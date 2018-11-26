@@ -13,7 +13,7 @@ public class MapEditor : Editor {
         DrawDefaultInspector();
 
         if (GUILayout.Button ("Generate")) {
-            foreach (Transform child in map.layout.transform)
+            foreach (Transform child in map.terrain.transform)
             {
                 DestroyImmediate(child.gameObject);
             }

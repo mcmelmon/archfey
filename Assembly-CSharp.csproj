@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{614E876A-FD50-1117-77BD-35AD6C2F0E14}</ProjectGuid>
+    <ProjectGuid>{8A5C2260-5A42-3222-B972-25A752D0ADFC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -74,81 +74,81 @@
     <Compile Include="Assets\Scripts\Gameplay\Offense.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Projectile.cs" />
     <Compile Include="Assets\Scripts\Gameplay\Raven.cs" />
-    <Compile Include="Assets\Scripts\Geography\Installations.cs" />
-    <Compile Include="Assets\Scripts\Geography\Layout.cs" />
-    <Compile Include="Assets\Scripts\Geography\Map.cs" />
-    <Compile Include="Assets\Scripts\Geography\Tile.cs" />
+    <Compile Include="Assets\Scripts\Map\Installations.cs" />
+    <Compile Include="Assets\Scripts\Map\Map.cs" />
+    <Compile Include="Assets\Scripts\Map\Terrain.cs" />
+    <Compile Include="Assets\Scripts\Map\Tile.cs" />
     <Reference Include="Cinemachine">
-      <HintPath>/Users/dev/UtopiaDefense/Library/ScriptAssemblies/Cinemachine.dll</HintPath>
+      <HintPath>/Users/dev/git/archfey/Library/ScriptAssemblies/Cinemachine.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Entities.Properties">
-      <HintPath>/Users/dev/UtopiaDefense/Library/ScriptAssemblies/Unity.Entities.Properties.dll</HintPath>
+      <HintPath>/Users/dev/git/archfey/Library/ScriptAssemblies/Unity.Entities.Properties.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Properties.Codegen">
-      <HintPath>/Users/dev/UtopiaDefense/Library/ScriptAssemblies/Unity.Properties.Codegen.dll</HintPath>
+      <HintPath>/Users/dev/git/archfey/Library/ScriptAssemblies/Unity.Properties.Codegen.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Jobs">
-      <HintPath>/Users/dev/UtopiaDefense/Library/ScriptAssemblies/Unity.Jobs.dll</HintPath>
+      <HintPath>/Users/dev/git/archfey/Library/ScriptAssemblies/Unity.Jobs.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Jobs.Editor">
-      <HintPath>/Users/dev/UtopiaDefense/Library/ScriptAssemblies/Unity.Jobs.Editor.dll</HintPath>
+      <HintPath>/Users/dev/git/archfey/Library/ScriptAssemblies/Unity.Jobs.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Entities.Editor">
-      <HintPath>/Users/dev/UtopiaDefense/Library/ScriptAssemblies/Unity.Entities.Editor.dll</HintPath>
+      <HintPath>/Users/dev/git/archfey/Library/ScriptAssemblies/Unity.Entities.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Properties">
-      <HintPath>/Users/dev/UtopiaDefense/Library/ScriptAssemblies/Unity.Properties.dll</HintPath>
+      <HintPath>/Users/dev/git/archfey/Library/ScriptAssemblies/Unity.Properties.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Collections">
-      <HintPath>/Users/dev/UtopiaDefense/Library/ScriptAssemblies/Unity.Collections.dll</HintPath>
+      <HintPath>/Users/dev/git/archfey/Library/ScriptAssemblies/Unity.Collections.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.StandardEvents">
-      <HintPath>/Users/dev/UtopiaDefense/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
+      <HintPath>/Users/dev/git/archfey/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>/Users/dev/UtopiaDefense/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>/Users/dev/git/archfey/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Burst">
-      <HintPath>/Users/dev/UtopiaDefense/Library/ScriptAssemblies/Unity.Burst.dll</HintPath>
+      <HintPath>/Users/dev/git/archfey/Library/ScriptAssemblies/Unity.Burst.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>/Users/dev/UtopiaDefense/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+      <HintPath>/Users/dev/git/archfey/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Rendering.Hybrid">
-      <HintPath>/Users/dev/UtopiaDefense/Library/ScriptAssemblies/Unity.Rendering.Hybrid.dll</HintPath>
+      <HintPath>/Users/dev/git/archfey/Library/ScriptAssemblies/Unity.Rendering.Hybrid.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Properties.Editor">
-      <HintPath>/Users/dev/UtopiaDefense/Library/ScriptAssemblies/Unity.Properties.Editor.dll</HintPath>
+      <HintPath>/Users/dev/git/archfey/Library/ScriptAssemblies/Unity.Properties.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Entities.Hybrid">
-      <HintPath>/Users/dev/UtopiaDefense/Library/ScriptAssemblies/Unity.Entities.Hybrid.dll</HintPath>
+      <HintPath>/Users/dev/git/archfey/Library/ScriptAssemblies/Unity.Entities.Hybrid.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Mathematics">
-      <HintPath>/Users/dev/UtopiaDefense/Library/ScriptAssemblies/Unity.Mathematics.dll</HintPath>
+      <HintPath>/Users/dev/git/archfey/Library/ScriptAssemblies/Unity.Mathematics.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Entities">
-      <HintPath>/Users/dev/UtopiaDefense/Library/ScriptAssemblies/Unity.Entities.dll</HintPath>
+      <HintPath>/Users/dev/git/archfey/Library/ScriptAssemblies/Unity.Entities.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Transforms">
-      <HintPath>/Users/dev/UtopiaDefense/Library/ScriptAssemblies/Unity.Transforms.dll</HintPath>
+      <HintPath>/Users/dev/git/archfey/Library/ScriptAssemblies/Unity.Transforms.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Transforms.Editor">
-      <HintPath>/Users/dev/UtopiaDefense/Library/ScriptAssemblies/Unity.Transforms.Editor.dll</HintPath>
+      <HintPath>/Users/dev/git/archfey/Library/ScriptAssemblies/Unity.Transforms.Editor.dll</HintPath>
     </Reference>
     <Reference Include="com.unity.cinemachine.editor">
-      <HintPath>/Users/dev/UtopiaDefense/Library/ScriptAssemblies/com.unity.cinemachine.editor.dll</HintPath>
+      <HintPath>/Users/dev/git/archfey/Library/ScriptAssemblies/com.unity.cinemachine.editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Burst.Editor">
-      <HintPath>/Users/dev/UtopiaDefense/Library/ScriptAssemblies/Unity.Burst.Editor.dll</HintPath>
+      <HintPath>/Users/dev/git/archfey/Library/ScriptAssemblies/Unity.Burst.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Mathematics.Editor">
-      <HintPath>/Users/dev/UtopiaDefense/Library/ScriptAssemblies/Unity.Mathematics.Editor.dll</HintPath>
+      <HintPath>/Users/dev/git/archfey/Library/ScriptAssemblies/Unity.Mathematics.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>/Users/dev/UtopiaDefense/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>/Users/dev/git/archfey/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Transforms.Hybrid">
-      <HintPath>/Users/dev/UtopiaDefense/Library/ScriptAssemblies/Unity.Transforms.Hybrid.dll</HintPath>
+      <HintPath>/Users/dev/git/archfey/Library/ScriptAssemblies/Unity.Transforms.Hybrid.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>/Applications/Unity/Hub/Editor/2018.2.17f1/Unity.app/Contents/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -714,12 +714,6 @@
     <Reference Include="Boo.Lang">
       <HintPath>/Applications/Unity/Hub/Editor/2018.2.17f1/Unity.app/Contents/MonoBleedingEdge/lib/mono/unityscript/Boo.Lang.dll</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
-      <Project>{47DB4C12-E01E-C128-9AB7-BB80DCBA3447}</Project>
-      <Name>Assembly-CSharp-firstpass</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

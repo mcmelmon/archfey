@@ -50,7 +50,7 @@ public class Offense : MonoBehaviour {
 
     private void Spawn()
     {
-        Tile spawn_point = map.layout.PickRandomEdgeTile();
+        Tile spawn_point = map.terrain.PickRandomEdgeTile();
 
         if (spawn_point != null && spawn_point.occupier == null)
         {
@@ -71,7 +71,7 @@ public class Offense : MonoBehaviour {
         wave++;
         for (int i = 0; i < wave; i++)
         {
-            if (!map.layout.AllBordersOccupied())
+            if (!map.terrain.AllBordersOccupied())
             {
                 Spawn();
                 yield return new WaitForSeconds(2f);
