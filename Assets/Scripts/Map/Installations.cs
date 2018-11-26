@@ -4,20 +4,29 @@ using UnityEngine;
 
 public class Installations : MonoBehaviour {
 
-    public Installation installation_template;
+    public Installation installation_prefab;
     public List<Installation> listing;
-    public Map map;
     public int target_number_of_installations;
+
+    Map map;
+
 
     // Unity
 
-    void Start () 
+
+    private void Awake()
+    {
+        map = transform.parent.transform.parent.GetComponent<Map>();
+    }
+
+
+    private void Start () 
     {
         PlaceInstallations();
 	}
 	
 
-	void Update () 
+	private void Update () 
     {
 		
 	}
@@ -28,13 +37,13 @@ public class Installations : MonoBehaviour {
 
     public void PlaceInstallations()
     {
-        int bail_safe = map.terrain.width * map.terrain.height * target_number_of_installations;
+        int bail_safe = map.GetTerrain().width * map.GetTerrain().height * target_number_of_installations;
         int bail_count = 0;
 
         while (listing.Count < target_number_of_installations)
         {
             if (bail_count >= bail_safe) break;
-            Tile _tile = map.terrain.PickRandomInteriorTile();
+            Tile _tile = map.GetTerrain().PickRandomInteriorTile();
             if (InstantiateInstallation(_tile))
             {
                 listing.Add(_tile.installation);
@@ -50,7 +59,7 @@ public class Installations : MonoBehaviour {
     {
         if (tile.installation == null)
         {
-            Installation _installation = Instantiate(installation_template, tile.transform.position + new Vector3(0,5,0), tile.transform.rotation, installation_template.transform);
+            Installation _installation = Instantiate(installation_prefab, tile.transform.position + new Vector3(0,5,0), tile.transform.rotation, installation_prefab.transform);
             if (_installation != null)
             {
                 tile.installation = _installation;

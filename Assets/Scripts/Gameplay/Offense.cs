@@ -4,21 +4,27 @@ using UnityEngine;
 
 public class Offense : MonoBehaviour {
 
-    public Map map;
-    public Combatant combatant_template;
+    public Actor actor_prefab;
 
-    List<Combatant> combatants;
+    Map map;
+    List<Actor> actors;
     float count = 5f;
     float delay = 5f;
     int wave = 0;
 
 
+
     // Unity
+
+    private void Awake()
+    {
+        map = GetComponent<Map>();
+    }
 
 
     private void Start()
     {
-        combatants = new List<Combatant>();
+        actors = new List<Actor>();
     }
 
     void Update()
@@ -38,11 +44,11 @@ public class Offense : MonoBehaviour {
 
     private void AssignTheTroops() 
     {
-        foreach (var combatant in combatants)
+        foreach (var combatant in actors)
         {
             if (combatant.destination == null)
             {
-                combatant.FindTarget(map.installations.listing);
+                combatant.FindTarget(map.GetInstallations().listing);
             }
         }
     }
@@ -50,17 +56,17 @@ public class Offense : MonoBehaviour {
 
     private void Spawn()
     {
-        Tile spawn_point = map.terrain.PickRandomEdgeTile();
+        Tile spawn_point = map.GetTerrain().PickRandomEdgeTile();
 
         if (spawn_point != null && spawn_point.occupier == null)
         {
-            Combatant _combatant = Instantiate(combatant_template, (spawn_point.transform.position + new Vector3(0, 3, 0)), combatant_template.transform.rotation);
-            if (_combatant != null)
+            Actor _actor = Instantiate(actor_prefab, (spawn_point.transform.position + new Vector3(0, 3, 0)), actor_prefab.transform.rotation);
+            if (_actor != null)
             {
-                spawn_point.occupier = _combatant;
-                _combatant.transform.parent = spawn_point.transform;
-                _combatant.FindTarget(map.installations.listing);
-                combatants.Add(_combatant);
+                spawn_point.occupier = _actor;
+                _actor.transform.parent = spawn_point.transform;
+                _actor.FindTarget(map.GetInstallations().listing);
+                actors.Add(_actor);
             }
         }
     }
@@ -71,7 +77,7 @@ public class Offense : MonoBehaviour {
         wave++;
         for (int i = 0; i < wave; i++)
         {
-            if (!map.terrain.AllBordersOccupied())
+            if (!map.GetTerrain().AllBordersOccupied())
             {
                 Spawn();
                 yield return new WaitForSeconds(2f);

@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Map : MonoBehaviour {
 
-    public Terrain terrain;
-    public Installations installations;
     public int sky_height;
-    public Transform raven;
 
+    Terrain terrain;
+    Installations installations;
+    
     public struct HeavenAndEarth
     {
         public static Plane earth;
@@ -21,6 +21,8 @@ public class Map : MonoBehaviour {
 
     void Awake () 
     {
+        terrain = transform.Find("Terrain").gameObject.GetComponent<Terrain>();
+        installations = transform.Find("Civilization").gameObject.transform.Find("Installations").gameObject.GetComponent<Installations>();
         SetHeavenAndEarth();
         SetBounds();
     }
@@ -47,11 +49,23 @@ public class Map : MonoBehaviour {
     }
 
 
+    public Installations GetInstallations()
+    {
+        return installations;
+    }
+
+
+    public Terrain GetTerrain()
+    {
+        return terrain;
+    }
+
+
     // private
 
     private void OnValidate()
     {
-        if (sky_height < 50) sky_height = 50;
+        if (sky_height < 30) sky_height = 30;
     }
 
 

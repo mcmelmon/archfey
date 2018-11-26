@@ -5,7 +5,7 @@ using UnityEngine;
 public class Tile : MonoBehaviour {
 
     public Installation installation;
-    public Combatant occupier;
+    public Actor occupier;
 
 
     // Unity

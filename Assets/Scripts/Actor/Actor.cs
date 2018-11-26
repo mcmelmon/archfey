@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Combatant : MonoBehaviour {
+public class Actor : MonoBehaviour {
 
     private float current_haste;
     public float starting_haste = 100f;
