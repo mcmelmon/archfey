@@ -6,6 +6,7 @@ public class Health : MonoBehaviour {
 
     public int starting_health;
     public int current_health;
+    public int recovery_rate;
 
 
     // Unity

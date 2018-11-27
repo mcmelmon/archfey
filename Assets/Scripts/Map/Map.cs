@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class Map : MonoBehaviour {
 
-    public int sky_height;
+    Geography geography;
+    int sky_height = 20;
 
-    Terrain terrain;
-    Installations installations;
 
     public struct HeavenAndEarth
     {
@@ -21,22 +20,9 @@ public class Map : MonoBehaviour {
 
     void Awake ()
     {
-        terrain = transform.Find("Terrain").gameObject.GetComponent<Terrain>();
-        installations = transform.Find("Civilization").gameObject.transform.Find("Installations").gameObject.GetComponent<Installations>();
+        geography = transform.GetComponentInChildren<Geography>();
         SetHeavenAndEarth();
-        SetBounds();
     }
-
-    private void Start()
-    {
-
-    }
-
-
-    void Update ()
-    {
-
-	}
 
 
     // public
@@ -44,20 +30,13 @@ public class Map : MonoBehaviour {
 
     public Vector3 GetCenter()
     {
-        Vector3 center = new Vector3(terrain.width * terrain.tile_scale / 2, 0, terrain.depth * terrain.tile_scale / 2);
-        return center;
+        return geography.GetCenter();
     }
 
 
-    public Installations GetInstallations()
+    public Geography GetGeography()
     {
-        return installations;
-    }
-
-
-    public Terrain GetTerrain()
-    {
-        return terrain;
+        return geography;
     }
 
 
@@ -71,60 +50,13 @@ public class Map : MonoBehaviour {
 
     void AddDirectionBoundary(string direction, Transform boundaries)
     {
-        GameObject boundary = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        boundary.transform.parent = boundaries.transform;
-        boundary.transform.localScale = new Vector3((terrain.width * terrain.tile_scale) + 2, 2, terrain.depth * terrain.tile_scale);
-        boundary.name = direction;
-
-        MeshRenderer plane_renderer = boundary.GetComponent<MeshRenderer>();
-        plane_renderer.enabled = false;
-
-        switch (direction){
-            case "east":
-                boundary.transform.position = new Vector3(terrain.width * terrain.tile_scale, 0, (terrain.depth * terrain.tile_scale / 2) - terrain.tile_scale / 2);
-                boundary.transform.rotation = Quaternion.LookRotation(new Vector3(-1, 90, 0));
-                break;
-            case "west":
-                boundary.transform.position = new Vector3(-terrain.tile_scale / 2, 0, (terrain.depth * terrain.tile_scale / 2) - terrain.tile_scale / 2);
-                boundary.transform.rotation = Quaternion.LookRotation(new Vector3(-1, 90, 0));
-                break;
-            case "north":
-                boundary.transform.position = new Vector3(terrain.width * terrain.tile_scale / 2, 0, (terrain.depth * terrain.tile_scale) - terrain.tile_scale / 2);
-                boundary.transform.rotation = Quaternion.LookRotation(new Vector3(0, 90, 0));
-                break;
-            case "south":
-                boundary.transform.position = new Vector3(terrain.width * terrain.tile_scale / 2, 0, -terrain.tile_scale / 2);
-                boundary.transform.rotation = Quaternion.LookRotation(new Vector3(0, 90, 0));
-                break;
-            case "sky":
-                boundary.transform.position = new Vector3((terrain.depth * terrain.tile_scale / 2) - terrain.tile_scale / 2, sky_height, (terrain.depth * terrain.tile_scale / 2) - terrain.tile_scale / 2);
-                break;
-            case "ground":
-                boundary.transform.position = new Vector3((terrain.depth * terrain.tile_scale / 2) - terrain.tile_scale / 2, 0, (terrain.depth * terrain.tile_scale / 2) - terrain.tile_scale / 2);
-                break;
-            default:
-                break;
-        }
+        // TODO: keep player from flying off map
     }
 
 
     void SetBounds()
     {
-        List<string> directions = new List<string>();
-        GameObject boundaries = new GameObject("Boundaries");
-        boundaries.transform.parent = this.transform;
 
-        directions.Add("east");
-        directions.Add("west");
-        directions.Add("south");
-        directions.Add("north");
-        directions.Add("sky");
-        directions.Add("ground");
-
-        foreach (var direction in directions)
-        {
-            AddDirectionBoundary(direction, boundaries.transform);
-        }
     }
 
 

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Flora : MonoBehaviour {
 
     public Tree tree_prefab;
-    public int tree_coverage_percent;
+    public float tree_coverage;
 
     Map map;
     Biosphere biosphere;
@@ -15,8 +15,8 @@ public class Flora : MonoBehaviour {
 
 
 	void Awake () {
-        biosphere = transform.parent.GetComponent<Biosphere>();
-        map = biosphere.GetMap();
+        biosphere = transform.GetComponentInParent<Biosphere>();
+        map = transform.GetComponentInParent<Map>();
 	}
 	
 	void Update () {
@@ -29,15 +29,14 @@ public class Flora : MonoBehaviour {
 
     public void PlaceTrees()
     {
-        int number_of_trees = Mathf.RoundToInt(map.GetTerrain().GetAllTiles().Count * (tree_coverage_percent / 100f));
+        // TODO: use Terrain feature tree spawning
+        int number_of_trees = Mathf.RoundToInt((map.GetGeography().GetResolution()) * (tree_coverage / 100f));
         for (int i = 0; i < number_of_trees; i++)
         {
-            Tile _tile = map.GetTerrain().PickRandomTile();
+            Vector3 point = map.GetGeography().RandomLocation();
             Quaternion rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
-            Vector3 offset = new Vector3(Random.Range(-1, 2), _tile.obstacles.Count, Random.Range(-1, 2));
-            Tree _tree = Instantiate(tree_prefab, _tile.transform.position + offset, rotation);
-            _tree.transform.localScale = new Vector3(.75f, 1f, .75f) * Random.Range(0.1f, 0.6f);
-            _tile.trees.Add(_tree);
+            Tree _tree = Instantiate(tree_prefab, point, rotation);
+            _tree.transform.localScale = new Vector3(1f, 1.25f, 1f) * Random.Range(0.1f, 1f);
             biosphere.trees.Add(_tree);
         }
     }
