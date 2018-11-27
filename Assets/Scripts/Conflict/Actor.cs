@@ -7,18 +7,17 @@ public class Actor : MonoBehaviour {
 
     private float current_haste;
     public float starting_haste = 100f;
-
     public float speed = 10f;
     public Transform destination;
     public float ranged_attack_range;
     public float melee_attack_range;
     public float haste = 200f;
+    bool holding;
 
-    bool holding = false;
     NavMeshAgent agent;
-    Tile tile;
-    Terrain terrain;
     Map map;
+    Geography geography;
+
 
     // Unity
 
@@ -26,13 +25,13 @@ public class Actor : MonoBehaviour {
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        holding = false;
     }
 
     private void Start()
     {
-        tile = transform.parent.gameObject.GetComponent<Tile>();
-        terrain = tile.transform.parent.GetComponent<Terrain>();
-        map = terrain.transform.parent.GetComponent<Map>();
+        map = GetComponentInParent<Offense>().map;
+        geography = map.GetGeography();
     }
 
 
@@ -41,15 +40,28 @@ public class Actor : MonoBehaviour {
         if (destination == null) FindTarget();
         if (!holding) Move();
         EvaluateAttacks();
+        DespawnIfTrapped();
     }
 
 
     // public
 
 
+    public bool PathToCenter()
+    {
+        NavMeshPath path = new NavMeshPath();
+        bool complete = true;
+
+
+        NavMesh.CalculatePath(transform.position, map.GetCenter(), NavMesh.AllAreas, path);
+        complete = path.status == NavMeshPathStatus.PathComplete;
+        return complete;
+    }
+
+
     public Transform FindTarget() 
     {
-        List<Installation> _installations = map.GetInstallations().listing;
+        List<Installation> _installations = map.GetComponentInChildren<Civilization>().GetComponentInChildren<Installations>().listing;
         float shortest_distance = Mathf.Infinity;
         Transform nearest_target = null;
 
@@ -76,13 +88,6 @@ public class Actor : MonoBehaviour {
     }
 
 
-    public bool PathAvailable()
-    {
-        // TODO: calculate if the destination is reachable.
-        return true;
-    }
-
-
     // private
 
 
@@ -105,6 +110,15 @@ public class Actor : MonoBehaviour {
     private void AttackAtRange()
     {
         holding = true;
+    }
+
+
+    private void DespawnIfTrapped()
+    {
+        if (!PathToCenter()){
+            transform.gameObject.SetActive(false);
+            Destroy(transform.gameObject);
+        } 
     }
 
 

@@ -12,7 +12,7 @@ public class Biosphere : MonoBehaviour {
 
     private void Awake()
     {
-        map = transform.parent.GetComponent<Map>();
+        map = transform.GetComponentInParent<Map>();
     }
 
 
@@ -37,6 +37,6 @@ public class Biosphere : MonoBehaviour {
 
     private void PlaceVegetation()
     {
-        transform.Find("Flora").GetComponent<Flora>().PlaceTrees();
+        transform.GetComponentInChildren<Flora>().PlaceTrees();
     }
 }
