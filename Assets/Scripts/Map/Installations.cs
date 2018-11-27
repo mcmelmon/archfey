@@ -44,6 +44,7 @@ public class Installations : MonoBehaviour {
         {
             if (bail_count >= bail_safe) break;
             Tile _tile = map.GetTerrain().PickRandomInteriorTile();
+            if (_tile.obstacles.Count != 0) continue;
             if (InstantiateInstallation(_tile))
             {
                 listing.Add(_tile.installation);
@@ -57,9 +58,10 @@ public class Installations : MonoBehaviour {
 
     bool InstantiateInstallation(Tile tile)
     {
-        if (tile.installation == null)
+        if (tile.installation == null && tile.obstacles.Count == 0 && tile.trees.Count == 0)
         {
             Installation _installation = Instantiate(installation_prefab, tile.transform.position + new Vector3(0,5,0), tile.transform.rotation, installation_prefab.transform);
+            _installation.transform.localScale += new Vector3(1, 0, 1);
             if (_installation != null)
             {
                 tile.installation = _installation;

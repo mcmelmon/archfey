@@ -8,7 +8,7 @@ public class Map : MonoBehaviour {
 
     Terrain terrain;
     Installations installations;
-    
+
     public struct HeavenAndEarth
     {
         public static Plane earth;
@@ -19,7 +19,7 @@ public class Map : MonoBehaviour {
     // Unity
 
 
-    void Awake () 
+    void Awake ()
     {
         terrain = transform.Find("Terrain").gameObject.GetComponent<Terrain>();
         installations = transform.Find("Civilization").gameObject.transform.Find("Installations").gameObject.GetComponent<Installations>();
@@ -35,7 +35,7 @@ public class Map : MonoBehaviour {
 
     void Update ()
     {
-		
+
 	}
 
 
@@ -128,7 +128,7 @@ public class Map : MonoBehaviour {
     }
 
 
-    void SetHeavenAndEarth() 
+    void SetHeavenAndEarth()
     {
         HeavenAndEarth.earth = new Plane(Vector3.up, 0f);
         HeavenAndEarth.heaven = new Plane(Vector3.down, sky_height * 5);

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// TODO: Move from Map to Conflict
+
 public class Offense : MonoBehaviour {
 
     public Actor actor_prefab;
@@ -42,31 +44,25 @@ public class Offense : MonoBehaviour {
     // private
 
 
-    private void AssignTheTroops() 
-    {
-        foreach (var combatant in actors)
-        {
-            if (combatant.destination == null)
-            {
-                combatant.FindTarget(map.GetInstallations().listing);
-            }
-        }
-    }
-
-
     private void Spawn()
     {
         Tile spawn_point = map.GetTerrain().PickRandomEdgeTile();
 
-        if (spawn_point != null && spawn_point.occupier == null)
+        if (spawn_point != null && spawn_point.occupier == null && spawn_point.obstacles.Count == 0)
         {
             Actor _actor = Instantiate(actor_prefab, (spawn_point.transform.position + new Vector3(0, 3, 0)), actor_prefab.transform.rotation);
+            _actor.transform.parent = spawn_point.transform;
+
             if (_actor != null)
             {
-                spawn_point.occupier = _actor;
-                _actor.transform.parent = spawn_point.transform;
-                _actor.FindTarget(map.GetInstallations().listing);
-                actors.Add(_actor);
+                if (_actor.PathAvailable())
+                {
+                    spawn_point.occupier = _actor;
+                    actors.Add(_actor);
+                } else {
+                    _actor.gameObject.SetActive(false);
+                    Destroy(_actor);
+                }
             }
         }
     }

@@ -335,6 +335,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1108985627}
+  - component: {fileID: 1108985628}
   m_Layer: 0
   m_Name: Biosphere
   m_TagString: Untagged
@@ -351,10 +352,24 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 2010972940}
+  - {fileID: 2048047800}
   m_Father: {fileID: 370547028}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1108985628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1108985626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2d08d2ecd1e0443894411cad95bf69f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trees: []
 --- !u!1 &1134764492
 GameObject:
   m_ObjectHideFlags: 0
@@ -481,7 +496,7 @@ MonoBehaviour:
   installation_prefab: {fileID: 114188019553596920, guid: 1e23d15d78b024e7a944e59d822aab57,
     type: 2}
   listing: []
-  target_number_of_installations: 4
+  target_number_of_installations: 7
 --- !u!4 &1345618518
 Transform:
   m_ObjectHideFlags: 0
@@ -526,6 +541,48 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1712792469
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4665207368141026, guid: 983e16168f2634b139e08265bbf5d09c, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4665207368141026, guid: 983e16168f2634b139e08265bbf5d09c, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4665207368141026, guid: 983e16168f2634b139e08265bbf5d09c, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4665207368141026, guid: 983e16168f2634b139e08265bbf5d09c, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4665207368141026, guid: 983e16168f2634b139e08265bbf5d09c, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4665207368141026, guid: 983e16168f2634b139e08265bbf5d09c, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4665207368141026, guid: 983e16168f2634b139e08265bbf5d09c, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4665207368141026, guid: 983e16168f2634b139e08265bbf5d09c, type: 2}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 983e16168f2634b139e08265bbf5d09c, type: 2}
+  m_IsPrefabAsset: 0
 --- !u!114 &1753891152
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -538,7 +595,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6986031112234358bda47238576cc83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  installations: {fileID: 1345618517}
   sky_height: 50
 --- !u!1 &1820443082
 GameObject:
@@ -641,11 +697,57 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tile: {fileID: 114135940325442130, guid: 983e16168f2634b139e08265bbf5d09c, type: 2}
-  width: 10
+  obstacle_prefab: {fileID: 114541305684308576, guid: 4bc14c347de7e4fbeb8bc34b11c5cb22,
+    type: 2}
+  obstacles: []
+  width: 20
   height: 1
-  depth: 10
+  depth: 20
   tile_scale: 4
-  surface: {fileID: 1820443083}
+  obstacle_coverage_percent: 25
+--- !u!1 &2010972939
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2010972940}
+  - component: {fileID: 2010972941}
+  m_Layer: 0
+  m_Name: Flora
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2010972940
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2010972939}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1108985627}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2010972941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2010972939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da6c3be13a68e4772a81cc7dc5e3afda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tree_prefab: {fileID: 193315016116472686, guid: cd8d55f494bd4434cade770ab7e6b381,
+    type: 2}
+  tree_coverage_percent: 66
 --- !u!1 &2037575970
 GameObject:
   m_ObjectHideFlags: 0
@@ -673,4 +775,32 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2048047799
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2048047800}
+  m_Layer: 0
+  m_Name: Fauna
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2048047800
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2048047799}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1108985627}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
