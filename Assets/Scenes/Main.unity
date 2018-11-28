@@ -249,7 +249,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 465733991}
   m_LocalRotation: {x: 0.3420201, y: -0, z: -0, w: 0.9396927}
-  m_LocalPosition: {x: 51.441, y: 59.240227, z: -51.89032}
+  m_LocalPosition: {x: 100, y: 100, z: -70}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 460771912}
@@ -513,6 +513,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1154486184}
+  - component: {fileID: 1154486186}
   - component: {fileID: 1154486185}
   m_Layer: 0
   m_Name: Conflict
@@ -545,9 +546,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 906f1cfd409c947c8b28dbdd5f2a1c4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actor_prefab: {fileID: 114622511376475628, guid: 235a3e539eea845b79c0d0cb44baec18,
+--- !u!114 &1154486186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1154486183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4408801ba2ae4a628d6ebb4b4cd8d9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  faction_size: 20
+  ghaddim_prefab: {fileID: 114127286258734026, guid: 023e71d7833984f6fbf62ca90915a2a3,
     type: 2}
-  map: {fileID: 1753891152}
+  mhoddim_prefab: {fileID: 114736850986846170, guid: 8f2959a8036b642a79856e38e5ab84f0,
+    type: 2}
+  fey_prefab: {fileID: 114551666208405138, guid: 3d00b446c83074897b4178f61223b6ae,
+    type: 2}
 --- !u!1 &1345618516
 GameObject:
   m_ObjectHideFlags: 0
@@ -580,7 +596,7 @@ MonoBehaviour:
   installation_prefab: {fileID: 114188019553596920, guid: 1e23d15d78b024e7a944e59d822aab57,
     type: 2}
   listing: []
-  target_number_of_installations: 9
+  target_number_of_installations: 5
 --- !u!4 &1345618518
 Transform:
   m_ObjectHideFlags: 0
@@ -603,6 +619,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1477133919}
+  - component: {fileID: 1477133920}
   m_Layer: 0
   m_Name: World
   m_TagString: Untagged
@@ -625,6 +642,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1477133920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1477133918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97ad63185fed54c238f58c424d84da9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1753891152
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -741,7 +769,7 @@ MonoBehaviour:
   obstacle_prefab: {fileID: 114541305684308576, guid: 4bc14c347de7e4fbeb8bc34b11c5cb22,
     type: 2}
   obstacles: []
-  obstacle_coverage: 33
+  obstacle_coverage: 20
 --- !u!1 &2010972939
 GameObject:
   m_ObjectHideFlags: 0
@@ -784,7 +812,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tree_prefab: {fileID: 193315016116472686, guid: cd8d55f494bd4434cade770ab7e6b381,
     type: 2}
-  tree_coverage: 75
+  tree_coverage: 45
 --- !u!1 &2037575970
 GameObject:
   m_ObjectHideFlags: 0

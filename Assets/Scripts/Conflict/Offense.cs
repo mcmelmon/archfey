@@ -4,63 +4,123 @@ using UnityEngine;
 
 public class Offense : MonoBehaviour {
 
-    public Actor actor_prefab;
-    public Map map;
+    List<OffenseSpawnCircle> spawn_circles = new List<OffenseSpawnCircle>();
 
-    List<Actor> actors;
-    float count = 5f;
     float delay = 5f;
-    int wave = 0;
-
+    float count = 5f;
+    Map map;
+    Geography geography;
+    Queue<GameObject> aggressors = new Queue<GameObject>();
+    List<GameObject> deployed = new List<GameObject>();
 
 
     // Unity
 
+
     private void Awake()
     {
-
-    }
-
-
-    private void Start()
-    {
-        actors = new List<Actor>();
+        map = GetComponentInParent<World>().GetComponentInChildren<Map>();
+        geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();  // can't rely on map loading its geography first
     }
 
     void Update()
     {
-        if (delay <= 0f)
+        if (aggressors.Count > 0)
         {
-            StartCoroutine(Wave());
-            delay = count;
-        }
+            if (delay <= 0f)
+            {
+                StartCoroutine(Wave());
+                delay = count;
+            }
 
-        delay -= Time.deltaTime;
+            delay -= Time.deltaTime;
+        }
+    }
+
+
+    // public
+
+
+    public void Attack(Queue<GameObject> _aggressors)
+    {
+        aggressors = _aggressors;
+        DeployOffense();
     }
 
 
     // private
 
 
+    private void DeployOffense()
+    {
+        OffenseSpawnCircle spawn_circle = new OffenseSpawnCircle();
+        Vector3 edge_point = geography.RandomBorderLocation();
+        Vector3 circle_center = geography.PointBetween(edge_point, geography.GetCenter(), 0.15f, true);
+
+        spawn_circles.Add(spawn_circle.DrawCircle(circle_center));
+    }
+
+
     private void Spawn()
     {
-        Vector3 spawn_point = map.GetGeography().RandomBorderLocation();
+        int squad_size = aggressors.Count / 5;
+        // TODO: make squads real
 
-        Actor _actor = Instantiate(actor_prefab, (spawn_point + new Vector3(0, 3, 0)), actor_prefab.transform.rotation);
-        _actor.transform.parent = transform;
-        if (_actor != null) actors.Add(_actor);  // TODO: these lists can be tagged children
+        for (int i = 0; i < squad_size; i++)
+        {
+            GameObject _aggressor = aggressors.Dequeue();
+            _aggressor.transform.position = spawn_circles[0].RandomPointWithin();
+            _aggressor.SetActive(true);
+            deployed.Add(_aggressor);
+        }
     }
 
 
     private IEnumerator Wave()
     {
-        wave++;
-        for (int i = 0; i < wave; i++)
+        Spawn();
+        yield return new WaitForSeconds(delay);
+    }
+}
+
+
+public class OffenseSpawnCircle {
+    public Vector3 center;
+    public List<Vector3> vertices = new List<Vector3>();
+    public int vertex_count = 12;
+    public int radius = 15;
+    public float theta = 0f;
+    public float delta_theta;
+
+    public OffenseSpawnCircle DrawCircle(Vector3 _center)
+    {
+        center = _center;
+        delta_theta = (2f * Mathf.PI) / vertex_count;
+
+        for (int i = 0; i < vertex_count; i++)
         {
-            Spawn();
-            yield return new WaitForSeconds(2f);
+            Vector3 vertex = new Vector3(radius * Mathf.Cos(theta), 0f, radius * Mathf.Sin(theta));
+            vertices.Add(center + vertex);
+            theta += delta_theta;
         }
+
+        return this;
     }
 
 
+    public Vector3 RandomPointWithin()
+    {
+        if (center != null)
+        {
+            Vector3 point_3;
+            Vector2 point_2 = new Vector2(center.x, center.z);
+            Vector2 _center = new Vector2(center.x, center.z);
+
+            point_2 = _center + Random.insideUnitCircle * radius;
+            point_3 = new Vector3(point_2.x, 0, point_2.y);
+            return point_3;
+        }
+
+        return Vector3.zero;
+    }
 }

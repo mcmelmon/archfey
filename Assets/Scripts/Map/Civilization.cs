@@ -12,8 +12,8 @@ public class Civilization : MonoBehaviour {
 
 
     void Awake () {
-        map = transform.GetComponentInParent<Map>();
-        installations = transform.GetComponentInChildren<Installations>();
+        map = GetComponentInParent<Map>();
+        installations = GetComponentInChildren<Installations>();
     }
 
 

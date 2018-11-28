@@ -20,18 +20,12 @@ public class Map : MonoBehaviour {
 
     void Awake ()
     {
-        geography = transform.GetComponentInChildren<Geography>();
+        geography = GetComponentInChildren<Geography>();
         SetHeavenAndEarth();
     }
 
 
     // public
-
-
-    public Vector3 GetCenter()
-    {
-        return geography.GetCenter();
-    }
 
 
     public Geography GetGeography()

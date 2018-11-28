@@ -27,9 +27,9 @@ public class Obstacle : MonoBehaviour {
     }
 
 
-    public Obstacle InstantiateScaledObstacle(int _w, float _h, int _d, Terrain terrain)
+    public Obstacle InstantiateScaledObstacle(Vector3 position, Geography geography)
     {
-        Obstacle _obstacle = Instantiate(this, new Vector3(_w, _h, _d), transform.rotation, terrain.transform);
+        Obstacle _obstacle = Instantiate(this, position, transform.rotation, geography.transform);
         _obstacle.transform.localScale = new Vector3(Random.Range(1,4), Random.Range(1,4), Random.Range(1,4));
         return _obstacle;
     }
