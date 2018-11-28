@@ -16,8 +16,8 @@ public class Geography : MonoBehaviour {
     // Unity
 
     void Awake () {
-        map = transform.GetComponentInParent<Map>();
-        terrain = transform.GetComponentInChildren<Terrain>();
+        map = GetComponentInParent<Map>();
+        terrain = GetComponentInChildren<Terrain>();
         terrain_data = terrain.terrainData;
         CreateNavigationMesh();
         PlaceObstacles();
@@ -33,6 +33,13 @@ public class Geography : MonoBehaviour {
     // public
 
 
+    public Vector3 FaceLocation(Vector3 _from, Vector3 _to)
+    {
+        return _to - _from;
+    }
+
+
+
     public Vector3 GetCenter()
     {
         return new Vector3(terrain_data.heightmapResolution / 2, 0, terrain_data.heightmapResolution / 2);  // TODO: sample height
@@ -42,6 +49,27 @@ public class Geography : MonoBehaviour {
     public int GetResolution()
     {
         return terrain_data.heightmapResolution;
+    }
+
+    public Terrain GetTerrain()
+    {
+        return terrain;
+    }
+
+
+    public bool PathToCenter(Vector3 from_here, int radius)
+    {
+        // TODO: take a circle, ensure that it has a path to "somewhere"
+        return true;
+    }
+
+
+    public Vector3 PointBetween(Vector3 _from, Vector3 _to, float step_percentage, bool grounded)
+    {
+        Vector3 heading = FaceLocation(_from, _to);
+        if (grounded) heading.y = 0;
+        float distance = heading.magnitude * step_percentage;
+        return distance * Vector3.Normalize(_to - _from) + _from;
     }
 
 
@@ -76,8 +104,11 @@ public class Geography : MonoBehaviour {
 
     public Vector3 RandomLocation()
     {
-        // TODO: use sampled height
-        return new Vector3(Random.Range(0, terrain_data.heightmapResolution), 0, Random.Range(0, terrain_data.heightmapResolution));
+        int _w = Random.Range(0, terrain_data.heightmapResolution);
+        int _d = Random.Range(0, terrain_data.heightmapResolution);
+        float _h = terrain.SampleHeight(new Vector3(_d, 0, _w));
+
+        return new Vector3(_w, _h, _d);
     }
 
 
@@ -86,21 +117,13 @@ public class Geography : MonoBehaviour {
 
     private void OnValidate()
     {
-        if (obstacle_coverage < 0) obstacle_coverage = 0;
-        if (obstacle_coverage > 100) obstacle_coverage = 100;
+        if (obstacle_coverage < 0f) obstacle_coverage = 0f;
+        if (obstacle_coverage > 100f) obstacle_coverage = 100f;
     }
 
 
     private bool AdjustObstacle(Dictionary<string, Tile> neighbors, Obstacle _obstacle)
     {
-        foreach (var neighbor in neighbors) {
-            if (neighbor.Value.obstacles.Count > 0)
-            {
-                neighbor.Value.AddObstacle(_obstacle);
-                return true;
-            }
-
-        }
 
         return false;
     }
@@ -119,10 +142,7 @@ public class Geography : MonoBehaviour {
 
         for (int i = 0; i < number_of_obstacles; i++)
         {
-            int _w = Random.Range(0, terrain_data.heightmapResolution);
-            int _d = Random.Range(0, terrain_data.heightmapResolution);
-            float _h = terrain.SampleHeight(new Vector3(_d, 0, _w));
-            Obstacle _obstacle = obstacle_prefab.InstantiateScaledObstacle(_w, _h, _d, terrain);
+            Obstacle _obstacle = obstacle_prefab.InstantiateScaledObstacle(RandomLocation(), this);
             if (_obstacle != null) obstacles.Add(_obstacle);
         }
     }

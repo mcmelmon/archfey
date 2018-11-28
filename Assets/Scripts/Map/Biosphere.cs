@@ -12,7 +12,7 @@ public class Biosphere : MonoBehaviour {
 
     private void Awake()
     {
-        map = transform.GetComponentInParent<Map>();
+        map = GetComponentInParent<Map>();
     }
 
 

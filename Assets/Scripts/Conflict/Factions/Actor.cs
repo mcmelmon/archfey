@@ -16,8 +16,6 @@ public class Actor : MonoBehaviour {
 
     NavMeshAgent agent;
     Map map;
-    Geography geography;
-
 
     // Unity
 
@@ -30,37 +28,22 @@ public class Actor : MonoBehaviour {
 
     private void Start()
     {
-        map = GetComponentInParent<Offense>().map;
-        geography = map.GetGeography();
+
     }
 
 
     private void Update()
     {
-        if (destination == null) FindTarget();
-        if (!holding) Move();
-        EvaluateAttacks();
-        DespawnIfTrapped();
+
     }
 
 
     // public
 
 
-    public bool PathToCenter()
-    {
-        NavMeshPath path = new NavMeshPath();
-        bool complete = true;
-
-
-        NavMesh.CalculatePath(transform.position, map.GetCenter(), NavMesh.AllAreas, path);
-        complete = path.status == NavMeshPathStatus.PathComplete;
-        return complete;
-    }
-
-
     public Transform FindTarget() 
     {
+        return null;
         List<Installation> _installations = map.GetComponentInChildren<Civilization>().GetComponentInChildren<Installations>().listing;
         float shortest_distance = Mathf.Infinity;
         Transform nearest_target = null;
@@ -110,15 +93,6 @@ public class Actor : MonoBehaviour {
     private void AttackAtRange()
     {
         holding = true;
-    }
-
-
-    private void DespawnIfTrapped()
-    {
-        if (!PathToCenter()){
-            transform.gameObject.SetActive(false);
-            Destroy(transform.gameObject);
-        } 
     }
 
 

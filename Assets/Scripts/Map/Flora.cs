@@ -29,13 +29,14 @@ public class Flora : MonoBehaviour {
 
     public void PlaceTrees()
     {
-        // TODO: use Terrain feature tree spawning
+        Terrain terrain = map.GetGeography().GetTerrain();
+
         int number_of_trees = Mathf.RoundToInt((map.GetGeography().GetResolution()) * (tree_coverage / 100f));
         for (int i = 0; i < number_of_trees; i++)
         {
-            Vector3 point = map.GetGeography().RandomLocation();
+            Vector3 position = map.GetGeography().RandomLocation();
             Quaternion rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
-            Tree _tree = Instantiate(tree_prefab, point, rotation);
+            Tree _tree = Instantiate(tree_prefab, position, rotation, biosphere.transform);
             _tree.transform.localScale = new Vector3(1f, 1.25f, 1f) * Random.Range(0.1f, 1f);
             biosphere.trees.Add(_tree);
         }
