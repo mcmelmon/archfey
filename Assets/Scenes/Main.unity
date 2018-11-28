@@ -514,6 +514,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1154486184}
   - component: {fileID: 1154486186}
+  - component: {fileID: 1154486187}
   - component: {fileID: 1154486185}
   m_Layer: 0
   m_Name: Conflict
@@ -564,6 +565,17 @@ MonoBehaviour:
     type: 2}
   fey_prefab: {fileID: 114551666208405138, guid: 3d00b446c83074897b4178f61223b6ae,
     type: 2}
+--- !u!114 &1154486187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1154486183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3c989ae5335d4a58ae9e8d7b39b7781, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1345618516
 GameObject:
   m_ObjectHideFlags: 0
