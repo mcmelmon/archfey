@@ -7,7 +7,7 @@ public class Tile : MonoBehaviour {
     // TODO: Tile no longer builds the map, but should define an "actable area"
 
     public Dictionary<string, int> coordinates = new Dictionary<string, int>();
-    public Installation installation;
+    public Ruin ruin;
     public Actor occupier;
     public List<Obstacle> obstacles = new List<Obstacle>();
     public List<Tree> trees = new List<Tree>();

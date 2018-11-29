@@ -24,9 +24,8 @@ GameObject:
   - component: {fileID: 65603422255998190}
   - component: {fileID: 114188019553596920}
   - component: {fileID: 208928926469663226}
-  - component: {fileID: 114233292361961858}
   m_Layer: 0
-  m_Name: Installation
+  m_Name: Ruin
   m_TagString: Installation
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -67,8 +66,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1648719279284348}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
-  m_LocalScale: {x: 1, y: 4, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 3, y: 4, z: 3}
   m_Children:
   - {fileID: 4260051938143926}
   m_Father: {fileID: 0}
@@ -139,26 +138,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fdc5809f6f1b4086b088de15947bb75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  starting_haste: 100
-  ranged_attack_weapon: {fileID: 1616139879216142, guid: 5ef6dfd2c2595457cafd0f83612f3c8a,
-    type: 2}
-  ranged_attack_origin: {fileID: 4260051938143926}
-  ranged_attack_range: 10
-  target: {fileID: 0}
---- !u!114 &114233292361961858
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1648719279284348}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59b0a99f6f2754a46984de39bc6bbef6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  starting_health: 20
-  current_health: 0
-  recovery_rate: 0
 --- !u!208 &208928926469663226
 NavMeshObstacle:
   m_ObjectHideFlags: 1

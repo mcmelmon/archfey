@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 
 public class Map : MonoBehaviour {
 
@@ -32,21 +31,6 @@ public class Map : MonoBehaviour {
 
 
     // public
-
-
-    public Dictionary<string, float> DistanceToEdges(Vector3 _from)
-    {
-        Dictionary<string, float> distances = new Dictionary<string, float>();
-
-        foreach (KeyValuePair <string, Vector3[]> keyValue in boundaries)
-        {
-            Vector3 edge = keyValue.Value[1] - keyValue.Value[0];
-            float distance = HandleUtility.DistancePointLine(_from, keyValue.Value[1], keyValue.Value[0]);
-            distances[keyValue.Key] = distance;
-        }
-
-        return distances;
-    }
 
 
     public Geography GetGeography()

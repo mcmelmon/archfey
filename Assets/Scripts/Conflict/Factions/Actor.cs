@@ -44,11 +44,11 @@ public class Actor : MonoBehaviour {
     public Transform FindTarget() 
     {
         return null;
-        List<Installation> _installations = map.GetComponentInChildren<Civilization>().GetComponentInChildren<Installations>().listing;
+        List<Ruin> _ruins = map.GetComponentInChildren<Civilization>().GetComponentInChildren<Ruins>().ruins;
         float shortest_distance = Mathf.Infinity;
         Transform nearest_target = null;
 
-        foreach (var _target in _installations)
+        foreach (var _target in _ruins)
         {
             float to_enemy = Vector3.Distance(transform.position, _target.transform.position);
             if (to_enemy < shortest_distance)
@@ -93,6 +93,23 @@ public class Actor : MonoBehaviour {
     private void AttackAtRange()
     {
         holding = true;
+        //GameObject projectile = Instantiate(ranged_attack_weapon, ranged_attack_origin.position, ranged_attack_weapon.transform.rotation);
+        //Projectile _projectile = projectile.GetComponent<Projectile>();
+        //_projectile.transform.LookAt(target.transform);
+        //_projectile.transform.rotation *= Quaternion.Euler(90, 0, 0);
+
+        //if (current_haste > 0)
+        //{
+        //    current_haste -= 1;
+        //    return;
+        //}
+
+        //if (_projectile != null && target != null)
+        //{
+        //    _projectile.Seek(target.transform);
+        //}
+
+        //current_haste = starting_haste;
     }
 
 

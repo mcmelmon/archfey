@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Civilization : MonoBehaviour {
 
-    Installations installations;
+    Ruins ruins;
     Map map;
 
 
@@ -13,7 +13,7 @@ public class Civilization : MonoBehaviour {
 
     void Awake () {
         map = GetComponentInParent<Map>();
-        installations = GetComponentInChildren<Installations>();
+        ruins = GetComponentInChildren<Ruins>();
     }
 
 

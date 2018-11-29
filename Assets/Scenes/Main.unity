@@ -587,7 +587,7 @@ GameObject:
   - component: {fileID: 1345618518}
   - component: {fileID: 1345618517}
   m_Layer: 0
-  m_Name: Installations
+  m_Name: Ruins
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -605,10 +605,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ac84ef2e5a054d9c95515d47377594e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  installation_prefab: {fileID: 114188019553596920, guid: 1e23d15d78b024e7a944e59d822aab57,
+  ruin_prefab: {fileID: 114188019553596920, guid: 1e23d15d78b024e7a944e59d822aab57,
     type: 2}
   listing: []
-  target_number_of_installations: 5
+  target_number_of_ruins: 4
 --- !u!4 &1345618518
 Transform:
   m_ObjectHideFlags: 0

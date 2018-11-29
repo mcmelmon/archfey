@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEditor;
 
 public class Geography : MonoBehaviour {
 
@@ -31,6 +32,21 @@ public class Geography : MonoBehaviour {
 
 
     // public
+
+
+    public Dictionary<string, float> DistanceToEdges(Vector3 _from)
+    {
+        Dictionary<string, float> distances = new Dictionary<string, float>();
+
+        foreach (KeyValuePair<string, Vector3[]> keyValue in map.boundaries)
+        {
+            Vector3 edge = keyValue.Value[1] - keyValue.Value[0];
+            float distance = HandleUtility.DistancePointLine(_from, keyValue.Value[1], keyValue.Value[0]);
+            distances[keyValue.Key] = distance;
+        }
+
+        return distances;
+    }
 
 
     public Vector3 FaceLocation(Vector3 _from, Vector3 _to)
@@ -109,6 +125,15 @@ public class Geography : MonoBehaviour {
         float _h = terrain.SampleHeight(new Vector3(_d, 0, _w));
 
         return new Vector3(_w, _h, _d);
+    }
+
+
+    public Vector3 RandomLocation(float distance_from_edge)
+    {
+        Vector3 point = Vector3.zero;
+        Circle extent = new Circle();
+        extent.Inscribe(GetCenter(), terrain_data.heightmapResolution - (2 * distance_from_edge));
+        return extent.RandomContainedPoint();
     }
 
 
