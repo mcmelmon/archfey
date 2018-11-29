@@ -4,16 +4,13 @@ using UnityEngine;
 
 public class Civilization : MonoBehaviour {
 
-    Installations installations;
-    Map map;
-
 
     // Unity
 
 
-    void Awake () {
-        map = GetComponentInParent<Map>();
-        installations = GetComponentInChildren<Installations>();
+    private void Awake () 
+    {
+
     }
 
 

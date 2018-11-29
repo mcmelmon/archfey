@@ -2,39 +2,37 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Offense : MonoBehaviour {
+public class Offense : MonoBehaviour 
+{
+    readonly Dictionary<string, Circle> attack_circles = new Dictionary<string, Circle>();
+    readonly List<GameObject> deployed = new List<GameObject>();
 
-    List<OffenseSpawnCircle> spawn_circles = new List<OffenseSpawnCircle>();
-
-    float delay = 5f;
-    float count = 5f;
-    Map map;
+    Dictionary<string, Circle> ruin_circles = new Dictionary<string, Circle>();
     Geography geography;
-    Queue<GameObject> aggressors = new Queue<GameObject>();
-    List<GameObject> deployed = new List<GameObject>();
 
+    Queue<GameObject> aggressors = new Queue<GameObject>();
+    List<GameObject> scouts = new List<GameObject>();
+    List<GameObject> strikers = new List<GameObject>();
+    List<GameObject> heavies = new List<GameObject>();
 
     // Unity
 
 
     private void Awake()
     {
-        map = GetComponentInParent<World>().GetComponentInChildren<Map>();
-        geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();  // can't rely on map loading its geography first
+        geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();
+        ruin_circles = GetComponentInParent<World>().GetComponentInChildren<Ruins>().GetOrCreateRuinCircles();
     }
 
-    void Update()
-    {
-        if (aggressors.Count > 0)
-        {
-            if (delay <= 0f)
-            {
-                StartCoroutine(Wave());
-                delay = count;
-            }
 
-            delay -= Time.deltaTime;
-        }
+    private void Start()
+    {
+
+    }
+
+    private void Update()
+    {
+
     }
 
 
@@ -44,83 +42,106 @@ public class Offense : MonoBehaviour {
     public void Attack(Queue<GameObject> _aggressors)
     {
         aggressors = _aggressors;
-        DeployOffense();
+        Locate();
+        Deploy();
+        Scout();
     }
 
 
     // private
 
 
-    private void DeployOffense()
+    private void Deploy()
     {
-        OffenseSpawnCircle spawn_circle = new OffenseSpawnCircle();
-        Vector3 edge_point = geography.RandomBorderLocation();
-        Vector3 circle_center = geography.PointBetween(edge_point, geography.GetCenter(), 0.15f, true);
+        GameObject offense_parent = new GameObject();
+        offense_parent.name = "Offense";
+        offense_parent.transform.parent = transform;
 
-        spawn_circles.Add(spawn_circle.DrawCircle(circle_center));
-    }
-
-
-    private void Spawn()
-    {
-        int squad_size = aggressors.Count / 5;
-        // TODO: make squads real
-
-        for (int i = 0; i < squad_size; i++)
+        foreach (KeyValuePair<string, Circle> keyValue in attack_circles)
         {
-            GameObject _aggressor = aggressors.Dequeue();
-            _aggressor.transform.position = spawn_circles[0].RandomPointWithin();
-            _aggressor.SetActive(true);
-            deployed.Add(_aggressor);
+            switch (keyValue.Key)
+            {
+                case "primary":
+                    for (int i = 0; i < 12; i++)
+                    {
+                        heavies.Add( Spawn(keyValue.Value.RandomContainedPoint(), offense_parent.transform) );
+                    }
+                    break;
+                case "secondary":
+                    for (int i = 0; i < 5; i++)
+                    {
+                        strikers.Add( Spawn(keyValue.Value.RandomContainedPoint(), offense_parent.transform) );
+                    }
+                    break;
+                case "tertiary":
+                    for (int i = 0; i < 3; i++)
+                    {
+                        scouts.Add( Spawn(keyValue.Value.RandomContainedPoint(), offense_parent.transform) );
+                    }
+                    break;
+            }
         }
     }
 
 
-    private IEnumerator Wave()
+    private void Locate()
     {
-        Spawn();
-        yield return new WaitForSeconds(delay);
-    }
-}
-
-
-public class OffenseSpawnCircle {
-    public Vector3 center;
-    public List<Vector3> vertices = new List<Vector3>();
-    public int vertex_count = 12;
-    public int radius = 15;
-    public float theta = 0f;
-    public float delta_theta;
-
-    public OffenseSpawnCircle DrawCircle(Vector3 _center)
-    {
-        center = _center;
-        delta_theta = (2f * Mathf.PI) / vertex_count;
-
-        for (int i = 0; i < vertex_count; i++)
-        {
-            Vector3 vertex = new Vector3(radius * Mathf.Cos(theta), 0f, radius * Mathf.Sin(theta));
-            vertices.Add(center + vertex);
-            theta += delta_theta;
-        }
-
-        return this;
+        if (geography == null) geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();
+        LocatePrimaryAttack();
+        LocateSecondaryAttack();
+        LocateTertiaryAttack();
     }
 
 
-    public Vector3 RandomPointWithin()
+    public void LocatePrimaryAttack()
     {
-        if (center != null)
+        Circle attack_circle = new Circle();
+        float distance_from_edge_percent = 0.15f;
+        bool grounded = true;
+        Vector3 circle_center = geography.PointBetween(geography.RandomBorderLocation(), geography.GetCenter(), distance_from_edge_percent, grounded);
+
+        attack_circles["primary"] = attack_circle.Inscribe(circle_center, 10f);
+    }
+
+
+    public void LocateSecondaryAttack()
+    {
+        Circle attack_circle = new Circle();
+        float distance_from_edge_percent = 0.1f;
+        bool grounded = true;
+        Vector3 circle_center = geography.PointBetween(geography.RandomBorderLocation(), geography.GetCenter(), distance_from_edge_percent, grounded);
+
+        attack_circles["secondary"] = attack_circle.Inscribe(circle_center, 5f);
+    }
+
+
+    public void LocateTertiaryAttack()
+    {
+        Circle attack_circle = new Circle();
+        float distance_from_edge_percent = 0.1f;
+        bool grounded = true;
+        Vector3 circle_center = geography.PointBetween(geography.RandomBorderLocation(), geography.GetCenter(), distance_from_edge_percent, grounded);
+
+        attack_circles["tertiary"] = attack_circle.Inscribe(circle_center, 5f);
+    }
+
+
+    private void Scout()
+    {
+        foreach (var scout in scouts)
         {
-            Vector3 point_3;
-            Vector2 point_2 = new Vector2(center.x, center.z);
-            Vector2 _center = new Vector2(center.x, center.z);
-
-            point_2 = _center + Random.insideUnitCircle * radius;
-            point_3 = new Vector3(point_2.x, 0, point_2.y);
-            return point_3;
+            scout.GetComponent<Actor>().SetDestination(geography.GetCenter());
         }
+    }
 
-        return Vector3.zero;
+
+    private GameObject Spawn(Vector3 point, Transform offense_parent)
+    {
+        GameObject _aggressor = aggressors.Dequeue();
+        _aggressor.transform.position = point;
+        _aggressor.transform.parent = offense_parent;
+        _aggressor.SetActive(true);
+        deployed.Add(_aggressor);
+        return _aggressor;
     }
 }

@@ -144,7 +144,6 @@ Transform:
   - {fileID: 1942554469}
   - {fileID: 1108985627}
   - {fileID: 657341630}
-  - {fileID: 1820443084}
   m_Father: {fileID: 1477133919}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -248,13 +247,13 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 465733991}
-  m_LocalRotation: {x: 0.3420201, y: -0, z: -0, w: 0.9396927}
-  m_LocalPosition: {x: 100, y: 100, z: -70}
+  m_LocalRotation: {x: 0.06104851, y: 0, z: 0, w: 0.99813485}
+  m_LocalPosition: {x: 99.5, y: 5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 460771912}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 40, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 7, y: 0, z: 0}
 --- !u!1 &657341629
 GameObject:
   m_ObjectHideFlags: 0
@@ -514,6 +513,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1154486184}
   - component: {fileID: 1154486186}
+  - component: {fileID: 1154486187}
   - component: {fileID: 1154486185}
   m_Layer: 0
   m_Name: Conflict
@@ -531,7 +531,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1820443084}
   m_Father: {fileID: 1477133919}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -564,6 +565,17 @@ MonoBehaviour:
     type: 2}
   fey_prefab: {fileID: 114551666208405138, guid: 3d00b446c83074897b4178f61223b6ae,
     type: 2}
+--- !u!114 &1154486187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1154486183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3c989ae5335d4a58ae9e8d7b39b7781, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1345618516
 GameObject:
   m_ObjectHideFlags: 0
@@ -575,7 +587,7 @@ GameObject:
   - component: {fileID: 1345618518}
   - component: {fileID: 1345618517}
   m_Layer: 0
-  m_Name: Installations
+  m_Name: Ruins
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -593,10 +605,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ac84ef2e5a054d9c95515d47377594e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  installation_prefab: {fileID: 114188019553596920, guid: 1e23d15d78b024e7a944e59d822aab57,
+  ruin_prefab: {fileID: 114188019553596920, guid: 1e23d15d78b024e7a944e59d822aab57,
     type: 2}
-  listing: []
-  target_number_of_installations: 5
+  ruins: []
 --- !u!4 &1345618518
 Transform:
   m_ObjectHideFlags: 0
@@ -706,7 +717,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.16666667
+  m_VoxelSize: 0.33333334
   m_BuildHeightMesh: 0
   m_NavMeshData: {fileID: 0}
 --- !u!4 &1820443084
@@ -719,8 +730,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 370547028}
-  m_RootOrder: 3
+  m_Father: {fileID: 1154486184}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1942554468
 GameObject:
@@ -769,7 +780,7 @@ MonoBehaviour:
   obstacle_prefab: {fileID: 114541305684308576, guid: 4bc14c347de7e4fbeb8bc34b11c5cb22,
     type: 2}
   obstacles: []
-  obstacle_coverage: 20
+  obstacle_coverage: 33
 --- !u!1 &2010972939
 GameObject:
   m_ObjectHideFlags: 0
@@ -812,7 +823,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tree_prefab: {fileID: 193315016116472686, guid: cd8d55f494bd4434cade770ab7e6b381,
     type: 2}
-  tree_coverage: 45
+  tree_coverage: 60
 --- !u!1 &2037575970
 GameObject:
   m_ObjectHideFlags: 0

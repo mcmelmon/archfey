@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Conflict : MonoBehaviour {
 
@@ -10,20 +11,15 @@ public class Conflict : MonoBehaviour {
     public Fey fey_prefab;
 
     Map map;
-    Queue<GameObject> aggressors;
-    Queue<GameObject> defenders;
 
     private void Awake()
     {
         map = GetComponentInParent<World>().GetMap();
-        aggressors = new Queue<GameObject>();
-        defenders = new Queue<GameObject>();
     }
 
     private void Start()
     {
-        PopulateFactions();
-        ChooseSides();
+        CreateNavigationMesh();
         Hajime();
     }
 
@@ -45,29 +41,24 @@ public class Conflict : MonoBehaviour {
     }
 
 
-    private void ChooseSides()
+    private void CreateNavigationMesh()
     {
-        if (Random.Range(0,2) == 1) {
-            aggressors = PopulateMhoddim();
-            defenders = PopulateGhaddim();
-        } else {
-            defenders = PopulateMhoddim();
-            aggressors = PopulateGhaddim();
-        }
+        GetComponentInChildren<NavMeshSurface>().BuildNavMesh();
     }
 
 
     private void Hajime()
     {
-        GetComponentInChildren<Defense>().Defend(defenders);
-        GetComponentInChildren<Offense>().Attack(aggressors);
-    }
-
-
-    private void PopulateFactions()
-    {
-        PopulateMhoddim();
-        PopulateGhaddim();
+        if (Random.Range(0, 2) == 1)
+        {
+            GetComponentInChildren<Defense>().Defend(PopulateMhoddim());
+            GetComponentInChildren<Offense>().Attack(PopulateGhaddim());
+        }
+        else
+        {
+            GetComponentInChildren<Offense>().Attack(PopulateMhoddim());
+            GetComponentInChildren<Defense>().Defend(PopulateGhaddim());
+        }
     }
 
 
