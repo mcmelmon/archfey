@@ -44,12 +44,15 @@ public class Map : MonoBehaviour {
 
     void AddDirectionBoundaries()
     {
+        GameObject bounds = new GameObject();
+        bounds.transform.parent = transform;
+        bounds.name = "Bounds";
+
         foreach (KeyValuePair <string, Vector3[]> keyValue in boundaries)
         {
             GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            wall.transform.parent = transform;
+            wall.transform.parent = bounds.transform;
             Vector3 heading = keyValue.Value[1] - keyValue.Value[0];
-
             wall.transform.localScale = new Vector3(heading.magnitude, heading.magnitude, 1);
             wall.transform.gameObject.GetComponentInChildren<Renderer>().enabled = false;
             wall.transform.up = heading;

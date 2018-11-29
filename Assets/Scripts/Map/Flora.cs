@@ -38,6 +38,8 @@ public class Flora : MonoBehaviour {
             Quaternion rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
             Tree _tree = Instantiate(tree_prefab, position, rotation, biosphere.transform);
             _tree.transform.localScale = new Vector3(1f, 1.25f, 1f) * Random.Range(0.1f, 1f);
+            _tree.transform.position += new Vector3(0, _tree.transform.localScale.y - 2, 0);
+
             biosphere.trees.Add(_tree);
         }
     }

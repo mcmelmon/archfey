@@ -248,13 +248,13 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 465733991}
-  m_LocalRotation: {x: 0.3420201, y: -0, z: -0, w: 0.9396927}
-  m_LocalPosition: {x: 100, y: 100, z: -70}
+  m_LocalRotation: {x: 0.06104851, y: 0, z: 0, w: 0.99813485}
+  m_LocalPosition: {x: 99.5, y: 5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 460771912}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 40, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 7, y: 0, z: 0}
 --- !u!1 &657341629
 GameObject:
   m_ObjectHideFlags: 0
@@ -607,8 +607,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ruin_prefab: {fileID: 114188019553596920, guid: 1e23d15d78b024e7a944e59d822aab57,
     type: 2}
-  listing: []
-  target_number_of_ruins: 4
+  ruins: []
 --- !u!4 &1345618518
 Transform:
   m_ObjectHideFlags: 0
@@ -781,7 +780,7 @@ MonoBehaviour:
   obstacle_prefab: {fileID: 114541305684308576, guid: 4bc14c347de7e4fbeb8bc34b11c5cb22,
     type: 2}
   obstacles: []
-  obstacle_coverage: 20
+  obstacle_coverage: 33
 --- !u!1 &2010972939
 GameObject:
   m_ObjectHideFlags: 0
@@ -824,7 +823,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tree_prefab: {fileID: 193315016116472686, guid: cd8d55f494bd4434cade770ab7e6b381,
     type: 2}
-  tree_coverage: 45
+  tree_coverage: 60
 --- !u!1 &2037575970
 GameObject:
   m_ObjectHideFlags: 0

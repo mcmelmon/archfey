@@ -40,4 +40,10 @@ public class Circle {
         point_3 = new Vector3(point_2.x, 0, point_2.y);
         return point_3;
     }
+
+
+    public Vector3 RandomVertex()
+    {
+        return vertices[Random.Range(0, vertices.Count)];
+    }
 }

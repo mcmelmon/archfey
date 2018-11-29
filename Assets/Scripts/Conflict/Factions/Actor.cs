@@ -17,6 +17,8 @@ public class Actor : MonoBehaviour {
     NavMeshAgent agent;
     Map map;
 
+    Vector3 point_of_contact;
+
     // Unity
 
 
@@ -24,6 +26,16 @@ public class Actor : MonoBehaviour {
     {
         agent = GetComponent<NavMeshAgent>();
         holding = false;
+
+        this.gameObject.AddComponent<SphereCollider>();
+        this.GetComponent<SphereCollider>().isTrigger = true;
+        this.GetComponent<SphereCollider>().radius = 1.5f;
+    }
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        point_of_contact = other.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
     }
 
     private void Start()
@@ -70,6 +82,11 @@ public class Actor : MonoBehaviour {
         return destination;
     }
 
+
+    public Vector3 GetPointOfContact()
+    {
+        return point_of_contact;
+    }
 
     // private
 

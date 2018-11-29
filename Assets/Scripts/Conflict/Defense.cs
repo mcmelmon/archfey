@@ -5,15 +5,11 @@ using UnityEngine;
 public class Defense : MonoBehaviour
 {
 
-    List<Circle> spawn_circles = new List<Circle>();
-
-    float delay = 5f;
-    float count = 5f;
     Map map;
     Geography geography;
     Queue<GameObject> defenders = new Queue<GameObject>();
     List<GameObject> deployed = new List<GameObject>();
-
+    Dictionary<string, Circle> ruin_circles = new Dictionary<string, Circle>();
 
     // Unity
 
@@ -24,17 +20,18 @@ public class Defense : MonoBehaviour
         geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();  // can't rely on map loading its geography first
     }
 
-    void Update()
-    {
-        if (defenders.Count > 0)
-        {
-            if (delay <= 0f)
-            {
-                StartCoroutine(Wave());
-                delay = count;
-            }
 
-            delay -= Time.deltaTime;
+    private void Start()
+    {
+
+    }
+
+    private void Update()
+    {
+        if (ruin_circles.Count <= 0) {
+            ruin_circles = GetComponentInParent<World>().GetComponentInChildren<Ruins>().GetRuinCircles();
+        } else if (defenders.Count > 0) {
+            DeployDefense();
         }
     }
 
@@ -45,7 +42,6 @@ public class Defense : MonoBehaviour
     public void Defend(Queue<GameObject> _defenders)
     {
         defenders = _defenders;
-        DeployDefense();
     }
 
 
@@ -54,32 +50,38 @@ public class Defense : MonoBehaviour
 
     private void DeployDefense()
     {
-        Circle spawn_circle = new Circle();
-        Vector3 edge_point = geography.RandomLocation();
-        Vector3 circle_center = geography.PointBetween(edge_point, geography.GetCenter(), 0.15f, true);
-
-        spawn_circles.Add(spawn_circle.Inscribe(circle_center, 8f));
-    }
-
-
-    private void Spawn()
-    {
-        int squad_size = defenders.Count / 5;
-        // TODO: make squads real
-
-        for (int i = 0; i < squad_size; i++)
+        foreach (KeyValuePair<string, Circle> keyValue in ruin_circles)
         {
-            GameObject _defenders = defenders.Dequeue();
-            _defenders.transform.position = spawn_circles[0].RandomContainedPoint();
-            _defenders.SetActive(true);
-            deployed.Add(_defenders);
+            switch (keyValue.Key)
+            {
+                case "primary":
+                    for (int i = 0; i < 12; i++)
+                    {
+                        Spawn(keyValue.Value.RandomContainedPoint());
+                    }
+                    break;
+                case "secondary":
+                    for (int i = 0; i < 5; i++)
+                    {
+                        Spawn(keyValue.Value.RandomContainedPoint());
+                    }
+                    break;
+                case "tertiary":
+                    for (int i = 0; i < 3; i++)
+                    {
+                        Spawn(keyValue.Value.RandomContainedPoint());
+                    }
+                    break;
+            }
         }
     }
 
 
-    private IEnumerator Wave()
+    private void Spawn(Vector3 point)
     {
-        Spawn();
-        yield return new WaitForSeconds(delay);
+        GameObject _defender = defenders.Dequeue();
+        _defender.transform.position = GetComponentInParent<Conflict>().ClearSpawn(point, _defender);
+        _defender.SetActive(true);
+        deployed.Add(_defender);
     }
 }

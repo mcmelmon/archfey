@@ -31,6 +31,25 @@ public class Conflict : MonoBehaviour {
     // public
 
 
+    public Vector3 ClearSpawn(Vector3 point, GameObject actor)
+    {
+        // TODO: The sphere collider appears to be preventing other objects from coming too
+        // close, so this isn't necessary... yet.  I am skeptical.
+
+        Vector3 contact;
+        Actor _actor = actor.GetComponent<Actor>();
+
+        if (_actor != null) {
+            contact = _actor.GetPointOfContact();
+            if (contact != Vector3.zero) {
+                Debug.Log("In contact");
+            }
+        }
+
+        return point;
+    }
+
+
     public Map GetMap()
     {
         return map;

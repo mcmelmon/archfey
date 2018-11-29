@@ -42,6 +42,12 @@ public class Ruins : MonoBehaviour {
     // public
 
 
+    public Dictionary<string, Circle> GetRuinCircles()
+    {
+        return ruin_circles;
+    }
+
+
     public void PlaceRuins()
     {
         LocatePrimaryRuinComplex();
@@ -62,19 +68,19 @@ public class Ruins : MonoBehaviour {
                 case "primary":
                     for (int i = 0; i < 9; i++)
                     {
-                        InstantiateRuin(keyValue.Value.RandomContainedPoint(), this);
+                        InstantiateRuin(keyValue.Value.RandomVertex(), this);
                     }
                     break;
                 case "secondary":
                     for (int i = 0; i < 5; i++)
                     {
-                        InstantiateRuin(keyValue.Value.RandomContainedPoint(), this);
+                        InstantiateRuin(keyValue.Value.RandomVertex(), this);
                     }
                     break;
                 case "tertiary":
                     for (int i = 0; i < 2; i++)
                     {
-                        InstantiateRuin(keyValue.Value.RandomContainedPoint(), this);
+                        InstantiateRuin(keyValue.Value.RandomVertex(), this);
                     }
                     break;
             }
@@ -85,7 +91,7 @@ public class Ruins : MonoBehaviour {
     void InstantiateRuin(Vector3 point, Ruins _ruins)
     {
         Ruin _ruin = Instantiate(ruin_prefab, point, transform.rotation, _ruins.transform);
-        _ruin.transform.localScale += new Vector3(4, 36, 4);
+        _ruin.transform.localScale += new Vector3(4, 16, 4);
         _ruin.transform.position += new Vector3(0, _ruin.transform.localScale.y / 2, 0);
         if (_ruin != null) ruins.Add(_ruin);
     }
