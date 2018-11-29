@@ -30,7 +30,7 @@ public class Circle {
 
     public Vector3 RandomContainedPoint()
     {
-        if (center == null) return Vector3.zero;
+        if (center == Vector3.zero) return Vector3.zero;
 
         Vector3 point_3;
         Vector2 point_2 = new Vector2(center.x, center.z);

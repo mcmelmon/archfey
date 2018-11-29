@@ -29,8 +29,6 @@ public class Flora : MonoBehaviour {
 
     public void PlaceTrees()
     {
-        Terrain terrain = map.GetGeography().GetTerrain();
-
         int number_of_trees = Mathf.RoundToInt((map.GetGeography().GetResolution()) * (tree_coverage / 100f));
         for (int i = 0; i < number_of_trees; i++)
         {

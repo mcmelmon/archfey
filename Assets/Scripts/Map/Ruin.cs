@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Ruin : MonoBehaviour {
 
+    public static float minimum_ruin_proximity = 15f;
+
+    readonly List<GameObject> allies = new List<GameObject>();
 
     // Unity
 

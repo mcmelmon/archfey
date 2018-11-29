@@ -40,7 +40,6 @@ public class Geography : MonoBehaviour {
 
         foreach (KeyValuePair<string, Vector3[]> keyValue in map.boundaries)
         {
-            Vector3 edge = keyValue.Value[1] - keyValue.Value[0];
             float distance = HandleUtility.DistancePointLine(_from, keyValue.Value[1], keyValue.Value[0]);
             distances[keyValue.Key] = distance;
         }
@@ -55,9 +54,13 @@ public class Geography : MonoBehaviour {
     }
 
 
-
     public Vector3 GetCenter()
     {
+        if (terrain == null)
+        {
+            terrain = GetComponentInChildren<Terrain>();
+            terrain_data = terrain.terrainData;
+        }
         return new Vector3(terrain_data.heightmapResolution / 2, 0, terrain_data.heightmapResolution / 2);  // TODO: sample height
     }
 
@@ -67,16 +70,10 @@ public class Geography : MonoBehaviour {
         return terrain_data.heightmapResolution;
     }
 
+
     public Terrain GetTerrain()
     {
         return terrain;
-    }
-
-
-    public bool PathToCenter(Vector3 from_here, int radius)
-    {
-        // TODO: take a circle, ensure that it has a path to "somewhere"
-        return true;
     }
 
 
@@ -91,10 +88,6 @@ public class Geography : MonoBehaviour {
 
     public Vector3 RandomBorderLocation()
     {
-        Vector3 ne = new Vector3(terrain_data.heightmapResolution, 0, terrain_data.heightmapResolution);
-        Vector3 se = new Vector3(terrain_data.heightmapResolution, 0, 0);
-        Vector3 sw = Vector3.zero;
-        Vector3 nw = new Vector3(0, 0, terrain_data.heightmapResolution);
         Vector3 point = Vector3.zero;
 
         switch (Random.Range(0,4))
@@ -132,7 +125,7 @@ public class Geography : MonoBehaviour {
     {
         Vector3 point = Vector3.zero;
         Circle extent = new Circle();
-        extent.Inscribe(GetCenter(), terrain_data.heightmapResolution - (2 * distance_from_edge));
+        extent.Inscribe(GetCenter(), (terrain_data.heightmapResolution / 2) - distance_from_edge);
         return extent.RandomContainedPoint();
     }
 
@@ -164,10 +157,13 @@ public class Geography : MonoBehaviour {
     private void PlaceObstacles()
     {
         int number_of_obstacles = Mathf.RoundToInt(terrain_data.heightmapResolution * (obstacle_coverage / 100f));
+        GameObject obstacles_parent = new GameObject();
+        obstacles_parent.name = "Obstacles";
+        obstacles_parent.transform.parent = transform;
 
         for (int i = 0; i < number_of_obstacles; i++)
         {
-            Obstacle _obstacle = obstacle_prefab.InstantiateScaledObstacle(RandomLocation(), this);
+            Obstacle _obstacle = obstacle_prefab.InstantiateScaledObstacle(RandomLocation(), obstacles_parent.transform);
             if (_obstacle != null) obstacles.Add(_obstacle);
         }
     }

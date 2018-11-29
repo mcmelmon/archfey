@@ -608,6 +608,7 @@ MonoBehaviour:
   ruin_prefab: {fileID: 114188019553596920, guid: 1e23d15d78b024e7a944e59d822aab57,
     type: 2}
   ruins: []
+  ruin_is_close: 12
 --- !u!4 &1345618518
 Transform:
   m_ObjectHideFlags: 0

@@ -5,10 +5,8 @@ using UnityEngine;
 public class Defense : MonoBehaviour
 {
 
-    Map map;
-    Geography geography;
     Queue<GameObject> defenders = new Queue<GameObject>();
-    List<GameObject> deployed = new List<GameObject>();
+    readonly List<GameObject> deployed = new List<GameObject>();
     Dictionary<string, Circle> ruin_circles = new Dictionary<string, Circle>();
 
     // Unity
@@ -16,8 +14,7 @@ public class Defense : MonoBehaviour
 
     private void Awake()
     {
-        map = GetComponentInParent<World>().GetComponentInChildren<Map>();
-        geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();  // can't rely on map loading its geography first
+
     }
 
 
@@ -28,11 +25,7 @@ public class Defense : MonoBehaviour
 
     private void Update()
     {
-        if (ruin_circles.Count <= 0) {
-            ruin_circles = GetComponentInParent<World>().GetComponentInChildren<Ruins>().GetRuinCircles();
-        } else if (defenders.Count > 0) {
-            DeployDefense();
-        }
+
     }
 
 
@@ -42,14 +35,20 @@ public class Defense : MonoBehaviour
     public void Defend(Queue<GameObject> _defenders)
     {
         defenders = _defenders;
+        ruin_circles = GetComponentInParent<World>().GetComponentInChildren<Ruins>().GetOrCreateRuinCircles();
+        Deploy();
     }
 
 
     // private
 
 
-    private void DeployDefense()
+    private void Deploy()
     {
+        GameObject defense_parent = new GameObject();
+        defense_parent.name = "Defense";
+        defense_parent.transform.parent = transform;
+
         foreach (KeyValuePair<string, Circle> keyValue in ruin_circles)
         {
             switch (keyValue.Key)
@@ -57,19 +56,19 @@ public class Defense : MonoBehaviour
                 case "primary":
                     for (int i = 0; i < 12; i++)
                     {
-                        Spawn(keyValue.Value.RandomContainedPoint());
+                        Spawn(keyValue.Value.RandomContainedPoint(), defense_parent.transform);
                     }
                     break;
                 case "secondary":
                     for (int i = 0; i < 5; i++)
                     {
-                        Spawn(keyValue.Value.RandomContainedPoint());
+                        Spawn(keyValue.Value.RandomContainedPoint(), defense_parent.transform);
                     }
                     break;
                 case "tertiary":
                     for (int i = 0; i < 3; i++)
                     {
-                        Spawn(keyValue.Value.RandomContainedPoint());
+                        Spawn(keyValue.Value.RandomContainedPoint(), defense_parent.transform);
                     }
                     break;
             }
@@ -77,10 +76,11 @@ public class Defense : MonoBehaviour
     }
 
 
-    private void Spawn(Vector3 point)
+    private void Spawn(Vector3 point, Transform defense_parent)
     {
         GameObject _defender = defenders.Dequeue();
-        _defender.transform.position = GetComponentInParent<Conflict>().ClearSpawn(point, _defender);
+        _defender.transform.position = point;
+        _defender.transform.parent = defense_parent;
         _defender.SetActive(true);
         deployed.Add(_defender);
     }
