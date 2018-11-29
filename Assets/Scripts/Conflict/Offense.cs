@@ -71,6 +71,7 @@ public class Offense : MonoBehaviour {
             GameObject _aggressor = aggressors.Dequeue();
             _aggressor.transform.position = spawn_circles[0].RandomPointWithin();
             _aggressor.SetActive(true);
+            Dictionary<string, float> distance_to_edges = map.DistanceToEdges(_aggressor.transform.position);
             deployed.Add(_aggressor);
         }
     }
