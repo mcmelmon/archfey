@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEditor;
 
 public class Geography : MonoBehaviour {
@@ -20,7 +19,6 @@ public class Geography : MonoBehaviour {
         map = GetComponentInParent<Map>();
         terrain = GetComponentInChildren<Terrain>();
         terrain_data = terrain.terrainData;
-        CreateNavigationMesh();
         PlaceObstacles();
     }
 
@@ -145,13 +143,6 @@ public class Geography : MonoBehaviour {
 
         return false;
     }
-
-
-    private void CreateNavigationMesh()
-    {
-        transform.parent.Find("Navigation").gameObject.GetComponent<NavMeshSurface>().BuildNavMesh();  // TODO: use GetComponentInChilren instead of Find
-    }
-
 
 
     private void PlaceObstacles()

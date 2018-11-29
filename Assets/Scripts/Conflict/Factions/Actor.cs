@@ -5,19 +5,10 @@ using UnityEngine.AI;
 
 public class Actor : MonoBehaviour {
 
-    private float current_haste;
-    public float starting_haste = 100f;
-    public float speed = 10f;
-    public Transform destination;
-    public float ranged_attack_range;
-    public float melee_attack_range;
-    public float haste = 200f;
-    bool holding;
+    public Vector3 destination;
 
     NavMeshAgent agent;
-    Map map;
-
-    Vector3 point_of_contact;
+    Dictionary<string, GameObject> senses = new Dictionary<string, GameObject>();
 
     // Unity
 
@@ -25,18 +16,9 @@ public class Actor : MonoBehaviour {
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        holding = false;
-
-        this.gameObject.AddComponent<SphereCollider>();
-        this.GetComponent<SphereCollider>().isTrigger = true;
-        this.GetComponent<SphereCollider>().radius = 1.5f;
+        destination = Vector3.zero;
     }
 
-
-    private void OnTriggerEnter(Collider other)
-    {
-        point_of_contact = other.gameObject.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
-    }
 
     private void Start()
     {
@@ -53,107 +35,36 @@ public class Actor : MonoBehaviour {
     // public
 
 
-    public Transform FindTarget() 
+    public void SetDestination(Vector3 point) 
     {
-        return null;
-        List<Ruin> _ruins = map.GetComponentInChildren<Civilization>().GetComponentInChildren<Ruins>().ruins;
-        float shortest_distance = Mathf.Infinity;
-        Transform nearest_target = null;
-
-        foreach (var _target in _ruins)
-        {
-            float to_enemy = Vector3.Distance(transform.position, _target.transform.position);
-            if (to_enemy < shortest_distance)
-            {
-                shortest_distance = to_enemy;
-                nearest_target = _target.transform;
-            }
-        }
-
-        if (nearest_target != null)
-        {
-            destination = nearest_target;
-        }
-        else
-        {
-            destination = null;
-        }
-
-        return destination;
+        destination = point;
+        agent.SetDestination(destination);
     }
 
-
-    public Vector3 GetPointOfContact()
-    {
-        return point_of_contact;
-    }
 
     // private
 
 
     private void AttackInMelee()
     {
-        holding = true;
 
-        if (current_haste > 0) {
-            current_haste--;
-            return;
-        }
-
-        Health health = destination.gameObject.GetComponent<Health>();
-        health.LoseHealth(1);
-
-        current_haste = starting_haste;
     }
 
 
     private void AttackAtRange()
     {
-        holding = true;
-        //GameObject projectile = Instantiate(ranged_attack_weapon, ranged_attack_origin.position, ranged_attack_weapon.transform.rotation);
-        //Projectile _projectile = projectile.GetComponent<Projectile>();
-        //_projectile.transform.LookAt(target.transform);
-        //_projectile.transform.rotation *= Quaternion.Euler(90, 0, 0);
 
-        //if (current_haste > 0)
-        //{
-        //    current_haste -= 1;
-        //    return;
-        //}
-
-        //if (_projectile != null && target != null)
-        //{
-        //    _projectile.Seek(target.transform);
-        //}
-
-        //current_haste = starting_haste;
     }
 
 
     private void EvaluateAttacks()
     {
-        if (destination == null) return;
 
-        float to_enemy = Vector3.Distance(transform.position, destination.position);
-
-        if (to_enemy <= ranged_attack_range)
-        {
-            AttackAtRange();
-        }
-        else if (to_enemy <= melee_attack_range)
-        {
-            AttackInMelee();
-        }
     }
 
 
     private void Move()
     {
-        if (destination != null) {
-            agent.SetDestination(destination.position);
-        }
-        else {
-            holding = true;
-        }
+
     }
 }

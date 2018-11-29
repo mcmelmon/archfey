@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Conflict : MonoBehaviour {
 
@@ -18,30 +19,12 @@ public class Conflict : MonoBehaviour {
 
     private void Start()
     {
+        CreateNavigationMesh();
         Hajime();
     }
 
 
     // public
-
-
-    public Vector3 ClearSpawn(Vector3 point, GameObject actor)
-    {
-        // TODO: The sphere collider appears to be preventing other objects from coming too
-        // close, so this isn't necessary... yet.  I am skeptical.
-
-        Vector3 contact;
-        Actor _actor = actor.GetComponent<Actor>();
-
-        if (_actor != null) {
-            contact = _actor.GetPointOfContact();
-            if (contact != Vector3.zero) {
-                Debug.Log("In contact");
-            }
-        }
-
-        return point;
-    }
 
 
     public Map GetMap()
@@ -55,6 +38,12 @@ public class Conflict : MonoBehaviour {
     private void OnValidate()
     {
         if (faction_size > 30) faction_size = 30;
+    }
+
+
+    private void CreateNavigationMesh()
+    {
+        GetComponentInChildren<NavMeshSurface>().BuildNavMesh();
     }
 
 

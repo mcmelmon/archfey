@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class Offense : MonoBehaviour 
 {
-
-    Queue<GameObject> aggressors = new Queue<GameObject>();
-    readonly List<GameObject> deployed = new List<GameObject>();
     readonly Dictionary<string, Circle> attack_circles = new Dictionary<string, Circle>();
+    readonly List<GameObject> deployed = new List<GameObject>();
+
     Dictionary<string, Circle> ruin_circles = new Dictionary<string, Circle>();
     Geography geography;
+
+    Queue<GameObject> aggressors = new Queue<GameObject>();
+    List<GameObject> scouts = new List<GameObject>();
+    List<GameObject> strikers = new List<GameObject>();
+    List<GameObject> heavies = new List<GameObject>();
 
     // Unity
 
@@ -40,6 +44,7 @@ public class Offense : MonoBehaviour
         aggressors = _aggressors;
         Locate();
         Deploy();
+        Scout();
     }
 
 
@@ -59,19 +64,19 @@ public class Offense : MonoBehaviour
                 case "primary":
                     for (int i = 0; i < 12; i++)
                     {
-                        Spawn(keyValue.Value.RandomContainedPoint(), offense_parent.transform);
+                        heavies.Add( Spawn(keyValue.Value.RandomContainedPoint(), offense_parent.transform) );
                     }
                     break;
                 case "secondary":
                     for (int i = 0; i < 5; i++)
                     {
-                        Spawn(keyValue.Value.RandomContainedPoint(), offense_parent.transform);
+                        strikers.Add( Spawn(keyValue.Value.RandomContainedPoint(), offense_parent.transform) );
                     }
                     break;
                 case "tertiary":
                     for (int i = 0; i < 3; i++)
                     {
-                        Spawn(keyValue.Value.RandomContainedPoint(), offense_parent.transform);
+                        scouts.Add( Spawn(keyValue.Value.RandomContainedPoint(), offense_parent.transform) );
                     }
                     break;
             }
@@ -121,12 +126,22 @@ public class Offense : MonoBehaviour
     }
 
 
-    private void Spawn(Vector3 point, Transform offense_parent)
+    private void Scout()
+    {
+        foreach (var scout in scouts)
+        {
+            scout.GetComponent<Actor>().SetDestination(geography.GetCenter());
+        }
+    }
+
+
+    private GameObject Spawn(Vector3 point, Transform offense_parent)
     {
         GameObject _aggressor = aggressors.Dequeue();
         _aggressor.transform.position = point;
         _aggressor.transform.parent = offense_parent;
         _aggressor.SetActive(true);
         deployed.Add(_aggressor);
+        return _aggressor;
     }
 }

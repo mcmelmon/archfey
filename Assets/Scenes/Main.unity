@@ -144,7 +144,6 @@ Transform:
   - {fileID: 1942554469}
   - {fileID: 1108985627}
   - {fileID: 657341630}
-  - {fileID: 1820443084}
   m_Father: {fileID: 1477133919}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -532,7 +531,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1820443084}
   m_Father: {fileID: 1477133919}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -608,7 +608,6 @@ MonoBehaviour:
   ruin_prefab: {fileID: 114188019553596920, guid: 1e23d15d78b024e7a944e59d822aab57,
     type: 2}
   ruins: []
-  ruin_is_close: 12
 --- !u!4 &1345618518
 Transform:
   m_ObjectHideFlags: 0
@@ -718,7 +717,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.16666667
+  m_VoxelSize: 0.33333334
   m_BuildHeightMesh: 0
   m_NavMeshData: {fileID: 0}
 --- !u!4 &1820443084
@@ -731,8 +730,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 370547028}
-  m_RootOrder: 3
+  m_Father: {fileID: 1154486184}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1942554468
 GameObject:
