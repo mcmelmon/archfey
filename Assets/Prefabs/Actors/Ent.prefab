@@ -19,7 +19,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4071356417606092}
-  m_Layer: 0
+  m_Layer: 26
   m_Name: RangedAttackOrigin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -37,9 +37,7 @@ GameObject:
   - component: {fileID: 193346730982068004}
   - component: {fileID: 33413509336958334}
   - component: {fileID: 23528780234405162}
-  - component: {fileID: 114781482321772332}
-  - component: {fileID: 114368880420779018}
-  m_Layer: 0
+  m_Layer: 26
   m_Name: Ent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -116,35 +114,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1320874998648350}
   m_Mesh: {fileID: 43276687269741700, guid: cd8d55f494bd4434cade770ab7e6b381, type: 2}
---- !u!114 &114368880420779018
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1320874998648350}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00f97da34dc604f9db24efd8a75f7a58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  long_range: 35
-  turning: 100
-  attack: 1
-  starting_haste: 100
-  ranged_attack_weapon: {fileID: 1992146552763668, guid: 8bf21f678538442038e3f94ca5d3645a,
-    type: 2}
-  ranged_attack_origin: {fileID: 4071356417606092}
---- !u!114 &114781482321772332
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1320874998648350}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5bf10cdea1344482e91a4f2b58506b77, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!193 &193346730982068004
 Tree:
   m_ObjectHideFlags: 1

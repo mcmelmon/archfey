@@ -44,7 +44,18 @@ public class Offense : MonoBehaviour
         aggressors = _aggressors;
         Locate();
         Deploy();
-        Scout();
+    }
+
+
+    public Dictionary<string, Circle> GetAttackCircles()
+    {
+        return attack_circles;
+    }
+
+
+    public Dictionary<string, Circle> GetRuinCircles()
+    {
+        return ruin_circles;
     }
 
 
@@ -54,7 +65,8 @@ public class Offense : MonoBehaviour
     private void Deploy()
     {
         GameObject offense_parent = new GameObject();
-        offense_parent.name = "Offense";
+        offense_parent.name = "Attack";
+        offense_parent.AddComponent<Attack>();
         offense_parent.transform.parent = transform;
 
         foreach (KeyValuePair<string, Circle> keyValue in attack_circles)
@@ -76,7 +88,9 @@ public class Offense : MonoBehaviour
                 case "tertiary":
                     for (int i = 0; i < 3; i++)
                     {
-                        scouts.Add( Spawn(keyValue.Value.RandomContainedPoint(), offense_parent.transform) );
+                        GameObject _scout = Spawn(keyValue.Value.RandomContainedPoint(), offense_parent.transform);
+                        _scout.AddComponent<Scout>();
+                        scouts.Add(_scout);
                     }
                     break;
             }
@@ -123,15 +137,6 @@ public class Offense : MonoBehaviour
         Vector3 circle_center = geography.PointBetween(geography.RandomBorderLocation(), geography.GetCenter(), distance_from_edge_percent, grounded);
 
         attack_circles["tertiary"] = attack_circle.Inscribe(circle_center, 5f);
-    }
-
-
-    private void Scout()
-    {
-        foreach (var scout in scouts)
-        {
-            scout.GetComponent<Actor>().SetDestination(geography.GetCenter());
-        }
     }
 
 

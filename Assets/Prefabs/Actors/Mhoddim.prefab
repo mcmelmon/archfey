@@ -27,9 +27,9 @@ GameObject:
   - component: {fileID: 114356980778237652}
   - component: {fileID: 114669221061675160}
   - component: {fileID: 114736850986846170}
-  m_Layer: 0
+  m_Layer: 26
   m_Name: Mhoddim
-  m_TagString: Enemy
+  m_TagString: Actor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

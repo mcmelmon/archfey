@@ -17,6 +17,7 @@ public class Actor : MonoBehaviour {
     {
         agent = GetComponent<NavMeshAgent>();
         destination = Vector3.zero;
+        if (GetComponent<SphereCollider>() == null) AddSenses();
     }
 
 
@@ -35,6 +36,12 @@ public class Actor : MonoBehaviour {
     // public
 
 
+    public void Move()
+    {
+
+    }
+
+
     public void SetDestination(Vector3 point) 
     {
         destination = point;
@@ -43,6 +50,13 @@ public class Actor : MonoBehaviour {
 
 
     // private
+
+
+    private void AddSenses()
+    {
+        transform.gameObject.AddComponent<Senses>();
+        GetComponent<SphereCollider>().isTrigger = true;
+    }
 
 
     private void AttackInMelee()
@@ -58,12 +72,6 @@ public class Actor : MonoBehaviour {
 
 
     private void EvaluateAttacks()
-    {
-
-    }
-
-
-    private void Move()
     {
 
     }

@@ -5,9 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Waypoint
-  - Enemy
   - Node
   - Installation
+  - Actor
   layers:
   - Default
   - TransparentFX
@@ -35,7 +35,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - Faction
   - 
   - 
   - 

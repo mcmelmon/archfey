@@ -27,9 +27,9 @@ GameObject:
   - component: {fileID: 114694588726356082}
   - component: {fileID: 114139611233692798}
   - component: {fileID: 114551666208405138}
-  m_Layer: 0
+  m_Layer: 26
   m_Name: Fey
-  m_TagString: Enemy
+  m_TagString: Actor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

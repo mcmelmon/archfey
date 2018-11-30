@@ -46,7 +46,8 @@ public class Defense : MonoBehaviour
     private void Deploy()
     {
         GameObject defense_parent = new GameObject();
-        defense_parent.name = "Defense";
+        defense_parent.name = "Defend";
+        defense_parent.AddComponent<Defend>();
         defense_parent.transform.parent = transform;
 
         foreach (KeyValuePair<string, Circle> keyValue in ruin_circles)

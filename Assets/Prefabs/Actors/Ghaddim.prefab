@@ -27,9 +27,9 @@ GameObject:
   - component: {fileID: 114495797075432720}
   - component: {fileID: 114399145179561114}
   - component: {fileID: 114127286258734026}
-  m_Layer: 0
+  m_Layer: 26
   m_Name: Ghaddim
-  m_TagString: Enemy
+  m_TagString: Actor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
