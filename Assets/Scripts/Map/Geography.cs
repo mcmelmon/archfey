@@ -46,7 +46,7 @@ public class Geography : MonoBehaviour {
     }
 
 
-    public Vector3 FaceTowardLocation(Vector3 _from, Vector3 _to)
+    public Vector3 TowardLocation(Vector3 _from, Vector3 _to)
     {
         return _to - _from;
     }
@@ -109,7 +109,7 @@ public class Geography : MonoBehaviour {
 
     public Vector3 PointBetween(Vector3 _from, Vector3 _to, float step_percentage, bool grounded)
     {
-        Vector3 heading = FaceTowardLocation(_from, _to);
+        Vector3 heading = TowardLocation(_from, _to);
         if (grounded) heading.y = 0;
         float distance = heading.magnitude * step_percentage;
         return distance * Vector3.Normalize(_to - _from) + _from;
