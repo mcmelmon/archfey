@@ -229,14 +229,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07343df19ca64406b915afdf78876558, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agent: {fileID: 0}
-  first_point: {fileID: 1049067056}
-  second_point: {fileID: 2030518308}
-  to_first: {x: 0, y: 0, z: 0}
-  to_second: {x: 0, y: 0, z: 0}
-  start_rotation: {x: 0, y: 0, z: 0, w: 0}
-  update_rotation: {x: 0, y: 0, z: 0, w: 0}
-  my_target: {x: 0, y: 0, z: 0}
+  target: {fileID: 2030518308}
 --- !u!65 &1150473733
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -298,7 +291,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1150473731}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -242, y: 0, z: 352}
   m_LocalScale: {x: 1, y: 1, z: 4}
   m_Children:
   - {fileID: 1672566852}
