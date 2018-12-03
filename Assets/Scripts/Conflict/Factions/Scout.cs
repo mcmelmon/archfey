@@ -7,6 +7,9 @@ public class Scout : MonoBehaviour {
     Geography geography;
     Attack offense;
     Defend defense;
+    readonly float sense_radius = 40f;
+    Route my_route;
+
 
     // Unity
 
@@ -15,62 +18,93 @@ public class Scout : MonoBehaviour {
         geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();
         offense = GetComponentInParent<Attack>();
         defense = GetComponentInParent<Defend>();
-        GetComponent<Senses>().radius = 40f;
+        GetComponent<Senses>().radius = sense_radius;
     }
 
 
     private void Start () {
-        ChooseObjective();
+        EstablishRoute();
     }
 
 
-    private void Update () {
-		
-	}
+    private void Update () 
+    {
+        if (my_route.ReachedCurrentVertex(transform.position)) ExploreMap();
+    }
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position, transform.TransformDirection(Vector3.forward * 100));
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawRay(transform.position, (my_route.current_vertex - transform.position));
+    }
 
     // private
 
 
-    private void ChooseObjective()
+    private void EstablishRoute()
     {
-        if (defense == null && offense != null) {  // attacker; also, not a Fey
-            float to_edge = Mathf.Infinity;
-            string nearest_edge = "";
+        Circle exploration_circle = Circle.CreateCircle(geography.GetCenter(), (geography.GetResolution() / 2f) - (sense_radius / 2f), 18);
+        my_route = Route.CreateRoute(exploration_circle.VertexClosestTo(transform.position), exploration_circle);
 
-            Dictionary<string, float> distances = geography.DistanceToEdges(transform.position);
-            foreach (KeyValuePair<string, float> keyValue in distances)
-            {
-                if (keyValue.Value <= to_edge) {
-                    to_edge = keyValue.Value;
-                    nearest_edge = keyValue.Key;
-                } 
-            }
-
-            MoveAwayFromPrimary(geography.GetBorder(nearest_edge));
-        }
+        GetComponentInParent<Actor>().Move(my_route.current_vertex);
     }
 
-    private void MoveAwayFromPrimary(Vector3[] nearest_edge)
+
+    private void ExploreMap()
     {
-        Vector3 primary_center = GetComponentInParent<Offense>().GetAttackCircles()["primary"].center;
-        Vector3 first_vertex = nearest_edge[0];
-        Vector3 second_vertex = nearest_edge[1];
-        Vector3 corner, destination;
-        
-        if ( Vector3.Distance(primary_center, first_vertex) > Vector3.Distance(primary_center, second_vertex) ) {
-            corner = nearest_edge[0];
+        my_route.SetNextVertex(true);
+        GetComponentInParent<Actor>().Move(my_route.current_vertex);
+    }
+}
+
+
+class Route
+{
+    public Circle path;
+    public Vector3 starting_vertex;
+    public Vector3 current_vertex;
+    public bool completed;
+    public bool clockwise;
+
+    public static Route CreateRoute(Vector3 start, Circle circle)
+    {
+        Route route = new Route();
+        route.path = circle;
+        route.starting_vertex = start;
+        route.current_vertex = start;
+        route.completed = false;
+        route.clockwise = (Random.Range(0, 1f) > .5f) ? true : false;
+
+        return route;
+    }
+
+    public bool ReachedCurrentVertex(Vector3 current_location)
+    {
+        return (Vector3.Distance(current_vertex, current_location) < 4f) ? true : false;
+    }
+
+
+    public void SetNextVertex(bool looping)
+    {
+        if (!looping && completed) return;
+        int next_index;
+
+        int index = path.vertices.IndexOf(current_vertex);
+        if (clockwise)
+        {
+            next_index = ((index - 1) + (path.vertex_count)) % (path.vertex_count);
         } else {
-            corner = nearest_edge[1];
+            next_index = (index + 1) % (path.vertex_count);
+        }
+        Vector3 next_vertex = path.vertices[next_index];
+
+        if (next_vertex == starting_vertex){
+            completed = true;
         }
 
-        destination = geography.PointBetween(corner, geography.GetCenter(), .1f, true);
-        destination.y = 0;
-
-        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        cube.name = "Destination";
-        cube.transform.position = destination;
-
-        GetComponentInParent<Actor>().Move(destination);
+        current_vertex = next_vertex;
     }
 }
