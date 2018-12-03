@@ -109,34 +109,34 @@ public class Offense : MonoBehaviour
 
     public void LocatePrimaryAttack()
     {
-        Circle attack_circle = new Circle();
         float distance_from_edge_percent = 0.15f;
         bool grounded = true;
         Vector3 circle_center = geography.PointBetween(geography.RandomBorderLocation(), geography.GetCenter(), distance_from_edge_percent, grounded);
+        Circle attack_circle = Circle.CreateCircle(circle_center, 10f);
 
-        attack_circles["primary"] = attack_circle.Inscribe(circle_center, 10f);
+        attack_circles["primary"] = attack_circle;
     }
 
 
     public void LocateSecondaryAttack()
     {
-        Circle attack_circle = new Circle();
         float distance_from_edge_percent = 0.1f;
         bool grounded = true;
         Vector3 circle_center = geography.PointBetween(geography.RandomBorderLocation(), geography.GetCenter(), distance_from_edge_percent, grounded);
+        Circle attack_circle = Circle.CreateCircle(circle_center, 5f);
 
-        attack_circles["secondary"] = attack_circle.Inscribe(circle_center, 5f);
+        attack_circles["secondary"] = attack_circle;
     }
 
 
     public void LocateTertiaryAttack()
     {
-        Circle attack_circle = new Circle();
         float distance_from_edge_percent = 0.1f;
         bool grounded = true;
         Vector3 circle_center = geography.PointBetween(geography.RandomBorderLocation(), geography.GetCenter(), distance_from_edge_percent, grounded);
+        Circle attack_circle = Circle.CreateCircle(circle_center, 5f);
 
-        attack_circles["tertiary"] = attack_circle.Inscribe(circle_center, 5f);
+        attack_circles["tertiary"] = attack_circle;
     }
 
 

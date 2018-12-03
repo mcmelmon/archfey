@@ -117,31 +117,31 @@ public class Ruins : MonoBehaviour {
 
     private void LocatePrimaryRuinComplex()
     {
-        Circle spawn_circle = new Circle();
         float distance_from_edge = 100f;
         Vector3 circle_center = geography.RandomLocation(distance_from_edge);
+        Circle spawn_circle = Circle.CreateCircle(circle_center, 40f);
 
-        ruin_circles["primary"] = spawn_circle.Inscribe(circle_center, 40f);
+        ruin_circles["primary"] = spawn_circle;
     }
 
 
     private void LocateSecondaryRuinComplex()
     {
-        Circle spawn_circle = new Circle();
         float distance_from_edge = 80f;
         Vector3 circle_center = geography.RandomLocation(distance_from_edge);
+        Circle spawn_circle = Circle.CreateCircle(circle_center, 20f);
 
-        ruin_circles["secondary"] = spawn_circle.Inscribe(circle_center, 20f);
+        ruin_circles["secondary"] = spawn_circle;
     }
 
 
     private void LocateTertiaryRuinComplex()
     {
-        Circle spawn_circle = new Circle();
         float distance_from_edge = 80f;
         Vector3 circle_center = geography.RandomLocation(distance_from_edge);
+        Circle spawn_circle = Circle.CreateCircle(circle_center, 12f);
 
-        ruin_circles["tertiary"] = spawn_circle.Inscribe(circle_center, 12f);
+        ruin_circles["tertiary"] = spawn_circle;
     }
 
 

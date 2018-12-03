@@ -11,20 +11,23 @@ public class Circle {
     public float theta = 0f;
     public float delta_theta;
 
-    public Circle Inscribe(Vector3 _center, float _radius)
-    {
-        center = _center;
-        radius = _radius;
-        delta_theta = (2f * Mathf.PI) / vertex_count;
 
-        for (int i = 0; i < vertex_count; i++)
+    public static Circle CreateCircle(Vector3 center, float radius)
+    {
+        Circle _circle = new Circle();
+        _circle.center = center;
+        _circle.radius = radius;
+
+        _circle.delta_theta = (2f * Mathf.PI) / _circle.vertex_count;
+
+        for (int i = 0; i < _circle.vertex_count; i++)
         {
-            Vector3 vertex = new Vector3(radius * Mathf.Cos(theta), 0f, radius * Mathf.Sin(theta));
-            vertices.Add(center + vertex);
-            theta += delta_theta;
+            Vector3 vertex = new Vector3(radius * Mathf.Cos(_circle.theta), 0f, radius * Mathf.Sin(_circle.theta));
+            _circle.vertices.Add(center + vertex);
+            _circle.theta += _circle.delta_theta;
         }
 
-        return this;
+        return _circle;
     }
 
 

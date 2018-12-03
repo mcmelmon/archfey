@@ -154,8 +154,7 @@ public class Geography : MonoBehaviour {
     public Vector3 RandomLocation(float distance_from_edge)
     {
         Vector3 point = Vector3.zero;
-        Circle extent = new Circle();
-        extent.Inscribe(GetCenter(), (terrain_data.heightmapResolution / 2) - distance_from_edge);
+        Circle extent = Circle.CreateCircle(GetCenter(), (terrain_data.heightmapResolution / 2) - distance_from_edge);
         return extent.RandomContainedPoint();
     }
 

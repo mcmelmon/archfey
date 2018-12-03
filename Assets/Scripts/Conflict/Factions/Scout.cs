@@ -20,7 +20,7 @@ public class Scout : MonoBehaviour {
 
 
     private void Start () {
-        ChoosePath();
+        ChooseObjective();
     }
 
 
@@ -31,9 +31,10 @@ public class Scout : MonoBehaviour {
 
     // private
 
-    private void ChoosePath()
+
+    private void ChooseObjective()
     {
-        if (defense == null && offense != null) {  // attacker; not a Fey
+        if (defense == null && offense != null) {  // attacker; also, not a Fey
             float to_edge = Mathf.Infinity;
             string nearest_edge = "";
 
@@ -64,7 +65,12 @@ public class Scout : MonoBehaviour {
         }
 
         destination = geography.PointBetween(corner, geography.GetCenter(), .1f, true);
+        destination.y = 0;
 
-        GetComponentInParent<Actor>().SetDestination(destination);
+        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        cube.name = "Destination";
+        cube.transform.position = destination;
+
+        GetComponentInParent<Actor>().Move(destination);
     }
 }
