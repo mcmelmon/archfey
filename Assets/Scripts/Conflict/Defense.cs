@@ -81,6 +81,7 @@ public class Defense : MonoBehaviour
     {
         GameObject _defender = defenders.Dequeue();
         _defender.transform.position = point;
+        _defender.AddComponent<Defend>();
         _defender.transform.parent = defense_parent;
         _defender.SetActive(true);
         deployed.Add(_defender);

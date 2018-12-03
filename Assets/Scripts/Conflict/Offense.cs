@@ -144,6 +144,7 @@ public class Offense : MonoBehaviour
     {
         GameObject _aggressor = aggressors.Dequeue();
         _aggressor.transform.position = point;
+        _aggressor.AddComponent<Attack>();
         _aggressor.transform.parent = offense_parent;
         _aggressor.SetActive(true);
         deployed.Add(_aggressor);

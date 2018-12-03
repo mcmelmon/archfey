@@ -8,6 +8,7 @@ public class Movement : MonoBehaviour {
     NavMeshAgent agent;
     GameObject wisp;
 
+    // TODO: Movement should take route management duties from Scout
 
     // Unity
 
@@ -19,16 +20,7 @@ public class Movement : MonoBehaviour {
 
 	
 	void Update () {
-        //if (wisp != null) {
-        //    if (Vector3.Distance(transform.position, wisp.transform.position) > 5f)
-        //    {
-        //        agent.SetDestination(wisp.transform.position);
-        //    }
-        //    else
-        //    {
-        //        agent.ResetPath();
-        //    }
-        //}
+
 	}
 
 
@@ -38,11 +30,5 @@ public class Movement : MonoBehaviour {
     public void MoveToward(Vector3 objective)
     {
         agent.SetDestination(objective);
-
-        //if (wisp == null)
-        //{
-        //    wisp = Wisp.CallWisp(transform);
-        //    wisp.GetComponent<Wisp>().FindPath(objective);
-        //}
     }
 }

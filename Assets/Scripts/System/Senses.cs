@@ -17,16 +17,45 @@ public class Senses : MonoBehaviour {
     }
 
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        foreach (var sighting in sightings)
+        {
+            Gizmos.DrawRay(transform.position, (sighting.transform.position - transform.position));
+        }
+    }
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Actor" && other.GetComponent<Actor>().Friend())
+        {
+            RecordSighting(other.gameObject);
+        }
+    }
+
+
     private void Start()
     {
         GetComponent<SphereCollider>().radius = radius;
     }
 
-    private void OnTriggerEnter(Collider other)
+
+    private void Update()
     {
-        if (other.gameObject.tag == "Actor" ) 
+        PruneSightings();
+    }
+
+
+    // private
+
+
+    public void RecordSighting(GameObject sighting)
+    {
+        if (!sightings.Contains(sighting))
         {
-            RecordSighting(other.gameObject);
+            sightings.Add(sighting);
         }
     }
 
@@ -34,10 +63,20 @@ public class Senses : MonoBehaviour {
     // private
 
 
-    private void RecordSighting(GameObject sighting)
+    private void PruneSightings()
     {
-        if (!sightings.Contains(sighting)) {
-            sightings.Add(sighting);
+        List<int> prunings = new List<int>();
+
+        foreach (var sighting in sightings)
+        {
+            if (Vector3.Distance(sighting.transform.position, transform.position) > 40f) {
+                prunings.Add(sightings.IndexOf(sighting));
+            }
+        }
+
+        foreach (var index in prunings)
+        {
+            sightings.RemoveAt(index);
         }
     }
 }
