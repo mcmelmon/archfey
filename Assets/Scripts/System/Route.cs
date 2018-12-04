@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// TODO: make this less specific to Scouts
+
 class Route
 {
     public Circle path;
@@ -9,6 +11,16 @@ class Route
     public Vector3 current_vertex;
     public bool completed;
     public bool clockwise;
+
+
+    public void ContractRoute()
+    {
+        path.Redraw(path.center, path.radius * .7f, path.vertex_count);
+        completed = false;
+        current_vertex = path.VertexClosestTo(current_vertex);
+        starting_vertex = current_vertex;
+    }
+
 
     public static Route CreateRoute(Vector3 start, Circle circle)
     {
@@ -24,11 +36,11 @@ class Route
 
     public bool ReachedCurrentVertex(Vector3 current_location)
     {
-        return (Vector3.Distance(current_vertex, current_location) < 4f) ? true : false;
+        return (Vector3.Distance(current_vertex, current_location) < 8f) ? true : false;
     }
 
 
-    public void SetNextVertex(bool looping)
+    public void SetNextVertex(bool looping = false)
     {
         if (!looping && completed) return;
         int next_index;
@@ -36,11 +48,11 @@ class Route
         int index = path.vertices.IndexOf(current_vertex);
         if (clockwise)
         {
-            next_index = ((index - 1) + (path.vertex_count)) % (path.vertex_count);
+            next_index = ((index - 1) + (path.vertex_count)) % path.vertex_count;
         }
         else
         {
-            next_index = (index + 1) % (path.vertex_count);
+            next_index = (index + 1) % path.vertex_count;
         }
         Vector3 next_vertex = path.vertices[next_index];
 

@@ -29,9 +29,12 @@ public class Senses : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Actor" && other.GetComponent<Actor>().Friend())
+        if (other.gameObject.tag == "Actor")
         {
-            RecordSighting(other.gameObject);
+            if (GetComponent<Defend>() == null && other.GetComponent<Defend>() != null)
+            {
+                RecordSighting(other.gameObject);
+            }
         }
     }
 
@@ -53,10 +56,7 @@ public class Senses : MonoBehaviour {
 
     public void RecordSighting(GameObject sighting)
     {
-        if (!sightings.Contains(sighting))
-        {
-            sightings.Add(sighting);
-        }
+        if (!sightings.Contains(sighting)) sightings.Add(sighting);
     }
 
 

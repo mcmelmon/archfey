@@ -12,6 +12,9 @@ public class Circle {
     public float delta_theta;
 
 
+    // public
+
+
     public static Circle CreateCircle(Vector3 center, float radius, int vertices = 12, bool draw_vertices = false)
     {
         Circle _circle = new Circle();
@@ -62,6 +65,19 @@ public class Circle {
 
         return nearest;
     }
+
+
+    public void Redraw(Vector3 _center, float _radius, int _vertex_count = 12, bool draw_vertices = false)
+    {
+        center = _center;
+        radius = _radius;
+        vertex_count = _vertex_count;
+        vertices.Clear();
+        Draw(draw_vertices);
+    }
+
+
+    // private
 
 
     private void Draw(bool draw_vertices)

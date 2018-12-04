@@ -38,27 +38,44 @@ public class Scout : MonoBehaviour {
 
     private void Update () 
     {
-        if (my_route.ReachedCurrentVertex(transform.position)) ExploreMap();
+        if (ReachedGoal()) ExploreMap();
+        if (FinishedPath()) ContractRoute();
     }
 
 
     // private
 
 
+    private void ContractRoute()
+    {
+        my_route.ContractRoute();
+        actor.Move(my_route.current_vertex);
+    }
+
+
     private void EstablishRoute()
     {
-        if (actor.GetAttackTransform() != null)
-        {
-            Circle exploration_circle = Circle.CreateCircle(geography.GetCenter(), (geography.GetResolution() / 2f) - (sense_radius / 2f), 18);
-            my_route = Route.CreateRoute(exploration_circle.VertexClosestTo(transform.position), exploration_circle);
-            actor.Move(my_route.current_vertex);
-        }
+        Circle exploration_circle = Circle.CreateCircle(geography.GetCenter(), (geography.GetResolution() / 2f) - sense_radius, 18);
+        my_route = Route.CreateRoute(exploration_circle.VertexClosestTo(transform.position), exploration_circle);
+        actor.Move(my_route.current_vertex);
     }
 
 
     private void ExploreMap()
     {
-        my_route.SetNextVertex(true);
+        my_route.SetNextVertex();
         actor.Move(my_route.current_vertex);
+    }
+
+
+    private bool FinishedPath()
+    {
+        return my_route.completed;
+    }
+
+
+    private bool ReachedGoal()
+    {
+        return my_route.ReachedCurrentVertex(transform.position);
     }
 }

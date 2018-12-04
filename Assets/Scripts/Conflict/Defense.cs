@@ -38,7 +38,12 @@ public class Defense : MonoBehaviour
         ruin_circles = GetComponentInParent<World>().GetComponentInChildren<Ruins>().GetOrCreateRuinCircles();
         Deploy();
     }
+                
 
+    public List<GameObject> GetDeployed()
+    {
+        return deployed;
+    }
 
     // private
 
@@ -82,6 +87,7 @@ public class Defense : MonoBehaviour
         GameObject _defender = defenders.Dequeue();
         _defender.transform.position = point;
         _defender.AddComponent<Defend>();
+        _defender.tag = "Defense";
         _defender.transform.parent = defense_parent;
         _defender.SetActive(true);
         deployed.Add(_defender);
