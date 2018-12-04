@@ -25,11 +25,12 @@ GameObject:
   - component: {fileID: 54145213560318138}
   - component: {fileID: 195628119734187222}
   - component: {fileID: 114495797075432720}
+  - component: {fileID: 114191208075042882}
   - component: {fileID: 114399145179561114}
   - component: {fileID: 114127286258734026}
-  m_Layer: 0
+  m_Layer: 26
   m_Name: Ghaddim
-  m_TagString: Enemy
+  m_TagString: Actor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -115,7 +116,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 843f0e01e2c994a8e9abea9a484d8a9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destination: {x: 0, y: 0, z: 0}
+--- !u!114 &114191208075042882
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1837594824673670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 523d3699de28f40c0a43cd80e27c15a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114399145179561114
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -141,7 +152,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35e4f71a8c43f4146a37679b0f8a756d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destination: {x: 0, y: 0, z: 0}
 --- !u!136 &136051218736860880
 CapsuleCollider:
   m_ObjectHideFlags: 1
@@ -164,7 +174,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 4
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120

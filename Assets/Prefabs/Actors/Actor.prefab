@@ -25,10 +25,11 @@ GameObject:
   - component: {fileID: 54176829473299802}
   - component: {fileID: 195258252824600532}
   - component: {fileID: 114622511376475628}
+  - component: {fileID: 114305065716879510}
   - component: {fileID: 114565898830616680}
-  m_Layer: 0
+  m_Layer: 26
   m_Name: Actor
-  m_TagString: Enemy
+  m_TagString: Actor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -103,6 +104,17 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
+--- !u!114 &114305065716879510
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1690649058592984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 523d3699de28f40c0a43cd80e27c15a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114565898830616680
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -128,7 +140,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35e4f71a8c43f4146a37679b0f8a756d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destination: {x: 0, y: 0, z: 0}
 --- !u!136 &136865368129096052
 CapsuleCollider:
   m_ObjectHideFlags: 1
@@ -151,7 +162,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 4
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120

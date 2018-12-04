@@ -71,6 +71,7 @@ public class Conflict : MonoBehaviour {
 
             Mhoddim _mhoddim = Instantiate(mhoddim_prefab, mhoddim_prefab.transform.position, mhoddim_prefab.transform.rotation, transform);
             _mhoddim.transform.gameObject.SetActive(false);
+            _mhoddim.tag = "Mhoddim";
             mhoddim.Enqueue(_mhoddim.gameObject);
         }
 
@@ -87,6 +88,7 @@ public class Conflict : MonoBehaviour {
 
             Ghaddim _ghaddim = Instantiate(ghaddim_prefab, mhoddim_prefab.transform.position, mhoddim_prefab.transform.rotation, transform);
             _ghaddim.transform.gameObject.SetActive(false);
+            _ghaddim.tag = "Ghaddim";
             ghaddim.Enqueue(_ghaddim.gameObject);
         }
 

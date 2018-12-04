@@ -46,9 +46,41 @@ public class Geography : MonoBehaviour {
     }
 
 
-    public Vector3 FaceLocation(Vector3 _from, Vector3 _to)
+    public Vector3 TowardLocation(Vector3 _from, Vector3 _to)
     {
         return _to - _from;
+    }
+
+
+    public Vector3[] GetBorder(string cardinal)
+    {
+        Vector3[] border = new Vector3[2];
+        float resolution = terrain.terrainData.heightmapResolution;
+
+        switch (cardinal){
+            case "north":
+                border[0] = new Vector3(0, 0, resolution);
+                border[1] = new Vector3(resolution, 0, resolution);
+                break;
+            case "east":
+                border[0] = new Vector3(resolution, 0, resolution); ;
+                border[1] = new Vector3(resolution, 0, 0);
+                break;
+            case "south":
+                border[0] = new Vector3(resolution, 0, 0);
+                border[1] = new Vector3(0, 0, 0);
+                break;
+            case "west":
+                border[0] = new Vector3(0, 0, 0);
+                border[1] = new Vector3(0, 0, resolution);
+                break;
+            default:
+                border[0] = Vector3.zero;
+                border[1] = Vector3.zero;
+                break;
+        }
+
+        return border;
     }
 
 
@@ -77,7 +109,7 @@ public class Geography : MonoBehaviour {
 
     public Vector3 PointBetween(Vector3 _from, Vector3 _to, float step_percentage, bool grounded)
     {
-        Vector3 heading = FaceLocation(_from, _to);
+        Vector3 heading = TowardLocation(_from, _to);
         if (grounded) heading.y = 0;
         float distance = heading.magnitude * step_percentage;
         return distance * Vector3.Normalize(_to - _from) + _from;
@@ -122,8 +154,7 @@ public class Geography : MonoBehaviour {
     public Vector3 RandomLocation(float distance_from_edge)
     {
         Vector3 point = Vector3.zero;
-        Circle extent = new Circle();
-        extent.Inscribe(GetCenter(), (terrain_data.heightmapResolution / 2) - distance_from_edge);
+        Circle extent = Circle.CreateCircle(GetCenter(), (terrain_data.heightmapResolution / 2) - distance_from_edge);
         return extent.RandomContainedPoint();
     }
 

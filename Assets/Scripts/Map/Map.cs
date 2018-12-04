@@ -73,27 +73,14 @@ public class Map : MonoBehaviour {
     {
         // using a dictionary instead of list or array to ensure accurate lookup by edge name (e.g. "north")
 
-        float resolution = terrain.terrainData.heightmapResolution;
-        Vector3[] north = new Vector3[2], east = new Vector3[2], south = new Vector3[2], west = new Vector3[2], sky = new Vector3[2];
+        boundaries["north"] = geography.GetBorder("north");
+        boundaries["east"] = geography.GetBorder("east");
+        boundaries["south"] = geography.GetBorder("south");
+        boundaries["west"] = geography.GetBorder("west");
 
-        north[0]    = new Vector3(0, 0, resolution);
-        north[1]    = new Vector3(resolution, 0, resolution);
-        boundaries["north"] = north;
-
-        east[0]     = north[1];
-        east[1]     = new Vector3(resolution, 0, 0);
-        boundaries["east"] = east;
-
-        south[0]    = east[1];
-        south[1]    = new Vector3(0, 0, 0);
-        boundaries["south"] = south;
-
-        west[0]     = south[1];
-        west[1]     = north[0];
-        boundaries["west"] = west;
-
-        sky[0] = north[0];
-        sky[1] = south[0];
+        Vector3[] sky = new Vector3[2];
+        sky[0] = boundaries["north"][0];
+        sky[1] = boundaries["south"][0];
         boundaries["sky"] = sky;
 
         AddDirectionBoundaries();

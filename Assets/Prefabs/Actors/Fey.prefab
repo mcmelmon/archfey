@@ -25,11 +25,12 @@ GameObject:
   - component: {fileID: 54547099937082450}
   - component: {fileID: 195627049723346458}
   - component: {fileID: 114694588726356082}
+  - component: {fileID: 114440850736700250}
   - component: {fileID: 114139611233692798}
   - component: {fileID: 114551666208405138}
-  m_Layer: 0
+  m_Layer: 26
   m_Name: Fey
-  m_TagString: Enemy
+  m_TagString: Actor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -118,6 +119,17 @@ MonoBehaviour:
   starting_health: 1
   current_health: 0
   recovery_rate: 0
+--- !u!114 &114440850736700250
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1467454993613262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 523d3699de28f40c0a43cd80e27c15a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114551666208405138
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -140,7 +152,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35e4f71a8c43f4146a37679b0f8a756d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destination: {x: 0, y: 0, z: 0}
 --- !u!136 &136747664559137662
 CapsuleCollider:
   m_ObjectHideFlags: 1
@@ -163,7 +174,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 10
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120

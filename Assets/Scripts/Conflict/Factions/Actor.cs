@@ -1,22 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class Actor : MonoBehaviour {
 
-    public Vector3 destination;
-
-    NavMeshAgent agent;
     Dictionary<string, GameObject> senses = new Dictionary<string, GameObject>();
+    Movement mover;
+
 
     // Unity
 
 
     private void Awake()
     {
-        agent = GetComponent<NavMeshAgent>();
-        destination = Vector3.zero;
+        if (GetComponent<SphereCollider>() == null) AddSenses();
+        mover = GetComponent<Movement>();
     }
 
 
@@ -35,36 +33,24 @@ public class Actor : MonoBehaviour {
     // public
 
 
-    public void SetDestination(Vector3 point) 
+    public void Attack()
     {
-        destination = point;
-        agent.SetDestination(destination);
+
+    }
+
+
+    public void Move(Vector3 objective)
+    {
+        mover.MoveToward(objective);
     }
 
 
     // private
 
 
-    private void AttackInMelee()
+    private void AddSenses()
     {
-
-    }
-
-
-    private void AttackAtRange()
-    {
-
-    }
-
-
-    private void EvaluateAttacks()
-    {
-
-    }
-
-
-    private void Move()
-    {
-
+        transform.gameObject.AddComponent<Senses>();
+        GetComponent<SphereCollider>().isTrigger = true;
     }
 }
