@@ -1,81 +1,95 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Scout : MonoBehaviour {
 
     Geography geography;
-    Actor actor;
-    Senses senses;
+    Mhoddim mhoddim;
+    Ghaddim ghaddim;
+    Attack attack;
+    Defend defend;
+    Movement movement;
+    readonly Senses senses;
     readonly float sense_radius = 40f;
-    Route my_route;
-
 
     // Unity
 
     private void Awake()
     {
         geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();
-        actor = GetComponent<Actor>();
+        mhoddim = GetComponent<Mhoddim>();
+        ghaddim = GetComponent<Ghaddim>();
+        attack = GetComponent<Attack>();
+        defend = GetComponent<Defend>();
+        movement = GetComponent<Movement>();
         GetComponent<Senses>().radius = sense_radius;
     }
 
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawRay(transform.position, transform.TransformDirection(Vector3.forward * 100));
-
-        Gizmos.color = Color.blue;
-        Gizmos.DrawRay(transform.position, (my_route.current_vertex - transform.position));
-    }
-
-
     private void Start () {
-        EstablishRoute();
+        Strategize();
     }
 
 
     private void Update () 
     {
-        if (ReachedGoal()) ExploreMap();
-        if (FinishedPath()) ContractRoute();
+
     }
 
 
     // private
 
 
-    private void ContractRoute()
+    private void Restrategize()
     {
-        my_route.ContractRoute();
-        actor.Move(my_route.current_vertex);
+        Route previous_route = movement.GetRoute();
+        Route new_route;
+
+        if (attack != null && previous_route != null) {
+            // Scout a smaller concentric circle
+            Circle _circle = Circle.CreateCircle(geography.GetCenter(), previous_route.path.radius * .7f, 18);
+            new_route = Route.CircularRoute(_circle.VertexClosestTo(transform.position), _circle, false, Restrategize);
+            new_route.AccumulateRoutes(previous_route);
+        } else {
+            Dictionary<string, Circle> ruins_by_category = GetComponentInParent<Defense>().GetRuinCircles();
+            List<Circle> _ruins = new List<Circle>();
+
+            // Create a list of the ruin circles
+            foreach (KeyValuePair<string, Circle> keyValue in ruins_by_category) {
+                _ruins.Add(keyValue.Value);
+            }
+
+            // Clear the paths traveled if we've covered every ruin circle
+            if (_ruins.Count == previous_route.routes_followed.Count) {
+                previous_route.routes_followed.Clear();
+            }
+
+            // Patrol the first ruin that we haven't traveled (recently)
+            Circle next_circle = _ruins[previous_route.routes_followed.Count];
+            new_route = Route.CircularRoute(next_circle.VertexClosestTo(transform.position), next_circle, false, Restrategize);
+            new_route.AccumulateRoutes(previous_route);
+        }
+
+        movement.SetRoute(new_route);
     }
+  
 
-
-    private void EstablishRoute()
+    private void Strategize()
     {
-        Circle exploration_circle = Circle.CreateCircle(geography.GetCenter(), (geography.GetResolution() / 2f) - sense_radius, 18);
-        my_route = Route.CreateRoute(exploration_circle.VertexClosestTo(transform.position), exploration_circle);
-        actor.Move(my_route.current_vertex);
-    }
+        // TODO: differentiate between Mhoddim and Ghaddim approaches
 
+        Route _route;
 
-    private void ExploreMap()
-    {
-        my_route.SetNextVertex();
-        actor.Move(my_route.current_vertex);
-    }
+        if (attack != null) {
+            Circle _circle = Circle.CreateCircle(geography.GetCenter(), (geography.GetResolution() / 2f) - sense_radius, 18);
+            _route = Route.CircularRoute(_circle.VertexClosestTo(transform.position), _circle, false, Restrategize);
+        } else {
+            Dictionary<string, Circle> ruin_circles = GetComponentInParent<Defense>().GetRuinCircles();
+            _route = Route.CircularRoute(ruin_circles["tertiary"].VertexClosestTo(transform.position), ruin_circles["tertiary"], false, Restrategize);
+        }
 
-
-    private bool FinishedPath()
-    {
-        return my_route.completed;
-    }
-
-
-    private bool ReachedGoal()
-    {
-        return my_route.ReachedCurrentVertex(transform.position);
+        movement.SetRoute(_route);
     }
 }

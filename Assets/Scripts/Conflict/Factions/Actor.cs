@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Actor : MonoBehaviour {
 
-    Dictionary<string, GameObject> senses = new Dictionary<string, GameObject>();
     Movement mover;
 
 
@@ -36,12 +35,6 @@ public class Actor : MonoBehaviour {
     public void Attack()
     {
 
-    }
-
-
-    public void Move(Vector3 objective)
-    {
-        mover.MoveToward(objective);
     }
 
 
