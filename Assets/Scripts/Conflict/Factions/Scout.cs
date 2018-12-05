@@ -43,11 +43,11 @@ public class Scout : MonoBehaviour {
             new_route = Route.CircularRoute(_circle.VertexClosestTo(transform.position), _circle, false, Restrategize);
             new_route.AccumulateRoutes(previous_route);
         } else {
-            Dictionary<string, Circle> ruins_by_category = GetComponentInParent<Defense>().GetRuinCircles();
+            Dictionary<Ruins.Category, Circle> ruins_by_category = GetComponentInParent<Defense>().GetRuinCircles();
             List<Circle> _ruins = new List<Circle>();
 
             // Create a list of the ruin circles
-            foreach (KeyValuePair<string, Circle> keyValue in ruins_by_category) {
+            foreach (KeyValuePair<Ruins.Category, Circle> keyValue in ruins_by_category) {
                 _ruins.Add(keyValue.Value);
             }
 
@@ -76,8 +76,8 @@ public class Scout : MonoBehaviour {
             Circle _circle = Circle.CreateCircle(geography.GetCenter(), (geography.GetResolution() / 2f) - sense_radius, 18);
             _route = Route.CircularRoute(_circle.VertexClosestTo(transform.position), _circle, false, Restrategize);
         } else {
-            Dictionary<string, Circle> ruin_circles = GetComponentInParent<Defense>().GetRuinCircles();
-            _route = Route.CircularRoute(ruin_circles["tertiary"].VertexClosestTo(transform.position), ruin_circles["tertiary"], false, Restrategize);
+            Dictionary<Ruins.Category, Circle> ruin_circles = GetComponentInParent<Defense>().GetRuinCircles();
+            _route = Route.CircularRoute(ruin_circles[Ruins.Category.Tertiary].VertexClosestTo(transform.position), ruin_circles[Ruins.Category.Tertiary], false, Restrategize);
         }
 
         actor.movement.SetRoute(_route);

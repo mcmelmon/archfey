@@ -23,20 +23,14 @@ public class Geography : MonoBehaviour {
     }
 
 
-    private void Start()
-    {
-
-    }
-
-
     // public
 
 
-    public Dictionary<string, float> DistanceToEdges(Vector3 _from)
+    public Dictionary<Map.Cardinal, float> DistanceToEdges(Vector3 _from)
     {
-        Dictionary<string, float> distances = new Dictionary<string, float>();
+        Dictionary<Map.Cardinal, float> distances = new Dictionary<Map.Cardinal, float>();
 
-        foreach (KeyValuePair<string, Vector3[]> keyValue in map.boundaries)
+        foreach (KeyValuePair<Map.Cardinal, Vector3[]> keyValue in map.boundaries)
         {
             float distance = HandleUtility.DistancePointLine(_from, keyValue.Value[1], keyValue.Value[0]);
             distances[keyValue.Key] = distance;
@@ -52,25 +46,25 @@ public class Geography : MonoBehaviour {
     }
 
 
-    public Vector3[] GetBorder(string cardinal)
+    public Vector3[] GetBorder(Map.Cardinal cardinal)
     {
         Vector3[] border = new Vector3[2];
         float resolution = terrain.terrainData.heightmapResolution;
 
         switch (cardinal){
-            case "north":
+            case Map.Cardinal.North:
                 border[0] = new Vector3(0, 0, resolution);
                 border[1] = new Vector3(resolution, 0, resolution);
                 break;
-            case "east":
+            case Map.Cardinal.East:
                 border[0] = new Vector3(resolution, 0, resolution); ;
                 border[1] = new Vector3(resolution, 0, 0);
                 break;
-            case "south":
+            case Map.Cardinal.South:
                 border[0] = new Vector3(resolution, 0, 0);
                 border[1] = new Vector3(0, 0, 0);
                 break;
-            case "west":
+            case Map.Cardinal.West:
                 border[0] = new Vector3(0, 0, 0);
                 border[1] = new Vector3(0, 0, resolution);
                 break;
@@ -166,13 +160,6 @@ public class Geography : MonoBehaviour {
     {
         if (obstacle_coverage < 0f) obstacle_coverage = 0f;
         if (obstacle_coverage > 100f) obstacle_coverage = 100f;
-    }
-
-
-    private bool AdjustObstacle(Dictionary<string, Tile> neighbors, Obstacle _obstacle)
-    {
-
-        return false;
     }
 
 

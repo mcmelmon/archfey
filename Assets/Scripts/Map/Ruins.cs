@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class Ruins : MonoBehaviour {
 
+    public enum Category { Primary = 0, Secondary = 1, Tertiary = 2 };
+
     public Ruin ruin_prefab;
     public List<Ruin> ruins;
-    readonly Dictionary<string, Circle> ruin_circles = new Dictionary<string, Circle>();
+    readonly Dictionary<Category, Circle> ruin_circles = new Dictionary<Category, Circle>();
     Geography geography;
+
 
     // Unity
 
@@ -33,7 +36,7 @@ public class Ruins : MonoBehaviour {
     // public
 
 
-    public Dictionary<string, Circle> GetOrCreateRuinCircles()
+    public Dictionary<Category, Circle> GetOrCreateRuinCircles()
     {
         if (ruin_circles.Count == 0) Place();
         return ruin_circles;
@@ -65,10 +68,10 @@ public class Ruins : MonoBehaviour {
 
     void Construct()
     {
-        foreach (KeyValuePair<string, Circle> keyValue in ruin_circles)
+        foreach (KeyValuePair<Category, Circle> keyValue in ruin_circles)
         {
             switch (keyValue.Key) {
-                case "primary":
+                case Category.Primary:
                     for (int i = 0; i < 9; i++)
                     {
                         Vector3 position = keyValue.Value.RandomVertex();
@@ -76,7 +79,7 @@ public class Ruins : MonoBehaviour {
                             InstantiateRuin(position, this);
                     }
                     break;
-                case "secondary":
+                case Category.Secondary:
                     for (int i = 0; i < 5; i++)
                     {
                         Vector3 position = keyValue.Value.RandomVertex();
@@ -84,7 +87,7 @@ public class Ruins : MonoBehaviour {
                             InstantiateRuin(position, this);
                     }
                     break;
-                case "tertiary":
+                case Category.Tertiary:
                     for (int i = 0; i < 2; i++)
                     {
                         Vector3 position = keyValue.Value.RandomVertex();
@@ -121,7 +124,7 @@ public class Ruins : MonoBehaviour {
         Vector3 circle_center = geography.RandomLocation(distance_from_edge);
         Circle spawn_circle = Circle.CreateCircle(circle_center, 40f);
 
-        ruin_circles["primary"] = spawn_circle;
+        ruin_circles[Category.Primary] = spawn_circle;
     }
 
 
@@ -131,7 +134,7 @@ public class Ruins : MonoBehaviour {
         Vector3 circle_center = geography.RandomLocation(distance_from_edge);
         Circle spawn_circle = Circle.CreateCircle(circle_center, 20f);
 
-        ruin_circles["secondary"] = spawn_circle;
+        ruin_circles[Category.Secondary] = spawn_circle;
     }
 
 
@@ -141,7 +144,7 @@ public class Ruins : MonoBehaviour {
         Vector3 circle_center = geography.RandomLocation(distance_from_edge);
         Circle spawn_circle = Circle.CreateCircle(circle_center, 12f);
 
-        ruin_circles["tertiary"] = spawn_circle;
+        ruin_circles[Category.Tertiary] = spawn_circle;
     }
 
 
@@ -159,7 +162,7 @@ public class Ruins : MonoBehaviour {
 
     private bool NearRuinCircle(Vector3 position, float how_close)
     {
-        foreach (KeyValuePair<string, Circle> keyValue in ruin_circles)
+        foreach (KeyValuePair<Category, Circle> keyValue in ruin_circles)
         {
             float distance = Vector3.Distance(position, keyValue.Value.center);
             if (distance < how_close) return true;

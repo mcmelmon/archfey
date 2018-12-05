@@ -34,19 +34,12 @@ public class Striker : MonoBehaviour {
 
     private void Restrategize()
     {
-        Route previous_route = actor.movement.GetRoute();
-        Route new_route;
-
-        if (actor.attack != null && previous_route != null)
-        {
+        if (actor.attack != null) {
 
         }
-        else
-        {
+        else {
 
         }
-
-        //actor.movement.SetRoute(new_route);
     }
 
 
@@ -54,17 +47,10 @@ public class Striker : MonoBehaviour {
     {
         // TODO: differentiate between Mhoddim and Ghaddim approaches
 
-        Route _route;
-
-        if (actor.attack != null)
-        {
-
+        if (actor.attack != null) {
         }
-        else
-        {
+        else {
         }
-
-        //actor.movement.SetRoute(_route);
     }
 
 
@@ -77,10 +63,62 @@ public class Striker : MonoBehaviour {
         actor.SetComponents();
         actor.SetStats();
     }
+}
 
 
-    private void SetFormation()
+public class Formation 
+{
+    // position units in 
+
+    public enum Profile { Round = 0, Rectangle = 1, Triangle = 2 };
+
+    Profile profile;
+    Vector3 center;
+    float width;
+    List<GameObject> units = new List<GameObject>();
+
+    public static Formation CreateFormation(Vector3 _center, float _width, Profile _profile)
     {
+        Formation _formation = new Formation
+        {
+            profile = _profile,
+            center = _center,
+            width = _width
+        };
 
+        return _formation;
+    }
+
+
+    public void JoinFormation(GameObject unit)
+    {
+        units.Add(unit);
+
+        switch (profile)
+        {
+            case Profile.Round:
+                Circle formation = Circle.CreateCircle(center, width / 2f, units.Count);
+                PositionCircle(formation);
+                break;
+            case Profile.Rectangle:
+                break;
+            case Profile.Triangle:
+                break;
+        }
+    }
+
+
+    // private
+
+
+    private void PositionCircle(Circle formation)
+    {
+        for (int i = 0; i < units.Count; i++)
+        {
+            units[i].transform.position = formation.vertices[i];
+            Vector3 facing = units[i].transform.position - formation.center;
+            facing.y = 0;
+            units[i].transform.rotation = Quaternion.LookRotation(facing);
+        }
     }
 }

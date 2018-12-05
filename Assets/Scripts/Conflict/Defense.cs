@@ -7,10 +7,11 @@ public class Defense : MonoBehaviour
 
     Queue<GameObject> defenders = new Queue<GameObject>();
     readonly List<GameObject> deployed = new List<GameObject>();
-    Dictionary<string, Circle> ruin_circles = new Dictionary<string, Circle>();
+    Dictionary<Ruins.Category, Circle> ruin_circles = new Dictionary<Ruins.Category, Circle>();
     List<GameObject> scouts = new List<GameObject>();
     List<GameObject> strikers = new List<GameObject>();
     List<GameObject> heavies = new List<GameObject>();
+
 
     // Unity
 
@@ -37,13 +38,18 @@ public class Defense : MonoBehaviour
 
     public void Defend(Queue<GameObject> _defenders)
     {
+        GameObject defense_parent = new GameObject();
+        defense_parent.name = "Defend";
+        defense_parent.AddComponent<Defend>();
+        defense_parent.transform.parent = transform;
         defenders = _defenders;
         ruin_circles = GetComponentInParent<World>().GetComponentInChildren<Ruins>().GetOrCreateRuinCircles();
-        Deploy();
+
+        Deploy(defense_parent);
     }
 
 
-    public Dictionary<string, Circle> GetRuinCircles()
+    public Dictionary<Ruins.Category, Circle> GetRuinCircles()
     {
         return ruin_circles;
     }
@@ -52,40 +58,41 @@ public class Defense : MonoBehaviour
     // private
 
 
-    private void Deploy()
+    private void Deploy(GameObject parent)
     {
-        GameObject defense_parent = new GameObject();
-        defense_parent.name = "Defend";
-        defense_parent.AddComponent<Defend>();
-        defense_parent.transform.parent = transform;
-
-        foreach (KeyValuePair<string, Circle> keyValue in ruin_circles)
+        foreach (KeyValuePair<Ruins.Category, Circle> keyValue in ruin_circles)
         {
             switch (keyValue.Key)
             {
-                case "primary":
+                case Ruins.Category.Primary:
                     for (int i = 0; i < 12; i++)
                     {
-                        heavies.Add(Spawn(keyValue.Value.RandomContainedPoint(), defense_parent.transform));
+                        heavies.Add(Spawn(keyValue.Value.RandomContainedPoint(), parent.transform));
                     }
                     break;
-                case "secondary":
+                case Ruins.Category.Secondary:
                     for (int i = 0; i < 5; i++)
                     {
-                        GameObject _striker = Spawn(keyValue.Value.RandomContainedPoint(), defense_parent.transform);
+                        GameObject _striker = Spawn(keyValue.Value.RandomContainedPoint(), parent.transform);
                         _striker.AddComponent<Striker>();
                         strikers.Add(_striker);
                     }
                     break;
-                case "tertiary":
+                case Ruins.Category.Tertiary:
                     for (int i = 0; i < 3; i++)
                     {
-                        GameObject _scout = Spawn(keyValue.Value.RandomContainedPoint(), defense_parent.transform);
+                        GameObject _scout = Spawn(keyValue.Value.RandomContainedPoint(), parent.transform);
                         _scout.AddComponent<Scout>();
                         scouts.Add(_scout);
                     }
                     break;
             }
+        }
+
+        Formation strike_formation = Formation.CreateFormation(ruin_circles[Ruins.Category.Secondary].center, 10f, Formation.Profile.Round);
+        foreach (var striker in strikers)
+        {
+            strike_formation.JoinFormation(striker);
         }
     }
 
