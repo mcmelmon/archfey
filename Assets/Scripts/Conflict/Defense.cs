@@ -72,7 +72,9 @@ public class Defense : MonoBehaviour
                 case "secondary":
                     for (int i = 0; i < 5; i++)
                     {
-                        strikers.Add(Spawn(keyValue.Value.RandomContainedPoint(), defense_parent.transform));
+                        GameObject _striker = Spawn(keyValue.Value.RandomContainedPoint(), defense_parent.transform);
+                        _striker.AddComponent<Striker>();
+                        strikers.Add(_striker);
                     }
                     break;
                 case "tertiary":

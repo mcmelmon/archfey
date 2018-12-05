@@ -88,7 +88,9 @@ public class Offense : MonoBehaviour
                 case "secondary":
                     for (int i = 0; i < 5; i++)
                     {
-                        strikers.Add( Spawn(keyValue.Value.RandomContainedPoint(), offense_parent.transform) );
+                        GameObject _striker = Spawn(keyValue.Value.RandomContainedPoint(), offense_parent.transform);
+                        _striker.AddComponent<Striker>();
+                        strikers.Add(_striker);
                     }
                     break;
                 case "tertiary":

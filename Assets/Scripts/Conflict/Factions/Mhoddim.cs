@@ -2,15 +2,38 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Mhoddim : Actor {
+public class Mhoddim : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public Dictionary<string, int> starting_health = new Dictionary<string, int>();
+    public Dictionary<string, float> recovery_rate = new Dictionary<string, float>();
+
+    private void Awake()
+    {
+        starting_health["scout"] = 70;
+        starting_health["striker"] = 100;
+
+        recovery_rate["scout"] = 0;
+        recovery_rate["striker"] = 0f;
+    }
+
+
+    public bool SetHealthStats(GameObject unit)
+    {
+        Health health = unit.GetComponent<Health>();
+        if (health == null) return false;
+
+        if (unit.GetComponent<Scout>() != null) {
+            health.SetStartingHealth(starting_health["scout"]);
+            health.SetRecoveryRate(recovery_rate["scout"]);
+        }
+        else if (unit.GetComponent<Striker>() != null) {
+            health.SetStartingHealth(starting_health["striker"]);
+            health.SetRecoveryRate(recovery_rate["striker"]);
+        }
+        else {
+            return false;
+        }
+
+        return true;
+    }
 }

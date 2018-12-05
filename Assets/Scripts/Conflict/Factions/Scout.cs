@@ -6,12 +6,7 @@ using System;
 public class Scout : MonoBehaviour {
 
     Geography geography;
-    Mhoddim mhoddim;
-    Ghaddim ghaddim;
-    Attack attack;
-    Defend defend;
-    Movement movement;
-    readonly Senses senses;
+    Actor actor;
     readonly float sense_radius = 40f;
 
     // Unity
@@ -19,16 +14,11 @@ public class Scout : MonoBehaviour {
     private void Awake()
     {
         geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();
-        mhoddim = GetComponent<Mhoddim>();
-        ghaddim = GetComponent<Ghaddim>();
-        attack = GetComponent<Attack>();
-        defend = GetComponent<Defend>();
-        movement = GetComponent<Movement>();
-        GetComponent<Senses>().radius = sense_radius;
     }
 
 
     private void Start () {
+        ConfigureRoleSpecificProperties();
         Strategize();
     }
 
@@ -39,15 +29,15 @@ public class Scout : MonoBehaviour {
     }
 
 
-    // private
+    // public
 
 
-    private void Restrategize()
+    public void Restrategize()
     {
-        Route previous_route = movement.GetRoute();
+        Route previous_route = actor.movement.GetRoute();
         Route new_route;
 
-        if (attack != null && previous_route != null) {
+        if (actor.attack != null && previous_route != null) {
             // Scout a smaller concentric circle
             Circle _circle = Circle.CreateCircle(geography.GetCenter(), previous_route.path.radius * .7f, 18);
             new_route = Route.CircularRoute(_circle.VertexClosestTo(transform.position), _circle, false, Restrategize);
@@ -72,17 +62,17 @@ public class Scout : MonoBehaviour {
             new_route.AccumulateRoutes(previous_route);
         }
 
-        movement.SetRoute(new_route);
+        actor.movement.SetRoute(new_route);
     }
   
 
-    private void Strategize()
+    public void Strategize()
     {
         // TODO: differentiate between Mhoddim and Ghaddim approaches
 
         Route _route;
 
-        if (attack != null) {
+        if (actor.attack != null) {
             Circle _circle = Circle.CreateCircle(geography.GetCenter(), (geography.GetResolution() / 2f) - sense_radius, 18);
             _route = Route.CircularRoute(_circle.VertexClosestTo(transform.position), _circle, false, Restrategize);
         } else {
@@ -90,6 +80,18 @@ public class Scout : MonoBehaviour {
             _route = Route.CircularRoute(ruin_circles["tertiary"].VertexClosestTo(transform.position), ruin_circles["tertiary"], false, Restrategize);
         }
 
-        movement.SetRoute(_route);
+        actor.movement.SetRoute(_route);
+    }
+
+
+    // private
+
+
+    private void ConfigureRoleSpecificProperties()
+    {
+        GetComponent<Senses>().SetRange(sense_radius);
+        actor = GetComponent<Actor>();
+        actor.SetComponents();
+        actor.SetStats();
     }
 }
