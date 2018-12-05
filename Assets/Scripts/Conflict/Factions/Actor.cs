@@ -20,15 +20,10 @@ public class Actor : MonoBehaviour {
     }
 
 
-    private void Start()
+    private void OnDrawGizmos()
     {
-
-    }
-
-
-    private void Update()
-    {
-
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position, transform.TransformDirection(Vector3.forward * 50));
     }
 
 

@@ -32,18 +32,19 @@ public class VectorTest : MonoBehaviour {
 
 
     void Start () {
-        SetMilestones();
-        LayPath();
+        Rectangle rectangle = Rectangle.CreateRectangle(new Vector3(10, 0, 10), 5, 5, 5f, true);
+        //SetMilestones();
+        //LayPath();
     }
 
 
     void Update ()
     {
-        if (path.Count > 0)
-        {
-            SetObjective();
-            MoveTowardObjective();
-        }
+        //if (path.Count > 0)
+        //{
+        //    SetObjective();
+        //    MoveTowardObjective();
+        //}
     }
 
 

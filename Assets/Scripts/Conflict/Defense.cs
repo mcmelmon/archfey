@@ -46,6 +46,7 @@ public class Defense : MonoBehaviour
         ruin_circles = GetComponentInParent<World>().GetComponentInChildren<Ruins>().GetOrCreateRuinCircles();
 
         Deploy(defense_parent);
+        FormUp();
     }
 
 
@@ -88,8 +89,12 @@ public class Defense : MonoBehaviour
                     break;
             }
         }
+    }
 
-        Formation strike_formation = Formation.CreateFormation(ruin_circles[Ruins.Category.Secondary].center, 10f, Formation.Profile.Round);
+
+    private void FormUp()
+    {
+        Formation strike_formation = Formation.CreateFormation(ruin_circles[Ruins.Category.Secondary].center, 10f, Formation.Profile.Square);
         foreach (var striker in strikers)
         {
             strike_formation.JoinFormation(striker);

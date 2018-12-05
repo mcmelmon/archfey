@@ -51,6 +51,7 @@ public class Offense : MonoBehaviour
 
         Locate();
         Deploy(offense_parent);
+        FormUp();
     }
 
 
@@ -106,7 +107,13 @@ public class Offense : MonoBehaviour
             }
         }
 
-        Formation strike_formation = Formation.CreateFormation(attack_circles[Category.Secondary].center, 10f, Formation.Profile.Round);
+
+    }
+
+
+    private void FormUp()
+    {
+        Formation strike_formation = Formation.CreateFormation(attack_circles[Category.Secondary].center, 10f, Formation.Profile.Square);
         foreach (var striker in strikers)
         {
             strike_formation.JoinFormation(striker);
