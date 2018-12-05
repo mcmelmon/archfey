@@ -17,15 +17,22 @@ public class Circle {
 
     public static Circle CreateCircle(Vector3 center, float radius, int vertices = 12, bool draw_vertices = false)
     {
-        Circle _circle = new Circle();
-        _circle.center = center;
-        _circle.radius = radius;
-        _circle.vertex_count = vertices;
+        Circle _circle = new Circle
+        {
+            center = center,
+            radius = radius,
+            vertex_count = vertices
+        };
         _circle.delta_theta = (2f * Mathf.PI) / _circle.vertex_count;
-
         _circle.Draw(draw_vertices);
 
         return _circle;
+    }
+
+
+    public bool Equals(Circle other_circle)
+    {
+        return center == other_circle.center && Mathf.Approximately(radius, other_circle.radius);
     }
 
 

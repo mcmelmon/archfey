@@ -47,7 +47,7 @@ public class Senses : MonoBehaviour {
 
     private void Update()
     {
-        PruneSightings();
+        if (sightings.Count > 0) PruneSightings();
     }
 
 
@@ -76,7 +76,9 @@ public class Senses : MonoBehaviour {
 
         foreach (var index in prunings)
         {
-            sightings.RemoveAt(index);
+            if (index < sightings.Count && index > 0) {
+                sightings.RemoveAt(index);
+            }
         }
     }
 }

@@ -1,35 +1,41 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 // TODO: make this less specific to Scouts
 
-class Route
+public class Route
 {
     public Circle path;
     public Vector3 starting_vertex;
     public Vector3 current_vertex;
     public bool completed;
     public bool clockwise;
+    public bool looping;
+    Action when_complete;
+    public List<Route> routes_followed = new List<Route>();
 
 
-    public void ContractRoute()
+    public void AccumulateRoutes(Route previous_route)
     {
-        path.Redraw(path.center, path.radius * .7f, path.vertex_count);
-        completed = false;
-        current_vertex = path.VertexClosestTo(current_vertex);
-        starting_vertex = current_vertex;
+        routes_followed = previous_route.routes_followed;
+        routes_followed.Add(previous_route);
     }
 
 
-    public static Route CreateRoute(Vector3 start, Circle circle)
+    public static Route CircularRoute(Vector3 start, Circle circle, bool _looping = false, Action _when_complete = null)
     {
-        Route route = new Route();
-        route.path = circle;
-        route.starting_vertex = start;
-        route.current_vertex = start;
-        route.completed = false;
-        route.clockwise = (Random.Range(0, 1f) > .5f) ? true : false;
+        Route route = new Route
+        {
+            path = circle,
+            starting_vertex = start,
+            current_vertex = start,
+            completed = false,
+            clockwise = (UnityEngine.Random.Range(0, 1f) > .5f) ? true : false,
+            looping = _looping,
+            when_complete = _when_complete
+        };
 
         return route;
     }
@@ -40,7 +46,13 @@ class Route
     }
 
 
-    public void SetNextVertex(bool looping = false)
+    public Action GetWhenComplete()
+    {
+        return when_complete;
+    }
+
+
+    public void SetNextVertex()
     {
         if (!looping && completed) return;
         int next_index;
@@ -58,7 +70,7 @@ class Route
 
         if (next_vertex == starting_vertex)
         {
-            completed = true;
+            completed = !looping;
         }
 
         current_vertex = next_vertex;

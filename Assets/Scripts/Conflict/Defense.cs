@@ -8,6 +8,9 @@ public class Defense : MonoBehaviour
     Queue<GameObject> defenders = new Queue<GameObject>();
     readonly List<GameObject> deployed = new List<GameObject>();
     Dictionary<string, Circle> ruin_circles = new Dictionary<string, Circle>();
+    List<GameObject> scouts = new List<GameObject>();
+    List<GameObject> strikers = new List<GameObject>();
+    List<GameObject> heavies = new List<GameObject>();
 
     // Unity
 
@@ -38,12 +41,13 @@ public class Defense : MonoBehaviour
         ruin_circles = GetComponentInParent<World>().GetComponentInChildren<Ruins>().GetOrCreateRuinCircles();
         Deploy();
     }
-                
 
-    public List<GameObject> GetDeployed()
+
+    public Dictionary<string, Circle> GetRuinCircles()
     {
-        return deployed;
+        return ruin_circles;
     }
+                
 
     // private
 
@@ -62,19 +66,21 @@ public class Defense : MonoBehaviour
                 case "primary":
                     for (int i = 0; i < 12; i++)
                     {
-                        Spawn(keyValue.Value.RandomContainedPoint(), defense_parent.transform);
+                        heavies.Add(Spawn(keyValue.Value.RandomContainedPoint(), defense_parent.transform));
                     }
                     break;
                 case "secondary":
                     for (int i = 0; i < 5; i++)
                     {
-                        Spawn(keyValue.Value.RandomContainedPoint(), defense_parent.transform);
+                        strikers.Add(Spawn(keyValue.Value.RandomContainedPoint(), defense_parent.transform));
                     }
                     break;
                 case "tertiary":
                     for (int i = 0; i < 3; i++)
                     {
-                        Spawn(keyValue.Value.RandomContainedPoint(), defense_parent.transform);
+                        GameObject _scout = Spawn(keyValue.Value.RandomContainedPoint(), defense_parent.transform);
+                        _scout.AddComponent<Scout>();
+                        scouts.Add(_scout);
                     }
                     break;
             }
@@ -82,14 +88,14 @@ public class Defense : MonoBehaviour
     }
 
 
-    private void Spawn(Vector3 point, Transform defense_parent)
+    private GameObject Spawn(Vector3 point, Transform defense_parent)
     {
         GameObject _defender = defenders.Dequeue();
         _defender.transform.position = point;
         _defender.AddComponent<Defend>();
-        _defender.tag = "Defense";
         _defender.transform.parent = defense_parent;
         _defender.SetActive(true);
         deployed.Add(_defender);
+        return _defender;
     }
 }

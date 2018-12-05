@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using System;
 
 public class Movement : MonoBehaviour {
 
     NavMeshAgent agent;
-    GameObject wisp;
+    Route route;
+    GameObject role;
 
-    // TODO: Movement should take route management duties from Scout
 
     // Unity
 
@@ -18,17 +19,64 @@ public class Movement : MonoBehaviour {
         agent = GetComponent<NavMeshAgent>();
     }
 
-	
-	void Update () {
 
-	}
+    private void OnDrawGizmos()
+    {
+        if (route != null)
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawRay(transform.position, (route.current_vertex - gameObject.transform.position));
+        }
+    }
+
+
+    void Update () {
+        if (ReachedNearObjective()) GetNextObjective();
+        if (ObjectiveComplete()) GetNewObjective();
+    }
 
 
     // public
 
 
-    public void MoveToward(Vector3 objective)
+    public Route GetRoute()
     {
-        agent.SetDestination(objective);
+        return route;
+    }
+
+
+    public void SetRoute(Route _route)
+    {
+        route = _route;
+        agent.SetDestination(route.current_vertex);
+    }
+
+
+    // private
+
+
+    private void GetNewObjective()
+    {
+        Action when_completed = route.GetWhenComplete();
+        when_completed();
+    }
+
+
+    private void GetNextObjective()
+    {
+        route.SetNextVertex();
+        agent.SetDestination(route.current_vertex);
+    }
+
+
+    private bool ObjectiveComplete()
+    {
+        return route != null && route.completed ? true : false;
+    }
+
+
+    private bool ReachedNearObjective()
+    {
+        return agent != null && route != null && route.ReachedCurrentVertex(agent.transform.position);
     }
 }
