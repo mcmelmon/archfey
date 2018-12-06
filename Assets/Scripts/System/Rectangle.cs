@@ -27,6 +27,18 @@ public class Rectangle
     }
 
 
+    public Vector3 GetDepthDirection()
+    {
+        return top_left - grid[0, depth - 1];
+    }
+
+
+    public Vector3 GetWidthDirection()
+    {
+        return top_left - grid[width - 1, 0];
+    }
+
+
     // private
 
     private void Draw(bool draw_points)

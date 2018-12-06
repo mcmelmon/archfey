@@ -6,16 +6,14 @@ public class Offense : MonoBehaviour
 {
     public enum Category { Primary = 0, Secondary = 1, Tertiary = 2 };
 
-    readonly Dictionary<Category, Circle> attack_circles = new Dictionary<Category, Circle>();
-    readonly List<GameObject> deployed = new List<GameObject>();
-
-    Dictionary<Ruins.Category, Circle> ruin_circles = new Dictionary<Ruins.Category, Circle>();
     Geography geography;
 
-    Queue<GameObject> aggressors = new Queue<GameObject>();
-    List<GameObject> scouts = new List<GameObject>();
-    List<GameObject> strikers = new List<GameObject>();
-    List<GameObject> heavies = new List<GameObject>();
+    readonly Dictionary<Category, Circle> attack_circles = new Dictionary<Category, Circle>();
+    Dictionary<Ruins.Category, Circle> ruin_circles = new Dictionary<Ruins.Category, Circle>();
+    private Queue<GameObject> aggressors = new Queue<GameObject>();
+    readonly List<GameObject> deployed = new List<GameObject>();
+    readonly List<Formation> formations = new List<Formation>();
+
 
     // Unity
 
@@ -23,18 +21,12 @@ public class Offense : MonoBehaviour
     private void Awake()
     {
         geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();
-        ruin_circles = GetComponentInParent<World>().GetComponentInChildren<Ruins>().GetOrCreateRuinCircles();
     }
 
-
-    private void Start()
-    {
-
-    }
 
     private void Update()
     {
-
+        CommandFormations();
     }
 
 
@@ -43,15 +35,13 @@ public class Offense : MonoBehaviour
 
     public void Attack(Queue<GameObject> _aggressors)
     {
-        GameObject offense_parent = new GameObject();
-        offense_parent.name = "Attack";
+        GameObject offense_parent = new GameObject {name = "Attack"};
         offense_parent.AddComponent<Attack>();
         offense_parent.transform.parent = transform;
         aggressors = _aggressors;
 
         Locate();
         Deploy(offense_parent);
-        FormUp();
     }
 
 
@@ -73,6 +63,21 @@ public class Offense : MonoBehaviour
     }
 
 
+    public List<Formation> GetFormations()
+    {
+        return formations;
+    }
+
+
+    public void CommandFormations()
+    {
+        foreach (var formation in formations)
+        {
+            if (!formation.has_objective) formation.Strategize();
+        }
+    }
+
+
     // private
 
 
@@ -85,15 +90,19 @@ public class Offense : MonoBehaviour
                 case Category.Primary:
                     for (int i = 0; i < 12; i++)
                     {
-                        heavies.Add( Spawn(keyValue.Value.RandomContainedPoint(), parent.transform) );
+                        Spawn(keyValue.Value.RandomContainedPoint(), parent.transform);
                     }
                     break;
                 case Category.Secondary:
+                    Formation strike_formation = Formation.CreateFormation(attack_circles[Category.Secondary].center, Formation.Profile.Square);
+                    formations.Add(strike_formation);
+
                     for (int i = 0; i < 5; i++)
                     {
                         GameObject _striker = Spawn(keyValue.Value.RandomContainedPoint(), parent.transform);
                         _striker.AddComponent<Striker>();
-                        strikers.Add(_striker);
+                        strike_formation.JoinFormation(_striker);
+                        _striker.GetComponent<Striker>().SetFormation(strike_formation);
                     }
                     break;
                 case Category.Tertiary:
@@ -101,22 +110,9 @@ public class Offense : MonoBehaviour
                     {
                         GameObject _scout = Spawn(keyValue.Value.RandomContainedPoint(), parent.transform);
                         _scout.AddComponent<Scout>();
-                        scouts.Add(_scout);
                     }
                     break;
             }
-        }
-
-
-    }
-
-
-    private void FormUp()
-    {
-        Formation strike_formation = Formation.CreateFormation(attack_circles[Category.Secondary].center, 10f, Formation.Profile.Square);
-        foreach (var striker in strikers)
-        {
-            strike_formation.JoinFormation(striker);
         }
     }
 
@@ -124,6 +120,8 @@ public class Offense : MonoBehaviour
     private void Locate()
     {
         if (geography == null) geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();
+        ruin_circles = GetComponentInParent<World>().GetComponentInChildren<Ruins>().GetOrCreateRuinCircles();
+
         LocatePrimaryAttack();
         LocateSecondaryAttack();
         LocateTertiaryAttack();

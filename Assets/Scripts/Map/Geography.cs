@@ -48,6 +48,11 @@ public class Geography : MonoBehaviour {
 
     public Vector3[] GetBorder(Map.Cardinal cardinal)
     {
+        if (terrain == null) {
+            terrain = GetComponentInChildren<Terrain>();
+            terrain_data = terrain.terrainData;
+        }
+
         Vector3[] border = new Vector3[2];
         float resolution = terrain.terrainData.heightmapResolution;
 

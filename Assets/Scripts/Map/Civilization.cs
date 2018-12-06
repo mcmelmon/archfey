@@ -5,15 +5,4 @@ using UnityEngine;
 public class Civilization : MonoBehaviour {
 
 
-    // Unity
-
-
-    private void Awake () 
-    {
-
-    }
-
-
-    // public
-
 }

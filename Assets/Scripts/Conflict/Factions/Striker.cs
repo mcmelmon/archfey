@@ -4,14 +4,13 @@ using UnityEngine;
 
 public class Striker : MonoBehaviour {
 
-    Geography geography;
     Actor actor;
+    Formation formation;
 
     // Unity
 
     private void Awake()
     {
-        geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();
         actor = GetComponent<Actor>();
     }
 
@@ -32,7 +31,7 @@ public class Striker : MonoBehaviour {
     // public
 
 
-    private void Restrategize()
+    public void Restrategize()
     {
         if (actor.attack != null) {
 
@@ -43,13 +42,22 @@ public class Striker : MonoBehaviour {
     }
 
 
-    private void Strategize()
+    public void SetFormation(Formation _formation)
     {
-        // TODO: differentiate between Mhoddim and Ghaddim approaches
+        formation = _formation;
+    }
 
-        if (actor.attack != null) {
-        }
-        else {
+
+    public void Strategize()
+    {
+        if (formation == null)
+        {
+            // If we are not part of a formation, come up with an individual strategy.
+
+            if (actor.attack != null) {
+            }
+            else {
+            }
         }
     }
 

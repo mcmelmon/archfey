@@ -5,8 +5,10 @@ using System;
 
 public class Scout : MonoBehaviour {
 
+    public List<Vector3> reports = new List<Vector3>();
     Geography geography;
     Actor actor;
+    Senses senses;
     readonly float sense_radius = 40f;
 
     // Unity
@@ -25,7 +27,7 @@ public class Scout : MonoBehaviour {
 
     private void Update () 
     {
-
+        ReportSightings();
     }
 
 
@@ -87,11 +89,38 @@ public class Scout : MonoBehaviour {
     // private
 
 
+    private Vector3 AverageSightings()
+    {
+        Vector3 average = Vector3.zero;
+
+        foreach (var sighting in senses.sightings)
+        {
+            average += sighting.transform.position;
+        }
+
+        return average;
+    }
+
+
     private void ConfigureRoleSpecificProperties()
     {
-        GetComponent<Senses>().SetRange(sense_radius);
+        senses = GetComponent<Senses>();
+        senses.SetRange(sense_radius);
         actor = GetComponent<Actor>();
         actor.SetComponents();
         actor.SetStats();
+    }
+
+
+    private void ReportSightings()
+    {
+        if (senses.sightings.Count > 0){
+            Vector3 average = AverageSightings();
+            if (!reports.Contains(average)) {
+                reports.Add(average);
+            }
+        } else {
+            reports.Clear();
+        }
     }
 }

@@ -40,19 +40,13 @@ public class Senses : MonoBehaviour {
     }
 
 
-    private void Start()
-    {
-
-    }
-
-
     private void Update()
     {
         if (sightings.Count > 0) PruneSightings();
     }
 
 
-    // private
+    // public
 
 
     public void SetRange(float range)
