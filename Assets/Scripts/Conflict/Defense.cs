@@ -13,8 +13,21 @@ public class Defense : MonoBehaviour
 
     // Unity
 
+    private void Update()
+    {
+        CommandFormations();
+    }
+
 
     // public
+
+    public void CommandFormations()
+    {
+        foreach (var formation in formations)
+        {
+            if (!formation.has_objective) formation.Strategize();
+        }
+    }
 
 
     public void Defend(Queue<GameObject> _defenders)
@@ -45,13 +58,19 @@ public class Defense : MonoBehaviour
             switch (keyValue.Key)
             {
                 case Ruins.Category.Primary:
+                    Formation block_formation = Formation.CreateFormation(ruin_circles[Ruins.Category.Primary].center, Formation.Profile.Circle);
+                    formations.Add(block_formation);
+
                     for (int i = 0; i < 12; i++)
                     {
-                        Spawn(keyValue.Value.RandomContainedPoint(), parent.transform);
+                        GameObject _heavy = Spawn(keyValue.Value.RandomContainedPoint(), parent.transform);
+                        _heavy.AddComponent<Heavy>();
+                        block_formation.JoinFormation(_heavy);
+                        _heavy.GetComponent<Heavy>().SetFormation(block_formation);
                     }
                     break;
                 case Ruins.Category.Secondary:
-                    Formation strike_formation = Formation.CreateFormation(ruin_circles[Ruins.Category.Secondary].center, Formation.Profile.Square);
+                    Formation strike_formation = Formation.CreateFormation(ruin_circles[Ruins.Category.Secondary].center, Formation.Profile.Rectangle);
                     formations.Add(strike_formation);
 
                     for (int i = 0; i < 5; i++)

@@ -11,9 +11,11 @@ public class Mhoddim : MonoBehaviour {
     {
         starting_health["scout"] = 70;
         starting_health["striker"] = 100;
+        starting_health["heavy"] = 130;
 
         recovery_rate["scout"] = 0;
         recovery_rate["striker"] = 0f;
+        recovery_rate["heavy"] = 0f;
     }
 
 
@@ -30,7 +32,11 @@ public class Mhoddim : MonoBehaviour {
             health.SetStartingHealth(starting_health["striker"]);
             health.SetRecoveryRate(recovery_rate["striker"]);
         }
-        else {
+        else if (unit.GetComponent<Heavy>() != null)
+        {
+            health.SetStartingHealth(starting_health["heavy"]);
+            health.SetRecoveryRate(recovery_rate["heavy"]);
+        } else {
             return false;
         }
 
