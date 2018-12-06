@@ -14,6 +14,7 @@ public class Senses : MonoBehaviour {
     private void Awake()
     {
         transform.gameObject.AddComponent<SphereCollider>();
+        GetComponent<SphereCollider>().radius = radius;
     }
 
 
@@ -39,15 +40,18 @@ public class Senses : MonoBehaviour {
     }
 
 
-    private void Start()
-    {
-        GetComponent<SphereCollider>().radius = radius;
-    }
-
-
     private void Update()
     {
         if (sightings.Count > 0) PruneSightings();
+    }
+
+
+    // public
+
+
+    public void SetRange(float range)
+    {
+        GetComponent<SphereCollider>().radius = range;
     }
 
 
@@ -60,23 +64,20 @@ public class Senses : MonoBehaviour {
     }
 
 
-    // private
-
-
     private void PruneSightings()
     {
         List<int> prunings = new List<int>();
 
         foreach (var sighting in sightings)
         {
-            if (Vector3.Distance(sighting.transform.position, transform.position) > 40f) {
+            if (Vector3.Distance(sighting.transform.position, transform.position) > 60f) {
                 prunings.Add(sightings.IndexOf(sighting));
             }
         }
 
         foreach (var index in prunings)
         {
-            if (index < sightings.Count && index > 0) {
+            if (index < sightings.Count && index >= 0) {
                 sightings.RemoveAt(index);
             }
         }

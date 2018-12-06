@@ -5,13 +5,10 @@ using System;
 
 public class Scout : MonoBehaviour {
 
+    public List<Vector3> reports = new List<Vector3>();
     Geography geography;
-    Mhoddim mhoddim;
-    Ghaddim ghaddim;
-    Attack attack;
-    Defend defend;
-    Movement movement;
-    readonly Senses senses;
+    Actor actor;
+    Senses senses;
     readonly float sense_radius = 40f;
 
     // Unity
@@ -19,45 +16,40 @@ public class Scout : MonoBehaviour {
     private void Awake()
     {
         geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();
-        mhoddim = GetComponent<Mhoddim>();
-        ghaddim = GetComponent<Ghaddim>();
-        attack = GetComponent<Attack>();
-        defend = GetComponent<Defend>();
-        movement = GetComponent<Movement>();
-        GetComponent<Senses>().radius = sense_radius;
     }
 
 
     private void Start () {
+        ConfigureRoleSpecificProperties();
         Strategize();
     }
 
 
     private void Update () 
     {
-
+        ReportSightings();
     }
 
 
-    // private
+    // public
 
 
-    private void Restrategize()
+    public void Restrategize()
     {
-        Route previous_route = movement.GetRoute();
+        Route previous_route = actor.movement.GetRoute();
         Route new_route;
 
-        if (attack != null && previous_route != null) {
+        if (actor.attack != null && previous_route != null) {
             // Scout a smaller concentric circle
             Circle _circle = Circle.CreateCircle(geography.GetCenter(), previous_route.path.radius * .7f, 18);
             new_route = Route.CircularRoute(_circle.VertexClosestTo(transform.position), _circle, false, Restrategize);
             new_route.AccumulateRoutes(previous_route);
         } else {
-            Dictionary<string, Circle> ruins_by_category = GetComponentInParent<Defense>().GetRuinCircles();
+            Dictionary<Ruins.Category, Circle> ruins_by_category = GetComponentInParent<Defense>().GetRuinCircles();
             List<Circle> _ruins = new List<Circle>();
 
             // Create a list of the ruin circles
-            foreach (KeyValuePair<string, Circle> keyValue in ruins_by_category) {
+            foreach (KeyValuePair<Ruins.Category, Circle> keyValue in ruins_by_category) {
                 _ruins.Add(keyValue.Value);
             }
 
@@ -72,24 +64,63 @@ public class Scout : MonoBehaviour {
             new_route.AccumulateRoutes(previous_route);
         }
 
-        movement.SetRoute(new_route);
+        actor.movement.SetRoute(new_route);
     }
   
 
-    private void Strategize()
+    public void Strategize()
     {
         // TODO: differentiate between Mhoddim and Ghaddim approaches
 
         Route _route;
 
-        if (attack != null) {
+        if (actor.attack != null) {
             Circle _circle = Circle.CreateCircle(geography.GetCenter(), (geography.GetResolution() / 2f) - sense_radius, 18);
             _route = Route.CircularRoute(_circle.VertexClosestTo(transform.position), _circle, false, Restrategize);
         } else {
-            Dictionary<string, Circle> ruin_circles = GetComponentInParent<Defense>().GetRuinCircles();
-            _route = Route.CircularRoute(ruin_circles["tertiary"].VertexClosestTo(transform.position), ruin_circles["tertiary"], false, Restrategize);
+            Dictionary<Ruins.Category, Circle> ruin_circles = GetComponentInParent<Defense>().GetRuinCircles();
+            _route = Route.CircularRoute(ruin_circles[Ruins.Category.Tertiary].VertexClosestTo(transform.position), ruin_circles[Ruins.Category.Tertiary], false, Restrategize);
         }
 
-        movement.SetRoute(_route);
+        actor.movement.SetRoute(_route);
+    }
+
+
+    // private
+
+
+    private Vector3 AverageSightings()
+    {
+        Vector3 average = Vector3.zero;
+
+        foreach (var sighting in senses.sightings)
+        {
+            average += sighting.transform.position;
+        }
+
+        return average;
+    }
+
+
+    private void ConfigureRoleSpecificProperties()
+    {
+        senses = GetComponent<Senses>();
+        senses.SetRange(sense_radius);
+        actor = GetComponent<Actor>();
+        actor.SetComponents();
+        actor.SetStats();
+    }
+
+
+    private void ReportSightings()
+    {
+        if (senses.sightings.Count > 0){
+            Vector3 average = AverageSightings();
+            if (!reports.Contains(average)) {
+                reports.Add(average);
+            }
+        } else {
+            reports.Clear();
+        }
     }
 }

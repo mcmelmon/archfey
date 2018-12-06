@@ -6,20 +6,30 @@ public class Health : MonoBehaviour {
 
     public int starting_health;
     public int current_health;
-    public int recovery_rate;
+    public float recovery_rate;
 
 
     // Unity
 
+
     private void Awake()
     {
-        current_health = starting_health;
+
     }
+
 
     private void Update()
     {
 
     }
+
+
+    private void OnValidate()
+    {
+        if (starting_health < 1) starting_health = 1;
+        if (current_health < 0) current_health = 0;
+    }
+
 
     // public 
 
@@ -30,10 +40,21 @@ public class Health : MonoBehaviour {
     }
 
 
-
-
     public void RecoverHealth(int amount)
     {
         current_health += amount;
+    }
+
+
+    public void SetRecoveryRate(float rate)
+    {
+        recovery_rate = rate;
+    }
+
+
+    public void SetStartingHealth(int amount)
+    {
+        starting_health = amount;
+        current_health = amount;
     }
 }

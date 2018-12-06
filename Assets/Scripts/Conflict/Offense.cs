@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class Offense : MonoBehaviour 
 {
-    readonly Dictionary<string, Circle> attack_circles = new Dictionary<string, Circle>();
-    readonly List<GameObject> deployed = new List<GameObject>();
+    public enum Category { Primary = 0, Secondary = 1, Tertiary = 2 };
 
-    Dictionary<string, Circle> ruin_circles = new Dictionary<string, Circle>();
     Geography geography;
 
-    Queue<GameObject> aggressors = new Queue<GameObject>();
-    List<GameObject> scouts = new List<GameObject>();
-    List<GameObject> strikers = new List<GameObject>();
-    List<GameObject> heavies = new List<GameObject>();
+    readonly Dictionary<Category, Circle> attack_circles = new Dictionary<Category, Circle>();
+    Dictionary<Ruins.Category, Circle> ruin_circles = new Dictionary<Ruins.Category, Circle>();
+    private Queue<GameObject> aggressors = new Queue<GameObject>();
+    readonly List<GameObject> deployed = new List<GameObject>();
+    readonly List<Formation> formations = new List<Formation>();
+
 
     // Unity
 
@@ -21,18 +21,12 @@ public class Offense : MonoBehaviour
     private void Awake()
     {
         geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();
-        ruin_circles = GetComponentInParent<World>().GetComponentInChildren<Ruins>().GetOrCreateRuinCircles();
     }
 
-
-    private void Start()
-    {
-
-    }
 
     private void Update()
     {
-
+        CommandFormations();
     }
 
 
@@ -41,19 +35,23 @@ public class Offense : MonoBehaviour
 
     public void Attack(Queue<GameObject> _aggressors)
     {
+        GameObject offense_parent = new GameObject {name = "Attack"};
+        offense_parent.AddComponent<Attack>();
+        offense_parent.transform.parent = transform;
         aggressors = _aggressors;
+
         Locate();
-        Deploy();
+        Deploy(offense_parent);
     }
 
 
-    public Dictionary<string, Circle> GetAttackCircles()
+    public Dictionary<Category, Circle> GetAttackCircles()
     {
         return attack_circles;
     }
 
 
-    public Dictionary<string, Circle> GetRuinCircles()
+    public Dictionary<Ruins.Category, Circle> GetRuinCircles()
     {
         return ruin_circles;
     }
@@ -65,38 +63,53 @@ public class Offense : MonoBehaviour
     }
 
 
+    public List<Formation> GetFormations()
+    {
+        return formations;
+    }
+
+
+    public void CommandFormations()
+    {
+        foreach (var formation in formations)
+        {
+            if (!formation.has_objective) formation.Strategize();
+        }
+    }
+
+
     // private
 
 
-    private void Deploy()
+    private void Deploy(GameObject parent)
     {
-        GameObject offense_parent = new GameObject();
-        offense_parent.name = "Attack";
-        offense_parent.AddComponent<Attack>();
-        offense_parent.transform.parent = transform;
-
-        foreach (KeyValuePair<string, Circle> keyValue in attack_circles)
+        foreach (KeyValuePair<Category, Circle> keyValue in attack_circles)
         {
             switch (keyValue.Key)
             {
-                case "primary":
+                case Category.Primary:
                     for (int i = 0; i < 12; i++)
                     {
-                        heavies.Add( Spawn(keyValue.Value.RandomContainedPoint(), offense_parent.transform) );
+                        Spawn(keyValue.Value.RandomContainedPoint(), parent.transform);
                     }
                     break;
-                case "secondary":
+                case Category.Secondary:
+                    Formation strike_formation = Formation.CreateFormation(attack_circles[Category.Secondary].center, Formation.Profile.Square);
+                    formations.Add(strike_formation);
+
                     for (int i = 0; i < 5; i++)
                     {
-                        strikers.Add( Spawn(keyValue.Value.RandomContainedPoint(), offense_parent.transform) );
+                        GameObject _striker = Spawn(keyValue.Value.RandomContainedPoint(), parent.transform);
+                        _striker.AddComponent<Striker>();
+                        strike_formation.JoinFormation(_striker);
+                        _striker.GetComponent<Striker>().SetFormation(strike_formation);
                     }
                     break;
-                case "tertiary":
+                case Category.Tertiary:
                     for (int i = 0; i < 3; i++)
                     {
-                        GameObject _scout = Spawn(keyValue.Value.RandomContainedPoint(), offense_parent.transform);
+                        GameObject _scout = Spawn(keyValue.Value.RandomContainedPoint(), parent.transform);
                         _scout.AddComponent<Scout>();
-                        scouts.Add(_scout);
                     }
                     break;
             }
@@ -107,42 +120,44 @@ public class Offense : MonoBehaviour
     private void Locate()
     {
         if (geography == null) geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();
+        ruin_circles = GetComponentInParent<World>().GetComponentInChildren<Ruins>().GetOrCreateRuinCircles();
+
         LocatePrimaryAttack();
         LocateSecondaryAttack();
         LocateTertiaryAttack();
     }
 
 
-    public void LocatePrimaryAttack()
+    private void LocatePrimaryAttack()
     {
         float distance_from_edge_percent = 0.15f;
         bool grounded = true;
         Vector3 circle_center = geography.PointBetween(geography.RandomBorderLocation(), geography.GetCenter(), distance_from_edge_percent, grounded);
         Circle attack_circle = Circle.CreateCircle(circle_center, 10f);
 
-        attack_circles["primary"] = attack_circle;
+        attack_circles[Category.Primary] = attack_circle;
     }
 
 
-    public void LocateSecondaryAttack()
+    private void LocateSecondaryAttack()
     {
         float distance_from_edge_percent = 0.1f;
         bool grounded = true;
         Vector3 circle_center = geography.PointBetween(geography.RandomBorderLocation(), geography.GetCenter(), distance_from_edge_percent, grounded);
         Circle attack_circle = Circle.CreateCircle(circle_center, 5f);
 
-        attack_circles["secondary"] = attack_circle;
+        attack_circles[Category.Secondary] = attack_circle;
     }
 
 
-    public void LocateTertiaryAttack()
+    private void LocateTertiaryAttack()
     {
         float distance_from_edge_percent = 0.1f;
         bool grounded = true;
         Vector3 circle_center = geography.PointBetween(geography.RandomBorderLocation(), geography.GetCenter(), distance_from_edge_percent, grounded);
         Circle attack_circle = Circle.CreateCircle(circle_center, 5f);
 
-        attack_circles["tertiary"] = attack_circle;
+        attack_circles[Category.Tertiary] = attack_circle;
     }
 
 

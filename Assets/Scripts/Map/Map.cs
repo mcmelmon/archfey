@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Map : MonoBehaviour {
 
-    public Dictionary<string, Vector3[]> boundaries = new Dictionary<string, Vector3[]>();
+    public enum Cardinal { North = 0, East = 1, South = 2, West = 3, Sky = 4 };
+
+    public Dictionary<Cardinal, Vector3[]> boundaries = new Dictionary<Cardinal, Vector3[]>();
 
     Geography geography;
     Terrain terrain;
@@ -48,7 +50,7 @@ public class Map : MonoBehaviour {
         bounds.transform.parent = transform;
         bounds.name = "Bounds";
 
-        foreach (KeyValuePair <string, Vector3[]> keyValue in boundaries)
+        foreach (KeyValuePair <Cardinal, Vector3[]> keyValue in boundaries)
         {
             GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
             wall.transform.parent = bounds.transform;
@@ -57,9 +59,9 @@ public class Map : MonoBehaviour {
             wall.transform.gameObject.GetComponentInChildren<Renderer>().enabled = false;
             wall.transform.up = heading;
 
-            if (keyValue.Key == "east" || keyValue.Key == "west") wall.transform.rotation = Quaternion.Euler(new Vector3(0, 90, 90));
+            if (keyValue.Key == Cardinal.East || keyValue.Key == Cardinal.West) wall.transform.rotation = Quaternion.Euler(new Vector3(0, 90, 90));
 
-            if (keyValue.Key == "sky") {
+            if (keyValue.Key == Cardinal.Sky) {
                 wall.transform.position = new Vector3(terrain.terrainData.heightmapResolution / 2, sky_height, terrain.terrainData.heightmapResolution / 2);
                 wall.transform.rotation = Quaternion.Euler(new Vector3(90, 0, 90));
             } else {
@@ -73,15 +75,15 @@ public class Map : MonoBehaviour {
     {
         // using a dictionary instead of list or array to ensure accurate lookup by edge name (e.g. "north")
 
-        boundaries["north"] = geography.GetBorder("north");
-        boundaries["east"] = geography.GetBorder("east");
-        boundaries["south"] = geography.GetBorder("south");
-        boundaries["west"] = geography.GetBorder("west");
+        boundaries[Cardinal.North] = geography.GetBorder(Cardinal.North);
+        boundaries[Cardinal.East] = geography.GetBorder(Cardinal.East);
+        boundaries[Cardinal.South] = geography.GetBorder(Cardinal.South);
+        boundaries[Cardinal.West] = geography.GetBorder(Cardinal.West);
 
         Vector3[] sky = new Vector3[2];
-        sky[0] = boundaries["north"][0];
-        sky[1] = boundaries["south"][0];
-        boundaries["sky"] = sky;
+        sky[0] = boundaries[Cardinal.North][0];
+        sky[1] = boundaries[Cardinal.South][0];
+        boundaries[Cardinal.Sky] = sky;
 
         AddDirectionBoundaries();
     }

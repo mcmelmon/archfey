@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class Actor : MonoBehaviour {
 
-    Movement mover;
+    public Mhoddim mhoddim;
+    public Ghaddim ghaddim;
+    public Attack attack;
+    public Defend defend;
+    public Movement movement;
 
 
     // Unity
@@ -13,19 +17,13 @@ public class Actor : MonoBehaviour {
     private void Awake()
     {
         if (GetComponent<SphereCollider>() == null) AddSenses();
-        mover = GetComponent<Movement>();
     }
 
 
-    private void Start()
+    private void OnDrawGizmos()
     {
-
-    }
-
-
-    private void Update()
-    {
-
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position, transform.TransformDirection(Vector3.forward * 50));
     }
 
 
@@ -35,6 +33,27 @@ public class Actor : MonoBehaviour {
     public void Attack()
     {
 
+    }
+
+
+    public void SetComponents()
+    {
+        mhoddim = GetComponent<Mhoddim>();
+        ghaddim = GetComponent<Ghaddim>();
+        attack = GetComponent<Attack>();
+        defend = GetComponent<Defend>();
+        movement = GetComponent<Movement>();
+    }
+
+
+    public void SetStats()
+    {
+        if (mhoddim != null) {
+            mhoddim.SetHealthStats(gameObject);
+        }
+        else {
+            ghaddim.SetHealthStats(gameObject);
+        }
     }
 
 

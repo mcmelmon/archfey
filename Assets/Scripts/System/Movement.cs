@@ -8,7 +8,7 @@ public class Movement : MonoBehaviour {
 
     NavMeshAgent agent;
     Route route;
-    GameObject role;
+    readonly GameObject role;
 
 
     // Unity
@@ -37,6 +37,12 @@ public class Movement : MonoBehaviour {
 
 
     // public
+
+
+    public NavMeshAgent GetAgent()
+    {
+        return agent;
+    }
 
 
     public Route GetRoute()
