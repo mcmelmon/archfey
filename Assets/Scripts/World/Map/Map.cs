@@ -55,7 +55,7 @@ public class Map : MonoBehaviour {
             GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
             wall.transform.parent = bounds.transform;
             Vector3 heading = keyValue.Value[1] - keyValue.Value[0];
-            wall.transform.localScale = new Vector3(heading.magnitude, heading.magnitude, 1);
+            wall.transform.localScale = new Vector3(heading.magnitude, heading.magnitude, 20);
             wall.transform.gameObject.GetComponentInChildren<Renderer>().enabled = false;
             wall.transform.up = heading;
 
