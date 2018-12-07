@@ -25,7 +25,7 @@ public class Movement : MonoBehaviour {
         if (route != null)
         {
             Gizmos.color = Color.blue;
-            Gizmos.DrawRay(transform.position, (route.current_vertex - gameObject.transform.position));
+            Gizmos.DrawRay(transform.position, (route.current - gameObject.transform.position));
         }
     }
 
@@ -54,7 +54,7 @@ public class Movement : MonoBehaviour {
     public void SetRoute(Route _route)
     {
         route = _route;
-        agent.SetDestination(route.current_vertex);
+        agent.SetDestination(route.current);
     }
 
 
@@ -70,8 +70,8 @@ public class Movement : MonoBehaviour {
 
     private void GetNextObjective()
     {
-        route.SetNextVertex();
-        agent.SetDestination(route.current_vertex);
+        route.SetNext();
+        agent.SetDestination(route.current);
     }
 
 
@@ -83,6 +83,6 @@ public class Movement : MonoBehaviour {
 
     private bool ReachedNearObjective()
     {
-        return agent != null && route != null && route.ReachedCurrentVertex(agent.transform.position);
+        return agent != null && route != null && route.ReachedCurrent(agent.transform.position);
     }
 }

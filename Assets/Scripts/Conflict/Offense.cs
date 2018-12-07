@@ -45,6 +45,15 @@ public class Offense : MonoBehaviour
     }
 
 
+    public void CommandFormations()
+    {
+        foreach (var formation in formations)
+        {
+            if (!formation.has_objective) formation.Strategize();
+        }
+    }
+
+
     public Dictionary<Category, Circle> GetAttackCircles()
     {
         return attack_circles;
@@ -69,15 +78,6 @@ public class Offense : MonoBehaviour
     }
 
 
-    public void CommandFormations()
-    {
-        foreach (var formation in formations)
-        {
-            if (!formation.has_objective) formation.Strategize();
-        }
-    }
-
-
     // private
 
 
@@ -88,13 +88,19 @@ public class Offense : MonoBehaviour
             switch (keyValue.Key)
             {
                 case Category.Primary:
+                    Formation block_formation = Formation.CreateFormation(attack_circles[Category.Primary].center, Formation.Profile.Rectangle, 3f);
+                    formations.Add(block_formation);
+
                     for (int i = 0; i < 12; i++)
                     {
-                        Spawn(keyValue.Value.RandomContainedPoint(), parent.transform);
+                        GameObject _heavy = Spawn(keyValue.Value.RandomContainedPoint(), parent.transform);
+                        _heavy.AddComponent<Heavy>();
+                        block_formation.JoinFormation(_heavy);
+                        _heavy.GetComponent<Heavy>().SetFormation(block_formation);
                     }
                     break;
                 case Category.Secondary:
-                    Formation strike_formation = Formation.CreateFormation(attack_circles[Category.Secondary].center, Formation.Profile.Square);
+                    Formation strike_formation = Formation.CreateFormation(attack_circles[Category.Secondary].center, Formation.Profile.Rectangle);
                     formations.Add(strike_formation);
 
                     for (int i = 0; i < 5; i++)

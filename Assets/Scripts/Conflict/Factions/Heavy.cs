@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Striker : MonoBehaviour {
+public class Heavy : MonoBehaviour {
 
-    public float speed = 5f;
-    public float sense_radius = 30f;
-    public float sense_perception = 15f;
+    public float speed = 3.5f;
     Actor actor;
     Formation formation;
-    Senses senses;
 
     // Unity
 
@@ -37,10 +34,12 @@ public class Striker : MonoBehaviour {
 
     public void Restrategize()
     {
-        if (actor.attack != null) {
+        if (actor.attack != null)
+        {
 
         }
-        else {
+        else
+        {
 
         }
     }
@@ -58,9 +57,11 @@ public class Striker : MonoBehaviour {
         {
             // If we are not part of a formation, come up with an individual strategy.
 
-            if (actor.attack != null) {
+            if (actor.attack != null)
+            {
             }
-            else {
+            else
+            {
             }
         }
     }
@@ -71,8 +72,6 @@ public class Striker : MonoBehaviour {
 
     private void ConfigureRoleSpecificProperties()
     {
-        senses = GetComponent<Senses>();
-        senses.SetRange(sense_radius);
         actor = GetComponent<Actor>();
         actor.SetComponents();
         actor.SetStats();

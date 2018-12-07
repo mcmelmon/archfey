@@ -5,11 +5,15 @@ using System;
 
 public class Scout : MonoBehaviour {
 
+    public float speed = 6f;
+    public float sense_radius = 40f;
+    public float sense_perception = 20f;
     public List<Vector3> reports = new List<Vector3>();
     Geography geography;
     Actor actor;
     Senses senses;
-    readonly float sense_radius = 40f;
+
+
 
     // Unity
 
@@ -40,9 +44,9 @@ public class Scout : MonoBehaviour {
         Route new_route;
 
         if (actor.attack != null && previous_route != null) {
-            // Scout a smaller concentric circle
-            Circle _circle = Circle.CreateCircle(geography.GetCenter(), previous_route.path.radius * .7f, 18);
-            new_route = Route.CircularRoute(_circle.VertexClosestTo(transform.position), _circle, false, Restrategize);
+            // Scout a smaller concentric circle around the map
+            Circle _circle = Circle.CreateCircle(geography.GetCenter(), previous_route.circuitous.path.radius * .7f, 18);
+            new_route = Route.Circular(_circle.VertexClosestTo(transform.position), _circle, false, Restrategize);
             new_route.AccumulateRoutes(previous_route);
         } else {
             Dictionary<Ruins.Category, Circle> ruins_by_category = GetComponentInParent<Defense>().GetRuinCircles();
@@ -60,11 +64,11 @@ public class Scout : MonoBehaviour {
 
             // Patrol the first ruin that we haven't traveled (recently)
             Circle next_circle = _ruins[previous_route.routes_followed.Count];
-            new_route = Route.CircularRoute(next_circle.VertexClosestTo(transform.position), next_circle, false, Restrategize);
+            new_route = Route.Circular(next_circle.VertexClosestTo(transform.position), next_circle, false, Restrategize);
             new_route.AccumulateRoutes(previous_route);
         }
 
-        actor.movement.SetRoute(new_route);
+        actor.Move(new_route);
     }
   
 
@@ -75,14 +79,16 @@ public class Scout : MonoBehaviour {
         Route _route;
 
         if (actor.attack != null) {
+            // Circle the map
             Circle _circle = Circle.CreateCircle(geography.GetCenter(), (geography.GetResolution() / 2f) - sense_radius, 18);
-            _route = Route.CircularRoute(_circle.VertexClosestTo(transform.position), _circle, false, Restrategize);
+            _route = Route.Circular(_circle.VertexClosestTo(transform.position), _circle, false, Restrategize);
         } else {
+            // Move to the tertiary circle and patrol it, other circles handled by Restrategize()
             Dictionary<Ruins.Category, Circle> ruin_circles = GetComponentInParent<Defense>().GetRuinCircles();
-            _route = Route.CircularRoute(ruin_circles[Ruins.Category.Tertiary].VertexClosestTo(transform.position), ruin_circles[Ruins.Category.Tertiary], false, Restrategize);
+            _route = Route.Circular(ruin_circles[Ruins.Category.Tertiary].VertexClosestTo(transform.position), ruin_circles[Ruins.Category.Tertiary], false, Restrategize);
         }
 
-        actor.movement.SetRoute(_route);
+        actor.Move(_route);
     }
 
 
@@ -106,9 +112,11 @@ public class Scout : MonoBehaviour {
     {
         senses = GetComponent<Senses>();
         senses.SetRange(sense_radius);
+        senses.SetPerception(sense_perception);
         actor = GetComponent<Actor>();
         actor.SetComponents();
         actor.SetStats();
+        actor.movement.GetAgent().speed = speed;
     }
 
 

@@ -7,14 +7,22 @@ using System;
 
 public class Route
 {
-    public Circle path;
-    public Vector3 starting_vertex;
-    public Vector3 current_vertex;
+    public enum Geometry { Circuitous = 0, Line = 1 };
+
+    public Geometry geometry;
+    public Vector3 current, finish, next, start;
     public bool completed;
-    public bool clockwise;
     public bool looping;
     Action when_complete;
     public List<Route> routes_followed = new List<Route>();
+
+    public Circuitous circuitous;
+
+
+    public struct Circuitous {
+        public Circle path;
+        public bool clockwise;
+    }
 
 
     public void AccumulateRoutes(Route previous_route)
@@ -24,15 +32,38 @@ public class Route
     }
 
 
-    public static Route CircularRoute(Vector3 start, Circle circle, bool _looping = false, Action _when_complete = null)
+    public static Route Circular(Vector3 _start, Circle _circle, bool _looping = false, Action _when_complete = null)
     {
+        // TODO: the vertices could be added to a list of vectors similar to the line
+        // Move to the starting vertex, then follow _circle's vertices clockwise or counterclockwise
         Route route = new Route
         {
-            path = circle,
-            starting_vertex = start,
-            current_vertex = start,
+            geometry = Geometry.Circuitous,
+            start = _start,
+            current = _start,
+            circuitous = new Circuitous(),
             completed = false,
-            clockwise = (UnityEngine.Random.Range(0, 1f) > .5f) ? true : false,
+            looping = _looping,
+            when_complete = _when_complete
+        };
+
+        route.circuitous.path = _circle;
+        route.circuitous.clockwise = (UnityEngine.Random.Range(0, 1f) > .5f) ? true : false;
+
+        return route;
+    }
+
+
+    public static Route Line(Vector3 _start, Vector3 _finish, bool _looping = false, Action _when_complete = null)
+    {
+        // TODO: pass in a list of points and connect them.
+        Route route = new Route
+        {
+            geometry = Geometry.Line,
+            current = _finish,
+            start = _start,
+            finish = _finish,
+            completed = false,
             looping = _looping,
             when_complete = _when_complete
         };
@@ -40,9 +71,9 @@ public class Route
         return route;
     }
 
-    public bool ReachedCurrentVertex(Vector3 current_location)
+    public bool ReachedCurrent(Vector3 unit_position)
     {
-        return (Vector3.Distance(current_vertex, current_location) < 8f) ? true : false;
+        return (Vector3.Distance(current, unit_position) < 8f) ? true : false;
     }
 
 
@@ -52,27 +83,29 @@ public class Route
     }
 
 
-    public void SetNextVertex()
+    public void SetNext()
     {
         if (!looping && completed) return;
-        int next_index;
 
-        int index = path.vertices.IndexOf(current_vertex);
-        if (clockwise)
-        {
-            next_index = ((index - 1) + (path.vertex_count)) % path.vertex_count;
-        }
-        else
-        {
-            next_index = (index + 1) % path.vertex_count;
-        }
-        Vector3 next_vertex = path.vertices[next_index];
+        if (geometry == Geometry.Circuitous) {
+            int next_index;
+            int index = circuitous.path.vertices.IndexOf(current);
 
-        if (next_vertex == starting_vertex)
-        {
+            if (circuitous.clockwise) {
+                next_index = ((index - 1) + (circuitous.path.vertex_count)) % circuitous.path.vertex_count;
+            } else {
+                next_index = (index + 1) % circuitous.path.vertex_count;
+            }
+
+            next = circuitous.path.vertices[next_index];
+        } else {
+            // TODO: handle moving through a list of vectors
+        }
+
+        if (next == start) {
             completed = !looping;
         }
 
-        current_vertex = next_vertex;
+        current = next;
     }
 }
