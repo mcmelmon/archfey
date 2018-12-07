@@ -6,6 +6,7 @@ public class Senses : MonoBehaviour {
 
     public float radius = 20f;
     public List<GameObject> sightings = new List<GameObject>();
+    public float perception = 10f;
 
 
     // Unity
@@ -47,6 +48,12 @@ public class Senses : MonoBehaviour {
 
 
     // public
+
+
+    public void SetPerception(float _perception)
+    {
+        perception = _perception;
+    }
 
 
     public void SetRange(float range)

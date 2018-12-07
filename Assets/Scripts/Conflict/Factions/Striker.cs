@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class Striker : MonoBehaviour {
 
+    public float speed = 5f;
+    public float sense_radius = 30f;
+    public float sense_perception = 15f;
     Actor actor;
     Formation formation;
+    Senses senses;
 
     // Unity
 
@@ -67,8 +71,11 @@ public class Striker : MonoBehaviour {
 
     private void ConfigureRoleSpecificProperties()
     {
+        senses = GetComponent<Senses>();
+        senses.SetRange(sense_radius);
         actor = GetComponent<Actor>();
         actor.SetComponents();
         actor.SetStats();
+        actor.movement.GetAgent().speed = speed;
     }
 }

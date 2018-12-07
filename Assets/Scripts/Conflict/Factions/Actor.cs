@@ -36,6 +36,12 @@ public class Actor : MonoBehaviour {
     }
 
 
+    public void Move(Route _route)
+    {
+        movement.SetRoute(_route);
+    }
+
+
     public void SetComponents()
     {
         mhoddim = GetComponent<Mhoddim>();
