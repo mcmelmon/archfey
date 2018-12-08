@@ -8,19 +8,28 @@ public class Flora : MonoBehaviour {
     public float tree_coverage;
     public int canopy_layers;
     public GameObject canopy_prefab;
+    public List<Canopy> leaves = new List<Canopy>();
 
     Map map;
     Geography geography;
     Biosphere biosphere;
     List<Tree> trees = new List<Tree>();
     GameObject[] canopy;
+    GameObject carpet;
     int width, depth;
 
+    [System.Serializable]
+    public struct Canopy
+    {
+        public string name;
+        public float height;
+        public Color color;
+    }
 
     // Unity
 
 
-	void Awake () {
+    void Awake () {
         biosphere = transform.GetComponentInParent<Biosphere>();
         map = transform.GetComponentInParent<Map>();
         geography = map.GetOrCreateGeography();
@@ -28,10 +37,6 @@ public class Flora : MonoBehaviour {
         width = geography.GetResolution();
         depth = width;
     }
-	
-	void Update () {
-		
-	}
 
 
     // public
@@ -51,8 +56,9 @@ public class Flora : MonoBehaviour {
 
     public void Grow()
     {
-        Canopy();
-        Trees();
+        PlantTrees();
+        CarpetForest();
+        CoverForest();
     }
 
 
@@ -60,7 +66,25 @@ public class Flora : MonoBehaviour {
     // private
 
 
-    private void Canopy()
+    private void CarpetForest()
+    {
+        int octaves = 4;
+        float persistance = .5f;
+        float lacunarity = 2;
+        int seed = 5;
+        float scale = 10f;
+        Vector2 offset = new Vector2(0,0);
+
+        Noise noise = new Noise();
+        float[,] _carpet = noise.GenerateNoiseMap(width, depth, seed, scale, octaves, persistance, lacunarity, offset);
+        carpet = CanopyLayer(_carpet);
+        carpet.transform.localScale = new Vector3(75, 1, 75);
+        carpet.transform.position = new Vector3(geography.GetResolution() / 2f, 0.1f, geography.GetResolution() / 2f);
+    }
+
+
+
+    private void CoverForest()
     {
         int octaves = 4;
         float persistance = .5f;
@@ -68,50 +92,55 @@ public class Flora : MonoBehaviour {
 
         for (int i = 0; i < canopy_layers; i++)
         {
-            int seed = Random.Range(0,100);
-            float scale = 40f + seed;
+            int seed = 63;
+            float scale = 60f;
             Vector2 offset = new Vector2(Random.Range(0,20), Random.Range(0,20));
 
-            float[,] _canopy = Noise.GenerateNoiseMap(width, depth, seed, scale, octaves, persistance, lacunarity, offset);
-            canopy[i] = CanopyLayer(_canopy, i);
+            Noise noise = new Noise();
+            float[,] _canopy = noise.GenerateNoiseMap(width, depth, seed, scale, octaves, persistance, lacunarity, offset);
+            canopy[i] = CanopyLayer(_canopy);
+            canopy[i].transform.localScale = new Vector3(75, 1, 75);
+            canopy[i].transform.position = new Vector3(geography.GetResolution() / 2f, 150f + (i * 50f), geography.GetResolution() / 2f);
+
         }
     }
 
 
-    private GameObject CanopyLayer(float[,] _canopy, int _layer)
+    private GameObject CanopyLayer(float[,] _canopy)
     {
         Texture2D texture = new Texture2D(width, depth);
 
         Color[] colors = new Color[width * depth];
-        for (int w = 0; w < width; w++)
-        {
-            for (int d = 0; d < depth; d++)
-            {
-                float alpha = _canopy[w, d];
-                Color hue = new Color(0.3f, 0.4f, 0.6f)
-                {
-                    a = alpha
-                };
-                colors[w * width + d] = hue;
+        for (int w = 0; w < width; w++) {
+            for (int d = 0; d < depth; d++) {
+                foreach (var layer in leaves) {
+                    if (_canopy[w,d] <= layer.height) {
+                        float alpha = 1f; // randomize
+                        colors[w * width + d] = layer.color;
+                        colors[w * width + d].a = alpha;
+                        break;
+                    }
+                }
             }
         }
 
+        texture.wrapMode = TextureWrapMode.Clamp;
         texture.SetPixels(colors);
         texture.Apply();
 
-        GameObject canopy_plane = Instantiate(canopy_prefab, transform);
+        GameObject canopy_plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        canopy_plane.name = "Canopy";
+        canopy_plane.transform.parent = transform;
         canopy_plane.GetComponent<Renderer>().sharedMaterial.mainTexture = texture;
-        canopy_plane.transform.position = new Vector3(geography.GetResolution()/2f, 50 + (_layer * 50), geography.GetResolution()/2f);
 
         return canopy_plane;
     }
 
 
-    private void Trees()
+    private void PlantTrees()
     {
         int number_of_trees = Mathf.RoundToInt((geography.GetResolution()) * (tree_coverage / 100f));
-        for (int i = 0; i < number_of_trees; i++)
-        {
+        for (int i = 0; i < number_of_trees; i++) {
             Vector3 position = geography.RandomLocation();
             Quaternion rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
             Tree _tree = Instantiate(tree_prefab, position, rotation, transform);

@@ -24,7 +24,8 @@ public class NoiseMap : MonoBehaviour
 
     public void CreateNoiseMap()
     {
-        float[,] map = Noise.GenerateNoiseMap(width, depth, seed, scale, octaves, persistance, lacunarity, offset);
+        Noise noise = new Noise();
+        float[,] map = noise.GenerateNoiseMap(width, depth, seed, scale, octaves, persistance, lacunarity, offset);
         DrawNoiseMap(map);
     }
 

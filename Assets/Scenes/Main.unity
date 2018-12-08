@@ -135,7 +135,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 264195861}
-  m_LocalRotation: {x: 0.033735517, y: 0.0099069225, z: 0.00526753, w: 0.99936783}
+  m_LocalRotation: {x: 0.034092773, y: 0.008521189, z: 0.041889746, w: 0.9985041}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -288,7 +288,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 2
-  m_FollowOffset: {x: 0, y: 5, z: -18.23327}
+  m_FollowOffset: {x: 0, y: 5, z: -16.27391}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -432,8 +432,8 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 465733991}
-  m_LocalRotation: {x: 0.15335076, y: -0.02753522, z: 0.0042747897, w: 0.98777884}
-  m_LocalPosition: {x: 174.441, y: 8.240227, z: 161.8764}
+  m_LocalRotation: {x: 0.16836704, y: -0.027466986, z: 0.004693385, w: 0.98533046}
+  m_LocalPosition: {x: 174.441, y: 8.240227, z: 163.83577}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 625565791}
@@ -587,11 +587,11 @@ MonoBehaviour:
   m_SplineCurvature: 0.425
   m_Orbits:
   - m_Height: 15
-    m_Radius: 18.23327
+    m_Radius: 16.27391
   - m_Height: 5
-    m_Radius: 18.23327
+    m_Radius: 16.27391
   - m_Height: -2
-    m_Radius: 18.23327
+    m_Radius: 16.27391
   m_LegacyHeadingBias: 3.4028235e+38
   m_Rigs:
   - {fileID: 963679515}
@@ -689,7 +689,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 829675727}
-  m_LocalRotation: {x: 0.11072042, y: -0.019394033, z: 0.019850088, w: 0.99346405}
+  m_LocalRotation: {x: 0.1094207, y: -0.025734298, z: 0.07699494, w: 0.9906749}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -849,9 +849,9 @@ Rigidbody:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 893208850}
   serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_Mass: 25
+  m_Drag: 5
+  m_AngularDrag: 5
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -951,7 +951,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 963679513}
-  m_LocalRotation: {x: 0.09117457, y: 0.008401184, z: 0.014209702, w: 0.9956981}
+  m_LocalRotation: {x: 0.09149564, y: 0.0033735964, z: 0.06636214, w: 0.9935861}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1279,7 +1279,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 2
-  m_FollowOffset: {x: 0, y: 5, z: -18.23327}
+  m_FollowOffset: {x: 0, y: 5, z: -16.27391}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -1522,7 +1522,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 2
-  m_FollowOffset: {x: 0, y: 5, z: -18.23327}
+  m_FollowOffset: {x: 0, y: 5, z: -16.27391}
   m_XDamping: 4.27
   m_YDamping: 1
   m_ZDamping: 5.85
@@ -1741,9 +1741,31 @@ MonoBehaviour:
   tree_prefab: {fileID: 193315016116472686, guid: cd8d55f494bd4434cade770ab7e6b381,
     type: 2}
   tree_coverage: 60
-  canopy_layers: 2
+  canopy_layers: 1
   canopy_prefab: {fileID: 1146128279565858, guid: 5a3180c6ebad64e5390f79093133e824,
     type: 2}
+  leaves:
+  - name: Dark
+    height: 0.1
+    color: {r: 0.047511283, g: 0.16981131, b: 0.02322891, a: 0}
+  - name: Gloom
+    height: 0.3
+    color: {r: 0.13238831, g: 0.24528301, b: 0.059006754, a: 0}
+  - name: Deep
+    height: 0.5
+    color: {r: 0.049038816, g: 0.3584906, b: 0.10226841, a: 0}
+  - name: Forest
+    height: 0.6
+    color: {r: 0.08001069, g: 0.5849056, b: 0.13325037, a: 0}
+  - name: Light
+    height: 0.7
+    color: {r: 0.8421958, g: 1, b: 0.740566, a: 0}
+  - name: Bright
+    height: 0.8
+    color: {r: 0.8421958, g: 1, b: 0.740566, a: 0}
+  - name: Fey
+    height: 0.9
+    color: {r: 0.9370117, g: 1, b: 0.4292453, a: 0}
 --- !u!1 &2048047799
 GameObject:
   m_ObjectHideFlags: 0

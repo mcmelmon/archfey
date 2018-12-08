@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Noise {
 
-    public static float[,] GenerateNoiseMap(int width, int depth, int seed, float scale, int octaves, float persistance, float lacunarity, Vector2 offset){
+    public float[,] GenerateNoiseMap(int width, int depth, int seed, float scale, int octaves, float persistance, float lacunarity, Vector2 offset){
         float[,] noise = new float[width, depth];
 
         System.Random random = new System.Random(seed);
