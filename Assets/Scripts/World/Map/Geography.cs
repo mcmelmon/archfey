@@ -100,9 +100,9 @@ public class Geography : MonoBehaviour {
     }
 
 
-    public Terrain GetTerrain()
+    public Terrain GetOrCreateTerrain()
     {
-        return terrain;
+        return terrain ?? GetComponentInChildren<Terrain>();
     }
 
 

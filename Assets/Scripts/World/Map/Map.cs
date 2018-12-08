@@ -35,9 +35,9 @@ public class Map : MonoBehaviour {
     // public
 
 
-    public Geography GetGeography()
+    public Geography GetOrCreateGeography()
     {
-        return geography;
+        return geography ?? GetComponentInChildren<Geography>();
     }
 
 

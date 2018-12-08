@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657856, g: 0.49641234, b: 0.57481724, a: 1}
+  m_IndirectSpecularColor: {r: 0.439755, g: 0.48817962, b: 0.5683984, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -135,7 +135,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 264195861}
-  m_LocalRotation: {x: 0.03361569, y: 0.010358048, z: -0.0012811656, w: 0.99938035}
+  m_LocalRotation: {x: 0.033735517, y: 0.0099069225, z: 0.00526753, w: 0.99936783}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -288,7 +288,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 2
-  m_FollowOffset: {x: 0, y: 5, z: -25.03094}
+  m_FollowOffset: {x: 0, y: 5, z: -18.23327}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -432,8 +432,8 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 465733991}
-  m_LocalRotation: {x: 0.11845002, y: -0.027668733, z: 0.0033018983, w: 0.992569}
-  m_LocalPosition: {x: 174.441, y: 8.240227, z: 155.07874}
+  m_LocalRotation: {x: 0.15335076, y: -0.02753522, z: 0.0042747897, w: 0.98777884}
+  m_LocalPosition: {x: 174.441, y: 8.240227, z: 161.8764}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 625565791}
@@ -587,11 +587,11 @@ MonoBehaviour:
   m_SplineCurvature: 0.425
   m_Orbits:
   - m_Height: 15
-    m_Radius: 25.03094
+    m_Radius: 18.23327
   - m_Height: 5
-    m_Radius: 25.03094
+    m_Radius: 18.23327
   - m_Height: -2
-    m_Radius: 25.03094
+    m_Radius: 18.23327
   m_LegacyHeadingBias: 3.4028235e+38
   m_Rigs:
   - {fileID: 963679515}
@@ -689,7 +689,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 829675727}
-  m_LocalRotation: {x: 0.110980526, y: -0.01784534, z: 0.00596924, w: 0.9936444}
+  m_LocalRotation: {x: 0.11072042, y: -0.019394033, z: 0.019850088, w: 0.99346405}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -951,7 +951,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 963679513}
-  m_LocalRotation: {x: 0.09099489, y: 0.010135913, z: 0.00021587359, w: 0.9957998}
+  m_LocalRotation: {x: 0.09117457, y: 0.008401184, z: 0.014209702, w: 0.9956981}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1072,7 +1072,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2d08d2ecd1e0443894411cad95bf69f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trees: []
 --- !u!1 &1134764492
 GameObject:
   m_ObjectHideFlags: 0
@@ -1098,9 +1097,9 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 1
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+  m_Color: {r: 0.089444645, g: 0.2830189, b: 0.12310958, a: 1}
   m_Intensity: 1
-  m_Range: 10
+  m_Range: 1500
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
@@ -1132,13 +1131,13 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1134764492}
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: -25.559, y: 2.2402267, z: -19.89032}
+  m_LocalRotation: {x: 0.5735764, y: 0, z: 0, w: 0.8191521}
+  m_LocalPosition: {x: 235.9, y: 1000, z: -134.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 460771912}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 70, y: 0, z: 0}
 --- !u!1 &1154486183
 GameObject:
   m_ObjectHideFlags: 0
@@ -1280,7 +1279,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 2
-  m_FollowOffset: {x: 0, y: 5, z: -25.03094}
+  m_FollowOffset: {x: 0, y: 5, z: -18.23327}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -1523,7 +1522,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 2
-  m_FollowOffset: {x: 0, y: 5, z: -25.03094}
+  m_FollowOffset: {x: 0, y: 5, z: -18.23327}
   m_XDamping: 4.27
   m_YDamping: 1
   m_ZDamping: 5.85
@@ -1742,6 +1741,9 @@ MonoBehaviour:
   tree_prefab: {fileID: 193315016116472686, guid: cd8d55f494bd4434cade770ab7e6b381,
     type: 2}
   tree_coverage: 60
+  canopy_layers: 2
+  canopy_prefab: {fileID: 1146128279565858, guid: 5a3180c6ebad64e5390f79093133e824,
+    type: 2}
 --- !u!1 &2048047799
 GameObject:
   m_ObjectHideFlags: 0

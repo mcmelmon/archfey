@@ -4,16 +4,8 @@ using UnityEngine;
 
 public class Biosphere : MonoBehaviour {
 
-    public List<Tree> trees = new List<Tree>();
-
-    Map map;
 
     // Unity
-
-    private void Awake()
-    {
-        map = GetComponentInParent<Map>();
-    }
 
 
     private void Start () {
@@ -21,22 +13,10 @@ public class Biosphere : MonoBehaviour {
 	}
 
 
-	private void Update () {
-
-	}
-
-
-    // public
-
-    public Map GetMap()
-    {
-        return map;
-    }
-
     // private
 
     private void PlaceVegetation()
     {
-        transform.GetComponentInChildren<Flora>().PlaceTrees();
+        transform.GetComponentInChildren<Flora>().Grow();
     }
 }
