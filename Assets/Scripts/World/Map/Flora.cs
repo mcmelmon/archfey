@@ -7,7 +7,6 @@ public class Flora : MonoBehaviour {
     public Tree tree_prefab;
     public float tree_coverage;
     public int canopy_layers;
-    public GameObject canopy_prefab;
     public List<Canopy> leaves = new List<Canopy>();
 
     Map map;
@@ -71,8 +70,8 @@ public class Flora : MonoBehaviour {
         int octaves = 4;
         float persistance = .5f;
         float lacunarity = 2;
-        int seed = 5;
-        float scale = 10f;
+        int seed = Random.Range(1,10);
+        float scale = Random.Range(10,20);
         Vector2 offset = new Vector2(0,0);
 
         Noise noise = new Noise();
@@ -92,21 +91,21 @@ public class Flora : MonoBehaviour {
 
         for (int i = 0; i < canopy_layers; i++)
         {
-            int seed = 63;
-            float scale = 60f;
+            int seed = Random.Range(11,99);
+            float scale = Random.Range(30,70);
             Vector2 offset = new Vector2(Random.Range(0,20), Random.Range(0,20));
 
             Noise noise = new Noise();
             float[,] _canopy = noise.GenerateNoiseMap(width, depth, seed, scale, octaves, persistance, lacunarity, offset);
-            canopy[i] = CanopyLayer(_canopy);
-            canopy[i].transform.localScale = new Vector3(75, 1, 75);
-            canopy[i].transform.position = new Vector3(geography.GetResolution() / 2f, 150f + (i * 50f), geography.GetResolution() / 2f);
+            canopy[i] = CanopyLayer(_canopy, true);
+            canopy[i].transform.localScale = new Vector3(75, -1, 75);
+            canopy[i].transform.position = new Vector3(geography.GetResolution() / 2f, 50f + (i * 25f), geography.GetResolution() / 2f);
 
         }
     }
 
 
-    private GameObject CanopyLayer(float[,] _canopy)
+    private GameObject CanopyLayer(float[,] _canopy, bool enable_transparency = false)
     {
         Texture2D texture = new Texture2D(width, depth);
 
@@ -115,7 +114,7 @@ public class Flora : MonoBehaviour {
             for (int d = 0; d < depth; d++) {
                 foreach (var layer in leaves) {
                     if (_canopy[w,d] <= layer.height) {
-                        float alpha = 1f; // randomize
+                        float alpha = 1f - _canopy[w,d];
                         colors[w * width + d] = layer.color;
                         colors[w * width + d].a = alpha;
                         break;
@@ -131,7 +130,15 @@ public class Flora : MonoBehaviour {
         GameObject canopy_plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
         canopy_plane.name = "Canopy";
         canopy_plane.transform.parent = transform;
-        canopy_plane.GetComponent<Renderer>().sharedMaterial.mainTexture = texture;
+        canopy_plane.GetComponent<Renderer>().material = new Material(Shader.Find("Nature/Tree Creator Leaves Fast")) { mainTexture = texture };
+        canopy_plane.GetComponent<Renderer>().material.SetFloat("_Glossiness", 1f);
+
+        if (enable_transparency) { 
+            canopy_plane.GetComponent<Renderer>().material.SetFloat("_Cutoff", 0.45f); 
+        } else {
+            canopy_plane.GetComponent<Renderer>().material.SetFloat("_Cutoff", 0f);
+        }
+
 
         return canopy_plane;
     }
@@ -144,8 +151,9 @@ public class Flora : MonoBehaviour {
             Vector3 position = geography.RandomLocation();
             Quaternion rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
             Tree _tree = Instantiate(tree_prefab, position, rotation, transform);
-            _tree.transform.localScale = new Vector3(1f, 1.25f, 1f) * Random.Range(0.2f, 2f);
-            _tree.transform.position += new Vector3(0, _tree.transform.localScale.y - 2, 0);
+            float scale_boost = Random.Range(0.2f, 2f);
+            _tree.transform.localScale = new Vector3(scale_boost, scale_boost, scale_boost);
+            _tree.transform.position += new Vector3(0, -scale_boost, 0);
 
             trees.Add(_tree);
         }
