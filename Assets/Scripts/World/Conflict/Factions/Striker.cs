@@ -37,7 +37,7 @@ public class Striker : MonoBehaviour {
 
     public void Restrategize()
     {
-        if (actor.attack != null) {
+        if (actor.attacker != null) {
 
         }
         else {
@@ -58,7 +58,7 @@ public class Striker : MonoBehaviour {
         {
             // If we are not part of a formation, come up with an individual strategy.
 
-            if (actor.attack != null) {
+            if (actor.attacker != null) {
             }
             else {
             }

@@ -43,7 +43,7 @@ public class Scout : MonoBehaviour {
         Route previous_route = actor.movement.GetRoute();
         Route new_route;
 
-        if (actor.attack != null && previous_route != null) {
+        if (actor.attacker != null && previous_route != null) {
             // Scout a smaller concentric circle around the map
             Circle _circle = Circle.CreateCircle(geography.GetCenter(), previous_route.circuitous.path.radius * .7f, 18);
             new_route = Route.Circular(_circle.VertexClosestTo(transform.position), _circle, false, Restrategize);
@@ -78,7 +78,7 @@ public class Scout : MonoBehaviour {
 
         Route _route;
 
-        if (actor.attack != null) {
+        if (actor.attacker != null) {
             // Circle the map
             Circle _circle = Circle.CreateCircle(geography.GetCenter(), (geography.GetResolution() / 2f) - sense_radius, 18);
             _route = Route.Circular(_circle.VertexClosestTo(transform.position), _circle, false, Restrategize);

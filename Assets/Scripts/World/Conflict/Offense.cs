@@ -35,8 +35,7 @@ public class Offense : MonoBehaviour
 
     public void Attack(Queue<GameObject> _aggressors)
     {
-        GameObject offense_parent = new GameObject {name = "Attack"};
-        offense_parent.AddComponent<Attack>();
+        GameObject offense_parent = new GameObject {name = "Offense"};
         offense_parent.transform.parent = transform;
         aggressors = _aggressors;
 
@@ -171,7 +170,7 @@ public class Offense : MonoBehaviour
     {
         GameObject _aggressor = aggressors.Dequeue();
         _aggressor.transform.position = point;
-        _aggressor.AddComponent<Attack>();
+        _aggressor.AddComponent<Attacker>();
         _aggressor.transform.parent = offense_parent;
         _aggressor.SetActive(true);
         deployed.Add(_aggressor);

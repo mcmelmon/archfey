@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Ruins : MonoBehaviour {
 
+    public static Ruins ruins_instance;
     public enum Category { Primary = 0, Secondary = 1, Tertiary = 2 };
 
     public Ruin ruin_prefab;
@@ -17,20 +18,20 @@ public class Ruins : MonoBehaviour {
 
     private void Awake()
     {
-        geography = GetComponentInParent<Map>().GetComponentInChildren<Geography>();
+        if (ruins_instance != null) {
+            Debug.LogError("More than one ruins instance");
+            return;
+        }
+        ruins_instance = this;
     }
 
 
     private void Start () 
     {
-        Place();
-	}
-	
-
-	private void Update () 
-    {
-		
-	}
+        geography = GetComponentInParent<Map>().GetOrCreateGeography();
+        Locate();
+        Construct();
+    }
 
 
     // public
@@ -38,7 +39,7 @@ public class Ruins : MonoBehaviour {
 
     public Dictionary<Category, Circle> GetOrCreateRuinCircles()
     {
-        if (ruin_circles.Count == 0) Place();
+        if (ruin_circles.Count == 0) Start();
         return ruin_circles;
     }
 
@@ -53,13 +54,6 @@ public class Ruins : MonoBehaviour {
         }
 
         return positions;
-    }
-
-
-    public void Place()
-    {
-        Locate();
-        Construct();
     }
 
 
@@ -111,7 +105,6 @@ public class Ruins : MonoBehaviour {
 
     private void Locate()
     {
-        if (geography == null) geography = GetComponentInParent<Map>().GetComponentInChildren<Geography>();
         LocatePrimaryRuinComplex();
         LocateSecondaryRuinComplex();
         LocateTertiaryRuinComplex();

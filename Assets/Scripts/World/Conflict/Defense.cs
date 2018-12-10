@@ -32,8 +32,8 @@ public class Defense : MonoBehaviour
 
     public void Defend(Queue<GameObject> _defenders)
     {
-        GameObject defense_parent = new GameObject {name = "Defend"};
-        defense_parent.AddComponent<Defend>();
+        GameObject defense_parent = new GameObject {name = "Defense"};
+        //defense_parent.AddComponent<Defender>();
         defense_parent.transform.parent = transform;
         defenders = _defenders;
         ruin_circles = GetComponentInParent<World>().GetComponentInChildren<Ruins>().GetOrCreateRuinCircles();
@@ -98,7 +98,7 @@ public class Defense : MonoBehaviour
     {
         GameObject _defender = defenders.Dequeue();
         _defender.transform.position = point;
-        _defender.AddComponent<Defend>();
+        _defender.AddComponent<Defender>();
         _defender.transform.parent = defense_parent;
         _defender.SetActive(true);
         deployed.Add(_defender);

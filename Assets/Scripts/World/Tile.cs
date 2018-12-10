@@ -29,7 +29,6 @@ public class Tile : MonoBehaviour {
 
     public void AddObstacle(Obstacle _obstacle)
     {
-        _obstacle.GetTile().RemoveObstacle(_obstacle);
         _obstacle.transform.position = transform.position + new Vector3(0, (obstacles.Count + 1), 0);
         obstacles.Add(_obstacle);
     }

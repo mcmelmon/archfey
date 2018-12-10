@@ -8,7 +8,7 @@ public class Circle {
     public List<Vector3> vertices = new List<Vector3>();
     public int vertex_count;
     public float radius;
-    public float theta = 0f;
+    public float theta;
     public float delta_theta;
 
 

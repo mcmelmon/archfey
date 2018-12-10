@@ -23,7 +23,7 @@ public class CommandBarOne : MonoBehaviour {
     public void SummonEnt()
     {
         Vector3 _position = player_transform.position + player_transform.TransformDirection(Vector3.forward) * 20f;
-        Instantiate(ent_prefab, _position, player_transform.rotation, fey_transform);
+        Ent _ent = ent_prefab.SummonEnt(_position, fey_transform);
     }
 
 

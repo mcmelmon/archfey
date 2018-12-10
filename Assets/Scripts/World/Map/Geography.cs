@@ -6,7 +6,6 @@ using UnityEditor;
 public class Geography : MonoBehaviour {
 
     public static Geography geography_instance;
-
     public Obstacle obstacle_prefab;
     public List<Obstacle> obstacles = new List<Obstacle>();
     public float obstacle_coverage;
@@ -178,8 +177,7 @@ public class Geography : MonoBehaviour {
     private void PlaceObstacles()
     {
         int number_of_obstacles = Mathf.RoundToInt(terrain_data.heightmapResolution * (obstacle_coverage / 100f));
-        GameObject obstacles_parent = new GameObject();
-        obstacles_parent.name = "Obstacles";
+        GameObject obstacles_parent = new GameObject { name = "Obstacles" };
         obstacles_parent.transform.parent = transform;
 
         for (int i = 0; i < number_of_obstacles; i++)
