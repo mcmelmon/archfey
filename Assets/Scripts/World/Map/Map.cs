@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Map : MonoBehaviour {
 
+    public static Map map_instance;
+
     public enum Cardinal { North = 0, East = 1, South = 2, West = 3, Sky = 4 };
 
     public Dictionary<Cardinal, Vector3[]> boundaries = new Dictionary<Cardinal, Vector3[]>();
@@ -25,6 +27,11 @@ public class Map : MonoBehaviour {
 
     void Awake ()
     {
+        if (map_instance != null){
+            Debug.LogError("More than one map instance!");
+            return;
+        }
+        map_instance = this;
         geography = GetComponentInChildren<Geography>();
         terrain = GetComponentInChildren<Terrain>();
         SetHeavenAndEarth();
