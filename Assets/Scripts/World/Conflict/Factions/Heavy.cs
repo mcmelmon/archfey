@@ -34,7 +34,7 @@ public class Heavy : MonoBehaviour {
 
     public void Restrategize()
     {
-        if (actor.attack != null)
+        if (actor.attacker != null)
         {
 
         }
@@ -57,7 +57,7 @@ public class Heavy : MonoBehaviour {
         {
             // If we are not part of a formation, come up with an individual strategy.
 
-            if (actor.attack != null)
+            if (actor.attacker != null)
             {
             }
             else

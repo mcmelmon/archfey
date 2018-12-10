@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Flora : MonoBehaviour {
 
+    public static Flora flora_instance;
     public Tree tree_prefab;
     public float tree_coverage;
     public int canopy_layers;
@@ -29,6 +30,11 @@ public class Flora : MonoBehaviour {
 
 
     void Awake () {
+        if (flora_instance != null) {
+            Debug.LogError("More than one Flora");
+            return;
+        }
+        flora_instance = this;
         biosphere = transform.GetComponentInParent<Biosphere>();
         map = transform.GetComponentInParent<Map>();
         geography = map.GetOrCreateGeography();
@@ -76,9 +82,10 @@ public class Flora : MonoBehaviour {
 
         Noise noise = new Noise();
         float[,] _carpet = noise.GenerateNoiseMap(width, depth, seed, scale, octaves, persistance, lacunarity, offset);
-        carpet = CanopyLayer(_carpet);
+        carpet = Layer(_carpet);
         carpet.transform.localScale = new Vector3(75, 1, 75);
         carpet.transform.position = new Vector3(geography.GetResolution() / 2f, 0.1f, geography.GetResolution() / 2f);
+        carpet.name = "Carpet";
     }
 
 
@@ -97,15 +104,17 @@ public class Flora : MonoBehaviour {
 
             Noise noise = new Noise();
             float[,] _canopy = noise.GenerateNoiseMap(width, depth, seed, scale, octaves, persistance, lacunarity, offset);
-            canopy[i] = CanopyLayer(_canopy, true);
+            canopy[i] = Layer(_canopy, true);
             canopy[i].transform.localScale = new Vector3(75, -1, 75);
             canopy[i].transform.position = new Vector3(geography.GetResolution() / 2f, 50f + (i * 25f), geography.GetResolution() / 2f);
+            canopy[i].name = "Canopy";
+
 
         }
     }
 
 
-    private GameObject CanopyLayer(float[,] _canopy, bool enable_transparency = false)
+    private GameObject Layer(float[,] _canopy, bool enable_transparency = false)
     {
         Texture2D texture = new Texture2D(width, depth);
 
@@ -128,7 +137,6 @@ public class Flora : MonoBehaviour {
         texture.Apply();
 
         GameObject canopy_plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
-        canopy_plane.name = "Canopy";
         canopy_plane.transform.parent = transform;
         canopy_plane.GetComponent<Renderer>().material = new Material(Shader.Find("Nature/Tree Creator Leaves Fast")) { mainTexture = texture };
         canopy_plane.GetComponent<Renderer>().material.SetFloat("_Glossiness", 1f);

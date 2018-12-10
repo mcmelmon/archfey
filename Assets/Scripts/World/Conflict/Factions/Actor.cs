@@ -6,8 +6,8 @@ public class Actor : MonoBehaviour {
 
     public Mhoddim mhoddim;
     public Ghaddim ghaddim;
-    public Attack attack;
-    public Defend defend;
+    public Attacker attacker;
+    public Defender defender;
     public Movement movement;
     public Color hover_color;
 
@@ -75,8 +75,8 @@ public class Actor : MonoBehaviour {
     {
         mhoddim = GetComponent<Mhoddim>();
         ghaddim = GetComponent<Ghaddim>();
-        attack = GetComponent<Attack>();
-        defend = GetComponent<Defend>();
+        attacker = GetComponent<Attacker>();
+        defender = GetComponent<Defender>();
         movement = GetComponent<Movement>();
     }
 

@@ -76,7 +76,7 @@ public class Formation
     {
         if (units[0].GetComponent<Heavy>() != null) {
             // offense sits tight, defense patrols the ruins
-            if (units[0].GetComponent<Defend>() != null)
+            if (units[0].GetComponent<Defender>() != null)
             {
                 // copied from Scout
                 // TODO: don't copy from Scout
@@ -116,7 +116,7 @@ public class Formation
             Scout[] scouts = Object.FindObjectsOfType<Scout>();
             foreach (var scout in scouts) {
                 if (scout.reports.Count > 0) {
-                    if (scout.GetComponent<Defend>() == units[0].GetComponent<Defend>()) {
+                    if (scout.GetComponent<Defender>() == units[0].GetComponent<Defender>()) {
                         // move the formation's units to the reported location.
                         // TODO: move in formation
                         // TODO: give the Formation a Route
@@ -130,7 +130,7 @@ public class Formation
         }
         else if (units[0].GetComponent<Heavy>() != null) {
            // offense sits tight, defense patrols the ruins
-            if (units[0].GetComponent<Defend>() != null) {
+            if (units[0].GetComponent<Defender>() != null) {
                 // copied from Scout
                 // TODO: don't copy from Scout
                 // Move to the primary circle and patrol it, other circles handled by Restrategize()

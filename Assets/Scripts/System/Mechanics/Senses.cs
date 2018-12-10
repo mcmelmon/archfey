@@ -33,7 +33,7 @@ public class Senses : MonoBehaviour {
     {
         if (other.gameObject.tag == "Actor")
         {
-            if (GetComponent<Defend>() == null && other.GetComponent<Defend>() != null)
+            if (GetComponent<Defender>() == null && other.GetComponent<Defender>() != null)
             {
                 RecordSighting(other.gameObject);
             }

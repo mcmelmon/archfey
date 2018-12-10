@@ -9,6 +9,7 @@ public class Biosphere : MonoBehaviour {
 
 
     private void Start () {
+        // TODO: place fauna
         PlaceVegetation();
 	}
 

@@ -4,29 +4,6 @@ using UnityEngine;
 
 public class Obstacle : MonoBehaviour {
 
-    // Unity
-
-
-    void Awake()
-    {
-
-    }
-
-
-    void Update()
-    {
-
-    }
-
-
-    // public
-
-    public Tile GetTile()
-    {
-        return transform.GetComponentInParent<Tile>();
-    }
-
-
     public Obstacle InstantiateScaledObstacle(Vector3 position, Transform obstacles)
     {
         Obstacle _obstacle = Instantiate(this, position, transform.rotation, obstacles);
