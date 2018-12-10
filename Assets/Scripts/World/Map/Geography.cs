@@ -5,6 +5,8 @@ using UnityEditor;
 
 public class Geography : MonoBehaviour {
 
+    public static Geography geography_instance;
+
     public Obstacle obstacle_prefab;
     public List<Obstacle> obstacles = new List<Obstacle>();
     public float obstacle_coverage;
@@ -16,6 +18,11 @@ public class Geography : MonoBehaviour {
     // Unity
 
     void Awake () {
+        if (geography_instance != null){
+            Debug.LogError("More than one geography instance!");
+            return;
+        }
+        geography_instance = this;
         map = GetComponentInParent<Map>();
         terrain = GetComponentInChildren<Terrain>();
         terrain_data = terrain.terrainData;
@@ -100,9 +107,9 @@ public class Geography : MonoBehaviour {
     }
 
 
-    public Terrain GetTerrain()
+    public Terrain GetOrCreateTerrain()
     {
-        return terrain;
+        return terrain ?? GetComponentInChildren<Terrain>();
     }
 
 

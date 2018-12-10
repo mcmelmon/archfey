@@ -9,7 +9,10 @@ public class Actor : MonoBehaviour {
     public Attack attack;
     public Defend defend;
     public Movement movement;
+    public Color hover_color;
 
+    Color my_color;
+    Renderer my_renderer;
 
     // Unity
 
@@ -17,13 +20,39 @@ public class Actor : MonoBehaviour {
     private void Awake()
     {
         if (GetComponent<SphereCollider>() == null) AddSenses();
+
     }
 
 
-    private void OnDrawGizmos()
+    private void Start()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawRay(transform.position, transform.TransformDirection(Vector3.forward * 50));
+        my_renderer = GetComponent<Renderer>();
+        my_color = my_renderer.material.color;
+    }
+
+
+    //private void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawRay(transform.position, transform.TransformDirection(Vector3.forward * 50));
+    //}
+
+
+    private void OnMouseDown()
+    {
+        Debug.Log("Quit touching me!");
+    }
+
+
+    private void OnMouseEnter()
+    {
+        my_renderer.material.color = Color.blue;
+    }
+
+
+    private void OnMouseExit()
+    {
+        my_renderer.material.color = my_color;
     }
 
 
