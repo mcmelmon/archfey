@@ -10,13 +10,16 @@ public class Attack : MonoBehaviour {
     List<GameObject> available_targets = new List<GameObject>();
     List<GameObject> available_melee_targets = new List<GameObject>();
     List<GameObject> available_ranged_targets = new List<GameObject>();
-    private readonly List<GameObject> current_melee_targets = new List<GameObject>();
-    private readonly List<GameObject> current_ranged_targets = new List<GameObject>();
+    private readonly Queue<GameObject> current_melee_targets = new Queue<GameObject>();
+    private readonly Queue<GameObject> current_ranged_targets = new Queue<GameObject>();
 
     Mhoddim mhoddim;
     Ghaddim ghaddim;
     Fey fey;
 
+    int remaining_attacks;
+    float inverse_haste = 5f;
+    float current_haste;
 
     // Unity
 
@@ -26,6 +29,8 @@ public class Attack : MonoBehaviour {
         mhoddim = GetComponent<Mhoddim>();
         ghaddim = GetComponent<Ghaddim>();
         fey = GetComponent<Fey>();
+        remaining_attacks = number_of_attacks;
+        current_haste = inverse_haste;
     }
 
     private void Start () {
@@ -34,7 +39,14 @@ public class Attack : MonoBehaviour {
 
 
     private void Update () {
-        StartCoroutine("ManageAttacks");
+        if (current_haste <= 0)
+        {
+            StartCoroutine(ManageAttacks());
+            remaining_attacks = number_of_attacks;  // TODO: space the attacks out as we countdown haste
+            current_haste = inverse_haste;
+        } else {
+            current_haste -= Time.deltaTime;
+        }
     }
 
 
@@ -78,8 +90,6 @@ public class Attack : MonoBehaviour {
 
     private void CategorizeAvailableTargets()
     {
-        IdentifyAllTargets();
-
         foreach (var target in available_targets)
         {
             float distance = Vector3.Distance(target.transform.position, transform.position);
@@ -125,7 +135,9 @@ public class Attack : MonoBehaviour {
 
     IEnumerator ManageAttacks()
     {
+        IdentifyAllTargets();
         CategorizeAvailableTargets();
+
         if (available_weapons.Count > 0)
         {
             SelectTargetForEachAttack();
@@ -180,11 +192,11 @@ public class Attack : MonoBehaviour {
             {
                 if (available_melee_targets.Count > 0)
                 {
-                    current_melee_targets.Add(MeleeTarget());
+                    current_melee_targets.Enqueue(MeleeTarget());
                 }
                 else if (available_ranged_targets.Count > 0)
                 {
-                    current_ranged_targets.Add(RangedTarget());
+                    current_ranged_targets.Enqueue(RangedTarget());
                 }
             }
 
@@ -192,29 +204,39 @@ public class Attack : MonoBehaviour {
     }
 
 
-    public void StrikeMeleeTargets()
+    public void StrikeMeleeTarget()
     {
-        foreach (var target in current_melee_targets)
+        if (current_melee_targets.Count <= 0) return;
+
+        Weapon[] deployed_weapons = GetComponentsInChildren<Weapon>();
+
+        if (deployed_weapons.Length <= 0)
         {
             foreach (var weapon in available_weapons)
             {
-                if (weapon.range == Weapon.Range.Melee)
+                if (weapon.range == Weapon.Range.Melee && GetComponentsInChildren<Weapon>() == null)
                 {
                     // handle melee
-                } else {
+                }
+                else if (weapon.range == Weapon.Range.Melee)
+                {
                     Weapon _ranged = Instantiate(weapon, transform.position, transform.rotation, transform.parent.transform);
                     _ranged.name = "Ranged Weapon";
-                    _ranged.Target(target);
+                    _ranged.Target(current_melee_targets.Dequeue());
+                    remaining_attacks -= 1;
                 }
-
             }
         }
     }
 
 
-    public void StrikeRangedTargets()
+    public void StrikeRangedTarget()
     {
-        foreach (var target in current_ranged_targets)
+        if (current_ranged_targets.Count <= 0) return;
+
+        Weapon[] deployed_weapons = GetComponentsInChildren<Weapon>();
+
+        if (deployed_weapons.Length <= 0)
         {
             foreach (var weapon in available_weapons)
             {
@@ -222,7 +244,8 @@ public class Attack : MonoBehaviour {
                 {
                     Weapon _ranged = Instantiate(weapon, transform.position, transform.rotation, transform.parent.transform);
                     _ranged.name = "Ranged Weapon";
-                    _ranged.Target(target);
+                    _ranged.Target(current_ranged_targets.Dequeue());
+                    remaining_attacks -= 1;
                 }
             }
         }
@@ -230,10 +253,10 @@ public class Attack : MonoBehaviour {
 
     private void StrikeTargets()
     {
-        if (current_melee_targets.Count > 0 || current_ranged_targets.Count > 0)
+        if (current_melee_targets.Count > 0 || current_ranged_targets.Count > 0 && remaining_attacks > 0)
         {
-            StrikeMeleeTargets();
-            StrikeRangedTargets();
+            StrikeMeleeTarget();
+            StrikeRangedTarget();
         }
     }
 }

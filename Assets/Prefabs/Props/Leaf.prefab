@@ -121,5 +121,5 @@ MonoBehaviour:
   ranged_attack_origin: {fileID: 4666701022940694, guid: 45c92403343264da1bc9235f79c51629,
     type: 2}
   melee_attack_origin: {fileID: 0}
-  ranged_attack_range: 20
+  ranged_attack_range: 15
   melee_attack_range: 0
