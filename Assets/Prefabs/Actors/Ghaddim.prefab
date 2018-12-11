@@ -27,6 +27,8 @@ GameObject:
   - component: {fileID: 114495797075432720}
   - component: {fileID: 114191208075042882}
   - component: {fileID: 114399145179561114}
+  - component: {fileID: 114687339321338494}
+  - component: {fileID: 114261397115865856}
   - component: {fileID: 114127286258734026}
   m_Layer: 26
   m_Name: Ghaddim
@@ -127,6 +129,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 523d3699de28f40c0a43cd80e27c15a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114261397115865856
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1837594824673670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 602483510d2a145fe8df1e5797877311, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114399145179561114
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -154,9 +167,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mhoddim: {fileID: 0}
   ghaddim: {fileID: 0}
-  attack: {fileID: 0}
-  defend: {fileID: 0}
+  attacker: {fileID: 0}
+  defender: {fileID: 0}
   movement: {fileID: 0}
+  hover_color: {r: 0, g: 0, b: 0, a: 0}
+--- !u!114 &114687339321338494
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1837594824673670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7d5730f48c5e41528b1cae3f9183dc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!136 &136051218736860880
 CapsuleCollider:
   m_ObjectHideFlags: 1

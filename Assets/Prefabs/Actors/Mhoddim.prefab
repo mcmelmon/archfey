@@ -27,6 +27,8 @@ GameObject:
   - component: {fileID: 114356980778237652}
   - component: {fileID: 114989557624414676}
   - component: {fileID: 114669221061675160}
+  - component: {fileID: 114902456033344244}
+  - component: {fileID: 114905426238864658}
   - component: {fileID: 114736850986846170}
   m_Layer: 26
   m_Name: Mhoddim
@@ -118,9 +120,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mhoddim: {fileID: 0}
   ghaddim: {fileID: 0}
-  attack: {fileID: 0}
-  defend: {fileID: 0}
+  attacker: {fileID: 0}
+  defender: {fileID: 0}
   movement: {fileID: 0}
+  hover_color: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &114669221061675160
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -144,6 +147,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 881721a9845c741949e94809a4563f8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114902456033344244
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1654527326907342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7d5730f48c5e41528b1cae3f9183dc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114905426238864658
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1654527326907342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 602483510d2a145fe8df1e5797877311, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114989557624414676

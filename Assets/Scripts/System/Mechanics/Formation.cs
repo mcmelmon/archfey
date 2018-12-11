@@ -74,6 +74,8 @@ public class Formation
 
     public void Restrategize()
     {
+        if (has_objective || units.Count <= 0 || units[0] == null) return;
+
         if (units[0].GetComponent<Heavy>() != null) {
             // offense sits tight, defense patrols the ruins
             if (units[0].GetComponent<Defender>() != null)
@@ -109,7 +111,9 @@ public class Formation
     {
         // TODO: differentiate between Mhoddim and Ghaddim
 
-        if (has_objective || units.Count <= 0) return;
+        // NOTE: units can get destroyed in combat
+
+        if (has_objective || units.Count <= 0 || units[0] == null) return;
 
         if (units[0].GetComponent<Striker>() != null) {
             // move toward scout report

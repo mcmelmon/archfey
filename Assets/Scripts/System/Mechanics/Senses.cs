@@ -75,9 +75,11 @@ public class Senses : MonoBehaviour {
     {
         List<int> prunings = new List<int>();
 
+        // NOTE: A sighted object may be destroyed in combat after we have sighted it
+
         foreach (var sighting in sightings)
         {
-            if (Vector3.Distance(sighting.transform.position, transform.position) > 60f) {
+            if (sighting != null && Vector3.Distance(sighting.transform.position, transform.position) > 60f) {
                 prunings.Add(sightings.IndexOf(sighting));
             }
         }
@@ -85,7 +87,7 @@ public class Senses : MonoBehaviour {
         foreach (var index in prunings)
         {
             if (index < sightings.Count && index >= 0) {
-                sightings.RemoveAt(index);
+                if (sightings[index] != null) sightings.RemoveAt(index);
             }
         }
     }
