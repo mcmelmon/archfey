@@ -316,7 +316,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   available_weapons:
   - {fileID: 114480832309091280, guid: 8bf21f678538442038e3f94ca5d3645a, type: 2}
-  number_of_attacks: 1
+  number_of_attacks: 2
 --- !u!136 &136508349629120668
 CapsuleCollider:
   m_ObjectHideFlags: 1

@@ -45,18 +45,6 @@ public class Actor : MonoBehaviour {
     }
 
 
-    private void OnMouseEnter()
-    {
-        my_renderer.material.color = Color.blue;
-    }
-
-
-    private void OnMouseExit()
-    {
-        my_renderer.material.color = my_color;
-    }
-
-
     // public
 
 

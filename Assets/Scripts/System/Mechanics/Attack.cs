@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Attack : MonoBehaviour {
 
+    public const float action_threshold = 6f;
+
     public List<Weapon> available_weapons;
     public int number_of_attacks;
 
-    //List<GameObject> available_targets = new List<GameObject>();
     List<GameObject> available_melee_targets = new List<GameObject>();
     List<GameObject> available_ranged_targets = new List<GameObject>();
     private readonly Queue<GameObject> current_melee_targets = new Queue<GameObject>();
@@ -18,9 +19,7 @@ public class Attack : MonoBehaviour {
     Fey fey;
     Senses senses;
 
-    int remaining_attacks;
     readonly float haste_delta = 1f;      // TODO: configure by actor
-    readonly float action_threshold = 5f; // TODO: set globally; make haste class
     float current_haste;
 
     // Unity
@@ -32,7 +31,6 @@ public class Attack : MonoBehaviour {
         ghaddim = GetComponent<Ghaddim>();
         fey = GetComponent<Fey>();
         senses = GetComponent<Senses>();
-        remaining_attacks = number_of_attacks;
         current_haste = 0f;
     }
 
@@ -40,7 +38,7 @@ public class Attack : MonoBehaviour {
     private void Update () {
         if (current_haste >= action_threshold) {
             StartCoroutine(ManageAttacks());
-            current_haste = 0; 
+            current_haste = 0f; 
         } else {
             current_haste += haste_delta * Time.deltaTime;
         }
@@ -54,7 +52,9 @@ public class Attack : MonoBehaviour {
 
     private void CategorizePotentialTargets()
     {
-        foreach (var target in senses.sightings)
+        ClearAvailableTargets();
+
+        foreach (var target in senses.GetSightings())
         {
             if (target == null) continue;
             if (IsFriend(target)) continue;  // TODO: we will eventually want to heal friends
@@ -66,6 +66,13 @@ public class Attack : MonoBehaviour {
                 available_ranged_targets.Add(target);
             }
         }
+    }
+
+
+    private void ClearAvailableTargets()
+    {
+        available_melee_targets.Clear();
+        available_ranged_targets.Clear();
     }
 
 
@@ -112,8 +119,6 @@ public class Attack : MonoBehaviour {
 
     IEnumerator ManageAttacks()
     {
-        remaining_attacks = number_of_attacks;  // TODO: space the attacks out as we countdown haste
-
         CategorizePotentialTargets();
         SelectTarget();
         StrikeTarget();
@@ -177,58 +182,44 @@ public class Attack : MonoBehaviour {
     }
 
 
-    public void StrikeMeleeTarget()
+    private void StrikeMeleeTarget()
     {
         if (current_melee_targets.Count <= 0) return;
-
-        Weapon[] _weapons = GetComponentsInChildren<Weapon>();
-
-        if (_weapons.Length <= 0)
-        {
-            foreach (var weapon in available_weapons)
-            {
-                if (weapon.range == Weapon.Range.Melee && GetComponentsInChildren<Weapon>() == null)
-                {
-                    // handle melee
-                }
-                else if (weapon.range == Weapon.Range.Melee)
-                {
-                    Weapon _ranged = Instantiate(weapon, transform.position, transform.rotation, transform.parent.transform);
-                    _ranged.name = "Ranged Weapon";
-                    _ranged.Target(current_melee_targets.Dequeue());
-                    remaining_attacks -= 1;
-                }
+        
+        foreach (var weapon in available_weapons) {
+            if (weapon.range == Weapon.Range.Melee) {
+                // handle melee
+            } else if (weapon.range == Weapon.Range.Melee) {
+                Weapon _ranged = Instantiate(weapon, transform.position, transform.rotation, transform.parent.transform);
+                _ranged.name = "Ranged Weapon";
+                _ranged.Target(current_melee_targets.Dequeue());
             }
         }
     }
 
 
-    public void StrikeRangedTarget()
+    private void StrikeRangedTarget()
     {
         if (current_ranged_targets.Count <= 0) return;
 
-        Weapon[] deployed_weapons = GetComponentsInChildren<Weapon>();
-
-        if (deployed_weapons.Length <= 0)
-        {
-            foreach (var weapon in available_weapons)
-            {
-                if (weapon.range == Weapon.Range.Ranged)
-                {
-                    Weapon _ranged = Instantiate(weapon, transform.position, transform.rotation, transform.parent.transform);
-                    _ranged.name = "Ranged Weapon";
-                    _ranged.Target(current_ranged_targets.Dequeue());
-                    remaining_attacks -= 1;
-                }
+        foreach (var weapon in available_weapons) {
+            if (weapon.range == Weapon.Range.Ranged) {
+                Weapon _ranged = Instantiate(weapon, transform.position, transform.rotation, transform.parent.transform);
+                _ranged.name = "Ranged Weapon";
+                _ranged.Target(current_ranged_targets.Dequeue());
             }
         }
     }
 
     private void StrikeTarget()
     {
-        if (current_melee_targets.Count > 0 || current_ranged_targets.Count > 0 && remaining_attacks > 0)
-        {
+        // The number of strikes is governed by haste and action_threshold in Update.
+
+        // If any targets are in melee range, strike at them ahead of ranged
+
+        if (current_melee_targets.Count > 0) {
             StrikeMeleeTarget();
+        } else if (current_ranged_targets.Count > 0) { 
             StrikeRangedTarget();
         }
     }
