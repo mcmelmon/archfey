@@ -12,18 +12,6 @@ public class Health : MonoBehaviour {
     // Unity
 
 
-    private void Awake()
-    {
-
-    }
-
-
-    private void Update()
-    {
-
-    }
-
-
     private void OnValidate()
     {
         if (starting_health < 1) starting_health = 1;

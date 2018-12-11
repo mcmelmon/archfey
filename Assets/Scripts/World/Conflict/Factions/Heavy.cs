@@ -6,6 +6,7 @@ public class Heavy : MonoBehaviour {
 
     public float speed = 3.5f;
     Actor actor;
+    Movement movement;
     Formation formation;
 
     // Unity
@@ -75,6 +76,7 @@ public class Heavy : MonoBehaviour {
         actor = GetComponent<Actor>();
         actor.SetComponents();
         actor.SetStats();
-        actor.movement.GetAgent().speed = speed;
+        movement = GetComponent<Movement>();
+        movement.GetAgent().speed = speed;
     }
 }

@@ -6,6 +6,7 @@ public class Actor : MonoBehaviour {
 
     public Mhoddim mhoddim;
     public Ghaddim ghaddim;
+    public Fey fey;
     public Attacker attacker;
     public Defender defender;
     public Movement movement;
@@ -75,6 +76,7 @@ public class Actor : MonoBehaviour {
     {
         mhoddim = GetComponent<Mhoddim>();
         ghaddim = GetComponent<Ghaddim>();
+        fey = GetComponent<Fey>();
         attacker = GetComponent<Attacker>();
         defender = GetComponent<Defender>();
         movement = GetComponent<Movement>();
@@ -86,8 +88,10 @@ public class Actor : MonoBehaviour {
         if (mhoddim != null) {
             mhoddim.SetHealthStats(gameObject);
         }
-        else {
+        else if (ghaddim != null) {
             ghaddim.SetHealthStats(gameObject);
+        } else if (fey != null) {
+
         }
     }
 

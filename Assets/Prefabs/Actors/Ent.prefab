@@ -222,7 +222,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 84
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!114 &114132962431476870
 MonoBehaviour:
@@ -284,6 +284,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mhoddim: {fileID: 0}
   ghaddim: {fileID: 0}
+  fey: {fileID: 0}
   attacker: {fileID: 0}
   defender: {fileID: 0}
   movement: {fileID: 0}
@@ -299,6 +300,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ca9737e7abd148c084f2714535c1127, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 2
+  sense_radius: 60
+  sense_perception: 40
 --- !u!114 &114985438374253772
 MonoBehaviour:
   m_ObjectHideFlags: 1

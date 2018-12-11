@@ -8,6 +8,7 @@ public class Striker : MonoBehaviour {
     public float sense_radius = 30f;
     public float sense_perception = 15f;
     Actor actor;
+    Movement movement;
     Formation formation;
     Senses senses;
 
@@ -76,6 +77,7 @@ public class Striker : MonoBehaviour {
         actor = GetComponent<Actor>();
         actor.SetComponents();
         actor.SetStats();
-        actor.movement.GetAgent().speed = speed;
+        movement = GetComponent<Movement>();
+        movement.GetAgent().speed = speed;
     }
 }

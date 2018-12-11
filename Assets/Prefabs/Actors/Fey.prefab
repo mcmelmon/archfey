@@ -127,11 +127,13 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1467454993613262}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f7d5730f48c5e41528b1cae3f9183dc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  available_weapons: []
+  number_of_attacks: 0
 --- !u!114 &114440850736700250
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -167,6 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mhoddim: {fileID: 0}
   ghaddim: {fileID: 0}
+  fey: {fileID: 0}
   attacker: {fileID: 0}
   defender: {fileID: 0}
   movement: {fileID: 0}
@@ -177,7 +180,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1467454993613262}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 602483510d2a145fe8df1e5797877311, type: 3}
   m_Name: 

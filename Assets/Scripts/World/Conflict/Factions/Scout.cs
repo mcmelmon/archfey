@@ -11,6 +11,7 @@ public class Scout : MonoBehaviour {
     public List<Vector3> reports = new List<Vector3>();
     Geography geography;
     Actor actor;
+    Movement movement;
     Senses senses;
 
 
@@ -40,7 +41,7 @@ public class Scout : MonoBehaviour {
 
     public void Restrategize()
     {
-        Route previous_route = actor.movement.GetRoute();
+        Route previous_route = movement.GetRoute();
         Route new_route;
 
         if (actor.attacker != null && previous_route != null) {
@@ -116,7 +117,8 @@ public class Scout : MonoBehaviour {
         actor = GetComponent<Actor>();
         actor.SetComponents();
         actor.SetStats();
-        actor.movement.GetAgent().speed = speed;
+        movement = GetComponent<Movement>();
+        movement.GetAgent().speed = speed;
     }
 
 

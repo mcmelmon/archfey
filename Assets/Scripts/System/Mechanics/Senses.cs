@@ -24,6 +24,7 @@ public class Senses : MonoBehaviour {
         Gizmos.color = Color.green;
         foreach (var sighting in sightings)
         {
+            if (sighting == null) continue;
             Gizmos.DrawRay(transform.position, (sighting.transform.position - transform.position));
         }
     }
@@ -79,7 +80,7 @@ public class Senses : MonoBehaviour {
 
         foreach (var sighting in sightings)
         {
-            if (sighting != null && Vector3.Distance(sighting.transform.position, transform.position) > 60f) {
+            if (sighting == null || Vector3.Distance(sighting.transform.position, transform.position) > radius) {
                 prunings.Add(sightings.IndexOf(sighting));
             }
         }
@@ -87,7 +88,7 @@ public class Senses : MonoBehaviour {
         foreach (var index in prunings)
         {
             if (index < sightings.Count && index >= 0) {
-                if (sightings[index] != null) sightings.RemoveAt(index);
+                sightings.RemoveAt(index);
             }
         }
     }
