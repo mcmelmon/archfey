@@ -92,10 +92,10 @@ MeshCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1992146552763668}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 3
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
@@ -115,7 +115,7 @@ MonoBehaviour:
   instant_damage: 5
   damage_over_time: 0
   potency: 0
-  speed: 70
+  speed: 30
   impact_prefab: {fileID: 1710435542514214, guid: 21ad8cd3e2ef64a6e8adf8d98532382d,
     type: 2}
   ranged_attack_origin: {fileID: 4666701022940694, guid: 45c92403343264da1bc9235f79c51629,

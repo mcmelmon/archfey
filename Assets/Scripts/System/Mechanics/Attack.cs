@@ -18,7 +18,7 @@ public class Attack : MonoBehaviour {
     Fey fey;
 
     int remaining_attacks;
-    float inverse_haste = 5f;
+    float inverse_haste = 3f;
     float current_haste;
 
     // Unity
@@ -42,10 +42,9 @@ public class Attack : MonoBehaviour {
         if (current_haste <= 0)
         {
             StartCoroutine(ManageAttacks());
-            remaining_attacks = number_of_attacks;  // TODO: space the attacks out as we countdown haste
             current_haste = inverse_haste;
         } else {
-            current_haste -= Time.deltaTime;
+            current_haste -= 1f * Time.deltaTime;
         }
     }
 
@@ -137,6 +136,7 @@ public class Attack : MonoBehaviour {
     {
         IdentifyAllTargets();
         CategorizeAvailableTargets();
+        remaining_attacks = number_of_attacks;  // TODO: space the attacks out as we countdown haste
 
         if (available_weapons.Count > 0)
         {
@@ -144,7 +144,7 @@ public class Attack : MonoBehaviour {
             StrikeTargets();
         }
 
-        yield return new WaitForSeconds(5f); // TODO: incorporate the notion of "haste"
+        yield return null;
     }
 
 
@@ -224,6 +224,7 @@ public class Attack : MonoBehaviour {
                     _ranged.name = "Ranged Weapon";
                     _ranged.Target(current_melee_targets.Dequeue());
                     remaining_attacks -= 1;
+                    IdentifyAllTargets();
                 }
             }
         }
@@ -246,6 +247,7 @@ public class Attack : MonoBehaviour {
                     _ranged.name = "Ranged Weapon";
                     _ranged.Target(current_ranged_targets.Dequeue());
                     remaining_attacks -= 1;
+                    IdentifyAllTargets();
                 }
             }
         }

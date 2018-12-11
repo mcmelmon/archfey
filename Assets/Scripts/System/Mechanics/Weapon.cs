@@ -32,6 +32,7 @@ public class Weapon : MonoBehaviour {
     {
         if (target != null)
         {
+            target.GetComponent<Renderer>().material.color = Color.green;
             Attack();
         }
         else
@@ -69,16 +70,16 @@ public class Weapon : MonoBehaviour {
         Destroy(target.gameObject); // TODO: inflict damage on health instead of autokill
     }
 
+
     private void Attack()
     {
         Vector3 direction = target.position - transform.position;
-        float distanceTraveled = speed * Time.deltaTime;
-        transform.Translate(direction.normalized * distanceTraveled, Space.World); // TODO: use translate for other direct (non navmesh) movement
+        float distance = speed * Time.deltaTime;
+        transform.position += distance * direction;
 
-        if (direction.magnitude <= distanceTraveled)
+        if (Vector3.Distance(transform.position, target.position) <= .4f)
         {
             Hit();
-            return;
         }
     }
 }
