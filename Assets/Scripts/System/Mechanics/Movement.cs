@@ -50,6 +50,13 @@ public class Movement : MonoBehaviour {
     }
 
 
+    public void SetDestination(Vector3 destination)
+    {
+        destination.y = 0;
+        agent.SetDestination(destination);
+    }
+
+
     public void SetRoute(Route _route)
     {
         route = _route;

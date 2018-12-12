@@ -16,7 +16,7 @@ public class Ghaddim : MonoBehaviour {
 
         recovery_rate["scout"] = 0.05f;
         recovery_rate["striker"] = 0.075f;
-        recovery_rate["striker"] = 0.1f;
+        recovery_rate["heavy"] = 0.1f;
     }
 
 
