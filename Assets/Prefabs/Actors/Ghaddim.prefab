@@ -25,11 +25,12 @@ GameObject:
   - component: {fileID: 54145213560318138}
   - component: {fileID: 195628119734187222}
   - component: {fileID: 114495797075432720}
-  - component: {fileID: 114191208075042882}
-  - component: {fileID: 114399145179561114}
-  - component: {fileID: 114687339321338494}
-  - component: {fileID: 114261397115865856}
   - component: {fileID: 114127286258734026}
+  - component: {fileID: 114399145179561114}
+  - component: {fileID: 114261397115865856}
+  - component: {fileID: 114313003634657330}
+  - component: {fileID: 114191208075042882}
+  - component: {fileID: 114687339321338494}
   m_Layer: 26
   m_Name: Ghaddim
   m_TagString: Actor
@@ -135,11 +136,23 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1837594824673670}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 602483510d2a145fe8df1e5797877311, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114313003634657330
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1837594824673670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca979bb6133b24ffcac3ecbf74f3535e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  haste_delta: 1
 --- !u!114 &114399145179561114
 MonoBehaviour:
   m_ObjectHideFlags: 1

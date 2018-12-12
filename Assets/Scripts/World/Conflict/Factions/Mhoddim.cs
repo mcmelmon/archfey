@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class Mhoddim : MonoBehaviour {
 
-    public Dictionary<string, int> starting_health = new Dictionary<string, int>();
+    public Dictionary<string, float> starting_health = new Dictionary<string, float>();
     public Dictionary<string, float> recovery_rate = new Dictionary<string, float>();
 
     private void Awake()
     {
-        starting_health["scout"] = 70;
-        starting_health["striker"] = 100;
-        starting_health["heavy"] = 130;
+        starting_health["scout"] = 70f;
+        starting_health["striker"] = 100f;
+        starting_health["heavy"] = 130f;
 
-        recovery_rate["scout"] = 0;
+        recovery_rate["scout"] = 0f;
         recovery_rate["striker"] = 0f;
         recovery_rate["heavy"] = 0f;
     }

@@ -13,14 +13,16 @@ public class Weapon : MonoBehaviour {
     public float damage_over_time;  // how much ongoing damage does the weapon cause?
     public float potency;           // how effectively does the weapon overcome resistance?
     public float speed;
-    public GameObject impact_prefab;
 
+    public GameObject impact_prefab;
     public Transform ranged_attack_origin;
     public Transform melee_attack_origin;
     public float ranged_attack_range;
     public float melee_attack_range;
 
-    Transform target;
+    GameObject target;
+    Health target_health;
+    Defend target_defend;
 
 
     // TODO: differentiate between Type.Melee and Ranged
@@ -30,13 +32,11 @@ public class Weapon : MonoBehaviour {
 
     void Update()
     {
-        if (target != null)
-        {
-            target.GetComponent<Renderer>().material.color = Color.green;
-            Attack();
-        }
-        else
-        {
+        if (target != null) {
+            target_health = target.GetComponent<Health>();
+            target_defend = target.GetComponent<Defend>();
+            Aim();
+        } else {
             // TODO: destroying doesn't make sense for melee
             Destroy(gameObject); // if we have no target, destroy the weapon
             return;
@@ -54,7 +54,7 @@ public class Weapon : MonoBehaviour {
 
     public void Target(GameObject _target)
     {
-        if (_target != null) target = _target.transform;
+        if (_target != null) target = _target;
     }
 
 
@@ -63,21 +63,23 @@ public class Weapon : MonoBehaviour {
 
     private void Hit()
     {
-        GameObject _impact = Instantiate(impact_prefab, transform.position, transform.rotation);
+        GameObject _impact = Instantiate(impact_prefab, transform.position + new Vector3(0,2f,0), transform.rotation);
         _impact.name = "Impact";
-        Destroy(gameObject);
+        Destroy(gameObject);  // get rid of the weapon; TODO: this makes sense for ranged, but will need to be updated for melee
         Destroy(_impact, 2f);
-        Destroy(target.gameObject); // TODO: inflict damage on health instead of autokill
+        target_health.LoseHealth(instant_damage); // TODO: reduce damage by resistances/defense; apply damage over time
     }
 
 
-    private void Attack()
+    private void Aim()
     {
-        Vector3 direction = target.position - transform.position;
+        // TODO: incorporate possibility of missing due to Defend
+
+        Vector3 direction = target.transform.position - transform.position;
         float distance = speed * Time.deltaTime;
         transform.position += distance * direction;
 
-        if (Vector3.Distance(transform.position, target.position) <= .4f)
+        if (Vector3.Distance(transform.position, target.transform.position) <= .4f)
         {
             Hit();
         }

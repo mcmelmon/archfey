@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 64101312728229622}
   - component: {fileID: 114480832309091280}
   m_Layer: 0
-  m_Name: Leaf
+  m_Name: Weapon_Leaf
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -112,7 +112,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   range: 1
   type: 1
-  instant_damage: 5
+  instant_damage: 25
   damage_over_time: 0
   potency: 0
   speed: 30

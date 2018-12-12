@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Attack : MonoBehaviour {
 
-    public const float action_threshold = 6f;
-
     public List<Weapon> available_weapons;
     public int number_of_attacks;
 
@@ -14,38 +12,35 @@ public class Attack : MonoBehaviour {
     private readonly Queue<GameObject> current_melee_targets = new Queue<GameObject>();
     private readonly Queue<GameObject> current_ranged_targets = new Queue<GameObject>();
 
+    Turn turn;
     Mhoddim mhoddim;
     Ghaddim ghaddim;
     Fey fey;
     Senses senses;
-
-    readonly float haste_delta = 1f;      // TODO: configure by actor
-    float current_haste;
 
     // Unity
 
 
     private void Awake()
     {
+        turn = GetComponent<Turn>();
         mhoddim = GetComponent<Mhoddim>();
         ghaddim = GetComponent<Ghaddim>();
         fey = GetComponent<Fey>();
-        senses = GetComponent<Senses>();
-        current_haste = 0f;
-    }
-
-
-    private void Update () {
-        if (current_haste >= action_threshold) {
-            StartCoroutine(ManageAttacks());
-            current_haste = 0f; 
-        } else {
-            current_haste += haste_delta * Time.deltaTime;
-        }
     }
 
 
     // public
+
+
+    public IEnumerator ManageAttacks()
+    {
+        CategorizePotentialTargets();
+        SelectTarget();
+        StrikeTarget();
+
+        yield return null;
+    }
 
 
     // private
@@ -54,7 +49,7 @@ public class Attack : MonoBehaviour {
     {
         ClearAvailableTargets();
 
-        foreach (var target in senses.GetSightings())
+        foreach (var target in turn.GetSightings())
         {
             if (target == null) continue;
             if (IsFriend(target)) continue;  // TODO: we will eventually want to heal friends
@@ -114,16 +109,6 @@ public class Attack : MonoBehaviour {
         }
 
         return longest_range;
-    }
-
-
-    IEnumerator ManageAttacks()
-    {
-        CategorizePotentialTargets();
-        SelectTarget();
-        StrikeTarget();
-
-        yield return null;
     }
 
 

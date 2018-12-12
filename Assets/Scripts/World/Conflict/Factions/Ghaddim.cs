@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class Ghaddim : MonoBehaviour {
 
-    public Dictionary<string, int> starting_health = new Dictionary<string, int>();
+    public Dictionary<string, float> starting_health = new Dictionary<string, float>();
     public Dictionary<string, float> recovery_rate = new Dictionary<string, float>();
 
     private void Awake()
     {
-        starting_health["scout"] = 100;
-        starting_health["striker"] = 130;
-        starting_health["heavy"] = 160;
+        // TODO: make these enums
+        starting_health["scout"] = 100f;
+        starting_health["striker"] = 130f;
+        starting_health["heavy"] = 160f;
 
         recovery_rate["scout"] = 0.05f;
         recovery_rate["striker"] = 0.075f;
@@ -34,7 +35,7 @@ public class Ghaddim : MonoBehaviour {
             health.SetStartingHealth(starting_health["striker"]);
             health.SetRecoveryRate(recovery_rate["striker"]);
         }
-        else if (unit.GetComponent<Striker>() != null)
+        else if (unit.GetComponent<Heavy>() != null)
         {
             health.SetStartingHealth(starting_health["heavy"]);
             health.SetRecoveryRate(recovery_rate["heavy"]);

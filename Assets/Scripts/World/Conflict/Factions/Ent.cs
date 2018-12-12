@@ -8,19 +8,11 @@ public class Ent : MonoBehaviour {
     public float speed = 2f;
     public float sense_radius = 40f;
     public float sense_perception = 30f;
-    Geography geography;
     Actor actor;
-    Movement movement;
     Senses senses;
 
 
     // Unity
-
-
-    private void Awake()
-    {
-        geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();
-    }
 
 
     private void Start()
@@ -49,7 +41,5 @@ public class Ent : MonoBehaviour {
         actor = GetComponent<Actor>();
         actor.SetComponents();
         actor.SetStats();
-        movement = GetComponent<Movement>();
-        movement.GetAgent().speed = speed;
     }
 }

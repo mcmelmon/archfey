@@ -79,7 +79,7 @@ public class Actor : MonoBehaviour {
         else if (ghaddim != null) {
             ghaddim.SetHealthStats(gameObject);
         } else if (fey != null) {
-
+            fey.SetHealthStats(gameObject);
         }
     }
 

@@ -25,11 +25,12 @@ GameObject:
   - component: {fileID: 54827710321622534}
   - component: {fileID: 195375507050426254}
   - component: {fileID: 114356980778237652}
-  - component: {fileID: 114989557624414676}
-  - component: {fileID: 114669221061675160}
-  - component: {fileID: 114902456033344244}
-  - component: {fileID: 114905426238864658}
   - component: {fileID: 114736850986846170}
+  - component: {fileID: 114669221061675160}
+  - component: {fileID: 114905426238864658}
+  - component: {fileID: 114116596202346880}
+  - component: {fileID: 114989557624414676}
+  - component: {fileID: 114902456033344244}
   m_Layer: 26
   m_Name: Mhoddim
   m_TagString: Actor
@@ -107,6 +108,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
+--- !u!114 &114116596202346880
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1654527326907342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca979bb6133b24ffcac3ecbf74f3535e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  haste_delta: 1
 --- !u!114 &114356980778237652
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -169,7 +182,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1654527326907342}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 602483510d2a145fe8df1e5797877311, type: 3}
   m_Name: 

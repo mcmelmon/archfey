@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Fey : MonoBehaviour {
-    public Dictionary<string, int> starting_health = new Dictionary<string, int>();
+    public Dictionary<string, float> starting_health = new Dictionary<string, float>();
     public Dictionary<string, float> recovery_rate = new Dictionary<string, float>();
 
     private void Awake()
