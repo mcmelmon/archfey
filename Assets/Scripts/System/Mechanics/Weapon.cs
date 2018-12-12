@@ -68,6 +68,7 @@ public class Weapon : MonoBehaviour {
         Destroy(gameObject);  // get rid of the weapon; TODO: this makes sense for ranged, but will need to be updated for melee
         Destroy(_impact, 2f);
         target_health.LoseHealth(instant_damage); // TODO: reduce damage by resistances/defense; apply damage over time
+        target_health.AddDamager(gameObject, instant_damage);
     }
 
 

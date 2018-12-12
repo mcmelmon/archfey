@@ -7,6 +7,8 @@ public class Health : MonoBehaviour {
     public float starting_health;
     public float current_health;
     public float recovery_rate;
+    public bool taken_damage;
+    readonly Dictionary<GameObject, float> damagers = new Dictionary<GameObject, float>();
 
 
     // Unity
@@ -19,14 +21,38 @@ public class Health : MonoBehaviour {
     }
 
 
+    private void Update()
+    {
+        // TODO: prune damagers every now and then to be sure destroyed objects are gone
+    }
+
+
     // public 
+
+
+    public void AddDamager(GameObject _attacker, float _damage)
+    {
+        if (!damagers.ContainsKey(_attacker)) {
+            damagers[_attacker] = _damage;
+        }
+        else {
+            damagers[_attacker] += _damage;
+        }
+    }
+
+
+    public Dictionary<GameObject, float> GetDamagers()
+    {
+        return damagers;
+    }
 
 
     public void LoseHealth(float amount)
     {
-        float modified_amount = amount;  // TODO: handle resistances/armore/etc
+        float modified_amount = amount;     // TODO: handle resistances/armore/etc
 
         current_health -= modified_amount;
+        taken_damage = true;                // even if it turns out to be no damage after modifications, there's a bruise
     }
 
 

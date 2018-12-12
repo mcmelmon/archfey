@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class Defend : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
+    public bool under_attack;
+
+    Health health;
+
+
+    void Awake () {
+        under_attack = false;
+        health = GetComponent<Health>();
 	}
-	
-	// Update is called once per frame
+
+
 	void Update () {
 		
 	}

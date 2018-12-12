@@ -5,7 +5,7 @@ using UnityEngine;
 public class Attack : MonoBehaviour {
 
     public List<Weapon> available_weapons;
-    public bool attacking;
+    public bool enemies_abound;
 
     List<GameObject> enemies = new List<GameObject>();
     List<GameObject> available_melee_targets = new List<GameObject>();
@@ -18,6 +18,7 @@ public class Attack : MonoBehaviour {
     Ghaddim ghaddim;
     Fey fey;
     Senses senses;
+    Health health;
     Victims victims = new Victims();
 
     public struct Victims {
@@ -35,9 +36,10 @@ public class Attack : MonoBehaviour {
         ghaddim = GetComponent<Ghaddim>();
         fey = GetComponent<Fey>();
         senses = GetComponent<Senses>();
+        health = GetComponent<Health>();
         victims.mhoddim = false;
         victims.ghaddim = false;
-        attacking = false;
+        enemies_abound = false;
     }
 
 
@@ -46,24 +48,19 @@ public class Attack : MonoBehaviour {
 
     public void DiscoverEnemies()
     {
-        // This method will be called by Turn after GetSightings, so the sightings list 
-        // will be populated (if anything is in range).  We set sightings in Turn because
-        // we also want to know about friends.
-
         enemies.Clear();
 
-        foreach (var sighting in senses.sightings)
-        {
-            if (sighting == gameObject) continue; // we can "sight" ourselves (potential heal target), but not an enemy
+        foreach (KeyValuePair<GameObject, float> damager in health.GetDamagers()) {  // TODO: name "keyValue" better in other Dict iterators
+            if (damager.Key != null) enemies.Add(damager.Key);
+        }
+
+        foreach (var sighting in senses.GetSightings()) {
+            if (sighting == gameObject) continue; // we can "sight" ourselves (potential heal target), but not as an enemy
             if (IsFriendOrNeutral(sighting)) continue;
             if (!enemies.Contains(sighting)) enemies.Add(sighting);
         }
 
-        if (enemies.Count > 0) {
-            attacking = true;
-        } else {
-            attacking = false;
-        }
+        enemies_abound = enemies.Count > 0 ? true : false;
     }
 
 
@@ -73,14 +70,20 @@ public class Attack : MonoBehaviour {
     }
 
 
+    public GameObject GetAnEnemy()
+    {
+        return enemies.Count > 0 ? enemies[Random.Range(0, enemies.Count)] : null;
+    }
+
+
     public IEnumerator ManageAttacks()
     {
         DiscoverEnemies();
 
-        if (enemies.Count > 0) {
-            CategorizePotentialTargets();
-            SelectTarget();
-            StrikeTarget();
+        if (enemies_abound) {
+            EnemyAtMeleeOrRange();
+            SelectEnemy();
+            StrikeEnemy();
         }
 
         yield return null;
@@ -89,19 +92,20 @@ public class Attack : MonoBehaviour {
 
     // private
 
-    private void CategorizePotentialTargets()
+    private void EnemyAtMeleeOrRange()
     {
         ClearTargets();
 
-        foreach (var target in enemies) {
-            if (target == null) continue;
-            float distance = Vector3.Distance(target.transform.position, transform.position);
+        foreach (var enemy in enemies) {
+            if (enemy == null) continue;
+
+            float distance = Vector3.Distance(enemy.transform.position, transform.position);
 
             if ( distance <= LongestMeleeRange()) {
-                available_melee_targets.Add(target);
+                available_melee_targets.Add(enemy);
             } else if (distance <= LongestRangedRange()) {
                 // targets in melee range are also potential ranged targets
-                available_ranged_targets.Add(target);
+                available_ranged_targets.Add(enemy);
             }
         }
     }
@@ -118,7 +122,7 @@ public class Attack : MonoBehaviour {
 
     private bool IsFriendOrNeutral(GameObject _target)
     {
-        if (_target == null) return true;  // null is everyone's friend, or at least not their enemy!
+        if (_target == null) return true;  // null is everyone's friend, or at least not their enemy
         if (fey != null) {
             return false; // TODO: the only fey right now is an Ent, and Ents attack
         }
@@ -128,8 +132,7 @@ public class Attack : MonoBehaviour {
         Fey target_fey = _target.GetComponent<Fey>();
         bool fey_foe = false;
 
-        if (target_fey != null)
-        {
+        if (target_fey != null) {
             // The fey are neutral, but if a specific unit has attacked "us",
             // then it is an enemy
 
@@ -139,7 +142,7 @@ public class Attack : MonoBehaviour {
             fey_foe =  (mhoddim != null && mhoddim_victim) || (ghaddim != null && ghaddim_victim);
         }
 
-        bool friend_or_neutral = (mhoddim == null && target_mhoddim == null) || (ghaddim == null && target_ghaddim == null) && !fey_foe;
+        bool friend_or_neutral = !fey_foe && (mhoddim == null && target_mhoddim == null) || (ghaddim == null && target_ghaddim == null); 
 
         return friend_or_neutral;
     }
@@ -149,8 +152,7 @@ public class Attack : MonoBehaviour {
     {
         float longest_range = float.MinValue;
 
-        foreach (var weapon in available_weapons)
-        {
+        foreach (var weapon in available_weapons) {
             if (weapon.melee_attack_range > longest_range) {
                 longest_range = weapon.melee_attack_range;
             }
@@ -176,13 +178,11 @@ public class Attack : MonoBehaviour {
 
     private GameObject MeleeTarget()
     {
-        // select a random melee target and remove it from the list
-        // TODO: allow multiple attacks on one target
+        // select a random melee target
         GameObject _target = null;
 
         if (available_melee_targets.Count > 0) {
             _target = available_melee_targets[Random.Range(0, available_melee_targets.Count)];
-            available_melee_targets.Remove(_target);
         }
 
         return _target;
@@ -191,21 +191,19 @@ public class Attack : MonoBehaviour {
 
     private GameObject RangedTarget()
     {
-        // select a random ranged target and remove it from the list
-        // TODO: allow multiple attacks on one target
+        // select a random ranged target
 
         GameObject _target = null;
 
         if (available_ranged_targets.Count > 0) {
             _target = available_ranged_targets[Random.Range(0, available_ranged_targets.Count)];
-            available_ranged_targets.Remove(_target);
         }
 
         return _target;
     }
 
 
-    private void SelectTarget()
+    private void SelectEnemy()
     {
         // attack targets in melee range before those at distance
         
@@ -219,14 +217,16 @@ public class Attack : MonoBehaviour {
 
     private void SetVictims(GameObject _target)
     {
+        // Primarily used for Fey units, but other neutral units may be introduced
+
         victims.mhoddim = _target.GetComponent<Mhoddim>() != null;
         victims.ghaddim = _target.GetComponent<Ghaddim>() != null;
     }
 
 
-    private void StrikeMeleeTarget()
+    private void Melee()
     {
-        if (current_melee_targets.Count <= 0) return;
+        if (current_melee_targets.Count == 0) return;
         
         foreach (var weapon in available_weapons) {
             if (weapon.range == Weapon.Range.Melee) {
@@ -246,9 +246,9 @@ public class Attack : MonoBehaviour {
     }
 
 
-    private void StrikeRangedTarget()
+    private void Ranged()
     {
-        if (current_ranged_targets.Count <= 0) return;
+        if (current_ranged_targets.Count == 0) return;
 
         foreach (var weapon in available_weapons) {
 
@@ -265,18 +265,18 @@ public class Attack : MonoBehaviour {
         }
     }
 
-    private void StrikeTarget()
+    private void StrikeEnemy()
     {
         // The number of strikes is governed by haste and action_threshold in Update.
 
         // If any targets are in melee range, strike at them ahead of ranged
 
-        if (current_melee_targets.Count <= 0 && current_ranged_targets.Count <= 0) return;
+        if (current_melee_targets.Count == 0 && current_ranged_targets.Count == 0) return;
 
         if (current_melee_targets.Count > 0) {
-            StrikeMeleeTarget();
-        } else if (current_ranged_targets.Count > 0) { 
-            StrikeRangedTarget();
+            Melee();
+        } else { 
+            Ranged();
         }
     }
 }
