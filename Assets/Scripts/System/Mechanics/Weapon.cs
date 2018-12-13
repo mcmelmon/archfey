@@ -61,28 +61,56 @@ public class Weapon : MonoBehaviour {
     // private
 
 
-    private void Hit()
-    {
-        GameObject _impact = Instantiate(impact_prefab, transform.position + new Vector3(0,2f,0), transform.rotation);
-        _impact.name = "Impact";
-        Destroy(gameObject);  // get rid of the weapon; TODO: this makes sense for ranged, but will need to be updated for melee
-        Destroy(_impact, 2f);
-        target_health.LoseHealth(instant_damage); // TODO: reduce damage by resistances/defense; apply damage over time
-        target_health.AddDamager(gameObject, instant_damage);
-    }
-
-
     private void Aim()
     {
         // TODO: incorporate possibility of missing due to Defend
 
-        Vector3 direction = target.transform.position - transform.position;
-        float distance = speed * Time.deltaTime;
-        transform.position += distance * direction;
+        float separation = float.MaxValue;
 
-        if (Vector3.Distance(transform.position, target.transform.position) <= .4f)
-        {
-            Hit();
+        if (range == Weapon.Range.Ranged) {
+            Vector3 direction = target.transform.position - transform.position;
+            float distance = speed * Time.deltaTime;
+            transform.position += distance * direction;
+            separation = Vector3.Distance(target.transform.position, transform.position);
+        } else {
+            float grounded_center_distance = Vector3.Distance(new Vector3(target.transform.position.x, 0, target.transform.position.z), new Vector3(transform.parent.position.x, 0, transform.parent.position.z));
+            float combined_radius = (target.GetComponent<CapsuleCollider>().radius * target.transform.localScale.x) + (transform.parent.GetComponent<CapsuleCollider>().radius * transform.parent.localScale.x);
+            separation = grounded_center_distance - combined_radius;
+        }
+
+        if (separation <= 2f) Hit();
+    }
+
+
+    private void ApplyDamage()
+    {
+        if (target_health != null) {
+            target_health.LoseHealth(instant_damage); // TODO: reduce damage by resistances/defense; apply damage over time
+            target_health.AddDamager(transform.parent.gameObject, instant_damage);
         }
     }
+
+
+    private void CleanUpAmmunition()
+    {
+        if (range == Weapon.Range.Ranged) {
+            Destroy(gameObject);
+        }
+    }
+
+
+    private void Hit()
+    {
+        Impact();
+        ApplyDamage();
+        CleanUpAmmunition();
+    }
+
+
+    private void Impact() {
+        GameObject _impact = Instantiate(impact_prefab, transform.position + new Vector3(0, 2f, 0), transform.rotation);
+        _impact.name = "Impact";
+        Destroy(_impact, 2f);
+    }
+
 }

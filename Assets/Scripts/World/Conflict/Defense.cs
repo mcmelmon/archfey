@@ -13,9 +13,10 @@ public class Defense : MonoBehaviour
 
     // Unity
 
+
     private void Update()
     {
-        CommandFormations();
+        // TODO: units will move in accordance with their turns; or their formation turns
     }
 
 

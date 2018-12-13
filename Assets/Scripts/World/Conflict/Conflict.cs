@@ -10,6 +10,8 @@ public class Conflict : MonoBehaviour {
     public Mhoddim mhoddim_prefab;
     public Fey fey_prefab;
 
+    public float haste_delta = 1f;
+
     Map map;
 
     private void Awake()

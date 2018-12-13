@@ -9,7 +9,7 @@ public class Fey : MonoBehaviour {
     private void Awake()
     {
         starting_health["ent"] = 500;
-        recovery_rate["ent"] = 0.15f;
+        recovery_rate["ent"] = 0.05f;
     }
 
 

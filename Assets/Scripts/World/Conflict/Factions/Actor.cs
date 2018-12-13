@@ -18,25 +18,11 @@ public class Actor : MonoBehaviour {
     // Unity
 
 
-    private void Awake()
-    {
-        if (GetComponent<SphereCollider>() == null) AddSenses();
-
-    }
-
-
     private void Start()
     {
         my_renderer = GetComponent<Renderer>();
         my_color = my_renderer.material.color;
     }
-
-
-    //private void OnDrawGizmos()
-    //{
-    //    Gizmos.color = Color.red;
-    //    Gizmos.DrawRay(transform.position, transform.TransformDirection(Vector3.forward * 50));
-    //}
 
 
     private void OnMouseDown()
@@ -81,15 +67,5 @@ public class Actor : MonoBehaviour {
         } else if (fey != null) {
             fey.SetHealthStats(gameObject);
         }
-    }
-
-
-    // private
-
-
-    private void AddSenses()
-    {
-        transform.gameObject.AddComponent<Senses>();
-        GetComponent<SphereCollider>().isTrigger = true;
     }
 }

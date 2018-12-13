@@ -6,14 +6,13 @@ public class Offense : MonoBehaviour
 {
     public enum Category { Primary = 0, Secondary = 1, Tertiary = 2 };
 
-    Geography geography;
-
     readonly Dictionary<Category, Circle> attack_circles = new Dictionary<Category, Circle>();
     Dictionary<Ruins.Category, Circle> ruin_circles = new Dictionary<Ruins.Category, Circle>();
     private Queue<GameObject> aggressors = new Queue<GameObject>();
     readonly List<GameObject> deployed = new List<GameObject>();
     readonly List<Formation> formations = new List<Formation>();
 
+    Geography geography;
 
     // Unity
 
@@ -26,7 +25,7 @@ public class Offense : MonoBehaviour
 
     private void Update()
     {
-        CommandFormations();
+        // TODO: units will move in accordance with their turns; or their formation turns
     }
 
 

@@ -36,7 +36,7 @@ public class Ent : MonoBehaviour {
     private void ConfigureRoleSpecificProperties()
     {
         senses = GetComponent<Senses>();
-        senses.SetRange(sense_radius);
+        senses.SetRange(sense_radius / transform.localScale.y);  // radius inflated by scale, and y is the biggest scale for an Ent
         senses.SetPerception(sense_perception);
         actor = GetComponent<Actor>();
         actor.SetComponents();

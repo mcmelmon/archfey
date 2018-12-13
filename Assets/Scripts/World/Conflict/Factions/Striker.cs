@@ -74,6 +74,7 @@ public class Striker : MonoBehaviour {
     {
         senses = GetComponent<Senses>();
         senses.SetRange(sense_radius);
+        senses.SetPerception(sense_perception);
         actor = GetComponent<Actor>();
         actor.SetComponents();
         actor.SetStats();

@@ -46,7 +46,7 @@ public class Turn : MonoBehaviour {
         StartCoroutine(attack.ManageAttacks());
         if (attack.enemies_abound) {
             if (movement != null) {
-                movement.GetAgent().ResetPath();
+                movement.ResetPath();
                 movement.SetDestination(attack.GetAnEnemy().transform.position);
             }
         }

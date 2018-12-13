@@ -37,6 +37,8 @@ public class Movement : MonoBehaviour {
 
     // public
 
+    // TODO: warp the agent to the nearest navmesh point if it is off the mesh
+    // TODO: deal with an agent that is stuck
 
     public NavMeshAgent GetAgent()
     {
@@ -50,10 +52,16 @@ public class Movement : MonoBehaviour {
     }
 
 
+    public void ResetPath()
+    {
+        if (agent.isOnNavMesh) agent.ResetPath();
+    }
+
+
     public void SetDestination(Vector3 destination)
     {
         destination.y = 0;
-        agent.SetDestination(destination);
+        if (agent.isOnNavMesh) agent.SetDestination(destination);
     }
 
 

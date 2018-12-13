@@ -77,32 +77,8 @@ public class Formation
         if (has_objective || units.Count <= 0 || units[0] == null) return;
 
         if (units[0].GetComponent<Heavy>() != null) {
-            // offense sits tight, defense patrols the ruins
-            if (units[0].GetComponent<Defender>() != null)
-            {
-                // copied from Scout
-                // TODO: don't copy from Scout
-                Route previous_route = route;
-
-                Dictionary<Ruins.Category, Circle> ruins_by_category = units[0].GetComponentInParent<Defense>().GetRuinCircles();
-                List<Circle> _ruins = new List<Circle>();
-
-                // Create a list of the ruin circles
-                foreach (KeyValuePair<Ruins.Category, Circle> keyValue in ruins_by_category)
-                {
-                    _ruins.Add(keyValue.Value);
-                }
-
-                // Clear the paths traveled if we've covered every ruin circle
-                if (_ruins.Count == previous_route.routes_followed.Count)
-                {
-                    previous_route.routes_followed.Clear();
-                }
-
-                // Patrol the first ruin that we haven't traveled (recently)
-                Circle next_circle = _ruins[previous_route.routes_followed.Count];
-                route = Route.Circular(next_circle.VertexClosestTo(anchor), next_circle, false, Restrategize);
-                route.AccumulateRoutes(previous_route);
+            if (units[0].GetComponent<Defender>() != null) {
+                Debug.Log("Defense heavy is tanking");
             }
         }
     }
@@ -116,33 +92,10 @@ public class Formation
         if (has_objective || units.Count <= 0 || units[0] == null) return;
 
         if (units[0].GetComponent<Striker>() != null) {
-            // move toward scout report
-            Scout[] scouts = Object.FindObjectsOfType<Scout>();
-            foreach (var scout in scouts) {
-                if (scout.reports.Count > 0) {
-                    if (scout.GetComponent<Defender>() == units[0].GetComponent<Defender>()) {
-                        // move the formation's units to the reported location.
-                        // TODO: move in formation
-                        // TODO: give the Formation a Route
-                        has_objective = true;
-                        route = Route.Line(units[0].transform.position, scout.reports[0], true, Restrategize);  // march to the report and loop
-                        March();
-                    }
-                }
-            }
-
+            Debug.Log("Striker is striking");
         }
         else if (units[0].GetComponent<Heavy>() != null) {
-           // offense sits tight, defense patrols the ruins
-            if (units[0].GetComponent<Defender>() != null) {
-                // copied from Scout
-                // TODO: don't copy from Scout
-                // Move to the primary circle and patrol it, other circles handled by Restrategize()
-                has_objective = true;
-                Dictionary<Ruins.Category, Circle> ruin_circles = units[0].GetComponentInParent<Defense>().GetRuinCircles();
-                route = Route.Circular(ruin_circles[Ruins.Category.Primary].VertexClosestTo(anchor), ruin_circles[Ruins.Category.Primary], true, Restrategize);
-                March();
-            }
+            Debug.Log("Heavy is tanking");
         }
     }
 

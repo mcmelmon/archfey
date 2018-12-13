@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Senses : MonoBehaviour {
 
-    public float radius = 20f;
-    public float perception = 10f;
+    public float radius;
+    public float perception;
     public List<GameObject> sightings = new List<GameObject>();
 
 
@@ -15,14 +15,14 @@ public class Senses : MonoBehaviour {
     private void Awake()
     {
         transform.gameObject.AddComponent<SphereCollider>();
-        GetComponent<SphereCollider>().radius = radius;
+        GetComponent<SphereCollider>().isTrigger = true;
     }
 
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
-        foreach (var sighting in sightings)
+        foreach (var sighting in GetSightings())
         {
             if (sighting == null) continue;
             Gizmos.DrawRay(transform.position, (sighting.transform.position - transform.position));
@@ -59,8 +59,8 @@ public class Senses : MonoBehaviour {
     }
 
 
-    public void SetRange(float range)
+    public void SetRange(float _range)
     {
-        GetComponent<SphereCollider>().radius = range;
+        GetComponent<SphereCollider>().radius = radius = _range;
     }
 }

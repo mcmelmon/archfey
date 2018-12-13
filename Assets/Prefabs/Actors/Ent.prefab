@@ -11,21 +11,6 @@ Prefab:
   m_SourcePrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1394265834099708}
   m_IsPrefabAsset: 1
---- !u!1 &1079871415620400
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4193129501240500}
-  m_Layer: 26
-  m_Name: MeleeAttackOrigin (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &1134102223063308
 GameObject:
   m_ObjectHideFlags: 0
@@ -57,6 +42,7 @@ GameObject:
   - component: {fileID: 114674318048376190}
   - component: {fileID: 114376940726108032}
   - component: {fileID: 114850960800867084}
+  - component: {fileID: 114756480532763090}
   - component: {fileID: 114470042403908334}
   - component: {fileID: 114132962431476870}
   - component: {fileID: 114195250589654364}
@@ -83,34 +69,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &1915705503480586
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4584844302253700}
-  m_Layer: 26
-  m_Name: MeleeAttackOrigin (2)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4193129501240500
-Transform:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1079871415620400}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.694, y: 0.06700003, z: 0.04}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4999204020134564}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4533455931003046
 Transform:
   m_ObjectHideFlags: 1
@@ -123,19 +81,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4999204020134564}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4584844302253700
-Transform:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1915705503480586}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.676, y: 0.06700003, z: 0.04}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4999204020134564}
-  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4666701022940694
 Transform:
@@ -162,8 +107,6 @@ Transform:
   m_Children:
   - {fileID: 4666701022940694}
   - {fileID: 4533455931003046}
-  - {fileID: 4193129501240500}
-  - {fileID: 4584844302253700}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -235,6 +178,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 602483510d2a145fe8df1e5797877311, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  under_attack: 0
 --- !u!114 &114195250589654364
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -272,6 +216,7 @@ MonoBehaviour:
   starting_health: 1
   current_health: 0
   recovery_rate: 0
+  taken_damage: 0
 --- !u!114 &114674318048376190
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -290,6 +235,21 @@ MonoBehaviour:
   defender: {fileID: 0}
   movement: {fileID: 0}
   hover_color: {r: 0, g: 0, b: 0, a: 0}
+--- !u!114 &114756480532763090
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1394265834099708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f7ee7b2470a746268eab7b8c5a267d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 20
+  perception: 10
+  sightings:
+  - {fileID: 1394265834099708}
 --- !u!114 &114850960800867084
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -317,7 +277,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   available_weapons:
   - {fileID: 114480832309091280, guid: 8bf21f678538442038e3f94ca5d3645a, type: 2}
-  attacking: 0
+  enemies_abound: 0
 --- !u!136 &136508349629120668
 CapsuleCollider:
   m_ObjectHideFlags: 1
