@@ -62,13 +62,13 @@ public class Ruins : MonoBehaviour {
 
     void Construct()
     {
-        foreach (KeyValuePair<Category, Circle> keyValue in ruin_circles)
+        foreach (KeyValuePair<Category, Circle> circle in ruin_circles)
         {
-            switch (keyValue.Key) {
+            switch (circle.Key) {
                 case Category.Primary:
                     for (int i = 0; i < 9; i++)
                     {
-                        Vector3 position = keyValue.Value.RandomVertex();
+                        Vector3 position = circle.Value.RandomVertex();
                         if (!NearRuin(position, Ruin.minimum_ruin_proximity))
                             InstantiateRuin(position, this);
                     }
@@ -76,7 +76,7 @@ public class Ruins : MonoBehaviour {
                 case Category.Secondary:
                     for (int i = 0; i < 5; i++)
                     {
-                        Vector3 position = keyValue.Value.RandomVertex();
+                        Vector3 position = circle.Value.RandomVertex();
                         if (!NearRuin(position, Ruin.minimum_ruin_proximity))
                             InstantiateRuin(position, this);
                     }
@@ -84,7 +84,7 @@ public class Ruins : MonoBehaviour {
                 case Category.Tertiary:
                     for (int i = 0; i < 2; i++)
                     {
-                        Vector3 position = keyValue.Value.RandomVertex();
+                        Vector3 position = circle.Value.RandomVertex();
                         if (!NearRuin(position, Ruin.minimum_ruin_proximity))
                             InstantiateRuin(position, this);
                     }
@@ -155,9 +155,9 @@ public class Ruins : MonoBehaviour {
 
     private bool NearRuinCircle(Vector3 position, float how_close)
     {
-        foreach (KeyValuePair<Category, Circle> keyValue in ruin_circles)
+        foreach (KeyValuePair<Category, Circle> circle in ruin_circles)
         {
-            float distance = Vector3.Distance(position, keyValue.Value.center);
+            float distance = Vector3.Distance(position, circle.Value.center);
             if (distance < how_close) return true;
         }
 

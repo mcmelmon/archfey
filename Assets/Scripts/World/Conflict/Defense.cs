@@ -14,12 +14,6 @@ public class Defense : MonoBehaviour
     // Unity
 
 
-    private void Update()
-    {
-        // TODO: units will move in accordance with their turns; or their formation turns
-    }
-
-
     // public
 
     public void CommandFormations()
@@ -53,9 +47,9 @@ public class Defense : MonoBehaviour
 
     private void Deploy(GameObject parent)
     {
-        foreach (KeyValuePair<Ruins.Category, Circle> keyValue in ruin_circles)
+        foreach (KeyValuePair<Ruins.Category, Circle> circle in ruin_circles)
         {
-            switch (keyValue.Key)
+            switch (circle.Key)
             {
                 case Ruins.Category.Primary:
                     Formation block_formation = Formation.CreateFormation(ruin_circles[Ruins.Category.Primary].center, Formation.Profile.Circle);
@@ -63,7 +57,7 @@ public class Defense : MonoBehaviour
 
                     for (int i = 0; i < 12; i++)
                     {
-                        GameObject _heavy = Spawn(keyValue.Value.RandomContainedPoint(), parent.transform);
+                        GameObject _heavy = Spawn(circle.Value.RandomContainedPoint(), parent.transform);
                         _heavy.AddComponent<Heavy>();
                         block_formation.JoinFormation(_heavy);
                         _heavy.GetComponent<Heavy>().SetFormation(block_formation);
@@ -75,7 +69,7 @@ public class Defense : MonoBehaviour
 
                     for (int i = 0; i < 5; i++)
                     {
-                        GameObject _striker = Spawn(keyValue.Value.RandomContainedPoint(), parent.transform);
+                        GameObject _striker = Spawn(circle.Value.RandomContainedPoint(), parent.transform);
                         _striker.AddComponent<Striker>();
                         strike_formation.JoinFormation(_striker);
                         _striker.GetComponent<Striker>().SetFormation(strike_formation);
@@ -85,7 +79,7 @@ public class Defense : MonoBehaviour
                 case Ruins.Category.Tertiary:
                     for (int i = 0; i < 3; i++)
                     {
-                        GameObject _scout = Spawn(keyValue.Value.RandomContainedPoint(), parent.transform);
+                        GameObject _scout = Spawn(circle.Value.RandomContainedPoint(), parent.transform);
                         _scout.AddComponent<Scout>();
                     }
                     break;

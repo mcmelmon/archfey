@@ -10,10 +10,11 @@ public class Scout : MonoBehaviour {
     public float sense_perception = 20f;
     public List<Vector3> reports = new List<Vector3>();
     Geography geography;
-    Actor actor;
     Movement movement;
     Senses senses;
-
+    Actor actor;
+    Attacker attacker;
+    Defender defender;
 
 
     // Unity
@@ -21,6 +22,9 @@ public class Scout : MonoBehaviour {
     private void Awake()
     {
         geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();
+        actor = GetComponent<Actor>();
+        attacker = GetComponent<Attacker>();
+        defender = GetComponent<Defender>();
     }
 
 
@@ -43,7 +47,7 @@ public class Scout : MonoBehaviour {
     {
         Route previous_route = movement.GetRoute();
 
-        if (actor.attacker != null && previous_route != null) {
+        if (attacker != null && previous_route != null) {
             Debug.Log("Offense scout is scouting");
         } else {
             Debug.Log("Defense scout is scouting");
@@ -55,7 +59,7 @@ public class Scout : MonoBehaviour {
     {
         // TODO: differentiate between Mhoddim and Ghaddim approaches
         
-        if (actor.attacker != null) {
+        if (attacker != null) {
             Debug.Log("Offense scout is scouting");
         }
         else {

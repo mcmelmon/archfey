@@ -19,6 +19,10 @@ public class Formation
     float spacing;
     Route route;
 
+
+    // static
+
+
     public static Formation CreateFormation(Vector3 _anchor, Profile _profile, float _spacing = 5f)
     {
         Formation _formation = new Formation
@@ -30,6 +34,9 @@ public class Formation
 
         return _formation;
     }
+
+
+    // public
 
 
     public void Face(Vector3 facing)
@@ -81,6 +88,12 @@ public class Formation
                 Debug.Log("Defense heavy is tanking");
             }
         }
+    }
+
+
+    public void SetRoute(Route _route)
+    {
+        route = _route;
     }
 
     public void Strategize()

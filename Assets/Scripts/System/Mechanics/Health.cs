@@ -9,9 +9,16 @@ public class Health : MonoBehaviour {
     public float recovery_rate;
     public bool taken_damage;
     readonly Dictionary<GameObject, float> damagers = new Dictionary<GameObject, float>();
+    Actor actor;
 
 
     // Unity
+
+
+    private void Awake()
+    {
+        actor = GetComponent<Actor>();
+    }
 
 
     private void OnValidate()
@@ -34,10 +41,15 @@ public class Health : MonoBehaviour {
     {
         if (!damagers.ContainsKey(_attacker)) {
             damagers[_attacker] = _damage;
-        }
-        else {
+        } else {
             damagers[_attacker] += _damage;
         }
+    }
+
+
+    public void ApplyDamageOverTime()
+    {
+        // TODO
     }
 
 
@@ -67,8 +79,7 @@ public class Health : MonoBehaviour {
 
     public void PersistOrPerish()
     {
-        if (current_health <= 0)
-        {
+        if (current_health <= 0) {
             // Objects being destroyed suddenly probably lack health configuration stats...
             Destroy(gameObject);
         }

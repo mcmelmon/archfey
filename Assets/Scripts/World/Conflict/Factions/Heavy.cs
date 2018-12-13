@@ -11,13 +11,18 @@ public class Heavy : MonoBehaviour {
     Movement movement;
     Senses senses;
     Formation formation;
+    Attacker attacker;
+    Defender defender;
 
     // Unity
 
     private void Awake()
     {
         actor = GetComponent<Actor>();
+        attacker = GetComponent<Attacker>();
+        defender = GetComponent<Defender>();
     }
+
 
 
     private void Start()
@@ -38,7 +43,7 @@ public class Heavy : MonoBehaviour {
 
     public void Restrategize()
     {
-        if (actor.attacker != null)
+        if (true)
         {
 
         }
@@ -61,7 +66,7 @@ public class Heavy : MonoBehaviour {
         {
             // If we are not part of a formation, come up with an individual strategy.
 
-            if (actor.attacker != null)
+            if (true)
             {
             }
             else

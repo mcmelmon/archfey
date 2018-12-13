@@ -8,6 +8,7 @@ public class Turn : MonoBehaviour {
     public float haste_delta = 1f;
     float current_haste;
 
+    Actor actor;
     Health health;
     Attack attack;
     Movement movement;
@@ -16,6 +17,7 @@ public class Turn : MonoBehaviour {
 
 
     private void Awake () {
+        actor = GetComponent<Actor>();
         health = GetComponent<Health>();
         attack = GetComponent<Attack>();
         movement = GetComponent<Movement>();
@@ -23,9 +25,10 @@ public class Turn : MonoBehaviour {
 
 
     private void Update () {
-        if (current_haste > Turn.action_threshold) {
+        if (current_haste > action_threshold) {
             ResolveCurrentHealth();
-            // ResolveMovement();
+            ResolveMovement();
+            ResolveFriendAndFoe();
             ResolveAttacks();
             current_haste = 0f; 
         } else {
@@ -34,22 +37,12 @@ public class Turn : MonoBehaviour {
     }
 
 
-    // public
-
-
-
     // private
 
 
     private void ResolveAttacks()
     {
         StartCoroutine(attack.ManageAttacks());
-        if (attack.enemies_abound) {
-            if (movement != null) {
-                movement.ResetPath();
-                movement.SetDestination(attack.GetAnEnemy().transform.position);
-            }
-        }
     }
 
 
@@ -58,5 +51,23 @@ public class Turn : MonoBehaviour {
         health.RecoverHealth(health.recovery_rate * health.starting_health);
         // TODO: health.ApplyDamageOverTime
         health.PersistOrPerish();
+    }
+
+
+    private void ResolveFriendAndFoe()
+    {
+        StartCoroutine(actor.FriendAndFoe());
+    }
+
+
+    private void ResolveMovement()
+    {
+        if (actor.enemies_abound) {
+            GameObject enemy = actor.GetAnEnemy();
+            if (enemy != null && movement != null) {
+                movement.ResetPath();
+                movement.SetDestination(enemy.transform.position);
+            }
+        }
     }
 }

@@ -12,7 +12,7 @@ public class Weapon : MonoBehaviour {
     public float instant_damage;    // how much damage does the weapon cause when it hits?
     public float damage_over_time;  // how much ongoing damage does the weapon cause?
     public float potency;           // how effectively does the weapon overcome resistance?
-    public float speed;
+    public float ranged_speed;
 
     public GameObject impact_prefab;
     public Transform ranged_attack_origin;
@@ -25,85 +25,81 @@ public class Weapon : MonoBehaviour {
     Defend target_defend;
 
 
-    // TODO: differentiate between Type.Melee and Ranged
-
     // Unity
 
 
     void Update()
     {
-        if (target != null) {
-            target_health = target.GetComponent<Health>();
-            target_defend = target.GetComponent<Defend>();
-            Aim();
-        } else {
-            // TODO: destroying doesn't make sense for melee
-            Destroy(gameObject); // if we have no target, destroy the weapon
-            return;
-        }
+        if (range == Range.Ranged) Seek();
     }
+
 
     private void OnValidate()
     {
-        if (speed <= 1) speed = 10f;
+        if (ranged_speed <= 1) ranged_speed = 10f;
     }
 
 
     // public
 
 
-    public void Target(GameObject _target)
+    public void Hit()
     {
-        if (_target != null) target = _target;
+        if (target != null) {
+            target_defend = target.GetComponent<Defend>();          // TODO: incorporate possibility of miss 
+
+            Impact();
+            ApplyDamage();
+            CleanUpAmmunition();
+        }
+    }
+
+
+    public void Seek()
+    {
+        if (range != Range.Ranged) return;
+
+        if (target == null) {
+            Destroy(gameObject);  // destroy ranged "ammunition"
+            return;
+        }
+
+        float separation = float.MaxValue;
+        Vector3 direction = target.transform.position - transform.position;
+        float distance = ranged_speed * Time.deltaTime;
+        transform.position += distance * direction;
+        separation = Vector3.Distance(target.transform.position, transform.position);
+
+        if (separation <= .5f) Hit();
+    }
+
+
+    public void SetTarget(GameObject _target)
+    {
+        target = _target;
     }
 
 
     // private
 
 
-    private void Aim()
-    {
-        // TODO: incorporate possibility of missing due to Defend
-
-        float separation = float.MaxValue;
-
-        if (range == Weapon.Range.Ranged) {
-            Vector3 direction = target.transform.position - transform.position;
-            float distance = speed * Time.deltaTime;
-            transform.position += distance * direction;
-            separation = Vector3.Distance(target.transform.position, transform.position);
-        } else {
-            float grounded_center_distance = Vector3.Distance(new Vector3(target.transform.position.x, 0, target.transform.position.z), new Vector3(transform.parent.position.x, 0, transform.parent.position.z));
-            float combined_radius = (target.GetComponent<CapsuleCollider>().radius * target.transform.localScale.x) + (transform.parent.GetComponent<CapsuleCollider>().radius * transform.parent.localScale.x);
-            separation = grounded_center_distance - combined_radius;
-        }
-
-        if (separation <= 2f) Hit();
-    }
-
-
     private void ApplyDamage()
     {
+        target_health = target.GetComponent<Health>();
+
         if (target_health != null) {
             target_health.LoseHealth(instant_damage); // TODO: reduce damage by resistances/defense; apply damage over time
             target_health.AddDamager(transform.parent.gameObject, instant_damage);
+            SpreadThreat();
         }
     }
 
 
     private void CleanUpAmmunition()
     {
-        if (range == Weapon.Range.Ranged) {
+        if (range == Range.Ranged) {
             Destroy(gameObject);
         }
-    }
-
-
-    private void Hit()
-    {
-        Impact();
-        ApplyDamage();
-        CleanUpAmmunition();
     }
 
 
@@ -113,4 +109,13 @@ public class Weapon : MonoBehaviour {
         Destroy(_impact, 2f);
     }
 
+
+    private void SpreadThreat()
+    {
+        Mhoddim mhoddim_faction = target.GetComponent<Mhoddim>();
+        Ghaddim ghaddim_faction = target.GetComponent<Ghaddim>();
+
+        if (mhoddim_faction != null) mhoddim_faction.AddFactionThreat(transform.parent.gameObject, instant_damage);
+        if (ghaddim_faction != null) ghaddim_faction.AddFactionThreat(transform.parent.gameObject, instant_damage);
+    }
 }

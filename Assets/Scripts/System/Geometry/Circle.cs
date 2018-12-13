@@ -12,7 +12,7 @@ public class Circle {
     public float delta_theta;
 
 
-    // public
+    // static
 
 
     public static Circle CreateCircle(Vector3 center, float radius, int vertices = 12, bool draw_vertices = false)
@@ -28,6 +28,9 @@ public class Circle {
 
         return _circle;
     }
+
+
+    // public
 
 
     public bool Equals(Circle other_circle)
@@ -61,8 +64,7 @@ public class Circle {
         float shortest_distance = Mathf.Infinity;
         Vector3 nearest = Vector3.zero;
 
-        foreach (var vertex in vertices)
-        {
+        foreach (var vertex in vertices) {
             float distance = Vector3.Distance(vertex, point);
             if (distance < shortest_distance) {
                 shortest_distance = distance;
@@ -89,11 +91,9 @@ public class Circle {
 
     private void Draw(bool draw_vertices)
     {
-        for (int i = 0; i < vertex_count; i++)
-        {
+        for (int i = 0; i < vertex_count; i++) {
             Vector3 vertex = new Vector3(radius * Mathf.Cos(theta), 0f, radius * Mathf.Sin(theta));
-            if (draw_vertices)
-            {
+            if (draw_vertices) {
                 GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 cube.name = "Vertex";
                 cube.transform.position = (center + vertex);

@@ -6,6 +6,10 @@ public class Mhoddim : MonoBehaviour {
 
     public Dictionary<string, float> starting_health = new Dictionary<string, float>();
     public Dictionary<string, float> recovery_rate = new Dictionary<string, float>();
+    readonly Dictionary<GameObject, float> faction_threats = new Dictionary<GameObject, float>();
+
+
+    // Unity
 
     private void Awake()
     {
@@ -16,6 +20,27 @@ public class Mhoddim : MonoBehaviour {
         recovery_rate["scout"] = 0f;
         recovery_rate["striker"] = 0f;
         recovery_rate["heavy"] = 0f;
+    }
+
+
+    // public
+
+
+    public void AddFactionThreat(GameObject _foe, float _threat)
+    {
+        // TODO: differentiate between how Ghaddim and Mhoddim perceive threats
+
+        if (!faction_threats.ContainsKey(_foe)) {
+            faction_threats[_foe] = _threat;
+        } else {
+            faction_threats[_foe] += _threat;
+        }
+    }
+
+
+    public bool IsFactionThreat(GameObject _sighting)
+    {
+        return faction_threats.ContainsKey(_sighting);
     }
 
 

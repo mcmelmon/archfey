@@ -36,10 +36,10 @@ public class Geography : MonoBehaviour {
     {
         Dictionary<Map.Cardinal, float> distances = new Dictionary<Map.Cardinal, float>();
 
-        foreach (KeyValuePair<Map.Cardinal, Vector3[]> keyValue in map.boundaries)
+        foreach (KeyValuePair<Map.Cardinal, Vector3[]> boundary in map.boundaries)
         {
-            float distance = HandleUtility.DistancePointLine(_from, keyValue.Value[1], keyValue.Value[0]);
-            distances[keyValue.Key] = distance;
+            float distance = HandleUtility.DistancePointLine(_from, boundary.Value[1], boundary.Value[0]);
+            distances[boundary.Key] = distance;
         }
 
         return distances;
