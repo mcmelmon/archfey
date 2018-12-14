@@ -6,12 +6,12 @@ public class Defense : MonoBehaviour
 {
 
     public static Defense defense_instance;
-
-    readonly List<GameObject> units = new List<GameObject>();
+    public static List<GameObject> units = new List<GameObject>();
 
     Ruins ruins;
     Ghaddim ghaddim;
     Mhoddim mhoddim;
+
 
     // Unity
 
@@ -20,21 +20,22 @@ public class Defense : MonoBehaviour
     {
         if (defense_instance != null)
         {
-            Debug.LogError("More than one offense instance");
+            Debug.LogError("More than one defense instance");
+            Destroy(this);
             return;
         }
         defense_instance = this;
-    }
-
-
-    private void Start()
-    {
         SetComponents();
-        Deploy();
     }
 
 
     // public
+
+
+    public void Setup()
+    {
+        Deploy();
+    }
 
 
     public List<GameObject> GetUnits()
@@ -48,7 +49,7 @@ public class Defense : MonoBehaviour
 
     private void Deploy()
     {
-        foreach (KeyValuePair<Ruins.Category, Circle> circle in ruins.GetOrCreateRuinCircles()) {
+        foreach (KeyValuePair<Ruins.Category, Circle> circle in Ruins.ruin_circles) {
             switch (circle.Key) {
                 case Ruins.Category.Primary:
                     Formation block_formation = Formation.CreateFormation(circle.Value.center, Formation.Profile.Circle);

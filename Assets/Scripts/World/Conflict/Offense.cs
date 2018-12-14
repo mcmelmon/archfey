@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Offense : MonoBehaviour 
+public class Offense : MonoBehaviour
 {
     public static Offense offense_instance;
-
-    readonly Dictionary<Soldier.Clasification, Circle> attack_circles = new Dictionary<Soldier.Clasification, Circle>();
-    readonly List<GameObject> units = new List<GameObject>();
+    public static Dictionary<Soldier.Clasification, Circle> attack_circles = new Dictionary<Soldier.Clasification, Circle>();
+    public static List<GameObject> soldiers = new List<GameObject>();
 
     Geography geography;
     Ghaddim ghaddim;
@@ -21,32 +20,27 @@ public class Offense : MonoBehaviour
         if (offense_instance != null)
         {
             Debug.LogError("More than one offense instance");
+            Destroy(this);
             return;
         }
         offense_instance = this;
+        SetComponents();
     }
 
 
     private void Start()
     {
-        SetComponents();
-        Locate();
-        Deploy();
+        Debug.Log("Starting offense");
     }
 
 
     // public
 
 
-    public Dictionary<Soldier.Clasification, Circle> GetAttackCircles()
+    public void Setup()
     {
-        return attack_circles;
-    }
-
-
-    public List<GameObject> GetUnits()
-    {
-        return units;
+        Locate();
+        Deploy();
     }
 
 
@@ -103,7 +97,7 @@ public class Offense : MonoBehaviour
         float distance_from_edge_percent = 0.15f;
         bool grounded = true;
         Vector3 circle_center = geography.PointBetween(geography.RandomBorderLocation(), geography.GetCenter(), distance_from_edge_percent, grounded);
-        Circle attack_circle = Circle.CreateCircle(circle_center, 10f);
+        Circle attack_circle = Circle.CreateCircle(circle_center, 15f);
 
         attack_circles[Soldier.Clasification.Heavy] = attack_circle;
     }
@@ -114,7 +108,7 @@ public class Offense : MonoBehaviour
         float distance_from_edge_percent = 0.1f;
         bool grounded = true;
         Vector3 circle_center = geography.PointBetween(geography.RandomBorderLocation(), geography.GetCenter(), distance_from_edge_percent, grounded);
-        Circle attack_circle = Circle.CreateCircle(circle_center, 5f);
+        Circle attack_circle = Circle.CreateCircle(circle_center, 15f);
 
         attack_circles[Soldier.Clasification.Striker] = attack_circle;
     }
@@ -125,7 +119,7 @@ public class Offense : MonoBehaviour
         float distance_from_edge_percent = 0.1f;
         bool grounded = true;
         Vector3 circle_center = geography.PointBetween(geography.RandomBorderLocation(), geography.GetCenter(), distance_from_edge_percent, grounded);
-        Circle attack_circle = Circle.CreateCircle(circle_center, 5f);
+        Circle attack_circle = Circle.CreateCircle(circle_center, 15f);
 
         attack_circles[Soldier.Clasification.Scout] = attack_circle;
     }
@@ -145,7 +139,7 @@ public class Offense : MonoBehaviour
         _soldier.transform.position = point;
         _soldier.AddComponent<Attacker>();
         _soldier.transform.parent = transform;
-        units.Add(_soldier);
+        soldiers.Add(_soldier);
         return _soldier;
     }
 }

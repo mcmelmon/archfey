@@ -5,6 +5,7 @@ using UnityEngine;
 public class Flora : MonoBehaviour {
 
     public static Flora flora_instance;
+
     public Tree tree_prefab;
     public float tree_coverage;
     public int canopy_layers;
@@ -32,15 +33,11 @@ public class Flora : MonoBehaviour {
     void Awake () {
         if (flora_instance != null) {
             Debug.LogError("More than one Flora");
+            Destroy(this);
             return;
         }
+
         flora_instance = this;
-        biosphere = transform.GetComponentInParent<Biosphere>();
-        map = transform.GetComponentInParent<Map>();
-        geography = map.GetOrCreateGeography();
-        canopy = new GameObject[canopy_layers];
-        width = geography.GetResolution();
-        depth = width;
     }
 
 
@@ -61,6 +58,7 @@ public class Flora : MonoBehaviour {
 
     public void Grow()
     {
+        SetComponents();
         PlantTrees();
         CarpetForest();
         CoverForest();
@@ -165,5 +163,16 @@ public class Flora : MonoBehaviour {
 
             trees.Add(_tree);
         }
+    }
+
+
+    private void SetComponents()
+    {
+        biosphere = transform.GetComponentInParent<Biosphere>();
+        map = transform.GetComponentInParent<Map>();
+        geography = map.GetComponentInChildren<Geography>();
+        canopy = new GameObject[canopy_layers];
+        width = geography.GetResolution();
+        depth = width;
     }
 }

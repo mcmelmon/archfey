@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class Ruins : MonoBehaviour {
 
-    public static Ruins ruins_instance;
     public enum Category { Primary = 0, Secondary = 1, Tertiary = 2 };
 
-    public Ruin ruin_prefab;
-    public List<Ruin> ruins;
-    readonly Dictionary<Category, Circle> ruin_circles = new Dictionary<Category, Circle>();
-    Geography geography;
+    public static Ruins ruins_instance;
+    public static Dictionary<Category, Circle> ruin_circles = new Dictionary<Category, Circle>();
 
+    public Ruin ruin_prefab;
+
+    Geography geography;
+    List<Ruin> ruins = new List<Ruin>();
 
     // Unity
 
@@ -20,27 +21,21 @@ public class Ruins : MonoBehaviour {
     {
         if (ruins_instance != null) {
             Debug.LogError("More than one ruins instance");
+            Destroy(this);
             return;
         }
         ruins_instance = this;
     }
 
 
-    private void Start () 
-    {
-        geography = GetComponentInParent<Map>().GetOrCreateGeography();
-        Locate();
-        Construct();
-    }
-
-
     // public
 
 
-    public Dictionary<Category, Circle> GetOrCreateRuinCircles()
+    public void ErectRuins()
     {
-        if (ruin_circles.Count == 0) Start();
-        return ruin_circles;
+        SetComponents();
+        Locate();
+        Construct();
     }
 
 
@@ -158,5 +153,11 @@ public class Ruins : MonoBehaviour {
         }
 
         return false;
+    }
+
+
+    private void SetComponents()
+    {
+        geography = GetComponentInParent<Map>().GetComponentInChildren<Geography>();
     }
 }

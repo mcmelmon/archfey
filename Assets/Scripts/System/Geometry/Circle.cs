@@ -94,10 +94,10 @@ public class Circle {
         for (int i = 0; i < vertex_count; i++) {
             Vector3 vertex = new Vector3(radius * Mathf.Cos(theta), 0f, radius * Mathf.Sin(theta));
             if (draw_vertices) {
-                GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                cube.name = "Vertex";
-                cube.transform.position = (center + vertex);
-                cube.transform.localScale = new Vector3(2, 10, 2);
+                GameObject marker = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                marker.name = "Vertex";
+                marker.transform.position = (center + vertex);
+                marker.transform.localScale = new Vector3(1, 10, 1);
             }
             vertices.Add(center + vertex);
             theta += delta_theta;

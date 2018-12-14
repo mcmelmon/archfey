@@ -7,8 +7,9 @@ public class Geography : MonoBehaviour {
 
     public static Geography geography_instance;
     public Obstacle obstacle_prefab;
-    public List<Obstacle> obstacles = new List<Obstacle>();
     public float obstacle_coverage;
+
+    List<Obstacle> obstacles = new List<Obstacle>();
 
     Map map;
     Terrain terrain;
@@ -16,16 +17,22 @@ public class Geography : MonoBehaviour {
 
     // Unity
 
-    void Awake () {
+    private void Awake () {
         if (geography_instance != null){
             Debug.LogError("More than one geography instance!");
+            Destroy(this);
             return;
         }
+
         geography_instance = this;
-        map = GetComponentInParent<Map>();
-        terrain = GetComponentInChildren<Terrain>();
-        terrain_data = terrain.terrainData;
-        PlaceObstacles();
+        SetComponents();
+    }
+
+
+    private void OnValidate()
+    {
+        if (obstacle_coverage < 0f) obstacle_coverage = 0f;
+        if (obstacle_coverage > 100f) obstacle_coverage = 100f;
     }
 
 
@@ -43,12 +50,6 @@ public class Geography : MonoBehaviour {
         }
 
         return distances;
-    }
-
-
-    public Vector3 TowardLocation(Vector3 _from, Vector3 _to)
-    {
-        return _to - _from;
     }
 
 
@@ -112,6 +113,14 @@ public class Geography : MonoBehaviour {
     }
 
 
+    public void LayTheLand()
+    {
+        // Obstacles cause unit placement trouble.  
+        // TODO: redo this by modifying the terrain itself
+        //PlaceObstacles();
+    }
+
+
     public Vector3 PointBetween(Vector3 _from, Vector3 _to, float step_percentage, bool grounded)
     {
         Vector3 heading = TowardLocation(_from, _to);
@@ -164,13 +173,20 @@ public class Geography : MonoBehaviour {
     }
 
 
+    public Vector3 TowardLocation(Vector3 _from, Vector3 _to)
+    {
+        return _to - _from;
+    }
+
+
     // private
 
 
-    private void OnValidate()
+    private void SetComponents()
     {
-        if (obstacle_coverage < 0f) obstacle_coverage = 0f;
-        if (obstacle_coverage > 100f) obstacle_coverage = 100f;
+        map = GetComponentInParent<Map>();
+        terrain = GetComponentInChildren<Terrain>();
+        terrain_data = terrain.terrainData;
     }
 
 
