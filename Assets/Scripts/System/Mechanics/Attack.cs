@@ -6,9 +6,9 @@ public class Attack : MonoBehaviour {
 
     public List<Weapon> available_weapons;
 
-    List<GameObject> available_melee_targets = new List<GameObject>();
-    List<GameObject> available_ranged_targets = new List<GameObject>();
-    private readonly List<GameObject> current_melee_targets = new List<GameObject>();  // List instead of Queue to facilitate returning all targets
+    private readonly List<GameObject> available_melee_targets = new List<GameObject>();
+    private readonly List<GameObject> available_ranged_targets = new List<GameObject>();
+    private readonly List<GameObject> current_melee_targets = new List<GameObject>();
     private readonly List<GameObject> current_ranged_targets = new List<GameObject>();
 
     Actor actor;

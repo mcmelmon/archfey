@@ -41,7 +41,7 @@ public class Actor : MonoBehaviour {
     // public
 
 
-    public IEnumerator FriendAndFoe()
+    public void FriendAndFoe()
     {
         enemies.Clear();
         friends.Clear();
@@ -59,7 +59,6 @@ public class Actor : MonoBehaviour {
         }
 
         enemies_abound = enemies.Count > 0 ? true : false;
-        yield return null;
     }
 
 

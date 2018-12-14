@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Mhoddim : MonoBehaviour {
 
+    public static Dictionary<GameObject, float> faction_threats = new Dictionary<GameObject, float>();
+
     public Mhoddim mhoddim_prefab;
     readonly Dictionary<string, float> starting_health = new Dictionary<string, float>();
     readonly Dictionary<string, float> recovery_rate = new Dictionary<string, float>();
-    readonly Dictionary<GameObject, float> faction_threats = new Dictionary<GameObject, float>();
 
 
     // Unity
@@ -31,6 +32,7 @@ public class Mhoddim : MonoBehaviour {
     public void AddFactionThreat(GameObject _foe, float _threat)
     {
         // TODO: differentiate between how Ghaddim and Mhoddim perceive threats
+        // TODO: handle destroyed object as key
 
         if (!faction_threats.ContainsKey(_foe)) {
             faction_threats[_foe] = _threat;

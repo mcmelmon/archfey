@@ -7,7 +7,6 @@ public class Offense : MonoBehaviour
     public static Offense offense_instance;
 
     readonly Dictionary<Soldier.Clasification, Circle> attack_circles = new Dictionary<Soldier.Clasification, Circle>();
-    Dictionary<Ruins.Category, Circle> ruin_circles = new Dictionary<Ruins.Category, Circle>();
     readonly List<GameObject> units = new List<GameObject>();
 
     Geography geography;
@@ -31,8 +30,8 @@ public class Offense : MonoBehaviour
     private void Start()
     {
         SetComponents();
-        StartCoroutine(Locate());
-        StartCoroutine(Deploy());
+        Locate();
+        Deploy();
     }
 
 
@@ -45,12 +44,6 @@ public class Offense : MonoBehaviour
     }
 
 
-    public Dictionary<Ruins.Category, Circle> GetRuinCircles()
-    {
-        return ruin_circles;
-    }
-
-
     public List<GameObject> GetUnits()
     {
         return units;
@@ -60,7 +53,7 @@ public class Offense : MonoBehaviour
     // private
 
 
-    private IEnumerator Deploy()
+    private void Deploy()
     {
         foreach (KeyValuePair<Soldier.Clasification, Circle> circle in attack_circles) {
             switch (circle.Key) {
@@ -92,21 +85,16 @@ public class Offense : MonoBehaviour
                     break;
             }
         }
-
-        yield return null;
     }
 
 
-    private IEnumerator Locate()
+    private void Locate()
     {
         if (geography == null) geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();
-        ruin_circles = GetComponentInParent<World>().GetComponentInChildren<Ruins>().GetOrCreateRuinCircles();
 
         LocateHeavy();
         LocateStriker();
         LocateScout();
-
-        yield return null;
     }
 
 

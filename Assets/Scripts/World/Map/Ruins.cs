@@ -29,8 +29,8 @@ public class Ruins : MonoBehaviour {
     private void Start () 
     {
         geography = GetComponentInParent<Map>().GetOrCreateGeography();
-        StartCoroutine(Locate());
-        StartCoroutine(Construct());
+        Locate();
+        Construct();
     }
 
 
@@ -60,7 +60,7 @@ public class Ruins : MonoBehaviour {
     // private
 
 
-    private IEnumerator Construct()
+    private void Construct()
     {
         foreach (KeyValuePair<Category, Circle> circle in ruin_circles) {
             switch (circle.Key) {
@@ -87,8 +87,6 @@ public class Ruins : MonoBehaviour {
                     break;
             }
         }
-
-        yield return null;
     }
 
 
@@ -101,13 +99,11 @@ public class Ruins : MonoBehaviour {
     }
 
 
-    private IEnumerator Locate()
+    private void Locate()
     {
         LocatePrimaryRuinComplex();
         LocateSecondaryRuinComplex();
         LocateTertiaryRuinComplex();
-
-        yield return null;
     }
 
 

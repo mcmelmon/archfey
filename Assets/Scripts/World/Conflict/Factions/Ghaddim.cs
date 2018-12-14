@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Ghaddim : MonoBehaviour {
 
+    public static Dictionary<GameObject, float> faction_threats = new Dictionary<GameObject, float>();
+
     public Ghaddim ghaddim_prefab;
     public Dictionary<string, float> starting_health = new Dictionary<string, float>();
     public Dictionary<string, float> recovery_rate = new Dictionary<string, float>();
-    readonly Dictionary<GameObject, float> faction_threats = new Dictionary<GameObject, float>();
 
 
     // Unity

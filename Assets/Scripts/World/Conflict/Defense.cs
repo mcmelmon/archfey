@@ -30,14 +30,23 @@ public class Defense : MonoBehaviour
     private void Start()
     {
         SetComponents();
-        StartCoroutine(Deploy());
+        Deploy();
     }
-                
+
+
+    // public
+
+
+    public List<GameObject> GetUnits()
+    {
+        return units;
+    }
+
 
     // private
 
 
-    private IEnumerator Deploy()
+    private void Deploy()
     {
         foreach (KeyValuePair<Ruins.Category, Circle> circle in ruins.GetOrCreateRuinCircles()) {
             switch (circle.Key) {
@@ -70,8 +79,6 @@ public class Defense : MonoBehaviour
                     break;
             }
         }
-
-        yield return null;
     }
 
 
