@@ -25,8 +25,6 @@ GameObject:
   - component: {fileID: 54176829473299802}
   - component: {fileID: 195258252824600532}
   - component: {fileID: 114622511376475628}
-  - component: {fileID: 114305065716879510}
-  - component: {fileID: 114565898830616680}
   m_Layer: 26
   m_Name: Actor
   m_TagString: Actor
@@ -104,31 +102,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
---- !u!114 &114305065716879510
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1690649058592984}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 523d3699de28f40c0a43cd80e27c15a4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &114565898830616680
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1690649058592984}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59b0a99f6f2754a46984de39bc6bbef6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  starting_health: 1
-  current_health: 0
-  recovery_rate: 0
 --- !u!114 &114622511376475628
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -142,9 +115,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mhoddim: {fileID: 0}
   ghaddim: {fileID: 0}
-  attack: {fileID: 0}
-  defend: {fileID: 0}
+  fey: {fileID: 0}
+  attacker: {fileID: 0}
+  defender: {fileID: 0}
   movement: {fileID: 0}
+  hover_color: {r: 0, g: 0, b: 0, a: 0}
 --- !u!136 &136865368129096052
 CapsuleCollider:
   m_ObjectHideFlags: 1

@@ -8,14 +8,18 @@ public class Striker : MonoBehaviour {
     public float sense_radius = 30f;
     public float sense_perception = 15f;
     Actor actor;
-    Formation formation;
+    Movement movement;
     Senses senses;
+    Attacker attacker;
+    Defender defender;
 
     // Unity
 
     private void Awake()
     {
         actor = GetComponent<Actor>();
+        attacker = GetComponent<Attacker>();
+        defender = GetComponent<Defender>();
     }
 
 
@@ -37,7 +41,7 @@ public class Striker : MonoBehaviour {
 
     public void Restrategize()
     {
-        if (actor.attacker != null) {
+        if (attacker != null) {
 
         }
         else {
@@ -46,19 +50,13 @@ public class Striker : MonoBehaviour {
     }
 
 
-    public void SetFormation(Formation _formation)
-    {
-        formation = _formation;
-    }
-
-
     public void Strategize()
     {
-        if (formation == null)
+        if (true)
         {
             // If we are not part of a formation, come up with an individual strategy.
 
-            if (actor.attacker != null) {
+            if (attacker != null) {
             }
             else {
             }
@@ -73,9 +71,11 @@ public class Striker : MonoBehaviour {
     {
         senses = GetComponent<Senses>();
         senses.SetRange(sense_radius);
+        senses.SetPerception(sense_perception);
         actor = GetComponent<Actor>();
         actor.SetComponents();
         actor.SetStats();
-        actor.movement.GetAgent().speed = speed;
+        movement = GetComponent<Movement>();
+        movement.GetAgent().speed = speed;
     }
 }

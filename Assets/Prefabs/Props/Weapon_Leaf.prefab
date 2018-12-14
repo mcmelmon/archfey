@@ -22,9 +22,9 @@ GameObject:
   - component: {fileID: 33935925469207608}
   - component: {fileID: 23355342367214230}
   - component: {fileID: 64101312728229622}
-  - component: {fileID: 114241997911937550}
+  - component: {fileID: 114480832309091280}
   m_Layer: 0
-  m_Name: Leaf
+  m_Name: Weapon_Leaf
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -92,14 +92,14 @@ MeshCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1992146552763668}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 3
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &114241997911937550
+--- !u!114 &114480832309091280
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -107,8 +107,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 1992146552763668}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a1b3bcc2341a4957bf68cfe13e90eea, type: 3}
+  m_Script: {fileID: 11500000, guid: 343f8faffa6de4d0687c032dacb2bb1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 70
-  impact: {fileID: 1710435542514214, guid: 21ad8cd3e2ef64a6e8adf8d98532382d, type: 2}
+  range: 1
+  type: 1
+  instant_damage: 25
+  damage_over_time: 0
+  potency: 0
+  speed: 30
+  impact_prefab: {fileID: 1710435542514214, guid: 21ad8cd3e2ef64a6e8adf8d98532382d,
+    type: 2}
+  ranged_attack_origin: {fileID: 4666701022940694, guid: 45c92403343264da1bc9235f79c51629,
+    type: 2}
+  melee_attack_origin: {fileID: 0}
+  ranged_attack_range: 25
+  melee_attack_range: 0

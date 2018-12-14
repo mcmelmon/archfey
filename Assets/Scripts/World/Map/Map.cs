@@ -55,22 +55,22 @@ public class Map : MonoBehaviour {
         bounds.transform.parent = transform;
         bounds.name = "Bounds";
 
-        foreach (KeyValuePair <Cardinal, Vector3[]> keyValue in boundaries)
+        foreach (KeyValuePair <Cardinal, Vector3[]> boundary in boundaries)
         {
             GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
             wall.transform.parent = bounds.transform;
-            Vector3 heading = keyValue.Value[1] - keyValue.Value[0];
+            Vector3 heading = boundary.Value[1] - boundary.Value[0];
             wall.transform.localScale = new Vector3(heading.magnitude, heading.magnitude, 20);
             wall.transform.gameObject.GetComponentInChildren<Renderer>().enabled = false;
             wall.transform.up = heading;
 
-            if (keyValue.Key == Cardinal.East || keyValue.Key == Cardinal.West) wall.transform.rotation = Quaternion.Euler(new Vector3(0, 90, 90));
+            if (boundary.Key == Cardinal.East || boundary.Key == Cardinal.West) wall.transform.rotation = Quaternion.Euler(new Vector3(0, 90, 90));
 
-            if (keyValue.Key == Cardinal.Sky) {
+            if (boundary.Key == Cardinal.Sky) {
                 wall.transform.position = new Vector3(terrain.terrainData.heightmapResolution / 2, sky_height, terrain.terrainData.heightmapResolution / 2);
                 wall.transform.rotation = Quaternion.Euler(new Vector3(90, 0, 90));
             } else {
-                wall.transform.position = keyValue.Value[0] + heading / 2;
+                wall.transform.position = boundary.Value[0] + heading / 2;
             }
         }
     }

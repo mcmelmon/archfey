@@ -10,6 +10,9 @@ public class Rectangle
     public Vector3[,] grid;
     public List<Vector3> points = new List<Vector3>();
 
+
+    // static
+
     public static Rectangle CreateRectangle(Vector3 _top_left, int _width, int _depth, float _spacing, bool draw_points = false)
     {
         Rectangle _rectangle = new Rectangle
@@ -25,6 +28,9 @@ public class Rectangle
 
         return _rectangle;
     }
+
+
+    // public
 
 
     public Vector3 GetDepthDirection()

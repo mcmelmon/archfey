@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Senses : MonoBehaviour {
 
-    public float radius = 20f;
+    public float radius;
+    public float perception;
     public List<GameObject> sightings = new List<GameObject>();
-    public float perception = 10f;
 
 
     // Unity
@@ -15,39 +15,42 @@ public class Senses : MonoBehaviour {
     private void Awake()
     {
         transform.gameObject.AddComponent<SphereCollider>();
-        GetComponent<SphereCollider>().radius = radius;
+        GetComponent<SphereCollider>().isTrigger = true;
     }
 
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
-        foreach (var sighting in sightings)
+        foreach (var sighting in GetSightings())
         {
+            if (sighting == null) continue;
             Gizmos.DrawRay(transform.position, (sighting.transform.position - transform.position));
-        }
-    }
-
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.tag == "Actor")
-        {
-            if (GetComponent<Defender>() == null && other.GetComponent<Defender>() != null)
-            {
-                RecordSighting(other.gameObject);
-            }
         }
     }
 
 
     private void Update()
     {
-        if (sightings.Count > 0) PruneSightings();
+
     }
 
 
     // public
+
+
+    public List<GameObject> GetSightings()
+    {
+        sightings.Clear();
+
+        Collider[] colliders = Physics.OverlapSphere(transform.position, radius);
+
+        for (int i = 0; i < colliders.Length; i++) {
+            if (colliders[i].gameObject.tag == "Actor") sightings.Add(colliders[i].gameObject);
+        }
+
+        return sightings;
+    }
 
 
     public void SetPerception(float _perception)
@@ -56,37 +59,8 @@ public class Senses : MonoBehaviour {
     }
 
 
-    public void SetRange(float range)
+    public void SetRange(float _range)
     {
-        GetComponent<SphereCollider>().radius = range;
-    }
-
-
-    // private
-
-
-    public void RecordSighting(GameObject sighting)
-    {
-        if (!sightings.Contains(sighting)) sightings.Add(sighting);
-    }
-
-
-    private void PruneSightings()
-    {
-        List<int> prunings = new List<int>();
-
-        foreach (var sighting in sightings)
-        {
-            if (Vector3.Distance(sighting.transform.position, transform.position) > 60f) {
-                prunings.Add(sightings.IndexOf(sighting));
-            }
-        }
-
-        foreach (var index in prunings)
-        {
-            if (index < sightings.Count && index >= 0) {
-                sightings.RemoveAt(index);
-            }
-        }
+        GetComponent<SphereCollider>().radius = radius = _range;
     }
 }

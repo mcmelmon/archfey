@@ -5,103 +5,91 @@ using UnityEngine;
 public class Defense : MonoBehaviour
 {
 
-    Queue<GameObject> defenders = new Queue<GameObject>();
-    readonly List<GameObject> deployed = new List<GameObject>();
-    Dictionary<Ruins.Category, Circle> ruin_circles = new Dictionary<Ruins.Category, Circle>();
-    readonly List<Formation> formations = new List<Formation>();
+    public static Defense defense_instance;
 
+    readonly List<GameObject> units = new List<GameObject>();
+
+    Ruins ruins;
+    Ghaddim ghaddim;
+    Mhoddim mhoddim;
 
     // Unity
 
-    private void Update()
+
+    private void Awake()
     {
-        CommandFormations();
-    }
-
-
-    // public
-
-    public void CommandFormations()
-    {
-        foreach (var formation in formations)
+        if (defense_instance != null)
         {
-            if (!formation.has_objective) formation.Strategize();
+            Debug.LogError("More than one offense instance");
+            return;
         }
+        defense_instance = this;
     }
 
 
-    public void Defend(Queue<GameObject> _defenders)
+    private void Start()
     {
-        GameObject defense_parent = new GameObject {name = "Defense"};
-        //defense_parent.AddComponent<Defender>();
-        defense_parent.transform.parent = transform;
-        defenders = _defenders;
-        ruin_circles = GetComponentInParent<World>().GetComponentInChildren<Ruins>().GetOrCreateRuinCircles();
-
-        Deploy(defense_parent);
-    }
-
-
-    public Dictionary<Ruins.Category, Circle> GetRuinCircles()
-    {
-        return ruin_circles;
+        SetComponents();
+        StartCoroutine(Deploy());
     }
                 
 
     // private
 
 
-    private void Deploy(GameObject parent)
+    private IEnumerator Deploy()
     {
-        foreach (KeyValuePair<Ruins.Category, Circle> keyValue in ruin_circles)
-        {
-            switch (keyValue.Key)
-            {
+        foreach (KeyValuePair<Ruins.Category, Circle> circle in ruins.GetOrCreateRuinCircles()) {
+            switch (circle.Key) {
                 case Ruins.Category.Primary:
-                    Formation block_formation = Formation.CreateFormation(ruin_circles[Ruins.Category.Primary].center, Formation.Profile.Circle);
-                    formations.Add(block_formation);
+                    Formation block_formation = Formation.CreateFormation(circle.Value.center, Formation.Profile.Circle);
 
-                    for (int i = 0; i < 12; i++)
-                    {
-                        GameObject _heavy = Spawn(keyValue.Value.RandomContainedPoint(), parent.transform);
+                    for (int i = 0; i < 12; i++) {
+                        GameObject _heavy = Spawn(circle.Value.RandomContainedPoint());
                         _heavy.AddComponent<Heavy>();
                         block_formation.JoinFormation(_heavy);
-                        _heavy.GetComponent<Heavy>().SetFormation(block_formation);
+                        _heavy.GetComponent<Soldier>().SetFormation(block_formation);
                     }
                     break;
                 case Ruins.Category.Secondary:
-                    Formation strike_formation = Formation.CreateFormation(ruin_circles[Ruins.Category.Secondary].center, Formation.Profile.Rectangle);
-                    formations.Add(strike_formation);
+                    Formation strike_formation = Formation.CreateFormation(circle.Value.center, Formation.Profile.Rectangle);
 
-                    for (int i = 0; i < 5; i++)
-                    {
-                        GameObject _striker = Spawn(keyValue.Value.RandomContainedPoint(), parent.transform);
+                    for (int i = 0; i < 5; i++) {
+                        GameObject _striker = Spawn(circle.Value.RandomContainedPoint());
                         _striker.AddComponent<Striker>();
                         strike_formation.JoinFormation(_striker);
-                        _striker.GetComponent<Striker>().SetFormation(strike_formation);
+                        _striker.GetComponent<Soldier>().SetFormation(strike_formation);
 
                     }
                     break;
                 case Ruins.Category.Tertiary:
-                    for (int i = 0; i < 3; i++)
-                    {
-                        GameObject _scout = Spawn(keyValue.Value.RandomContainedPoint(), parent.transform);
+                    for (int i = 0; i < 3; i++) {
+                        GameObject _scout = Spawn(circle.Value.RandomContainedPoint());
                         _scout.AddComponent<Scout>();
                     }
                     break;
             }
         }
+
+        yield return null;
     }
 
 
-    private GameObject Spawn(Vector3 point, Transform defense_parent)
+    private void SetComponents()
     {
-        GameObject _defender = defenders.Dequeue();
-        _defender.transform.position = point;
-        _defender.AddComponent<Defender>();
-        _defender.transform.parent = defense_parent;
-        _defender.SetActive(true);
-        deployed.Add(_defender);
-        return _defender;
+        ruins = GetComponentInParent<World>().GetComponentInChildren<Ruins>();
+        ghaddim = GetComponentInParent<Ghaddim>();
+        mhoddim = GetComponentInParent<Mhoddim>();
+    }
+
+
+    private GameObject Spawn(Vector3 point)
+    {
+        GameObject _soldier = (ghaddim != null) ? ghaddim.SpawnUnit() : mhoddim.SpawnUnit();
+        _soldier.transform.position = point;
+        _soldier.AddComponent<Defender>();
+        _soldier.transform.parent = transform;
+        units.Add(_soldier);
+        return _soldier;
     }
 }

@@ -17,13 +17,22 @@ class Wisp : MonoBehaviour
     }
 
 
-    // Unity
+    // static
 
 
-    private void Awake()
+    public static GameObject CallWisp(Transform actor)
     {
+        GameObject _wisp = new GameObject();  // we need the transform, but inheriting from Monobehavior prevents "new Wisp()"
+        _wisp.AddComponent<Wisp>();
+        _wisp.name = "Wisp";
+        _wisp.transform.position = actor.transform.position;
+        _wisp.transform.parent = actor.transform.GetComponentInParent<Conflict>().transform;
 
+        return _wisp;
     }
+
+
+    // Unity
 
 
     private void Update()
@@ -43,18 +52,6 @@ class Wisp : MonoBehaviour
 
 
     // public
-
-
-    public static GameObject CallWisp(Transform actor)
-    {
-        GameObject _wisp = new GameObject();  // we need the transform, but inheriting from Monobehavior prevents "new Wisp()"
-        _wisp.AddComponent<Wisp>();
-        _wisp.name = "Wisp";
-        _wisp.transform.position = actor.transform.position;
-        _wisp.transform.parent = actor.transform.GetComponentInParent<Conflict>().transform;
-
-        return _wisp;
-    }
 
 
     public void FindPath(Vector3 objective)

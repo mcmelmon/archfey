@@ -23,11 +23,10 @@ GameObject:
   - component: {fileID: 23386630168084302}
   - component: {fileID: 136747664559137662}
   - component: {fileID: 54547099937082450}
-  - component: {fileID: 195627049723346458}
   - component: {fileID: 114694588726356082}
-  - component: {fileID: 114440850736700250}
-  - component: {fileID: 114139611233692798}
   - component: {fileID: 114551666208405138}
+  - component: {fileID: 114294805840872224}
+  - component: {fileID: 114270224776526368}
   m_Layer: 26
   m_Name: Fey
   m_TagString: Actor
@@ -105,7 +104,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
---- !u!114 &114139611233692798
+--- !u!114 &114270224776526368
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -113,13 +112,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1467454993613262}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59b0a99f6f2754a46984de39bc6bbef6, type: 3}
+  m_Script: {fileID: 11500000, guid: ca979bb6133b24ffcac3ecbf74f3535e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  starting_health: 1
-  current_health: 0
-  recovery_rate: 0
---- !u!114 &114440850736700250
+  haste_delta: 1
+--- !u!114 &114294805840872224
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,9 +124,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1467454993613262}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 523d3699de28f40c0a43cd80e27c15a4, type: 3}
+  m_Script: {fileID: 11500000, guid: 7f7ee7b2470a746268eab7b8c5a267d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  radius: 20
+  perception: 10
+  sightings: []
 --- !u!114 &114551666208405138
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -154,9 +154,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mhoddim: {fileID: 0}
   ghaddim: {fileID: 0}
-  attack: {fileID: 0}
-  defend: {fileID: 0}
+  fey: {fileID: 0}
+  attacker: {fileID: 0}
+  defender: {fileID: 0}
   movement: {fileID: 0}
+  hover_color: {r: 0, g: 0, b: 0, a: 0}
 --- !u!136 &136747664559137662
 CapsuleCollider:
   m_ObjectHideFlags: 1
@@ -170,24 +172,3 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!195 &195627049723346458
-NavMeshAgent:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1467454993613262}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 10
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 3
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 1
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4

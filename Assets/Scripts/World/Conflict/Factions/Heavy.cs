@@ -5,15 +5,23 @@ using UnityEngine;
 public class Heavy : MonoBehaviour {
 
     public float speed = 3.5f;
+    public float sense_radius = 20f;
+    public float sense_perception = 10f;
     Actor actor;
-    Formation formation;
+    Movement movement;
+    Senses senses;
+    Attacker attacker;
+    Defender defender;
 
     // Unity
 
     private void Awake()
     {
         actor = GetComponent<Actor>();
+        attacker = GetComponent<Attacker>();
+        defender = GetComponent<Defender>();
     }
+
 
 
     private void Start()
@@ -34,7 +42,7 @@ public class Heavy : MonoBehaviour {
 
     public void Restrategize()
     {
-        if (actor.attacker != null)
+        if (true)
         {
 
         }
@@ -45,19 +53,13 @@ public class Heavy : MonoBehaviour {
     }
 
 
-    public void SetFormation(Formation _formation)
-    {
-        formation = _formation;
-    }
-
-
     public void Strategize()
     {
-        if (formation == null)
+        if (true)
         {
             // If we are not part of a formation, come up with an individual strategy.
 
-            if (actor.attacker != null)
+            if (true)
             {
             }
             else
@@ -72,9 +74,13 @@ public class Heavy : MonoBehaviour {
 
     private void ConfigureRoleSpecificProperties()
     {
+        senses = GetComponent<Senses>();
+        senses.SetRange(sense_radius);
+        senses.SetPerception(sense_perception);
         actor = GetComponent<Actor>();
         actor.SetComponents();
         actor.SetStats();
-        actor.movement.GetAgent().speed = speed;
+        movement = GetComponent<Movement>();
+        movement.GetAgent().speed = speed;
     }
 }

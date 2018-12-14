@@ -16,10 +16,16 @@ public class NoiseMap : MonoBehaviour
     int depth = 512;
 
 
+    // Unity
+
+
     private void Start()
     {
         CreateNoiseMap();
     }
+
+
+    // public
 
 
     public void CreateNoiseMap()
@@ -49,5 +55,4 @@ public class NoiseMap : MonoBehaviour
         plane.sharedMaterial.mainTexture = texture;
         plane.transform.localScale = new Vector3(width, 1, depth);
     }
-
 }

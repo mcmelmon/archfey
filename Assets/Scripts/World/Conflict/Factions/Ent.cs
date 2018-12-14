@@ -1,8 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Ent : MonoBehaviour {
+
+    public float speed = 2f;
+    public float sense_radius = 40f;
+    public float sense_perception = 30f;
+    Actor actor;
+    Senses senses;
+
+
+    // Unity
+
+
+    private void Start()
+    {
+        ConfigureRoleSpecificProperties();
+        //Strategize();
+    }
+
+
+    // public
 
     public Ent SummonEnt(Vector3 _position, Transform _parent)
     {
@@ -10,23 +30,16 @@ public class Ent : MonoBehaviour {
         return _ent;
     }
 
-    //float shortest_distance = Mathf.Infinity;
-    //GameObject nearest_target = null;
 
-    //foreach (var _target in targets)
-    //{
-    //    float to_enemy = Vector3.Distance(transform.position, _target.transform.position);
-    //    if (to_enemy < shortest_distance)
-    //    {
-    //        shortest_distance = to_enemy;
-    //        nearest_target = _target;
-    //    }
-    //}
+    // private
 
-    //if (nearest_target != null && shortest_distance <= ranged_attack_range)
-    //{
-    //    target = nearest_target;
-    //}
-
-
+    private void ConfigureRoleSpecificProperties()
+    {
+        senses = GetComponent<Senses>();
+        senses.SetRange(sense_radius / transform.localScale.y);  // radius inflated by scale, and y is the biggest scale for an Ent
+        senses.SetPerception(sense_perception);
+        actor = GetComponent<Actor>();
+        actor.SetComponents();
+        actor.SetStats();
+    }
 }
