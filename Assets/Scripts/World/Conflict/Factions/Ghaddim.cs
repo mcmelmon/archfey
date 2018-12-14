@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Ghaddim : MonoBehaviour {
 
+    public Ghaddim ghaddim_prefab;
     public Dictionary<string, float> starting_health = new Dictionary<string, float>();
     public Dictionary<string, float> recovery_rate = new Dictionary<string, float>();
     readonly Dictionary<GameObject, float> faction_threats = new Dictionary<GameObject, float>();
@@ -68,5 +69,14 @@ public class Ghaddim : MonoBehaviour {
         }
 
         return true;
+    }
+
+
+    public GameObject SpawnUnit()
+    {
+        Ghaddim _ghaddim = Instantiate(ghaddim_prefab, ghaddim_prefab.transform.position, ghaddim_prefab.transform.rotation);
+        _ghaddim.gameObject.AddComponent<Soldier>();
+
+        return _ghaddim.gameObject;
     }
 }

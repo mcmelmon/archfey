@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class Mhoddim : MonoBehaviour {
 
-    public Dictionary<string, float> starting_health = new Dictionary<string, float>();
-    public Dictionary<string, float> recovery_rate = new Dictionary<string, float>();
+    public Mhoddim mhoddim_prefab;
+    readonly Dictionary<string, float> starting_health = new Dictionary<string, float>();
+    readonly Dictionary<string, float> recovery_rate = new Dictionary<string, float>();
     readonly Dictionary<GameObject, float> faction_threats = new Dictionary<GameObject, float>();
 
 
     // Unity
+
 
     private void Awake()
     {
@@ -66,5 +68,14 @@ public class Mhoddim : MonoBehaviour {
         }
 
         return true;
+    }
+
+
+    public GameObject SpawnUnit()
+    {
+        Mhoddim _mhoddim = Instantiate(mhoddim_prefab, mhoddim_prefab.transform.position, mhoddim_prefab.transform.rotation);
+        _mhoddim.gameObject.AddComponent<Soldier>();
+
+        return _mhoddim.gameObject;
     }
 }

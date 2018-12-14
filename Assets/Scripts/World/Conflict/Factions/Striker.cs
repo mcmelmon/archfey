@@ -9,7 +9,6 @@ public class Striker : MonoBehaviour {
     public float sense_perception = 15f;
     Actor actor;
     Movement movement;
-    Formation formation;
     Senses senses;
     Attacker attacker;
     Defender defender;
@@ -51,15 +50,9 @@ public class Striker : MonoBehaviour {
     }
 
 
-    public void SetFormation(Formation _formation)
-    {
-        formation = _formation;
-    }
-
-
     public void Strategize()
     {
-        if (formation == null)
+        if (true)
         {
             // If we are not part of a formation, come up with an individual strategy.
 

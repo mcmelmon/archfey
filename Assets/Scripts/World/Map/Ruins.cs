@@ -29,8 +29,8 @@ public class Ruins : MonoBehaviour {
     private void Start () 
     {
         geography = GetComponentInParent<Map>().GetOrCreateGeography();
-        Locate();
-        Construct();
+        StartCoroutine(Locate());
+        StartCoroutine(Construct());
     }
 
 
@@ -60,30 +60,26 @@ public class Ruins : MonoBehaviour {
     // private
 
 
-    void Construct()
+    private IEnumerator Construct()
     {
-        foreach (KeyValuePair<Category, Circle> circle in ruin_circles)
-        {
+        foreach (KeyValuePair<Category, Circle> circle in ruin_circles) {
             switch (circle.Key) {
                 case Category.Primary:
-                    for (int i = 0; i < 9; i++)
-                    {
+                    for (int i = 0; i < 9; i++) {
                         Vector3 position = circle.Value.RandomVertex();
                         if (!NearRuin(position, Ruin.minimum_ruin_proximity))
                             InstantiateRuin(position, this);
                     }
                     break;
                 case Category.Secondary:
-                    for (int i = 0; i < 5; i++)
-                    {
+                    for (int i = 0; i < 5; i++) {
                         Vector3 position = circle.Value.RandomVertex();
                         if (!NearRuin(position, Ruin.minimum_ruin_proximity))
                             InstantiateRuin(position, this);
                     }
                     break;
                 case Category.Tertiary:
-                    for (int i = 0; i < 2; i++)
-                    {
+                    for (int i = 0; i < 2; i++) {
                         Vector3 position = circle.Value.RandomVertex();
                         if (!NearRuin(position, Ruin.minimum_ruin_proximity))
                             InstantiateRuin(position, this);
@@ -91,10 +87,12 @@ public class Ruins : MonoBehaviour {
                     break;
             }
         }
+
+        yield return null;
     }
 
 
-    void InstantiateRuin(Vector3 point, Ruins _ruins)
+    private void InstantiateRuin(Vector3 point, Ruins _ruins)
     {
         Ruin _ruin = Instantiate(ruin_prefab, point, transform.rotation, _ruins.transform);
         _ruin.transform.localScale += new Vector3(4, 16, 4);
@@ -103,11 +101,13 @@ public class Ruins : MonoBehaviour {
     }
 
 
-    private void Locate()
+    private IEnumerator Locate()
     {
         LocatePrimaryRuinComplex();
         LocateSecondaryRuinComplex();
         LocateTertiaryRuinComplex();
+
+        yield return null;
     }
 
 

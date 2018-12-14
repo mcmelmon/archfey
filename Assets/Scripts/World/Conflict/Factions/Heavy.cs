@@ -10,7 +10,6 @@ public class Heavy : MonoBehaviour {
     Actor actor;
     Movement movement;
     Senses senses;
-    Formation formation;
     Attacker attacker;
     Defender defender;
 
@@ -54,15 +53,9 @@ public class Heavy : MonoBehaviour {
     }
 
 
-    public void SetFormation(Formation _formation)
-    {
-        formation = _formation;
-    }
-
-
     public void Strategize()
     {
-        if (formation == null)
+        if (true)
         {
             // If we are not part of a formation, come up with an individual strategy.
 

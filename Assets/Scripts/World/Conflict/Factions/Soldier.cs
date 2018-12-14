@@ -1,0 +1,19 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Soldier : MonoBehaviour {
+
+    public enum Clasification { Heavy = 0, Striker = 1, Scout = 2 };
+    public Formation formation;
+
+
+    // public
+
+
+    public void SetFormation(Formation _formation)
+    {
+        formation = _formation;
+    }
+
+}
