@@ -26,31 +26,29 @@ public class Actor : MonoBehaviour {
     }
 
 
-    private void Start()
-    {
-
-    }
-
-
-    private void OnMouseDown()
-    {
-        Debug.Log("Quit touching me!");
-    }
-
-
     // public
 
 
     public void FriendAndFoe()
     {
+        List<GameObject> sightings = senses.GetSightings();
+
         enemies.Clear();
         friends.Clear();
 
+
         foreach (KeyValuePair<GameObject, float> damager in health.GetDamagers()) {
-            if (damager.Key != null) enemies.Add(damager.Key);
+            if (damager.Key != null) {
+                // The enemy has damaged either us or an ally
+                // But if they are out of range, forget about them for now
+                // TODO: don't completely forget about damagers who are out of range
+                // TODO: "link" with allies who are attacking something, even if that something is out of our sight
+
+                if (sightings.Contains(damager.Key)) enemies.Add(damager.Key);
+            }
         }
 
-        foreach (var sighting in senses.GetSightings()) {
+        foreach (var sighting in sightings) {
             if (sighting == gameObject || IsFriendOrNeutral(sighting)) {
                 friends.Add(sighting);  // we are our best friend
             } else if (!enemies.Contains(sighting)) {

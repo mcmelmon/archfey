@@ -7,14 +7,16 @@ public class Weapon : MonoBehaviour {
     public enum Range { Melee = 0, Ranged = 1 };
     public enum Type { Blunt = 0, Piercing = 1, Slashing = 2, Poison = 3, Elemental = 4, Arcane = 5 };
 
-    public Range range;
+    public GameObject impact_prefab;
+
+    public Range range;             // melee or ranged
     public Type type;               // what is the nature of the damage caused by the weapon?
     public float instant_damage;    // how much damage does the weapon cause when it hits?
     public float damage_over_time;  // how much ongoing damage does the weapon cause?
-    public float potency;           // how effectively does the weapon overcome resistance?
-    public float ranged_speed;
+    public float penetration;       // how effectively does the weapon circumvent armor?
+    public float potency;           // how effectively does the weapon overcome resistance to its type?
+    public float projectile_speed;
 
-    public GameObject impact_prefab;
     public Transform ranged_attack_origin;
     public Transform melee_attack_origin;
     public float ranged_attack_range;
@@ -36,11 +38,17 @@ public class Weapon : MonoBehaviour {
 
     private void OnValidate()
     {
-        if (ranged_speed <= 1) ranged_speed = 10f;
+        if (projectile_speed <= 1) projectile_speed = 10f;
     }
 
 
     // public
+
+
+    public Type GetType()
+    {
+        return type;
+    }
 
 
     public void Hit()
@@ -66,7 +74,7 @@ public class Weapon : MonoBehaviour {
 
         float separation = float.MaxValue;
         Vector3 direction = target.transform.position - transform.position;
-        float distance = ranged_speed * Time.deltaTime;
+        float distance = projectile_speed * Time.deltaTime;
         transform.position += distance * direction;
         separation = Vector3.Distance(target.transform.position, transform.position);
 
@@ -86,9 +94,11 @@ public class Weapon : MonoBehaviour {
     private void ApplyDamage()
     {
         target_health = target.GetComponent<Health>();
+        target_defend = target.GetComponent<Defend>();
 
-        if (target_health != null) {
-            target_health.LoseHealth(instant_damage); // TODO: reduce damage by resistances/defense; apply damage over time
+        if (target_health != null && target_defend != null) {
+            float damage = target_defend.HandleAttack(this, this.transform.parent.gameObject);
+            target_health.LoseHealth(damage);
             target_health.AddDamager(transform.parent.gameObject, instant_damage);
             SpreadThreat();
         }
