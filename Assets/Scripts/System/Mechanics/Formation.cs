@@ -137,8 +137,7 @@ public class Formation
 
     private void PositionRectangle(Rectangle formation)
     {
-        for (int i = 0; i < units.Count; i++)
-        {
+        for (int i = 0; i < units.Count; i++) {
             units[i].transform.position = formation.points[i];
         }
         Face(rectangular_formation.GetDepthDirection());

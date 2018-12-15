@@ -11,7 +11,6 @@ public class Health : MonoBehaviour {
     readonly Dictionary<GameObject, float> damagers = new Dictionary<GameObject, float>();
     Actor actor;
 
-
     // Unity
 
 

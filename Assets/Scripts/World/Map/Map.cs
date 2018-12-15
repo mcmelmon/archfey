@@ -23,26 +23,27 @@ public class Map : MonoBehaviour {
     // Unity
 
 
-    void Awake ()
+    private void Awake ()
     {
         if (map_instance != null){
             Debug.LogError("More than one map instance!");
+            Destroy(this);
             return;
         }
+
         map_instance = this;
-        geography = GetComponentInChildren<Geography>();
-        terrain = GetComponentInChildren<Terrain>();
-        SetHeavenAndEarth();
-        SetBounds();
+        SetComponents();
     }
 
 
     // public
 
 
-    public Geography GetOrCreateGeography()
+    public void DrawMap()
     {
-        return geography ?? GetComponentInChildren<Geography>();
+        SetHeavenAndEarth();
+        SetBounds();
+        SetFoundations();
     }
 
 
@@ -76,7 +77,15 @@ public class Map : MonoBehaviour {
     }
 
 
-    void SetBounds()
+    private void SetFoundations()
+    {
+        GetComponentInChildren<Geography>().LayTheLand();
+        GetComponentInChildren<Biosphere>().Eden();
+        GetComponentInChildren<Civilization>().DawnOfMhoddim();
+    }
+
+
+    private void SetBounds()
     {
         // using a dictionary instead of list or array to ensure accurate lookup by edge name (e.g. "north")
 
@@ -91,6 +100,13 @@ public class Map : MonoBehaviour {
         boundaries[Cardinal.Sky] = sky;
 
         AddDirectionBoundaries();
+    }
+
+
+    private void SetComponents()
+    {
+        geography = GetComponentInChildren<Geography>();
+        terrain = GetComponentInChildren<Terrain>();
     }
 
 

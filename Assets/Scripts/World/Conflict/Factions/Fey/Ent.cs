@@ -17,7 +17,8 @@ public class Ent : MonoBehaviour {
 
     private void Start()
     {
-        ConfigureRoleSpecificProperties();
+        SetComponents();
+        SetStats();
         //Strategize();
     }
 
@@ -33,13 +34,18 @@ public class Ent : MonoBehaviour {
 
     // private
 
-    private void ConfigureRoleSpecificProperties()
+    private void SetComponents()
     {
+        actor = GetComponent<Actor>();
+        actor.SetComponents();
         senses = GetComponent<Senses>();
         senses.SetRange(sense_radius / transform.localScale.y);  // radius inflated by scale, and y is the biggest scale for an Ent
         senses.SetPerception(sense_perception);
-        actor = GetComponent<Actor>();
-        actor.SetComponents();
-        actor.SetStats();
+    }
+
+
+    private void SetStats()
+    {
+        actor.fey.SetStats();
     }
 }

@@ -6,9 +6,9 @@ public class Actor : MonoBehaviour {
 
     public bool enemies_abound;
 
-    Mhoddim mhoddim;
-    Ghaddim ghaddim;
-    Fey fey;
+    public Mhoddim mhoddim;
+    public Ghaddim ghaddim;
+    public Fey fey;
     Health health;
     Senses senses;
     Movement movement;
@@ -26,31 +26,29 @@ public class Actor : MonoBehaviour {
     }
 
 
-    private void Start()
-    {
-
-    }
-
-
-    private void OnMouseDown()
-    {
-        Debug.Log("Quit touching me!");
-    }
-
-
     // public
 
 
-    public IEnumerator FriendAndFoe()
+    public void FriendAndFoe()
     {
+        List<GameObject> sightings = senses.GetSightings();
+
         enemies.Clear();
         friends.Clear();
 
+
         foreach (KeyValuePair<GameObject, float> damager in health.GetDamagers()) {
-            if (damager.Key != null) enemies.Add(damager.Key);
+            if (damager.Key != null) {
+                // The enemy has damaged either us or an ally
+                // But if they are out of range, forget about them for now
+                // TODO: don't completely forget about damagers who are out of range
+                // TODO: "link" with allies who are attacking something, even if that something is out of our sight
+
+                if (sightings.Contains(damager.Key)) enemies.Add(damager.Key);
+            }
         }
 
-        foreach (var sighting in senses.GetSightings()) {
+        foreach (var sighting in sightings) {
             if (sighting == gameObject || IsFriendOrNeutral(sighting)) {
                 friends.Add(sighting);  // we are our best friend
             } else if (!enemies.Contains(sighting)) {
@@ -59,7 +57,6 @@ public class Actor : MonoBehaviour {
         }
 
         enemies_abound = enemies.Count > 0 ? true : false;
-        yield return null;
     }
 
 
@@ -95,19 +92,6 @@ public class Actor : MonoBehaviour {
         movement = GetComponent<Movement>();
         health = GetComponent<Health>();
         senses = GetComponent<Senses>();
-    }
-
-
-    public void SetStats()
-    {
-        if (mhoddim != null) {
-            mhoddim.SetHealthStats(gameObject);
-        }
-        else if (ghaddim != null) {
-            ghaddim.SetHealthStats(gameObject);
-        } else if (fey != null) {
-            fey.SetHealthStats(gameObject);
-        }
     }
 
 

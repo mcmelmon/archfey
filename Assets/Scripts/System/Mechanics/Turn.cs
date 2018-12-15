@@ -56,7 +56,7 @@ public class Turn : MonoBehaviour {
 
     private void ResolveFriendAndFoe()
     {
-        StartCoroutine(actor.FriendAndFoe());
+        actor.FriendAndFoe();
     }
 
 

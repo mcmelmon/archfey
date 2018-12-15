@@ -4,11 +4,40 @@ using UnityEngine;
 
 public class World : MonoBehaviour {
 
-    // public
+    public static World world_instance;
 
-    public Map GetMap()
+
+    // Unity
+
+
+    private void Awake()
     {
-        return transform.GetComponentInChildren<Map>();
+        if (world_instance != null)
+        {
+            Debug.LogError("More than one world instance!");
+            Destroy(this);
+            return;
+        }
+
+        world_instance = this;
     }
 
+
+    private void Start()
+    {
+        CreateTheWorld();
+    }
+
+
+    // public
+
+
+    // private
+
+
+    private void CreateTheWorld()
+    {
+        GetComponentInChildren<Map>().DrawMap();
+        GetComponentInChildren<Conflict>().Hajime();
+    }
 }
