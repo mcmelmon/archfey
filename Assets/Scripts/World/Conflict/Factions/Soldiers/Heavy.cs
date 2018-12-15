@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class Heavy : MonoBehaviour {
 
-    public float speed = 3.5f;
-    public float sense_radius = 20f;
-    public float sense_perception = 10f;
+    public float perception_range = 20f;
+    public float perception_rating = 0.1f;
+    public float speed = 1.5f;
+
     Actor actor;
     Movement movement;
     Senses senses;
@@ -48,8 +49,8 @@ public class Heavy : MonoBehaviour {
         movement = GetComponent<Movement>();
         movement.GetAgent().speed = speed;
         senses = GetComponent<Senses>();
-        senses.SetRange(sense_radius);
-        senses.SetPerception(sense_perception);
+        senses.perception_rating = perception_rating;
+        senses.SetRange(perception_range);
     }
 
 

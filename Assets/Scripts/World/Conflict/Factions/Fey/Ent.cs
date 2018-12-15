@@ -5,11 +5,15 @@ using UnityEngine.AI;
 
 public class Ent : MonoBehaviour {
 
+    public float perception_range = 30f;
+    public float perception_rating = .55f;
     public float speed = 2f;
-    public float sense_radius = 40f;
-    public float sense_perception = 30f;
+    public float stealth_persistence = 0.05f;
+    public float stealth_rating = 0.35f;
+
     Actor actor;
     Senses senses;
+    Stealth stealth;
 
 
     // Unity
@@ -39,8 +43,11 @@ public class Ent : MonoBehaviour {
         actor = GetComponent<Actor>();
         actor.SetComponents();
         senses = GetComponent<Senses>();
-        senses.SetRange(sense_radius / transform.localScale.y);  // radius inflated by scale, and y is the biggest scale for an Ent
-        senses.SetPerception(sense_perception);
+        senses.SetRange(perception_range / transform.localScale.y);  // radius inflated by scale, and y is the biggest scale for an Ent
+        senses.perception_rating = perception_rating;
+        stealth = gameObject.AddComponent<Stealth>();
+        stealth.stealth_rating = stealth_rating;
+        stealth.stealh_persistence = stealth_persistence;
     }
 
 

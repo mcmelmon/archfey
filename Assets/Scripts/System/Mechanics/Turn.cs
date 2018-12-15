@@ -12,6 +12,7 @@ public class Turn : MonoBehaviour {
     Health health;
     Attack attack;
     Movement movement;
+    Stealth stealth;
 
     // Unity
 
@@ -21,6 +22,7 @@ public class Turn : MonoBehaviour {
         health = GetComponent<Health>();
         attack = GetComponent<Attack>();
         movement = GetComponent<Movement>();
+        stealth = GetComponent<Stealth>();
     }
 
 
@@ -28,12 +30,21 @@ public class Turn : MonoBehaviour {
         if (current_haste > action_threshold) {
             ResolveCurrentHealth();
             ResolveMovement();
+            if (stealth != null) ResolveStealth();
             ResolveFriendAndFoe();
             ResolveAttacks();
             current_haste = 0f; 
         } else {
             current_haste += haste_delta * Time.deltaTime;
         }
+    }
+
+
+    // public
+
+    public void SetStealth(Stealth _stealth)
+    {
+        stealth = _stealth;
     }
 
 
@@ -69,5 +80,11 @@ public class Turn : MonoBehaviour {
                 movement.SetDestination(enemy.transform.position);
             }
         }
+    }
+
+
+    private void ResolveStealth()
+    {
+        stealth.RecoverStealth();
     }
 }

@@ -14,6 +14,7 @@ public class Offense : MonoBehaviour
     Ruins ruins;
 
     static List<GameObject> scouts = new List<GameObject>();
+    // TODO: discovered ruins
 
 
     // Unity
@@ -102,7 +103,6 @@ public class Offense : MonoBehaviour
             _scout.AddComponent<Scout>();
             soldiers.Add(_scout);
             scouts.Add(_scout);
-            //_scout.GetComponent<Scout>().Strategize();
         }
     }
 }

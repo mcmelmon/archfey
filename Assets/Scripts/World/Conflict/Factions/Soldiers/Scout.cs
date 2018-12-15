@@ -5,15 +5,19 @@ using System;
 
 public class Scout : MonoBehaviour {
 
-    public float sense_perception = 20f;
-    public float sense_radius = 40f;
-    public float speed = 15f;
+    public float perception_range = 40f;
+    public float perception_rating = 0.25f;
+    public float speed = 2.5f;
+    public float stealth_persistence = 0.25f;
+    public float stealth_rating = 0.4f;
 
     Actor actor;
     Geography geography;
     Movement movement;
     Senses senses;
+    Stealth stealth;
 
+    List<Ruin> spotted_ruins = new List<Ruin>();
 
     // Unity
 
@@ -25,12 +29,18 @@ public class Scout : MonoBehaviour {
     }
 
 
+    private void Update()
+    {
+        // spot ruins
+    }
+
+
     // public
 
 
     public void Restrategize()
     {
-        Debug.Log("Finished one circuit");
+
     }
   
 
@@ -57,8 +67,12 @@ public class Scout : MonoBehaviour {
         movement = GetComponent<Movement>();
         movement.GetAgent().speed = speed;
         senses = GetComponent<Senses>();
-        senses.SetRange(sense_radius);
-        senses.SetPerception(sense_perception);
+        senses.perception_rating = perception_rating;
+        senses.SetRange(perception_range);
+        stealth = gameObject.AddComponent<Stealth>();
+        stealth.stealth_rating = stealth_rating;
+        stealth.stealh_persistence = stealth_persistence;
+        GetComponent<Turn>().SetStealth(stealth);
     }
 
 

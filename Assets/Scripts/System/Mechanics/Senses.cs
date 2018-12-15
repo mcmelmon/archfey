@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class Senses : MonoBehaviour {
 
+    public float perception_rating;
     public float radius;
-    public float perception;
-    public List<GameObject> sightings = new List<GameObject>();
+
+    List<GameObject> sightings = new List<GameObject>();
 
 
     // Unity
@@ -30,12 +31,6 @@ public class Senses : MonoBehaviour {
     }
 
 
-    private void Update()
-    {
-
-    }
-
-
     // public
 
 
@@ -46,16 +41,15 @@ public class Senses : MonoBehaviour {
         Collider[] colliders = Physics.OverlapSphere(transform.position, radius);
 
         for (int i = 0; i < colliders.Length; i++) {
-            if (colliders[i].gameObject.tag == "Actor") sightings.Add(colliders[i].gameObject);
+            if (colliders[i].gameObject.tag == "Actor" && colliders[i].gameObject != gameObject) {  // don't sight yourself
+                Stealth _stealth = colliders[i].GetComponent<Stealth>();
+                if (_stealth == null || _stealth.Spotted(perception_rating)) {
+                    sightings.Add(colliders[i].gameObject);
+                }
+            }
         }
 
         return sightings;
-    }
-
-
-    public void SetPerception(float _perception)
-    {
-        perception = _perception;
     }
 
 

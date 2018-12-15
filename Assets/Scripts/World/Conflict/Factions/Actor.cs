@@ -50,7 +50,7 @@ public class Actor : MonoBehaviour {
 
         foreach (var sighting in sightings) {
             if (sighting == gameObject || IsFriendOrNeutral(sighting)) {
-                friends.Add(sighting);  // we are our best friend
+                friends.Add(sighting);
             } else if (!enemies.Contains(sighting)) {
                 enemies.Add(sighting);
             }
