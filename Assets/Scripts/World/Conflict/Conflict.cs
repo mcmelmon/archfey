@@ -23,6 +23,10 @@ public class Conflict : MonoBehaviour {
             return;
         }
         conflict_instance = this;
+
+        ConfigureFey.Populate();
+        ConfigureGhaddim.Populate();
+        ConfigureMhoddim.Populate();
     }
 
 

@@ -6,9 +6,9 @@ public class Actor : MonoBehaviour {
 
     public bool enemies_abound;
 
-    Mhoddim mhoddim;
-    Ghaddim ghaddim;
-    Fey fey;
+    public Mhoddim mhoddim;
+    public Ghaddim ghaddim;
+    public Fey fey;
     Health health;
     Senses senses;
     Movement movement;
@@ -92,19 +92,6 @@ public class Actor : MonoBehaviour {
         movement = GetComponent<Movement>();
         health = GetComponent<Health>();
         senses = GetComponent<Senses>();
-    }
-
-
-    public void SetStats()
-    {
-        if (mhoddim != null) {
-            mhoddim.SetHealthStats(gameObject);
-        }
-        else if (ghaddim != null) {
-            ghaddim.SetHealthStats(gameObject);
-        } else if (fey != null) {
-            fey.SetHealthStats(gameObject);
-        }
     }
 
 

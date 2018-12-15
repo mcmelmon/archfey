@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class Defend : MonoBehaviour
 {
-
-    public bool counter;            // ability to damage the attacker immediately
-    public float corporeal_rating;  // ignore some damage
     public float agility_rating;    // move out of harm's way to some extent
     public float armor_rating;      // percentage reduction of incoming damage
+    public float corporeal_rating;  // ignore some damage
+    public float counter;            // damage returned to attackers
     public float force_rating;      // percentage reduction of non DoT
 
     public Dictionary<Weapon.Type, float> resistances;
@@ -20,28 +19,6 @@ public class Defend : MonoBehaviour
 
 
     // Unity
-
-    private void Awake()
-    {
-        counter = false;
-        corporeal_rating = 0f;
-        agility_rating = 0f;
-        armor_rating = 0f;
-        force_rating = 0f;
-        computed_damage = 0f;
-    }
-
-
-    // public
-
-
-    public void SetResistances(Dictionary<Weapon.Type, float> _resistances)
-    {
-        resistances = _resistances;
-    }
-
-
-    // private
 
 
     private void OnValidate()
@@ -77,6 +54,48 @@ public class Defend : MonoBehaviour
         ApplyResistance();
 
         return computed_damage;
+    }
+
+
+    public float GetCounterDamage()
+    {
+        return counter;  // TODO: give counter a "weapon" so that it can be handled by defend
+    }
+
+
+    public void SetAgilityRating(float rate)
+    {
+        agility_rating = rate;
+    }
+
+
+    public void SetArmorRating(float rate)
+    {
+        armor_rating = rate;
+    }
+
+
+    public void SetCorporealRating(float rate)
+    {
+        corporeal_rating = rate;
+    }
+
+
+    public void SetCounter(float rate)
+    {
+        counter = rate;
+    }
+
+
+    public void SetForceRating(float rate)
+    {
+        force_rating = rate;
+    }
+
+
+    public void SetResistances(Dictionary<Weapon.Type, float> _resistances)
+    {
+        resistances = _resistances;
     }
 
 

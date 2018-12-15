@@ -97,10 +97,14 @@ public class Weapon : MonoBehaviour {
         target_defend = target.GetComponent<Defend>();
 
         if (target_health != null && target_defend != null) {
-            float damage = target_defend.HandleAttack(this, this.transform.parent.gameObject);
-            target_health.LoseHealth(damage);
-            target_health.AddDamager(transform.parent.gameObject, instant_damage);
+            float damage_inflicted = target_defend.HandleAttack(this, this.transform.parent.gameObject);
+            target_health.LoseHealth(damage_inflicted);
+            target_health.AddDamager(transform.parent.gameObject, damage_inflicted);
             SpreadThreat();
+
+            // TODO: counter damage should be handled like a weapon
+            float counter_damage = target_defend.GetCounterDamage();
+            GetComponentInParent<Health>().LoseHealth(counter_damage);
         }
     }
 
