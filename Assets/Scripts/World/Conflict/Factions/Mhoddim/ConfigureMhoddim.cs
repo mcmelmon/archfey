@@ -23,7 +23,7 @@ public static class ConfigureMhoddim
 
 
 
-    public static void Populate()
+    public static void GenerateStats()
     {
         PopulateAttributes();
         PopulateResistances();

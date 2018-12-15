@@ -22,7 +22,7 @@ public static class ConfigureFey {
     // static
 
 
-    public static void Populate()
+    public static void GenerateStats()
     {
         PopulateAttributes();
         PopulateResistances();

@@ -8,9 +8,9 @@ public class Defense : MonoBehaviour
     public static Defense defense_instance;
     public static List<GameObject> units = new List<GameObject>();
 
-    Ruins ruins;
     Ghaddim ghaddim;
     Mhoddim mhoddim;
+    Ruins ruins;
 
 
     // Unity

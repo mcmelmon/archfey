@@ -5,19 +5,20 @@ using System;
 
 public class Scout : MonoBehaviour {
 
-    public float speed = 6f;
-    public float sense_radius = 40f;
     public float sense_perception = 20f;
-    public List<Vector3> reports = new List<Vector3>();
+    public float sense_radius = 40f;
+    public float speed = 15f;
+
+    Actor actor;
+    Geography geography;
     Movement movement;
     Senses senses;
-    Actor actor;
 
 
     // Unity
 
 
-    private void Start () {
+    private void Awake () {
         SetComponents();
         SetStats();
         Strategize();
@@ -29,13 +30,19 @@ public class Scout : MonoBehaviour {
 
     public void Restrategize()
     {
-
+        Debug.Log("Finished one circuit");
     }
   
 
     public void Strategize()
     {
+        // move around the map in a circle with a radius equal to my distance from the map center
 
+        float distance_to_center = Vector3.Distance(geography.GetCenter(), transform.position);
+        Circle scouting_path = Circle.CreateCircle(geography.GetCenter(), distance_to_center);
+        Vector3 nearest_vertex = scouting_path.VertexClosestTo(transform.position);
+
+        movement.SetRoute(Route.Circular(nearest_vertex, scouting_path, false, false, Restrategize));
     }
 
 
@@ -46,6 +53,7 @@ public class Scout : MonoBehaviour {
     {
         actor = GetComponent<Actor>();
         actor.SetComponents();
+        geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();
         movement = GetComponent<Movement>();
         movement.GetAgent().speed = speed;
         senses = GetComponent<Senses>();
