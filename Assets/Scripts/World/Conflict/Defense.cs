@@ -72,12 +72,6 @@ public class Defense : MonoBehaviour
 
                     }
                     break;
-                case Ruins.Category.Tertiary:
-                    for (int i = 0; i < 3; i++) {
-                        GameObject _scout = Spawn(circle.Value.RandomContainedPoint());
-                        _scout.AddComponent<Scout>();
-                    }
-                    break;
             }
         }
     }

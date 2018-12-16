@@ -8,8 +8,8 @@ public class Scout : MonoBehaviour {
     public float perception_range = 40f;
     public float perception_rating = 0.25f;
     public float speed = 2.5f;
-    public float stealth_persistence = 0.25f;
-    public float stealth_rating = 0.4f;
+    public float stealth_persistence = 0.15f;
+    public float stealth_rating = 0.5f;
 
     Actor actor;
     Geography geography;
@@ -40,7 +40,15 @@ public class Scout : MonoBehaviour {
 
     public void Restrategize()
     {
+        // Create a new path around the center with a shorter radius
 
+        float distance_to_center = Vector3.Distance(geography.GetCenter(), transform.position);
+        Circle scouting_path = Circle.CreateCircle(geography.GetCenter(), distance_to_center - 20f);
+        Vector3 nearest_vertex = scouting_path.VertexClosestTo(transform.position);
+
+        Route new_route = Route.Circular(nearest_vertex, scouting_path, false, false, Restrategize);
+        new_route.AccumulateRoutes(movement.GetRoute());  // store our old routes in the new route in case we want to backtrack
+        movement.SetRoute(new_route);
     }
   
 
@@ -48,7 +56,7 @@ public class Scout : MonoBehaviour {
     {
         // move around the map in a circle with a radius equal to my distance from the map center
 
-        float distance_to_center = Vector3.Distance(geography.GetCenter(), transform.position);
+        float distance_to_center = Mathf.Min(Vector3.Distance(geography.GetCenter(), transform.position), geography.GetResolution() - 20f);
         Circle scouting_path = Circle.CreateCircle(geography.GetCenter(), distance_to_center);
         Vector3 nearest_vertex = scouting_path.VertexClosestTo(transform.position);
 

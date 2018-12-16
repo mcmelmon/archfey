@@ -70,6 +70,9 @@ public class Stealth : MonoBehaviour {
         // If that failed, we're seen
         if (spotted) return true;
 
+        // If we are not spotted, units without perception will not spot us
+        if (Mathf.Approximately(perception_rating, 0f)) return false;
+
         // If still unspotted, and stealth_rating == perception_rating, then 50% chance of being spotted
         spotted = Random.Range(0f, 1f) < 0.5f + (perception_rating - stealth_rating);
         return spotted;

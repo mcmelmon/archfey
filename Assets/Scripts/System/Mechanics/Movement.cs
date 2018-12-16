@@ -39,6 +39,7 @@ public class Movement : MonoBehaviour {
 
     // TODO: warp the agent to the nearest navmesh point if it is off the mesh
     // TODO: deal with an agent that is stuck
+    // TODO: if a destination is unreachable, choose the nearest reachable one
 
     public NavMeshAgent GetAgent()
     {

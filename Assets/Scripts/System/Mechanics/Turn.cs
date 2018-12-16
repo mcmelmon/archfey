@@ -30,9 +30,10 @@ public class Turn : MonoBehaviour {
         if (current_haste > action_threshold) {
             ResolveCurrentHealth();
             ResolveMovement();
-            if (stealth != null) ResolveStealth();
+            ResolveStealth();
             ResolveFriendAndFoe();
             ResolveAttacks();
+            ResolveRuinControl();
             current_haste = 0f; 
         } else {
             current_haste += haste_delta * Time.deltaTime;
@@ -73,9 +74,11 @@ public class Turn : MonoBehaviour {
 
     private void ResolveMovement()
     {
+        if (movement == null) return;
+
         if (actor.enemies_abound) {
             GameObject enemy = actor.GetAnEnemy();
-            if (enemy != null && movement != null) {
+            if (enemy != null) {
                 movement.ResetPath();
                 movement.SetDestination(enemy.transform.position);
             }
@@ -83,8 +86,14 @@ public class Turn : MonoBehaviour {
     }
 
 
+    private void ResolveRuinControl()
+    {
+        StartCoroutine(actor.EstablishRuinControl());
+    }
+
+
     private void ResolveStealth()
     {
-        stealth.RecoverStealth();
+        if (stealth != null) stealth.RecoverStealth();
     }
 }

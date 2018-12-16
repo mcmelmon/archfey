@@ -14,6 +14,7 @@ public class Ruins : MonoBehaviour {
     Geography geography;
     List<Ruin> ruins = new List<Ruin>();
 
+
     // Unity
 
 
@@ -49,6 +50,12 @@ public class Ruins : MonoBehaviour {
         }
 
         return positions;
+    }
+
+
+    public List<Ruin> GetRuins()
+    {
+        return ruins;
     }
 
 

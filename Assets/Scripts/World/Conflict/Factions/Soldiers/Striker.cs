@@ -7,7 +7,7 @@ public class Striker : MonoBehaviour {
     public float perception_range = 20f;
     public float perception_rating = 0.15f;
     public float speed = 2f;
-    public float stealth_persistence = 0.1f;
+    public float stealth_persistence = 0f;
     public float stealth_rating = 0.25f;
 
     Actor actor;

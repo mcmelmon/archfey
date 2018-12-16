@@ -5,16 +5,19 @@ using UnityEngine;
 public class Actor : MonoBehaviour {
 
     public bool enemies_abound;
+    public float ruin_control_radius;
+    public float ruin_control_raiting;
 
-    public Mhoddim mhoddim;
-    public Ghaddim ghaddim;
     public Fey fey;
-    Health health;
-    Senses senses;
-    Movement movement;
+    public Ghaddim ghaddim;
+    public Mhoddim mhoddim;
 
     List<GameObject> enemies = new List<GameObject>();
     List<GameObject> friends = new List<GameObject>();
+
+    Health health;
+    Senses senses;
+    Movement movement;
 
 
     // Unity
@@ -27,6 +30,22 @@ public class Actor : MonoBehaviour {
 
 
     // public
+
+
+    public IEnumerator EstablishRuinControl()
+    {
+        Ruin ruin = GetNearestRuin();
+        if (ruin != null) {
+
+            movement.ResetPath();  // don't move away from a viable ruin target!
+
+            if (!ruin.IsFriendlyTo(gameObject)) {
+                ruin.ExertControl(gameObject, ruin_control_raiting);
+            }
+        }
+
+        yield return null;
+    }
 
 
     public void FriendAndFoe()
@@ -92,16 +111,51 @@ public class Actor : MonoBehaviour {
         movement = GetComponent<Movement>();
         health = GetComponent<Health>();
         senses = GetComponent<Senses>();
+
+        SetRuinControlRadius(25f);  // TODO: pass this in unit by unit
+        SetRuinControlRating(0.1f);  // TODO: pass this in unit by unit
+    }
+
+
+    public void SetRuinControlRadius(float _radius)
+    {
+        ruin_control_radius = _radius;
+    }
+
+
+    public void SetRuinControlRating(float _rating)
+    {
+        ruin_control_raiting = _rating;
     }
 
 
     // private
+
+
+    private Ruin GetNearestRuin()
+    {
+        Ruin closest_ruin = null;
+        float distance;
+        float shortest_distance = float.MaxValue;
+
+        foreach(var ruin in GetComponentInParent<World>().GetComponentInChildren<Ruins>().GetRuins()) {
+            distance = Vector3.Distance(transform.position, ruin.transform.position);
+            if (distance < shortest_distance) {
+                closest_ruin = ruin;
+                shortest_distance = distance;
+            }
+        }
+
+        return (shortest_distance < ruin_control_radius) ? closest_ruin : null;
+    }
+
 
     private bool IsFriendOrNeutral(GameObject _target)
     {
         // TODO: differentiate between friend and neutral by faction
 
         if (_target == null) return true;  // null is everyone's friend, or at least not their enemy
+        if (GetComponent<Scout>() != null) return true; // scouts don't attack unless damaged
 
         if (mhoddim != null && mhoddim.IsFactionThreat(_target)) return false;
         if (ghaddim != null && ghaddim.IsFactionThreat(_target)) return false;
