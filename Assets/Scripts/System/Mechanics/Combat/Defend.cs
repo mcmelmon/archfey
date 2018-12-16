@@ -10,7 +10,7 @@ public class Defend : MonoBehaviour
     public float counter;            // damage returned to attackers
     public float force_rating;      // percentage reduction of non DoT
 
-    public Dictionary<Weapon.Type, float> resistances;
+    public Dictionary<Weapon.DamageType, float> resistances;
 
     float computed_damage;       // final health loss
 
@@ -93,7 +93,7 @@ public class Defend : MonoBehaviour
     }
 
 
-    public void SetResistances(Dictionary<Weapon.Type, float> _resistances)
+    public void SetResistances(Dictionary<Weapon.DamageType, float> _resistances)
     {
         resistances = _resistances;
     }
@@ -106,18 +106,18 @@ public class Defend : MonoBehaviour
     {
         if (computed_damage <= 0) return;
 
-        switch (weapon.GetType())
+        switch (weapon.damage_type)
         {
-            case Weapon.Type.Blunt:
+            case Weapon.DamageType.Blunt:
                 computed_damage -= armor_rating * computed_damage;
                 break;
-            case Weapon.Type.Piercing:
+            case Weapon.DamageType.Piercing:
                 computed_damage -= (armor_rating * computed_damage) * 0.8f;  // TODO: configure type effect on armor
                 break;
-            case Weapon.Type.Slashing:
+            case Weapon.DamageType.Slashing:
                 computed_damage -= (armor_rating * computed_damage) * 1.2f;
                 break;
-            case Weapon.Type.Elemental:
+            case Weapon.DamageType.Elemental:
                 computed_damage -= (armor_rating * computed_damage) * 0.4f;
                 break;
             default:
@@ -130,17 +130,17 @@ public class Defend : MonoBehaviour
     {
         if (computed_damage <= 0) return;
 
-        switch (weapon.GetType()) {
-            case Weapon.Type.Blunt:
+        switch (weapon.damage_type) {
+            case Weapon.DamageType.Blunt:
                 computed_damage -= agility_rating * computed_damage;
                 break;
-            case Weapon.Type.Piercing:
+            case Weapon.DamageType.Piercing:
                 computed_damage -= (armor_rating * computed_damage) * 1.5f;
                 break;
-            case Weapon.Type.Slashing:
+            case Weapon.DamageType.Slashing:
                 computed_damage -= (armor_rating * computed_damage) * 1.2f;
                 break;
-            case Weapon.Type.Elemental:
+            case Weapon.DamageType.Elemental:
                 computed_damage -= (armor_rating * computed_damage) * 0.2f;
                 break;
             default:
@@ -162,17 +162,17 @@ public class Defend : MonoBehaviour
     {
         if (computed_damage <= 0) return;
 
-        switch (weapon.GetType()) {
-            case Weapon.Type.Blunt:
+        switch (weapon.damage_type) {
+            case Weapon.DamageType.Blunt:
                 computed_damage -= force_rating * computed_damage;
                 break;
-            case Weapon.Type.Piercing:
+            case Weapon.DamageType.Piercing:
                 computed_damage -= (force_rating * computed_damage);
                 break;
-            case Weapon.Type.Slashing:
+            case Weapon.DamageType.Slashing:
                 computed_damage -= (force_rating * computed_damage);
                 break;
-            case Weapon.Type.Elemental:
+            case Weapon.DamageType.Elemental:
                 computed_damage -= (force_rating * computed_damage);
                 break;
             default:
@@ -185,6 +185,6 @@ public class Defend : MonoBehaviour
     {
         if (computed_damage <= 0 || resistances == null) return;
 
-        computed_damage -= resistances[weapon.GetType()] * computed_damage;
+        computed_damage -= resistances[weapon.damage_type] * computed_damage;
     }
 }

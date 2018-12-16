@@ -70,7 +70,6 @@ public class Scout : MonoBehaviour {
     private void SetComponents()
     {
         actor = GetComponent<Actor>();
-        actor.SetComponents();
         geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();
         movement = GetComponent<Movement>();
         movement.GetAgent().speed = speed;

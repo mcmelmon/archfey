@@ -12,6 +12,7 @@ public class Turn : MonoBehaviour {
     Health health;
     Attack attack;
     Movement movement;
+    Senses senses;
     Stealth stealth;
 
     // Unity
@@ -22,22 +23,15 @@ public class Turn : MonoBehaviour {
         health = GetComponent<Health>();
         attack = GetComponent<Attack>();
         movement = GetComponent<Movement>();
+        senses = GetComponent<Senses>();
         stealth = GetComponent<Stealth>();
+
+        actor.SetComponents();
     }
 
 
-    private void Update () {
-        if (current_haste > action_threshold) {
-            ResolveCurrentHealth();
-            ResolveMovement();
-            ResolveStealth();
-            ResolveFriendAndFoe();
-            ResolveAttacks();
-            ResolveRuinControl();
-            current_haste = 0f; 
-        } else {
-            current_haste += haste_delta * Time.deltaTime;
-        }
+    private void Start () {
+        StartCoroutine(ResolveTurns());
     }
 
 
@@ -54,7 +48,7 @@ public class Turn : MonoBehaviour {
 
     private void ResolveAttacks()
     {
-        StartCoroutine(attack.ManageAttacks());
+        attack.ManageAttacks();
     }
 
 
@@ -88,12 +82,31 @@ public class Turn : MonoBehaviour {
 
     private void ResolveRuinControl()
     {
-        StartCoroutine(actor.EstablishRuinControl());
+        actor.EstablishRuinControl();
     }
 
 
     private void ResolveStealth()
     {
         if (stealth != null) stealth.RecoverStealth();
+    }
+
+
+    private IEnumerator ResolveTurns()
+    {
+        while (true) {
+            if (current_haste < action_threshold) {
+                current_haste += haste_delta * Time.deltaTime;
+            } else {
+                ResolveCurrentHealth();
+                ResolveMovement();
+                ResolveStealth();
+                ResolveFriendAndFoe();
+                ResolveAttacks();
+                ResolveRuinControl();
+                current_haste = 0;
+            }
+            yield return null;
+        }
     }
 }

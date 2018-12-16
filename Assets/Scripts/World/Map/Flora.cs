@@ -56,6 +56,12 @@ public class Flora : MonoBehaviour {
     }
 
 
+    public GameObject GetCarpet()
+    {
+        return carpet;
+    }
+
+
     public void Grow()
     {
         SetComponents();

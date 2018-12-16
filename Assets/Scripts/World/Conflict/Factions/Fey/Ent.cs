@@ -41,7 +41,6 @@ public class Ent : MonoBehaviour {
     private void SetComponents()
     {
         actor = GetComponent<Actor>();
-        actor.SetComponents();
         senses = GetComponent<Senses>();
         senses.SetRange(perception_range / transform.localScale.y);  // radius inflated by scale, and y is the biggest scale for an Ent
         senses.perception_rating = perception_rating;

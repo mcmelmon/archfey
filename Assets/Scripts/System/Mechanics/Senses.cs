@@ -23,11 +23,17 @@ public class Senses : MonoBehaviour {
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
-        foreach (var sighting in GetSightings())
+        foreach (var sighting in sightings)
         {
             if (sighting == null) continue;
             Gizmos.DrawRay(transform.position, (sighting.transform.position - transform.position));
         }
+    }
+
+
+    private void Start()
+    {
+        StartCoroutine(Sight());
     }
 
 
@@ -36,25 +42,38 @@ public class Senses : MonoBehaviour {
 
     public List<GameObject> GetSightings()
     {
-        sightings.Clear();
-
-        Collider[] colliders = Physics.OverlapSphere(transform.position, radius);
-
-        for (int i = 0; i < colliders.Length; i++) {
-            if (colliders[i].gameObject.tag == "Actor" && colliders[i].gameObject != gameObject) {  // don't sight yourself
-                Stealth _stealth = colliders[i].GetComponent<Stealth>();
-                if (_stealth == null || _stealth.Spotted(perception_rating)) {
-                    sightings.Add(colliders[i].gameObject);
-                }
-            }
-        }
-
         return sightings;
     }
-
 
     public void SetRange(float _range)
     {
         GetComponent<SphereCollider>().radius = radius = _range;
+    }
+
+
+    // private
+
+
+    private IEnumerator Sight()
+    {
+        while (true) {
+            sightings.Clear();
+
+            Collider[] colliders = Physics.OverlapSphere(transform.position, radius);
+
+            for (int i = 0; i < colliders.Length; i++) {
+                GameObject sighting = colliders[i].gameObject;
+
+                if (sighting.tag == "Actor" && sighting != gameObject) {  // don't sight ourselves
+                    Stealth _stealth = sighting.GetComponent<Stealth>();
+
+                    if (_stealth == null || _stealth.Spotted(perception_rating) && !sightings.Contains(sighting)) {
+                        sightings.Add(colliders[i].gameObject);
+                    }
+                }
+            }
+
+            yield return null;
+        }
     }
 }

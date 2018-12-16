@@ -26,7 +26,7 @@ public class Attack : MonoBehaviour {
     // public
 
 
-    public IEnumerator ManageAttacks()
+    public void ManageAttacks()
     {
         if (actor == null) actor = GetComponent<Actor>();
         if (actor.enemies_abound) {
@@ -34,8 +34,6 @@ public class Attack : MonoBehaviour {
             SelectEnemy();
             StrikeEnemy();
         }
-
-        yield return null;
     }
 
 
@@ -146,7 +144,6 @@ public class Attack : MonoBehaviour {
                 _ranged.transform.parent = transform;
                 _ranged.name = "Ranged Weapon";
                 _ranged.SetTarget(_target);
-                _ranged.Seek();
             }
         }
     }
@@ -169,7 +166,6 @@ public class Attack : MonoBehaviour {
                 _ranged.transform.parent = transform;
                 _ranged.name = "Ranged Weapon";
                 _ranged.SetTarget(_target);
-                _ranged.Seek();
             }
         }
     }
@@ -182,6 +178,13 @@ public class Attack : MonoBehaviour {
         // If any targets are in melee range, strike at them ahead of ranged
 
         if (current_melee_targets.Count == 0 && current_ranged_targets.Count == 0) return;
+
+        // TODO: allow stealth to be recovered, e.g. "Vanish" and even attacking from stealth for a short while, etc.
+        Stealth stealth = GetComponent<Stealth>();
+        if (stealth != null) {
+            stealth.attacking = true;
+            stealth.spotted = true;
+        }
 
         if (current_melee_targets.Count > 0) {
             StrikeAtMelee();

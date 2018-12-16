@@ -4,9 +4,13 @@ using UnityEngine;
 
 public class Stealth : MonoBehaviour {
 
+    public bool attacking;
     public bool spotted;                    // has another unit overcome the stealth rating?
     public float stealth_rating;            // how hidden is the unit?
     public float stealh_persistence;        // how well does the unit recover stealth after being spotted?
+
+    Material original_material;
+    Renderer my_renderer;
 
 
     // Unity
@@ -14,6 +18,8 @@ public class Stealth : MonoBehaviour {
 
     private void Awake()
     {
+        my_renderer = GetComponent<Renderer>();
+        original_material = my_renderer.material;
         spotted = false;
     }
 
@@ -27,22 +33,9 @@ public class Stealth : MonoBehaviour {
     }
 
 
-    private void Update()
+    private void Start()
     {
-        // This "works," but only if you inspect the material at runtime
-        //if (!spotted) {
-        //    Renderer my_renderer = GetComponent<Renderer>();
-        //    my_renderer.material.SetFloat("_Mode", 3);
-        //    Color _color = my_renderer.material.color;
-        //    _color.a = 0.4f;
-        //    my_renderer.material.color = _color;
-        //} else {
-        //    Renderer my_renderer = GetComponent<Renderer>();
-        //    my_renderer.material.SetFloat("_Mode", 0);
-        //    Color _color = my_renderer.material.color;
-        //    _color.a = 1f;
-        //    my_renderer.material.color = _color;
-        //}
+        StartCoroutine(Camouflage());
     }
 
 
@@ -53,9 +46,9 @@ public class Stealth : MonoBehaviour {
     {
         // if we've been spotted, we have a shot every turn to regain our stealth
 
-        if (!spotted) return;
+        if (!spotted || attacking) return;
 
-        if (Random.Range(0f, 1f) < stealh_persistence) {
+        if (Random.Range(0f, 100f) < stealh_persistence * 100) {  // TODO: simplify these "percentile dice" ratings
             spotted = false;
             Debug.Log("Recovered stealth");
         }
@@ -64,17 +57,29 @@ public class Stealth : MonoBehaviour {
 
     public bool Spotted(float perception_rating)
     {
-        // There is a chance to slip back into stealth even when spotted
-        RecoverStealth();
+        if (attacking) {
+            spotted = true;
+        } else {
+            // There is a chance to slip back into stealth even when spotted
+            RecoverStealth();
 
-        // If that failed, we're seen
-        if (spotted) return true;
-
-        // If we are not spotted, units without perception will not spot us
-        if (Mathf.Approximately(perception_rating, 0f)) return false;
-
-        // If still unspotted, and stealth_rating == perception_rating, then 50% chance of being spotted
-        spotted = Random.Range(0f, 1f) < 0.5f + (perception_rating - stealth_rating);
+            // Units with no perception rating fail to spot us; others contest their perception against our stealth, i.e. it's 50/50 if both match
+            spotted = !(Mathf.Approximately(perception_rating, 0f)) && (Random.Range(0, 100) < (0.5f + (perception_rating - stealth_rating)) * 100);
+        }
         return spotted;
+    }
+
+
+    private IEnumerator Camouflage()
+    {
+        while (true) {
+            if (!spotted && !attacking) {
+                my_renderer.material = GetComponentInParent<World>().GetComponentInChildren<Flora>().GetCanopy()[0].GetComponent<Renderer>().material;
+            } else {
+                my_renderer.material = original_material;
+            }
+
+            yield return null;
+        }
     }
 }

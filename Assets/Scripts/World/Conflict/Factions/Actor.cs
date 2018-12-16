@@ -32,19 +32,19 @@ public class Actor : MonoBehaviour {
     // public
 
 
-    public IEnumerator EstablishRuinControl()
+    public void EstablishRuinControl()
     {
+        if (fey != null) return;  // only the mortals contend for mortal things
+
         Ruin ruin = GetNearestRuin();
         if (ruin != null) {
 
             movement.ResetPath();  // don't move away from a viable ruin target!
 
-            if (!ruin.IsFriendlyTo(gameObject)) {
+            if (!ruin.IsFriendlyTo(gameObject) && gameObject != null) {
                 ruin.ExertControl(gameObject, ruin_control_raiting);
             }
         }
-
-        yield return null;
     }
 
 

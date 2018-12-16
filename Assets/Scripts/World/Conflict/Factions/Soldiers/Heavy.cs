@@ -45,7 +45,6 @@ public class Heavy : MonoBehaviour {
     private void SetComponents()
     {
         actor = GetComponent<Actor>();
-        actor.SetComponents();
         movement = GetComponent<Movement>();
         movement.GetAgent().speed = speed;
         senses = GetComponent<Senses>();
