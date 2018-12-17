@@ -38,6 +38,7 @@ public class Mhoddim : MonoBehaviour {
     {
         SetDefenseStats();
         SetHealthStats();
+        SetOffenseStats();
     }
 
 
@@ -59,25 +60,25 @@ public class Mhoddim : MonoBehaviour {
         if (defend == null) return;
 
         if (GetComponent<Heavy>() != null) {
-            defend.SetAgilityRating(ConfigureMhoddim.agility_rating[Soldier.Clasification.Heavy]);
-            defend.SetArmorRating(ConfigureMhoddim.armor_rating[Soldier.Clasification.Heavy]);
-            defend.SetCorporealRating(ConfigureMhoddim.corporeal_rating[Soldier.Clasification.Heavy]);
-            defend.SetCounter(ConfigureMhoddim.counter[Soldier.Clasification.Heavy]);
-            defend.SetForceRating(ConfigureMhoddim.force_rating[Soldier.Clasification.Heavy]);
+            defend.agility_rating = ConfigureMhoddim.agility_rating[Soldier.Clasification.Heavy];
+            defend.armor_rating = ConfigureMhoddim.armor_rating[Soldier.Clasification.Heavy];
+            defend.corporeal_rating = ConfigureMhoddim.corporeal_rating[Soldier.Clasification.Heavy];
+            defend.counter = ConfigureMhoddim.counter[Soldier.Clasification.Heavy];
+            defend.force_rating = ConfigureMhoddim.force_rating[Soldier.Clasification.Heavy];
             defend.SetResistances(ConfigureMhoddim.resistances[Soldier.Clasification.Heavy]);
         } else if (GetComponent<Scout>() != null) {
-            defend.SetAgilityRating(ConfigureMhoddim.agility_rating[Soldier.Clasification.Scout]);
-            defend.SetArmorRating(ConfigureMhoddim.armor_rating[Soldier.Clasification.Scout]);
-            defend.SetCorporealRating(ConfigureMhoddim.corporeal_rating[Soldier.Clasification.Scout]);
-            defend.SetCounter(ConfigureMhoddim.counter[Soldier.Clasification.Scout]);
-            defend.SetForceRating(ConfigureMhoddim.force_rating[Soldier.Clasification.Scout]);
+            defend.agility_rating = ConfigureMhoddim.agility_rating[Soldier.Clasification.Scout];
+            defend.armor_rating = ConfigureMhoddim.armor_rating[Soldier.Clasification.Scout];
+            defend.corporeal_rating = ConfigureMhoddim.corporeal_rating[Soldier.Clasification.Scout];
+            defend.counter = ConfigureMhoddim.counter[Soldier.Clasification.Scout];
+            defend.force_rating = ConfigureMhoddim.force_rating[Soldier.Clasification.Scout];
             defend.SetResistances(ConfigureMhoddim.resistances[Soldier.Clasification.Scout]);
         } else if (GetComponent<Striker>() != null) {
-            defend.SetAgilityRating(ConfigureMhoddim.agility_rating[Soldier.Clasification.Striker]);
-            defend.SetArmorRating(ConfigureMhoddim.armor_rating[Soldier.Clasification.Striker]);
-            defend.SetCorporealRating(ConfigureMhoddim.corporeal_rating[Soldier.Clasification.Striker]);
-            defend.SetCounter(ConfigureMhoddim.counter[Soldier.Clasification.Striker]);
-            defend.SetForceRating(ConfigureMhoddim.force_rating[Soldier.Clasification.Striker]);
+            defend.agility_rating = ConfigureMhoddim.agility_rating[Soldier.Clasification.Striker];
+            defend.armor_rating = ConfigureMhoddim.armor_rating[Soldier.Clasification.Striker];
+            defend.corporeal_rating = ConfigureMhoddim.corporeal_rating[Soldier.Clasification.Striker];
+            defend.counter = ConfigureMhoddim.counter[Soldier.Clasification.Striker];
+            defend.force_rating = ConfigureMhoddim.force_rating[Soldier.Clasification.Striker];
             defend.SetResistances(ConfigureMhoddim.resistances[Soldier.Clasification.Striker]);
         }
     }
@@ -90,13 +91,31 @@ public class Mhoddim : MonoBehaviour {
 
         if (GetComponent<Heavy>() != null) {
             health.SetStartingHealth(ConfigureMhoddim.starting_health[Soldier.Clasification.Heavy]);
-            health.SetRecoveryRate(ConfigureMhoddim.recovery_rate[Soldier.Clasification.Heavy]);
+            health.SetRecoveryAmount(ConfigureMhoddim.recovery_amount[Soldier.Clasification.Heavy]);
         } else if (GetComponent<Scout>() != null) {
             health.SetStartingHealth(ConfigureMhoddim.starting_health[Soldier.Clasification.Scout]);
-            health.SetRecoveryRate(ConfigureMhoddim.recovery_rate[Soldier.Clasification.Scout]);
+            health.SetRecoveryAmount(ConfigureMhoddim.recovery_amount[Soldier.Clasification.Scout]);
         } else if (GetComponent<Striker>() != null) {
             health.SetStartingHealth(ConfigureMhoddim.starting_health[Soldier.Clasification.Striker]);
-            health.SetRecoveryRate(ConfigureMhoddim.recovery_rate[Soldier.Clasification.Striker]);
+            health.SetRecoveryAmount(ConfigureMhoddim.recovery_amount[Soldier.Clasification.Striker]);
+        }
+    }
+
+
+    private void SetOffenseStats()
+    {
+        Attack attack = GetComponent<Attack>();
+        if (attack == null) return;
+
+        if (GetComponent<Heavy>() != null) {
+            attack.agility_rating = ConfigureMhoddim.starting_health[Soldier.Clasification.Heavy];
+            attack.strength_rating = ConfigureMhoddim.starting_health[Soldier.Clasification.Heavy];
+        } else if (GetComponent<Scout>() != null) {
+            attack.agility_rating = ConfigureMhoddim.starting_health[Soldier.Clasification.Scout];
+            attack.strength_rating = ConfigureMhoddim.starting_health[Soldier.Clasification.Scout];
+        } else if (GetComponent<Striker>() != null) {
+            attack.agility_rating = ConfigureMhoddim.starting_health[Soldier.Clasification.Striker];
+            attack.strength_rating = ConfigureMhoddim.starting_health[Soldier.Clasification.Striker];
         }
     }
 }

@@ -54,7 +54,7 @@ public class Turn : MonoBehaviour {
 
     private bool Healthy()
     {
-        health.RecoverHealth(health.recovery_rate * health.starting_health);
+        health.RecoverHealth(health.recovery_amount);
         // TODO: health.ApplyDamageOverTime
         return health.Persist();
     }

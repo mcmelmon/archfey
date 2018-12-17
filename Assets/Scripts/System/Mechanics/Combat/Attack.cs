@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Attack : MonoBehaviour {
 
+    public int agility_rating;
     public List<Weapon> available_weapons;
+    public int strength_rating;
 
     private readonly List<GameObject> available_melee_targets = new List<GameObject>();
     private readonly List<GameObject> available_ranged_targets = new List<GameObject>();

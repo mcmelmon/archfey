@@ -110,14 +110,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 343f8faffa6de4d0687c032dacb2bb1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  range: 1
-  type: 1
-  instant_damage: 25
-  damage_over_time: 0
-  potency: 0
-  speed: 30
   impact_prefab: {fileID: 1710435542514214, guid: 21ad8cd3e2ef64a6e8adf8d98532382d,
     type: 2}
+  range: 1
+  damage_type: 0
+  instant_damage: 20
+  damage_over_time: 0
+  penetration: 1
+  potency: 0
+  projectile_speed: 30
   ranged_attack_origin: {fileID: 4666701022940694, guid: 45c92403343264da1bc9235f79c51629,
     type: 2}
   melee_attack_origin: {fileID: 0}
