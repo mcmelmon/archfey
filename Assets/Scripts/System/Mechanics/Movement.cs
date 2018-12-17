@@ -29,17 +29,6 @@ public class Movement : MonoBehaviour {
     }
 
 
-    private void Start()
-    {
-        StartCoroutine(MonitorProgress());
-    }
-
-
-    void Update () {
-
-    }
-
-
     // public
 
     // TODO: warp the agent to the nearest navmesh point if it is off the mesh
@@ -77,6 +66,7 @@ public class Movement : MonoBehaviour {
     {
         route = _route;
         agent.SetDestination(route.current);
+        StartCoroutine(MonitorProgress());
     }
 
 
@@ -93,17 +83,18 @@ public class Movement : MonoBehaviour {
     private void GetNextObjective()
     {
         route.SetNext();
-        agent.SetDestination(route.current);
+        if (!route.completed)
+            agent.SetDestination(route.current);
     }
 
 
     private IEnumerator MonitorProgress()
     {
-        while (agent.hasPath) {
-            if (ReachedNearObjective()) GetNextObjective();
-            if (ObjectiveComplete()) GetNewObjective();
-            if (Vector3.Distance(transform.position, agent.destination) < .4f)
-                agent.ResetPath();
+        while (true) {
+            if (ReachedNearObjective()) 
+                GetNextObjective();
+            if (ObjectiveComplete()) 
+                GetNewObjective();
 
             yield return null;
         }

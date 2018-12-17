@@ -14,11 +14,11 @@ public class Actor : MonoBehaviour {
 
     List<GameObject> enemies = new List<GameObject>();
     List<GameObject> friends = new List<GameObject>();
-    bool has_objective;
 
     Health health;
     Senses senses;
     Movement movement;
+    RuinControlPoint objective;
 
 
     // Unity
@@ -27,7 +27,6 @@ public class Actor : MonoBehaviour {
     private void Awake()
     {
         enemies_abound = false;
-        has_objective = false;
     }
 
 
@@ -36,19 +35,32 @@ public class Actor : MonoBehaviour {
 
     public void EstablishRuinControl()
     {
-        if (fey != null || has_objective) return;  // only the mortals contend for mortal things
+        if (fey != null) return;
 
-        Ruin ruin = GetNearestRuin();
+        if (objective != null) {
+            if (objective.OccupiedBy(gameObject)) {
+                // we occupy the objective, keep it
+                return;
+            } else if (!objective.IsOccupied()){
+                // the objective is still up for grabs, don't pick another
+                return;
+            } else  {
+                // someone else has occupied our objective, pick another; TODO: fight other faction
+                movement.ResetPath();
+                objective = null;
+            }
+        }
+
+        Ruin ruin = GetNearestUnoccupiedRuin();
         if (ruin != null) {
-
             ruin.GetComponent<Renderer>().material.color = Color.blue;
 
-            GameObject control_point = ruin.GetUnoccupiedControlPoint();
+            GameObject control_point = ruin.GetNearestUnoccupiedControlPoint(transform.position);
 
             if (control_point != null) {
+                objective = control_point.GetComponent<RuinControlPoint>();
                 control_point.transform.Find("Marker").GetComponent<Renderer>().material.color = Color.red;
                 movement.SetRoute(Route.Linear(transform.position, control_point.transform.position, ReachedControlPoint));
-                has_objective = true;
             }
         }
     }
@@ -126,7 +138,15 @@ public class Actor : MonoBehaviour {
 
     public void ReachedControlPoint()
     {
-        Debug.Log("Reached control point");
+        // TODO: attack opposing faction in control
+
+        if (objective == null) {
+            EstablishRuinControl();
+        } else if (!objective.IsOccupied()) {
+            objective.Occupy(gameObject);
+        } else {
+            EstablishRuinControl();
+        }
     }
 
 
@@ -159,7 +179,7 @@ public class Actor : MonoBehaviour {
     // private
 
 
-    private Ruin GetNearestRuin()
+    private Ruin GetNearestUnoccupiedRuin()
     {
         Ruin closest_ruin = null;
         float distance;
@@ -167,9 +187,13 @@ public class Actor : MonoBehaviour {
 
         foreach(var ruin in GetComponentInParent<World>().GetComponentInChildren<Ruins>().GetRuins()) {
             distance = Vector3.Distance(transform.position, ruin.transform.position);
-            if (distance < shortest_distance) {
-                closest_ruin = ruin;
-                shortest_distance = distance;
+            if (ruin.GetNearestUnoccupiedControlPoint(transform.position) != null) {
+                if (distance < shortest_distance) {
+                    closest_ruin = ruin;
+                    shortest_distance = distance;
+                }
+            } else {
+                continue;
             }
         }
 

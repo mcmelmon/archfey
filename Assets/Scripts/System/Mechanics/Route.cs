@@ -56,7 +56,7 @@ public class Route
     {
         Route route = new Route
         {
-            current = _start,
+            current = _next,
             start = _start,
             completed = false,
             looping = _looping,
@@ -66,7 +66,6 @@ public class Route
 
         route.points.Add(_start);
         route.points.Add(_next);
-        route.SetNext();
 
         return route;
     }

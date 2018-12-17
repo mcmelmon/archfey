@@ -28,14 +28,23 @@ public class Ruin : MonoBehaviour
     // public
 
 
-    public GameObject GetUnoccupiedControlPoint()
+    public GameObject GetNearestUnoccupiedControlPoint(Vector3 _location)
     {
+        float distance;
+        float shortest_distance = float.MaxValue;
+        GameObject nearest_control_point = null;
+
         foreach (var control_point in control_points) {
-            if (!control_point.GetComponent<RuinControlPoint>().IsOccupied())
-                return control_point;
+            if (!control_point.GetComponent<RuinControlPoint>().IsOccupied()) {
+                distance = Vector3.Distance(control_point.transform.position, _location);
+                if (distance < shortest_distance) {
+                    nearest_control_point = control_point;
+                    shortest_distance = distance;
+                }
+            }
         }
 
-        return null;
+        return nearest_control_point;
     }
 
 
@@ -135,9 +144,32 @@ public class RuinControlPoint : MonoBehaviour
     // public
 
 
+    public Conflict.Faction ControllingFaction()
+    {
+        return faction;
+    }
+
+
     public bool IsOccupied()
     {
         return occupied;
+    }
+
+
+    public bool OccupiedBy(GameObject _unit)
+    {
+        return contenders.Contains(_unit) && contenders.Count == 1;
+    }
+
+
+    public void Occupy(GameObject _unit)
+    {
+        if (!occupied) {
+            controller = _unit;
+            occupied = true;
+            contenders.Add(_unit);
+            faction = (_unit.GetComponent<Ghaddim>() != null) ? Conflict.Faction.Ghaddim : Conflict.Faction.Mhoddim;
+        }
     }
 
 
@@ -151,37 +183,4 @@ public class RuinControlPoint : MonoBehaviour
             }
         }
     }
-
-
-    // private
-
-
-    private IEnumerator CheckForOccupation()
-    {
-        while (!occupied) {
-            yield return new WaitForSeconds(Turn.action_threshold);
-
-            Collider[] colliders = Physics.OverlapSphere(transform.position, control_radius);
-
-            for (int i = 0; i < colliders.Length; i++) {
-                GameObject occupier = colliders[i].gameObject;
-
-                if (occupier.tag == "Actor" && occupier.GetComponent<Fey>() == null) {
-                    occupied = true;
-                    contenders.Add(occupier);
-                    faction = (occupier.GetComponent<Ghaddim>() != null) ? Conflict.Faction.Ghaddim : Conflict.Faction.Mhoddim;
-                    break;
-                }
-            }
-        }
-    }
-
-
-    private bool OccupiedBy(GameObject _unit)
-    {
-        return contenders.Contains(_unit) && contenders.Count == 1;
-    }
-
-
-
 }
