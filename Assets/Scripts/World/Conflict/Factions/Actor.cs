@@ -5,8 +5,7 @@ using UnityEngine;
 public class Actor : MonoBehaviour {
 
     public bool enemies_abound;
-    public float ruin_control_radius;
-    public int ruin_control_raiting;
+    public int ruin_control_rating;
 
     public Fey fey;
     public Ghaddim ghaddim;
@@ -53,13 +52,10 @@ public class Actor : MonoBehaviour {
 
         Ruin ruin = GetNearestUnoccupiedRuin();
         if (ruin != null) {
-            ruin.GetComponent<Renderer>().material.color = Color.blue;
-
             GameObject control_point = ruin.GetNearestUnoccupiedControlPoint(transform.position);
 
             if (control_point != null) {
                 objective = control_point.GetComponent<RuinControlPoint>();
-                control_point.transform.Find("Marker").GetComponent<Renderer>().material.color = Color.red;
                 movement.SetRoute(Route.Linear(transform.position, control_point.transform.position, ReachedControlPoint));
             }
         }
@@ -159,20 +155,13 @@ public class Actor : MonoBehaviour {
         health = GetComponent<Health>();
         senses = GetComponent<Senses>();
 
-        SetRuinControlRadius(25f);  // TODO: pass this in unit by unit
-        SetRuinControlRating(10);  // TODO: pass this in unit by unit
-    }
-
-
-    public void SetRuinControlRadius(float _radius)
-    {
-        ruin_control_radius = _radius;
+        SetRuinControlRating(5);  // TODO: pass this in unit by unit
     }
 
 
     public void SetRuinControlRating(int _rating)
     {
-        ruin_control_raiting = _rating;
+        ruin_control_rating = _rating;
     }
 
 

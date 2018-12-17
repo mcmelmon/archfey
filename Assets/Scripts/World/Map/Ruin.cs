@@ -10,6 +10,7 @@ public class Ruin : MonoBehaviour
     public bool is_controlled;
     public Material ghaddim_skin;
     public Material mhoddim_skin;
+    public Material unclaimed_skin;
 
     List<GameObject> control_points = new List<GameObject>();
     Conflict.Faction control;
@@ -22,6 +23,7 @@ public class Ruin : MonoBehaviour
         control = Conflict.Faction.None;
         is_controlled = false;
         SetControlPoints();
+        StartCoroutine(CheckControl());
     }
 
 
@@ -66,6 +68,39 @@ public class Ruin : MonoBehaviour
     // private
 
 
+    private IEnumerator CheckControl()
+    {
+        while (true) {
+            yield return new WaitForSeconds(Turn.action_threshold);
+
+            Conflict.Faction contending_faction = Conflict.Faction.None;
+
+            foreach (var control_point in control_points) {
+                RuinControlPoint _point = control_point.GetComponent<RuinControlPoint>();
+                Conflict.Faction _faction = _point.faction;
+
+                if (contending_faction == Conflict.Faction.None)
+                    contending_faction = _faction;
+
+                if ((_faction == Conflict.Faction.None)) {
+                    control = contending_faction = Conflict.Faction.None;
+                    is_controlled = false;
+                    GetComponent<Renderer>().material = unclaimed_skin;
+                    break;
+                } else if (contending_faction != _faction) {
+                    control = contending_faction = Conflict.Faction.None;
+                    is_controlled = false;
+                    GetComponent<Renderer>().material = unclaimed_skin;
+                    break;
+                }
+            }
+
+            if (contending_faction != Conflict.Faction.None)
+                TransferControl(contending_faction);
+        }
+    }
+
+
     private void SetControlPoints()
     {
         Circle _center = Circle.CreateCircle(transform.position, 10f, 3);
@@ -81,30 +116,21 @@ public class Ruin : MonoBehaviour
     private void TransferControl(Conflict.Faction faction)
     {
         control = faction;
-
-        switch (control) {
-            case Conflict.Faction.Ghaddim:
-                GetComponent<Renderer>().material = ghaddim_skin;
-                break;
-            case Conflict.Faction.Mhoddim:
-                GetComponent<Renderer>().material = mhoddim_skin;
-                break;
-        }
+        is_controlled = true;
+        GetComponent<Renderer>().material = (control == Conflict.Faction.Ghaddim) ? ghaddim_skin : mhoddim_skin;
     }
 }
 
 
 public class RuinControlPoint : MonoBehaviour
 {
-    List<GameObject> contenders = new List<GameObject>();
-    GameObject controller;
-    float control_radius;
-    float control_resistance_rating;
-    SphereCollider control_zone;
-    float current_resistance_points;
-    Conflict.Faction faction;
+    public Conflict.Faction faction;
+
+    GameObject occupier;
+    int control_resistance_rating;
+    int current_resistance_points;
     bool occupied;
-    public float starting_resistance_points;
+    int starting_resistance_points;
 
 
     public static GameObject CreateControlPoint(Vector3 _position, Ruin _ruin)
@@ -129,15 +155,12 @@ public class RuinControlPoint : MonoBehaviour
 
     private void Awake()
     {
-        control_radius = 1f;
-        control_resistance_rating = 50;
-        current_resistance_points = 10f;
-        control_zone = gameObject.AddComponent<SphereCollider>();
-        control_zone.radius = control_radius;
-        control_zone.isTrigger = true;
+        control_resistance_rating = 2;
+        current_resistance_points = 10;
         faction = Conflict.Faction.None;
         occupied = false;
-        starting_resistance_points = 10f;
+        starting_resistance_points = 10;
+        StartCoroutine(CheckControl());
     }
 
 
@@ -158,28 +181,36 @@ public class RuinControlPoint : MonoBehaviour
 
     public bool OccupiedBy(GameObject _unit)
     {
-        return contenders.Contains(_unit) && contenders.Count == 1;
+        return occupier == _unit;
     }
 
 
     public void Occupy(GameObject _unit)
     {
         if (!occupied) {
-            controller = _unit;
+            occupier = _unit;
             occupied = true;
-            contenders.Add(_unit);
-            faction = (_unit.GetComponent<Ghaddim>() != null) ? Conflict.Faction.Ghaddim : Conflict.Faction.Mhoddim;
         }
     }
 
 
-    public void TakeControl(GameObject _unit, float ruin_control_rating)
+    // private
+
+
+    private IEnumerator CheckControl()
     {
-        if (OccupiedBy(_unit)) {
-            current_resistance_points -= starting_resistance_points * ruin_control_rating * control_resistance_rating;
-            if (current_resistance_points <= 0) {
-                controller = _unit;
-                current_resistance_points = starting_resistance_points;
+        while (true) {
+            yield return new WaitForSeconds(Turn.action_threshold);
+
+            if (IsOccupied()) {
+                Actor actor = occupier.GetComponent<Actor>();
+
+                current_resistance_points -= (actor.ruin_control_rating - control_resistance_rating);
+                if (current_resistance_points <= 0) {
+                    faction = (actor.GetComponent<Ghaddim>() != null) ? Conflict.Faction.Ghaddim : Conflict.Faction.Mhoddim;
+                    current_resistance_points = starting_resistance_points;
+                    transform.Find("Marker").GetComponent<Renderer>().material.color = Color.red;
+                }
             }
         }
     }

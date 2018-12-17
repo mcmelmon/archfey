@@ -138,13 +138,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fdc5809f6f1b4086b088de15947bb75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  control_radius: 20
-  control_resistance_rating: 0
-  current_control_points: 0
   is_controlled: 0
-  starting_control_points: 10
   ghaddim_skin: {fileID: 2100000, guid: fb1e578c63cae49238d1d87030aa19eb, type: 2}
   mhoddim_skin: {fileID: 2100000, guid: d36a25fa27c6e4ce5b4bf14618e11f05, type: 2}
+  unclaimed_skin: {fileID: 2100000, guid: dbda295e5c3c343a0b9ff05b4c72283b, type: 2}
 --- !u!208 &208928926469663226
 NavMeshObstacle:
   m_ObjectHideFlags: 1

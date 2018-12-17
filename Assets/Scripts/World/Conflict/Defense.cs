@@ -54,7 +54,7 @@ public class Defense : MonoBehaviour
                 case Ruins.Category.Primary:
                     Formation block_formation = Formation.CreateFormation(circle.Value.center, Formation.Profile.Circle);
 
-                    for (int i = 0; i < 12; i++) {
+                    for (int i = 0; i < 14; i++) {
                         GameObject _heavy = Spawn(circle.Value.RandomContainedPoint());
                         _heavy.AddComponent<Heavy>();
                         block_formation.JoinFormation(_heavy);
@@ -64,7 +64,7 @@ public class Defense : MonoBehaviour
                 case Ruins.Category.Secondary:
                     Formation strike_formation = Formation.CreateFormation(circle.Value.center, Formation.Profile.Rectangle);
 
-                    for (int i = 0; i < 5; i++) {
+                    for (int i = 0; i < 6; i++) {
                         GameObject _striker = Spawn(circle.Value.RandomContainedPoint());
                         _striker.AddComponent<Striker>();
                         strike_formation.JoinFormation(_striker);

@@ -7,7 +7,7 @@ public class Conflict : MonoBehaviour {
 
     public static Conflict conflict_instance;
 
-    public enum Faction { None = 0, Ghaddim = 0, Mhoddim = 1, Fey = 2 };  // TODO: use this enum for more comparisons
+    public enum Faction { None = 0, Ghaddim = 1, Mhoddim = 2, Fey = 3 };  // TODO: use this enum for more comparisons
 
     public GameObject fey;
     public GameObject ghaddim;
@@ -65,7 +65,7 @@ public class Conflict : MonoBehaviour {
     private void FirstWave()
     {
         GetComponentInChildren<Defense>().Setup();
-        //GetComponentInChildren<Offense>().Setup();
+        GetComponentInChildren<Offense>().Setup();
     }
 
 
