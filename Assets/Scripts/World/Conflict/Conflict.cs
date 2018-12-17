@@ -7,7 +7,8 @@ public class Conflict : MonoBehaviour {
 
     public static Conflict conflict_instance;
 
-    public enum Faction { None = 0, Ghaddim = 1, Mhoddim = 2, Fey = 3 };  // TODO: use this enum for more comparisons
+    public enum Faction { None = 0, Ghaddim = 1, Mhoddim = 2, Fey = 3 };
+    public enum Role { None = 0, Defense = 1, Offense = 2 };
 
     public GameObject fey;
     public GameObject ghaddim;

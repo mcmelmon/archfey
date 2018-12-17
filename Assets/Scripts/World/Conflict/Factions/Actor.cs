@@ -1,10 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Actor : MonoBehaviour {
 
     public bool enemies_abound;
+    public Conflict.Faction faction;
+    public Conflict.Role role;
     public int ruin_control_rating;
 
     public Fey fey;
@@ -105,30 +108,15 @@ public class Actor : MonoBehaviour {
 
     public bool IsFriendOrNeutral(GameObject _unit)
     {
-        if (IsMyFaction(_unit)) return true;
         if (_unit == null || _unit == gameObject) return true;
-        if (GetComponent<Scout>() != null) return true; // scouts are everyone's friend unless damaged
-        if (GetComponent<Ent>() != null && _unit.GetComponent<Fey>() == null) return false; // Ents always attack
-        if ( (ghaddim != null && ghaddim.IsFactionThreat(_unit)) || (mhoddim != null && mhoddim.IsFactionThreat(_unit)) )
-            return false;
+        if (IsMyRole(_unit)) return true;  // but don't automatically return false if not my role (I might be a scout, it might be fey)
+        if (GetComponent<Scout>() != null) return true; // we are a scout, and scouts do not engage unless damaged
+        if (GetComponent<Ent>() != null) return false; // we are an Ent, and ents engage mortals; Fey have same role and will already have returned true
+        if (HasDamagedMe(_unit)) return false;
+        if (IsAttackingMyFaction(_unit)) return false;
+        if (_unit.GetComponent<Fey>() != null) return true; // fey are neutral until individual units (e.g. Ents) attack (and get added to damagers)
 
-        foreach (var damager in health.GetDamagers().Keys) {
-            if (damager == _unit) return true;
-        }
-
-        if (_unit.GetComponent<Fey>() != null) return true; // fey are neutral until individual units attack (and get added to damagers)
-
-        return false;  // if none of the above, it's plenty weird
-    }
-
-
-    public bool IsMyFaction(GameObject _unit)
-    {
-        Fey other_fey = _unit.GetComponent<Fey>();
-        Ghaddim other_ghaddim = _unit.GetComponent<Ghaddim>();
-        Mhoddim other_mhoddim = _unit.GetComponent<Mhoddim>();
-
-        return (ghaddim != null && other_ghaddim != null) || (mhoddim != null && other_mhoddim != null) || (fey != null && other_fey != null);
+        return false;  // if none of the above, it's probably the other faction and no exceptions apply
     }
 
 
@@ -154,6 +142,8 @@ public class Actor : MonoBehaviour {
         movement = GetComponent<Movement>();
         health = GetComponent<Health>();
         senses = GetComponent<Senses>();
+        faction = (fey != null) ? Conflict.Faction.Fey : (ghaddim != null) ? Conflict.Faction.Ghaddim : Conflict.Faction.Mhoddim;
+        role = Conflict.Role.None;  // offense and defense set this role for mortals
 
         SetRuinControlRating(5);  // TODO: pass this in unit by unit
     }
@@ -166,6 +156,30 @@ public class Actor : MonoBehaviour {
 
 
     // private
+
+
+    private bool HasDamagedMe(GameObject _unit)
+    {
+        return health.GetDamagers().Keys.ToArray().Contains(_unit);
+    }
+
+
+    private bool IsAttackingMyFaction(GameObject _unit)
+    {
+        return faction != Conflict.Faction.Fey && (faction == Conflict.Faction.Ghaddim) ? (ghaddim.IsFactionThreat(_unit)) : (mhoddim.IsFactionThreat(_unit));
+    }
+
+
+    private bool IsMyFaction(GameObject _unit)
+    {
+        return faction == _unit.GetComponent<Actor>().faction;
+    }
+
+
+    private bool IsMyRole(GameObject _unit)
+    {
+        return role == _unit.GetComponent<Actor>().role;
+    }
 
 
     private Ruin GetNearestUnoccupiedRuin()

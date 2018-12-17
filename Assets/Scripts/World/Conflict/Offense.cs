@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Offense : MonoBehaviour
 {
+    public static Conflict.Faction faction;
     public static Offense offense_instance;
     public static List<GameObject> soldiers = new List<GameObject>();
 
@@ -14,7 +15,6 @@ public class Offense : MonoBehaviour
     Ruins ruins;
 
     static List<GameObject> scouts = new List<GameObject>();
-    // TODO: discovered ruins
 
 
     // Unity
@@ -73,6 +73,7 @@ public class Offense : MonoBehaviour
         geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();
         ghaddim = GetComponentInParent<Ghaddim>();
         mhoddim = GetComponentInParent<Mhoddim>();
+        faction = (ghaddim != null) ? Conflict.Faction.Ghaddim : Conflict.Faction.Mhoddim;
     }
 
 
@@ -81,6 +82,7 @@ public class Offense : MonoBehaviour
         GameObject _soldier = (ghaddim != null) ? ghaddim.SpawnUnit() : mhoddim.SpawnUnit();
         _soldier.transform.position = point;
         _soldier.transform.parent = transform;
+        _soldier.GetComponent<Actor>().role = Conflict.Role.Offense;
         soldiers.Add(_soldier);
         return _soldier;
     }
