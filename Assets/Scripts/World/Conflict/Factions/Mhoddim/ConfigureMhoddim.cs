@@ -12,7 +12,7 @@ public static class ConfigureMhoddim
     public static Dictionary<string, float> counter = new Dictionary<string, float>();
     public static Dictionary<string, float> force_rating = new Dictionary<string, float>();
 
-    public static Dictionary<string, Dictionary<Weapon.Type, float>> resistances = new Dictionary<string, Dictionary<Weapon.Type, float>>();
+    public static Dictionary<string, Dictionary<Weapon.DamageType, float>> resistances = new Dictionary<string, Dictionary<Weapon.DamageType, float>>();
 
     // Health attributes
     public static Dictionary<string, float> recovery_rate = new Dictionary<string, float>();
@@ -23,7 +23,7 @@ public static class ConfigureMhoddim
 
 
 
-    public static void Populate()
+    public static void GenerateStats()
     {
         PopulateAttributes();
         PopulateResistances();
@@ -69,28 +69,28 @@ public static class ConfigureMhoddim
 
     private static void PopulateResistances()
     {
-        resistances["heavy"] = new Dictionary<Weapon.Type, float>();
-        resistances["heavy"][Weapon.Type.Arcane] = 0.25f;
-        resistances["heavy"][Weapon.Type.Blunt] = 0f;
-        resistances["heavy"][Weapon.Type.Elemental] = 0f;
-        resistances["heavy"][Weapon.Type.Piercing] = 0f;
-        resistances["heavy"][Weapon.Type.Poison] = 0f;
-        resistances["heavy"][Weapon.Type.Slashing] = 0f;
+        resistances["heavy"] = new Dictionary<Weapon.DamageType, float>();
+        resistances["heavy"][Weapon.DamageType.Arcane] = 0.25f;
+        resistances["heavy"][Weapon.DamageType.Blunt] = 0f;
+        resistances["heavy"][Weapon.DamageType.Elemental] = 0f;
+        resistances["heavy"][Weapon.DamageType.Piercing] = 0f;
+        resistances["heavy"][Weapon.DamageType.Poison] = 0f;
+        resistances["heavy"][Weapon.DamageType.Slashing] = 0f;
 
-        resistances["scout"] = new Dictionary<Weapon.Type, float>();
-        resistances["scout"][Weapon.Type.Arcane] = 0.25f;
-        resistances["scout"][Weapon.Type.Blunt] = 0f;
-        resistances["scout"][Weapon.Type.Elemental] = 0f;
-        resistances["scout"][Weapon.Type.Piercing] = 0f;
-        resistances["scout"][Weapon.Type.Poison] = 0f;
-        resistances["scout"][Weapon.Type.Slashing] = 0f;
+        resistances["scout"] = new Dictionary<Weapon.DamageType, float>();
+        resistances["scout"][Weapon.DamageType.Arcane] = 0.25f;
+        resistances["scout"][Weapon.DamageType.Blunt] = 0f;
+        resistances["scout"][Weapon.DamageType.Elemental] = 0f;
+        resistances["scout"][Weapon.DamageType.Piercing] = 0f;
+        resistances["scout"][Weapon.DamageType.Poison] = 0f;
+        resistances["scout"][Weapon.DamageType.Slashing] = 0f;
 
-        resistances["striker"] = new Dictionary<Weapon.Type, float>();
-        resistances["striker"][Weapon.Type.Arcane] = 0.25f;
-        resistances["striker"][Weapon.Type.Blunt] = 0f;
-        resistances["striker"][Weapon.Type.Elemental] = 0f;
-        resistances["striker"][Weapon.Type.Piercing] = 0f;
-        resistances["striker"][Weapon.Type.Poison] = 0f;
-        resistances["striker"][Weapon.Type.Slashing] = 0f;
+        resistances["striker"] = new Dictionary<Weapon.DamageType, float>();
+        resistances["striker"][Weapon.DamageType.Arcane] = 0.25f;
+        resistances["striker"][Weapon.DamageType.Blunt] = 0f;
+        resistances["striker"][Weapon.DamageType.Elemental] = 0f;
+        resistances["striker"][Weapon.DamageType.Piercing] = 0f;
+        resistances["striker"][Weapon.DamageType.Poison] = 0f;
+        resistances["striker"][Weapon.DamageType.Slashing] = 0f;
     }
 }

@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class Striker : MonoBehaviour {
 
-    public float speed = 5f;
-    public float sense_radius = 30f;
-    public float sense_perception = 15f;
+    public float perception_range = 20f;
+    public int perception_rating = 15;
+    public float speed = 2f;
+    public int stealth_persistence = 0;
+    public int stealth_rating = 25;
+
     Actor actor;
+    Geography geography;
     Movement movement;
     Senses senses;
+    Stealth stealth;
 
 
     // Unity
@@ -44,12 +49,15 @@ public class Striker : MonoBehaviour {
     private void SetComponents()
     {
         actor = GetComponent<Actor>();
-        actor.SetComponents();
+        geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();
         movement = GetComponent<Movement>();
         movement.GetAgent().speed = speed;
         senses = GetComponent<Senses>();
-        senses.SetRange(sense_radius);
-        senses.SetPerception(sense_perception);
+        senses.perception_rating = perception_rating;
+        senses.SetRange(perception_range);
+        //stealth = gameObject.AddComponent<Stealth>();
+        //stealth.stealth_rating = stealth_rating;
+        //stealth.stealh_persistence = stealth_persistence;
     }
 
 

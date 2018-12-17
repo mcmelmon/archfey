@@ -5,16 +5,19 @@ using UnityEngine;
 public class Actor : MonoBehaviour {
 
     public bool enemies_abound;
+    public int ruin_control_rating;
 
-    public Mhoddim mhoddim;
-    public Ghaddim ghaddim;
     public Fey fey;
-    Health health;
-    Senses senses;
-    Movement movement;
+    public Ghaddim ghaddim;
+    public Mhoddim mhoddim;
 
     List<GameObject> enemies = new List<GameObject>();
     List<GameObject> friends = new List<GameObject>();
+
+    Health health;
+    Senses senses;
+    Movement movement;
+    RuinControlPoint objective;
 
 
     // Unity
@@ -29,29 +32,45 @@ public class Actor : MonoBehaviour {
     // public
 
 
-    public void FriendAndFoe()
+    public void EstablishRuinControl()
     {
-        List<GameObject> sightings = senses.GetSightings();
+        if (fey != null) return;
 
-        enemies.Clear();
-        friends.Clear();
-
-
-        foreach (KeyValuePair<GameObject, float> damager in health.GetDamagers()) {
-            if (damager.Key != null) {
-                // The enemy has damaged either us or an ally
-                // But if they are out of range, forget about them for now
-                // TODO: don't completely forget about damagers who are out of range
-                // TODO: "link" with allies who are attacking something, even if that something is out of our sight
-
-                if (sightings.Contains(damager.Key)) enemies.Add(damager.Key);
+        if (objective != null) {
+            if (objective.OccupiedBy(gameObject)) {
+                // we occupy the objective, keep it
+                return;
+            } else if (!objective.IsOccupied()){
+                // the objective is still up for grabs, don't pick another
+                return;
+            } else  {
+                // someone else has occupied our objective, pick another; TODO: fight other faction
+                movement.ResetPath();
+                objective = null;
             }
         }
 
-        foreach (var sighting in sightings) {
-            if (sighting == gameObject || IsFriendOrNeutral(sighting)) {
-                friends.Add(sighting);  // we are our best friend
-            } else if (!enemies.Contains(sighting)) {
+        Ruin ruin = GetNearestUnoccupiedRuin();
+        if (ruin != null) {
+            GameObject control_point = ruin.GetNearestUnoccupiedControlPoint(transform.position);
+
+            if (control_point != null) {
+                objective = control_point.GetComponent<RuinControlPoint>();
+                movement.SetRoute(Route.Linear(transform.position, control_point.transform.position, ReachedControlPoint));
+            }
+        }
+    }
+
+
+    public void FriendAndFoe()
+    {
+        enemies.Clear();
+        friends.Clear();
+
+        foreach (var sighting in senses.GetSightings()) {
+            if (sighting == gameObject || IsMyFaction(sighting)) {
+                friends.Add(sighting);
+            } else if (!IsFriendOrNeutral(sighting) && !enemies.Contains(sighting)) {
                 enemies.Add(sighting);
             }
         }
@@ -84,6 +103,49 @@ public class Actor : MonoBehaviour {
     }
 
 
+    public bool IsFriendOrNeutral(GameObject _unit)
+    {
+        if (IsMyFaction(_unit)) return true;
+        if (_unit == null || _unit == gameObject) return true;
+        if (GetComponent<Scout>() != null) return true; // scouts are everyone's friend unless damaged
+        if (GetComponent<Ent>() != null && _unit.GetComponent<Fey>() == null) return false; // Ents always attack
+        if ( (ghaddim != null && ghaddim.IsFactionThreat(_unit)) || (mhoddim != null && mhoddim.IsFactionThreat(_unit)) )
+            return false;
+
+        foreach (var damager in health.GetDamagers().Keys) {
+            if (damager == _unit) return true;
+        }
+
+        if (_unit.GetComponent<Fey>() != null) return true; // fey are neutral until individual units attack (and get added to damagers)
+
+        return false;  // if none of the above, it's plenty weird
+    }
+
+
+    public bool IsMyFaction(GameObject _unit)
+    {
+        Fey other_fey = _unit.GetComponent<Fey>();
+        Ghaddim other_ghaddim = _unit.GetComponent<Ghaddim>();
+        Mhoddim other_mhoddim = _unit.GetComponent<Mhoddim>();
+
+        return (ghaddim != null && other_ghaddim != null) || (mhoddim != null && other_mhoddim != null) || (fey != null && other_fey != null);
+    }
+
+
+    public void ReachedControlPoint()
+    {
+        // TODO: attack opposing faction in control
+
+        if (objective == null) {
+            EstablishRuinControl();
+        } else if (!objective.IsOccupied()) {
+            objective.Occupy(gameObject);
+        } else {
+            EstablishRuinControl();
+        }
+    }
+
+
     public void SetComponents()
     {
         mhoddim = GetComponent<Mhoddim>();
@@ -92,26 +154,38 @@ public class Actor : MonoBehaviour {
         movement = GetComponent<Movement>();
         health = GetComponent<Health>();
         senses = GetComponent<Senses>();
+
+        SetRuinControlRating(5);  // TODO: pass this in unit by unit
+    }
+
+
+    public void SetRuinControlRating(int _rating)
+    {
+        ruin_control_rating = _rating;
     }
 
 
     // private
 
-    private bool IsFriendOrNeutral(GameObject _target)
+
+    private Ruin GetNearestUnoccupiedRuin()
     {
-        // TODO: differentiate between friend and neutral by faction
+        Ruin closest_ruin = null;
+        float distance;
+        float shortest_distance = float.MaxValue;
 
-        if (_target == null) return true;  // null is everyone's friend, or at least not their enemy
+        foreach(var ruin in GetComponentInParent<World>().GetComponentInChildren<Ruins>().GetRuins()) {
+            distance = Vector3.Distance(transform.position, ruin.transform.position);
+            if (ruin.GetNearestUnoccupiedControlPoint(transform.position) != null) {
+                if (distance < shortest_distance) {
+                    closest_ruin = ruin;
+                    shortest_distance = distance;
+                }
+            } else {
+                continue;
+            }
+        }
 
-        if (mhoddim != null && mhoddim.IsFactionThreat(_target)) return false;
-        if (ghaddim != null && ghaddim.IsFactionThreat(_target)) return false;
-        if (fey != null && _target.GetComponent<Fey>() == null) return false; // Ents hate mortals; mortals can't see ents until they attack
-
-        Mhoddim target_mhoddim = _target.GetComponent<Mhoddim>();
-        Ghaddim target_ghaddim = _target.GetComponent<Ghaddim>();
-
-        bool friend_or_neutral = (mhoddim == null && target_mhoddim == null) || (ghaddim == null && target_ghaddim == null);
-
-        return friend_or_neutral;
+        return closest_ruin;
     }
 }

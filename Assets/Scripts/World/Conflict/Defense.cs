@@ -8,9 +8,9 @@ public class Defense : MonoBehaviour
     public static Defense defense_instance;
     public static List<GameObject> units = new List<GameObject>();
 
-    Ruins ruins;
     Ghaddim ghaddim;
     Mhoddim mhoddim;
+    Ruins ruins;
 
 
     // Unity
@@ -54,7 +54,7 @@ public class Defense : MonoBehaviour
                 case Ruins.Category.Primary:
                     Formation block_formation = Formation.CreateFormation(circle.Value.center, Formation.Profile.Circle);
 
-                    for (int i = 0; i < 12; i++) {
+                    for (int i = 0; i < 14; i++) {
                         GameObject _heavy = Spawn(circle.Value.RandomContainedPoint());
                         _heavy.AddComponent<Heavy>();
                         block_formation.JoinFormation(_heavy);
@@ -64,18 +64,12 @@ public class Defense : MonoBehaviour
                 case Ruins.Category.Secondary:
                     Formation strike_formation = Formation.CreateFormation(circle.Value.center, Formation.Profile.Rectangle);
 
-                    for (int i = 0; i < 5; i++) {
+                    for (int i = 0; i < 6; i++) {
                         GameObject _striker = Spawn(circle.Value.RandomContainedPoint());
                         _striker.AddComponent<Striker>();
                         strike_formation.JoinFormation(_striker);
                         _striker.GetComponent<Soldier>().SetFormation(strike_formation);
 
-                    }
-                    break;
-                case Ruins.Category.Tertiary:
-                    for (int i = 0; i < 3; i++) {
-                        GameObject _scout = Spawn(circle.Value.RandomContainedPoint());
-                        _scout.AddComponent<Scout>();
                     }
                     break;
             }
@@ -95,7 +89,6 @@ public class Defense : MonoBehaviour
     {
         GameObject _soldier = (ghaddim != null) ? ghaddim.SpawnUnit() : mhoddim.SpawnUnit();
         _soldier.transform.position = point;
-        _soldier.AddComponent<Defender>();
         _soldier.transform.parent = transform;
         units.Add(_soldier);
         return _soldier;

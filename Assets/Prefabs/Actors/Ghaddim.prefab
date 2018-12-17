@@ -132,7 +132,7 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 20
   m_Drag: 10
-  m_AngularDrag: 0.05
+  m_AngularDrag: 5
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -149,6 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 843f0e01e2c994a8e9abea9a484d8a9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ghaddim_prefab: {fileID: 0}
 --- !u!114 &114191208075042882
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -171,7 +172,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 602483510d2a145fe8df1e5797877311, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  under_attack: 0
+  agility_rating: 0
+  armor_rating: 0
+  corporeal_rating: 0
+  counter: 0
+  force_rating: 0
 --- !u!114 &114313003634657330
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -210,9 +215,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f7ee7b2470a746268eab7b8c5a267d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  perception_rating: 0
   radius: 20
-  perception: 10
-  sightings: []
 --- !u!114 &114495797075432720
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -224,13 +228,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35e4f71a8c43f4146a37679b0f8a756d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mhoddim: {fileID: 0}
-  ghaddim: {fileID: 0}
+  enemies_abound: 0
+  ruin_control_radius: 0
+  ruin_control_raiting: 0
   fey: {fileID: 0}
-  attacker: {fileID: 0}
-  defender: {fileID: 0}
-  movement: {fileID: 0}
-  hover_color: {r: 0, g: 0, b: 0, a: 0}
+  ghaddim: {fileID: 0}
+  mhoddim: {fileID: 0}
 --- !u!114 &114687339321338494
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -244,7 +247,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   available_weapons:
   - {fileID: 114846560244222448, guid: 5d74e30122602450a862bb32716a0dee, type: 2}
-  enemies_abound: 0
 --- !u!136 &136051218736860880
 CapsuleCollider:
   m_ObjectHideFlags: 1

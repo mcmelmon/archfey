@@ -7,9 +7,12 @@ public class Conflict : MonoBehaviour {
 
     public static Conflict conflict_instance;
 
+    public enum Faction { None = 0, Ghaddim = 1, Mhoddim = 2, Fey = 3 };  // TODO: use this enum for more comparisons
+
     public GameObject fey;
     public GameObject ghaddim;
     public GameObject mhoddim;
+
 
     // Unity
 
@@ -23,10 +26,6 @@ public class Conflict : MonoBehaviour {
             return;
         }
         conflict_instance = this;
-
-        ConfigureFey.Populate();
-        ConfigureGhaddim.Populate();
-        ConfigureMhoddim.Populate();
     }
 
 
@@ -35,9 +34,10 @@ public class Conflict : MonoBehaviour {
 
     public void Hajime()
     {
+        GenerateStats();
         AssignFactionRoles();
         CreateNavigationMesh();
-        FlamesOfWar();
+        FirstWave();
     }
 
 
@@ -62,9 +62,17 @@ public class Conflict : MonoBehaviour {
     }
 
 
-    private void FlamesOfWar()
+    private void FirstWave()
     {
         GetComponentInChildren<Defense>().Setup();
         GetComponentInChildren<Offense>().Setup();
+    }
+
+
+    private void GenerateStats()
+    {
+        ConfigureFey.GenerateStats();
+        ConfigureGhaddim.GenerateStats();
+        ConfigureMhoddim.GenerateStats();
     }
 }

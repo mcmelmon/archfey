@@ -12,7 +12,7 @@ public static class ConfigureFey {
     public static Dictionary<string, float> counter = new Dictionary<string, float>();
     public static Dictionary<string, float> force_rating = new Dictionary<string, float>();
 
-    public static Dictionary<string, Dictionary<Weapon.Type, float>> resistances = new Dictionary<string, Dictionary<Weapon.Type, float>>();
+    public static Dictionary<string, Dictionary<Weapon.DamageType, float>> resistances = new Dictionary<string, Dictionary<Weapon.DamageType, float>>();
 
     // Health attributes
     public static Dictionary<string, float> recovery_rate = new Dictionary<string, float>();
@@ -22,7 +22,7 @@ public static class ConfigureFey {
     // static
 
 
-    public static void Populate()
+    public static void GenerateStats()
     {
         PopulateAttributes();
         PopulateResistances();
@@ -48,12 +48,12 @@ public static class ConfigureFey {
 
     private static void PopulateResistances()
     {
-        resistances["ent"] = new Dictionary<Weapon.Type, float>();
-        resistances["ent"][Weapon.Type.Arcane] = 0f;
-        resistances["ent"][Weapon.Type.Blunt] = 0.5f;
-        resistances["ent"][Weapon.Type.Elemental] = 0f;
-        resistances["ent"][Weapon.Type.Piercing] = .2f;
-        resistances["ent"][Weapon.Type.Poison] = .2f;
-        resistances["ent"][Weapon.Type.Slashing] = .4f;
+        resistances["ent"] = new Dictionary<Weapon.DamageType, float>();
+        resistances["ent"][Weapon.DamageType.Arcane] = 0f;
+        resistances["ent"][Weapon.DamageType.Blunt] = 0.5f;
+        resistances["ent"][Weapon.DamageType.Elemental] = 0f;
+        resistances["ent"][Weapon.DamageType.Piercing] = .2f;
+        resistances["ent"][Weapon.DamageType.Poison] = .2f;
+        resistances["ent"][Weapon.DamageType.Slashing] = .4f;
     }
 }

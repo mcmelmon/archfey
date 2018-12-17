@@ -5,12 +5,12 @@ using UnityEngine;
 public class Weapon : MonoBehaviour {
 
     public enum Range { Melee = 0, Ranged = 1 };
-    public enum Type { Blunt = 0, Piercing = 1, Slashing = 2, Poison = 3, Elemental = 4, Arcane = 5 };
+    public enum DamageType { Blunt = 0, Piercing = 1, Slashing = 2, Poison = 3, Elemental = 4, Arcane = 5 };
 
     public GameObject impact_prefab;
 
     public Range range;             // melee or ranged
-    public Type type;               // what is the nature of the damage caused by the weapon?
+    public DamageType damage_type;  // what is the nature of the damage caused by the weapon?
     public float instant_damage;    // how much damage does the weapon cause when it hits?
     public float damage_over_time;  // how much ongoing damage does the weapon cause?
     public float penetration;       // how effectively does the weapon circumvent armor?
@@ -30,9 +30,9 @@ public class Weapon : MonoBehaviour {
     // Unity
 
 
-    void Update()
+    void Start()
     {
-        if (range == Range.Ranged) Seek();
+        StartCoroutine(Seek());
     }
 
 
@@ -45,12 +45,6 @@ public class Weapon : MonoBehaviour {
     // public
 
 
-    public Type GetType()
-    {
-        return type;
-    }
-
-
     public void Hit()
     {
         if (target != null) {
@@ -60,25 +54,6 @@ public class Weapon : MonoBehaviour {
             ApplyDamage();
             CleanUpAmmunition();
         }
-    }
-
-
-    public void Seek()
-    {
-        if (range != Range.Ranged) return;
-
-        if (target == null) {
-            Destroy(gameObject);  // destroy ranged "ammunition"
-            return;
-        }
-
-        float separation = float.MaxValue;
-        Vector3 direction = target.transform.position - transform.position;
-        float distance = projectile_speed * Time.deltaTime;
-        transform.position += distance * direction;
-        separation = Vector3.Distance(target.transform.position, transform.position);
-
-        if (separation <= .5f) Hit();
     }
 
 
@@ -121,6 +96,29 @@ public class Weapon : MonoBehaviour {
         GameObject _impact = Instantiate(impact_prefab, transform.position + new Vector3(0, 2f, 0), transform.rotation);
         _impact.name = "Impact";
         Destroy(_impact, 2f);
+    }
+
+
+    private IEnumerator Seek()
+    {
+        while (true) {
+            if (range == Range.Ranged) {
+                if (target == null) {
+                    Destroy(gameObject);  // destroy ranged "ammunition"
+                    yield return null;
+                }
+
+                float separation = float.MaxValue;
+                Vector3 direction = target.transform.position - transform.position;
+                float distance = projectile_speed * Time.deltaTime;
+                transform.position += distance * direction;
+                separation = Vector3.Distance(target.transform.position, transform.position);
+
+                if (separation <= .5f) Hit();
+            }
+
+            yield return null;
+        }
     }
 
 

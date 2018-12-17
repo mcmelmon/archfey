@@ -29,16 +29,11 @@ public class Movement : MonoBehaviour {
     }
 
 
-    void Update () {
-        if (ReachedNearObjective()) GetNextObjective();
-        if (ObjectiveComplete()) GetNewObjective();
-    }
-
-
     // public
 
     // TODO: warp the agent to the nearest navmesh point if it is off the mesh
     // TODO: deal with an agent that is stuck
+    // TODO: if a destination is unreachable, choose the nearest reachable one
 
     public NavMeshAgent GetAgent()
     {
@@ -54,14 +49,16 @@ public class Movement : MonoBehaviour {
 
     public void ResetPath()
     {
-        if (agent.isOnNavMesh) agent.ResetPath();
+        if (agent.isOnNavMesh) 
+            agent.ResetPath();
     }
 
 
     public void SetDestination(Vector3 destination)
     {
-        destination.y = 0;
-        if (agent.isOnNavMesh) agent.SetDestination(destination);
+        destination.y = transform.position.y;
+        if (agent.isOnNavMesh) 
+            agent.SetDestination(destination);
     }
 
 
@@ -69,6 +66,7 @@ public class Movement : MonoBehaviour {
     {
         route = _route;
         agent.SetDestination(route.current);
+        StartCoroutine(MonitorProgress());
     }
 
 
@@ -85,7 +83,21 @@ public class Movement : MonoBehaviour {
     private void GetNextObjective()
     {
         route.SetNext();
-        agent.SetDestination(route.current);
+        if (!route.completed)
+            agent.SetDestination(route.current);
+    }
+
+
+    private IEnumerator MonitorProgress()
+    {
+        while (true) {
+            if (ReachedNearObjective()) 
+                GetNextObjective();
+            if (ObjectiveComplete()) 
+                GetNewObjective();
+
+            yield return null;
+        }
     }
 
 

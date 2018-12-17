@@ -14,6 +14,7 @@ public class Ruins : MonoBehaviour {
     Geography geography;
     List<Ruin> ruins = new List<Ruin>();
 
+
     // Unity
 
 
@@ -52,6 +53,12 @@ public class Ruins : MonoBehaviour {
     }
 
 
+    public List<Ruin> GetRuins()
+    {
+        return ruins;
+    }
+
+
     // private
 
 
@@ -74,7 +81,7 @@ public class Ruins : MonoBehaviour {
                     }
                     break;
                 case Category.Tertiary:
-                    for (int i = 0; i < 2; i++) {
+                    for (int i = 0; i < 3; i++) {
                         Vector3 position = circle.Value.RandomVertex();
                         if (!NearRuin(position, Ruin.minimum_ruin_proximity))
                             InstantiateRuin(position, this);

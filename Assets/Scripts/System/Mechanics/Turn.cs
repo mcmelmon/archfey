@@ -12,6 +12,8 @@ public class Turn : MonoBehaviour {
     Health health;
     Attack attack;
     Movement movement;
+    Senses senses;
+    Stealth stealth;
 
     // Unity
 
@@ -21,19 +23,23 @@ public class Turn : MonoBehaviour {
         health = GetComponent<Health>();
         attack = GetComponent<Attack>();
         movement = GetComponent<Movement>();
+        senses = GetComponent<Senses>();
+        stealth = GetComponent<Stealth>();
+
+        actor.SetComponents();
     }
 
 
-    private void Update () {
-        if (current_haste > action_threshold) {
-            ResolveCurrentHealth();
-            ResolveMovement();
-            ResolveFriendAndFoe();
-            ResolveAttacks();
-            current_haste = 0f; 
-        } else {
-            current_haste += haste_delta * Time.deltaTime;
-        }
+    private void Start () {
+        StartCoroutine(ResolveTurns());
+    }
+
+
+    // public
+
+    public void SetStealth(Stealth _stealth)
+    {
+        stealth = _stealth;
     }
 
 
@@ -42,15 +48,15 @@ public class Turn : MonoBehaviour {
 
     private void ResolveAttacks()
     {
-        StartCoroutine(attack.ManageAttacks());
+        attack.ManageAttacks();
     }
 
 
-    private void ResolveCurrentHealth()
+    private bool Healthy()
     {
         health.RecoverHealth(health.recovery_rate * health.starting_health);
         // TODO: health.ApplyDamageOverTime
-        health.PersistOrPerish();
+        return health.Persist();
     }
 
 
@@ -62,12 +68,51 @@ public class Turn : MonoBehaviour {
 
     private void ResolveMovement()
     {
+        if (movement == null) return;
+
         if (actor.enemies_abound) {
             GameObject enemy = actor.GetAnEnemy();
-            if (enemy != null && movement != null) {
-                movement.ResetPath();
+            if (enemy != null)
                 movement.SetDestination(enemy.transform.position);
-            }
         }
+    }
+
+
+    private void ResolveRuinControl()
+    {
+        actor.EstablishRuinControl();
+    }
+
+
+    private void ResolveSightings()
+    {
+        senses.Sight();
+    }
+
+
+    private IEnumerator ResolveTurns()
+    {
+        while (true) {
+            if (current_haste < action_threshold) {
+                current_haste += haste_delta * Time.deltaTime;
+            } else {
+                if (Healthy()) {
+                    TakeAction();
+                    current_haste = 0;
+                }
+            }
+
+            yield return null;
+        }
+    }
+
+
+    private void TakeAction()
+    {
+        ResolveSightings();
+        ResolveMovement();
+        ResolveFriendAndFoe();
+        ResolveAttacks();
+        ResolveRuinControl();
     }
 }

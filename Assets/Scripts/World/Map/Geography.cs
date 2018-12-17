@@ -55,11 +55,6 @@ public class Geography : MonoBehaviour {
 
     public Vector3[] GetBorder(Map.Cardinal cardinal)
     {
-        if (terrain == null) {
-            terrain = GetComponentInChildren<Terrain>();
-            terrain_data = terrain.terrainData;
-        }
-
         Vector3[] border = new Vector3[2];
         float resolution = terrain.terrainData.heightmapResolution;
 
@@ -92,11 +87,6 @@ public class Geography : MonoBehaviour {
 
     public Vector3 GetCenter()
     {
-        if (terrain == null)
-        {
-            terrain = GetComponentInChildren<Terrain>();
-            terrain_data = terrain.terrainData;
-        }
         return new Vector3(terrain_data.heightmapResolution / 2, 0, terrain_data.heightmapResolution / 2);  // TODO: sample height
     }
 

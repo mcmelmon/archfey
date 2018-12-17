@@ -1,16 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class Offense : MonoBehaviour
 {
     public static Offense offense_instance;
-    public static Dictionary<Soldier.Clasification, Circle> attack_circles = new Dictionary<Soldier.Clasification, Circle>();
     public static List<GameObject> soldiers = new List<GameObject>();
 
     Geography geography;
     Ghaddim ghaddim;
     Mhoddim mhoddim;
+    Ruins ruins;
+
+    static List<GameObject> scouts = new List<GameObject>();
+    // TODO: discovered ruins
+
 
     // Unity
 
@@ -30,7 +35,7 @@ public class Offense : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("Starting offense");
+        if (scouts.Count == 0) SpawnScouts();
     }
 
 
@@ -39,79 +44,17 @@ public class Offense : MonoBehaviour
 
     public void Setup()
     {
-        Locate();
-        Deploy();
+        // Scouts will enter the map at a random point along each border
+        // Scouts will look for ruins
+        // Heavy units will enter the map on the border closest to the largest spotted ruin
+        // Striker units will spawn to either side.
+        // Offense will try to advance from its border to the opposite
+
+        SpawnScouts();
     }
 
 
     // private
-
-
-    private void Deploy()
-    {
-        foreach (KeyValuePair<Soldier.Clasification, Circle> circle in attack_circles) {
-            switch (circle.Key) {
-                case Soldier.Clasification.Heavy:
-                    Formation block_formation = Formation.CreateFormation(circle.Value.center, Formation.Profile.Rectangle, 3f);
-
-                    for (int i = 0; i < 12; i++) {
-                        GameObject _heavy = Spawn(circle.Value.RandomContainedPoint());
-                        _heavy.AddComponent<Heavy>();
-                        block_formation.JoinFormation(_heavy);
-                        _heavy.GetComponent<Soldier>().SetFormation(block_formation);
-                    }
-                    break;
-                case Soldier.Clasification.Striker:
-                    Formation strike_formation = Formation.CreateFormation(circle.Value.center, Formation.Profile.Rectangle);
-
-                    for (int i = 0; i < 5; i++) {
-                        GameObject _striker = Spawn(circle.Value.RandomContainedPoint());
-                        _striker.AddComponent<Striker>();
-                        strike_formation.JoinFormation(_striker);
-                        _striker.GetComponent<Soldier>().SetFormation(strike_formation);
-                    }
-                    break;
-                case Soldier.Clasification.Scout:
-                    for (int i = 0; i < 3; i++) {
-                        GameObject _scout = Spawn(circle.Value.RandomContainedPoint());
-                        _scout.AddComponent<Scout>();
-                    }
-                    break;
-            }
-        }
-    }
-
-
-    private void Locate()
-    {
-        if (geography == null) geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();
-
-        LocateHeavy();
-        LocateStriker();
-        LocateScout();
-    }
-
-
-    private void LocateHeavy()
-    {
-        float distance_from_edge_percent = 0.15f;
-        bool grounded = true;
-        Vector3 circle_center = geography.PointBetween(geography.RandomBorderLocation(), geography.GetCenter(), distance_from_edge_percent, grounded);
-        Circle attack_circle = Circle.CreateCircle(circle_center, 15f);
-
-        attack_circles[Soldier.Clasification.Heavy] = attack_circle;
-    }
-
-
-    private void LocateStriker()
-    {
-        float distance_from_edge_percent = 0.1f;
-        bool grounded = true;
-        Vector3 circle_center = geography.PointBetween(geography.RandomBorderLocation(), geography.GetCenter(), distance_from_edge_percent, grounded);
-        Circle attack_circle = Circle.CreateCircle(circle_center, 15f);
-
-        attack_circles[Soldier.Clasification.Striker] = attack_circle;
-    }
 
 
     private void LocateScout()
@@ -121,12 +64,12 @@ public class Offense : MonoBehaviour
         Vector3 circle_center = geography.PointBetween(geography.RandomBorderLocation(), geography.GetCenter(), distance_from_edge_percent, grounded);
         Circle attack_circle = Circle.CreateCircle(circle_center, 15f);
 
-        attack_circles[Soldier.Clasification.Scout] = attack_circle;
     }
 
 
     private void SetComponents()
     {
+        ruins = GetComponentInParent<World>().GetComponentInChildren<Ruins>();
         geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();
         ghaddim = GetComponentInParent<Ghaddim>();
         mhoddim = GetComponentInParent<Mhoddim>();
@@ -137,9 +80,28 @@ public class Offense : MonoBehaviour
     {
         GameObject _soldier = (ghaddim != null) ? ghaddim.SpawnUnit() : mhoddim.SpawnUnit();
         _soldier.transform.position = point;
-        _soldier.AddComponent<Attacker>();
         _soldier.transform.parent = transform;
         soldiers.Add(_soldier);
         return _soldier;
+    }
+
+
+    private void SpawnScouts()
+    {
+        if (scouts.Count >= 4) return;
+
+        foreach (Map.Cardinal border in Enum.GetValues(typeof(Map.Cardinal))) {
+            // For each border, choose a location between its endpoints.
+            // Move a short distance from that point toward the center.
+
+            if (border == Map.Cardinal.Sky) continue;
+            Vector3[] end_points = geography.GetBorder(border);
+            Vector3 entry_point = geography.PointBetween(end_points[1], end_points[0], UnityEngine.Random.Range(0.05f, .95f), true);
+            Vector3 spawn_point = geography.PointBetween(entry_point, geography.GetCenter(), UnityEngine.Random.Range(0.15f, 0.25f), true);
+            GameObject _scout = Spawn(spawn_point);
+            _scout.AddComponent<Scout>();
+            soldiers.Add(_scout);
+            scouts.Add(_scout);
+        }
     }
 }
