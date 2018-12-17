@@ -6,7 +6,7 @@ public class Actor : MonoBehaviour {
 
     public bool enemies_abound;
     public float ruin_control_radius;
-    public float ruin_control_raiting;
+    public int ruin_control_raiting;
 
     public Fey fey;
     public Ghaddim ghaddim;
@@ -14,6 +14,7 @@ public class Actor : MonoBehaviour {
 
     List<GameObject> enemies = new List<GameObject>();
     List<GameObject> friends = new List<GameObject>();
+    bool has_objective;
 
     Health health;
     Senses senses;
@@ -26,6 +27,7 @@ public class Actor : MonoBehaviour {
     private void Awake()
     {
         enemies_abound = false;
+        has_objective = false;
     }
 
 
@@ -34,15 +36,19 @@ public class Actor : MonoBehaviour {
 
     public void EstablishRuinControl()
     {
-        if (fey != null) return;  // only the mortals contend for mortal things
+        if (fey != null || has_objective) return;  // only the mortals contend for mortal things
 
         Ruin ruin = GetNearestRuin();
         if (ruin != null) {
 
-            movement.ResetPath();  // don't move away from a viable ruin target!
+            ruin.GetComponent<Renderer>().material.color = Color.blue;
 
-            if (!ruin.IsFriendlyTo(gameObject) && gameObject != null) {
-                ruin.ExertControl(gameObject, ruin_control_raiting);
+            GameObject control_point = ruin.GetUnoccupiedControlPoint();
+
+            if (control_point != null) {
+                control_point.transform.Find("Marker").GetComponent<Renderer>().material.color = Color.red;
+                movement.SetRoute(Route.Linear(transform.position, control_point.transform.position, ReachedControlPoint));
+                has_objective = true;
             }
         }
     }
@@ -50,27 +56,13 @@ public class Actor : MonoBehaviour {
 
     public void FriendAndFoe()
     {
-        List<GameObject> sightings = senses.GetSightings();
-
         enemies.Clear();
         friends.Clear();
 
-
-        foreach (KeyValuePair<GameObject, float> damager in health.GetDamagers()) {
-            if (damager.Key != null) {
-                // The enemy has damaged either us or an ally
-                // But if they are out of range, forget about them for now
-                // TODO: don't completely forget about damagers who are out of range
-                // TODO: "link" with allies who are attacking something, even if that something is out of our sight
-
-                if (sightings.Contains(damager.Key)) enemies.Add(damager.Key);
-            }
-        }
-
-        foreach (var sighting in sightings) {
-            if (sighting == gameObject || IsFriendOrNeutral(sighting)) {
+        foreach (var sighting in senses.GetSightings()) {
+            if (sighting == gameObject || IsMyFaction(sighting)) {
                 friends.Add(sighting);
-            } else if (!enemies.Contains(sighting)) {
+            } else if (!IsFriendOrNeutral(sighting) && !enemies.Contains(sighting)) {
                 enemies.Add(sighting);
             }
         }
@@ -103,6 +95,41 @@ public class Actor : MonoBehaviour {
     }
 
 
+    public bool IsFriendOrNeutral(GameObject _unit)
+    {
+        if (IsMyFaction(_unit)) return true;
+        if (_unit == null || _unit == gameObject) return true;
+        if (GetComponent<Scout>() != null) return true; // scouts are everyone's friend unless damaged
+        if (GetComponent<Ent>() != null && _unit.GetComponent<Fey>() == null) return false; // Ents always attack
+        if ( (ghaddim != null && ghaddim.IsFactionThreat(_unit)) || (mhoddim != null && mhoddim.IsFactionThreat(_unit)) )
+            return false;
+
+        foreach (var damager in health.GetDamagers().Keys) {
+            if (damager == _unit) return true;
+        }
+
+        if (_unit.GetComponent<Fey>() != null) return true; // fey are neutral until individual units attack (and get added to damagers)
+
+        return false;  // if none of the above, it's plenty weird
+    }
+
+
+    public bool IsMyFaction(GameObject _unit)
+    {
+        Fey other_fey = _unit.GetComponent<Fey>();
+        Ghaddim other_ghaddim = _unit.GetComponent<Ghaddim>();
+        Mhoddim other_mhoddim = _unit.GetComponent<Mhoddim>();
+
+        return (ghaddim != null && other_ghaddim != null) || (mhoddim != null && other_mhoddim != null) || (fey != null && other_fey != null);
+    }
+
+
+    public void ReachedControlPoint()
+    {
+        Debug.Log("Reached control point");
+    }
+
+
     public void SetComponents()
     {
         mhoddim = GetComponent<Mhoddim>();
@@ -113,7 +140,7 @@ public class Actor : MonoBehaviour {
         senses = GetComponent<Senses>();
 
         SetRuinControlRadius(25f);  // TODO: pass this in unit by unit
-        SetRuinControlRating(0.1f);  // TODO: pass this in unit by unit
+        SetRuinControlRating(10);  // TODO: pass this in unit by unit
     }
 
 
@@ -123,7 +150,7 @@ public class Actor : MonoBehaviour {
     }
 
 
-    public void SetRuinControlRating(float _rating)
+    public void SetRuinControlRating(int _rating)
     {
         ruin_control_raiting = _rating;
     }
@@ -146,26 +173,6 @@ public class Actor : MonoBehaviour {
             }
         }
 
-        return (shortest_distance < ruin_control_radius) ? closest_ruin : null;
-    }
-
-
-    private bool IsFriendOrNeutral(GameObject _target)
-    {
-        // TODO: differentiate between friend and neutral by faction
-
-        if (_target == null) return true;  // null is everyone's friend, or at least not their enemy
-        if (GetComponent<Scout>() != null) return true; // scouts don't attack unless damaged
-
-        if (mhoddim != null && mhoddim.IsFactionThreat(_target)) return false;
-        if (ghaddim != null && ghaddim.IsFactionThreat(_target)) return false;
-        if (fey != null && _target.GetComponent<Fey>() == null) return false; // Ents hate mortals; mortals can't see ents until they attack
-
-        Mhoddim target_mhoddim = _target.GetComponent<Mhoddim>();
-        Ghaddim target_ghaddim = _target.GetComponent<Ghaddim>();
-
-        bool friend_or_neutral = (mhoddim == null && target_mhoddim == null) || (ghaddim == null && target_ghaddim == null);
-
-        return friend_or_neutral;
+        return closest_ruin;
     }
 }

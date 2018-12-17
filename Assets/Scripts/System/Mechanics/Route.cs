@@ -22,15 +22,15 @@ public class Route
     }
 
 
-    public void Add(Vector3 _next)
+    public void Add(Vector3 _point)
     {
         // This will "work" for a circle, but kind of awkward
 
-        points.Add(_next);
+        points.Add(_point);
     }
 
 
-    public static Route Circular(Vector3 _start, Circle _circle, bool _retracing = false, bool _looping = false, Action _when_complete = null)
+    public static Route Circular(Vector3 _start, Circle _circle, Action _when_complete = null, bool _retracing = false, bool _looping = false)
     {
         Route route = new Route
         {
@@ -52,7 +52,7 @@ public class Route
     }
 
 
-    public static Route Linear(Vector3 _start, Vector3 _next, bool _retracing = false, bool _looping = false, Action _when_complete = null)
+    public static Route Linear(Vector3 _start, Vector3 _next, Action _when_complete = null, bool _retracing = false, bool _looping = false)
     {
         Route route = new Route
         {
@@ -65,6 +65,7 @@ public class Route
         };
 
         route.points.Add(_start);
+        route.points.Add(_next);
         route.SetNext();
 
         return route;

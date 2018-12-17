@@ -81,13 +81,7 @@ public class Formation
 
     public void Restrategize()
     {
-        if (has_objective || units.Count <= 0 || units[0] == null) return;
 
-        if (units[0].GetComponent<Heavy>() != null) {
-            if (units[0].GetComponent<Defender>() != null) {
-                Debug.Log("Defense heavy is tanking");
-            }
-        }
     }
 
 
@@ -98,18 +92,7 @@ public class Formation
 
     public void Strategize()
     {
-        // TODO: differentiate between Mhoddim and Ghaddim
 
-        // NOTE: units can get destroyed in combat
-
-        if (has_objective || units.Count <= 0 || units[0] == null) return;
-
-        if (units[0].GetComponent<Striker>() != null) {
-            Debug.Log("Striker is striking");
-        }
-        else if (units[0].GetComponent<Heavy>() != null) {
-            Debug.Log("Heavy is tanking");
-        }
     }
 
 

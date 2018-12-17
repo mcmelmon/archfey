@@ -89,7 +89,6 @@ public class Defense : MonoBehaviour
     {
         GameObject _soldier = (ghaddim != null) ? ghaddim.SpawnUnit() : mhoddim.SpawnUnit();
         _soldier.transform.position = point;
-        _soldier.AddComponent<Defender>();
         _soldier.transform.parent = transform;
         units.Add(_soldier);
         return _soldier;

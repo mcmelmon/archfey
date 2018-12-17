@@ -5,7 +5,7 @@ using UnityEngine;
 public class Heavy : MonoBehaviour {
 
     public float perception_range = 20f;
-    public float perception_rating = 0f;
+    public int perception_rating = 0;
     public float speed = 1.5f;
 
     Actor actor;

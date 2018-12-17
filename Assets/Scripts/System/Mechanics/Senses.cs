@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Senses : MonoBehaviour {
 
-    public float perception_rating;
+    public int perception_rating;
     public float radius;
 
     List<GameObject> sightings = new List<GameObject>();
@@ -31,12 +31,6 @@ public class Senses : MonoBehaviour {
     }
 
 
-    private void Start()
-    {
-        StartCoroutine(Sight());
-    }
-
-
     // public
 
 
@@ -51,29 +45,22 @@ public class Senses : MonoBehaviour {
     }
 
 
-    // private
-
-
-    private IEnumerator Sight()
+    public void Sight()
     {
-        while (true) {
-            sightings.Clear();
+        sightings.Clear();
 
-            Collider[] colliders = Physics.OverlapSphere(transform.position, radius);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, radius);
 
-            for (int i = 0; i < colliders.Length; i++) {
-                GameObject sighting = colliders[i].gameObject;
+        for (int i = 0; i < colliders.Length; i++) {
+            GameObject sighting = colliders[i].gameObject;
 
-                if (sighting.tag == "Actor" && sighting != gameObject) {  // don't sight ourselves
-                    Stealth _stealth = sighting.GetComponent<Stealth>();
+            if (sighting.tag == "Actor" && sighting != gameObject) {  // don't sight ourselves
+                Stealth sighting_stealth = sighting.GetComponent<Stealth>();
 
-                    if (_stealth == null || _stealth.Spotted(perception_rating) && !sightings.Contains(sighting)) {
-                        sightings.Add(colliders[i].gameObject);
-                    }
+                if (sighting_stealth == null || sighting_stealth.Spotted(gameObject, perception_rating) && !sightings.Contains(sighting)) {
+                    sightings.Add(colliders[i].gameObject);
                 }
             }
-
-            yield return null;
         }
     }
 }

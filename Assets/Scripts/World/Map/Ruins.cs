@@ -81,7 +81,7 @@ public class Ruins : MonoBehaviour {
                     }
                     break;
                 case Category.Tertiary:
-                    for (int i = 0; i < 2; i++) {
+                    for (int i = 0; i < 3; i++) {
                         Vector3 position = circle.Value.RandomVertex();
                         if (!NearRuin(position, Ruin.minimum_ruin_proximity))
                             InstantiateRuin(position, this);

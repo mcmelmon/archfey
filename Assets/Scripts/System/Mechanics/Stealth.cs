@@ -5,10 +5,11 @@ using UnityEngine;
 public class Stealth : MonoBehaviour {
 
     public bool attacking;
-    public bool spotted;                    // has another unit overcome the stealth rating?
-    public float stealth_rating;            // how hidden is the unit?
-    public float stealh_persistence;        // how well does the unit recover stealth after being spotted?
+    public bool spotted;                  // has hostile unit overcome the stealth rating?
+    public int stealth_rating;            // how hidden is the unit?
+    public int stealh_persistence;        // how well does the unit recover stealth after being spotted?
 
+    Actor actor;
     Material original_material;
     Renderer my_renderer;
 
@@ -18,18 +19,16 @@ public class Stealth : MonoBehaviour {
 
     private void Awake()
     {
-        my_renderer = GetComponent<Renderer>();
-        original_material = my_renderer.material;
-        spotted = false;
+        SetComponents();
     }
 
 
     private void OnValidate()
     {
-        if (stealth_rating > 1f) stealth_rating = 1f;
-        if (stealth_rating < 0f) stealth_rating = 0f;
-        if (stealh_persistence > 1f) stealh_persistence = 1f;
-        if (stealh_persistence < 0f) stealh_persistence = 0f;
+        if (stealth_rating > 100) stealth_rating = 100;
+        if (stealth_rating < 0) stealth_rating = 0;
+        if (stealh_persistence > 100) stealh_persistence = 100;
+        if (stealh_persistence < 0) stealh_persistence = 0;
     }
 
 
@@ -48,23 +47,27 @@ public class Stealth : MonoBehaviour {
 
         if (!spotted || attacking) return;
 
-        if (Random.Range(0f, 100f) < stealh_persistence * 100) {  // TODO: simplify these "percentile dice" ratings
+        if (Random.Range(0, 100) < stealh_persistence) {
             spotted = false;
-            Debug.Log("Recovered stealth");
         }
     }
 
 
-    public bool Spotted(float perception_rating)
+    public bool Spotted(GameObject _spotter, int opposing_perception)
     {
         if (attacking) {
             spotted = true;
         } else {
-            // There is a chance to slip back into stealth even when spotted
+            // If we were previously spotted, there is a chance to slip back into stealth if not attacking
             RecoverStealth();
 
-            // Units with no perception rating fail to spot us; others contest their perception against our stealth, i.e. it's 50/50 if both match
-            spotted = !(Mathf.Approximately(perception_rating, 0f)) && (Random.Range(0, 100) < (0.5f + (perception_rating - stealth_rating)) * 100);
+            if (!actor.IsMyFaction(_spotter)) {
+                // Our own faction will not reveal us; neutrals will
+                // Units with no perception rating fail to spot us
+                // others contest their perception against our stealth, i.e. it's 50/50 if both match
+                int roll = Random.Range(0, 100);
+                spotted = !(opposing_perception == 0) && roll < (50 + opposing_perception - stealth_rating);
+            }
         }
         return spotted;
     }
@@ -73,13 +76,26 @@ public class Stealth : MonoBehaviour {
     private IEnumerator Camouflage()
     {
         while (true) {
+            RecoverStealth();
+
             if (!spotted && !attacking) {
-                my_renderer.material = GetComponentInParent<World>().GetComponentInChildren<Flora>().GetCanopy()[0].GetComponent<Renderer>().material;
+                GameObject[] canopies = GetComponentInParent<World>().GetComponentInChildren<Flora>().GetCanopy();
+                if (canopies.Length > 0)
+                    my_renderer.material = canopies[0].GetComponent<Renderer>().material;
             } else {
                 my_renderer.material = original_material;
             }
 
             yield return null;
         }
+    }
+
+
+    private void SetComponents()
+    {
+        actor = GetComponent<Actor>();
+        my_renderer = GetComponent<Renderer>();
+        original_material = my_renderer.material;
+        spotted = false;
     }
 }

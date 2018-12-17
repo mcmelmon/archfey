@@ -6,10 +6,10 @@ using UnityEngine.AI;
 public class Ent : MonoBehaviour {
 
     public float perception_range = 30f;
-    public float perception_rating = .55f;
+    public int perception_rating = 75;
     public float speed = 2f;
-    public float stealth_persistence = 0.05f;
-    public float stealth_rating = 0.35f;
+    public int stealth_persistence = 5;
+    public int stealth_rating = 35;
 
     Actor actor;
     Senses senses;

@@ -52,11 +52,11 @@ public class Turn : MonoBehaviour {
     }
 
 
-    private void ResolveCurrentHealth()
+    private bool Healthy()
     {
         health.RecoverHealth(health.recovery_rate * health.starting_health);
         // TODO: health.ApplyDamageOverTime
-        health.PersistOrPerish();
+        return health.Persist();
     }
 
 
@@ -72,10 +72,8 @@ public class Turn : MonoBehaviour {
 
         if (actor.enemies_abound) {
             GameObject enemy = actor.GetAnEnemy();
-            if (enemy != null) {
-                movement.ResetPath();
+            if (enemy != null)
                 movement.SetDestination(enemy.transform.position);
-            }
         }
     }
 
@@ -86,9 +84,9 @@ public class Turn : MonoBehaviour {
     }
 
 
-    private void ResolveStealth()
+    private void ResolveSightings()
     {
-        if (stealth != null) stealth.RecoverStealth();
+        senses.Sight();
     }
 
 
@@ -98,15 +96,23 @@ public class Turn : MonoBehaviour {
             if (current_haste < action_threshold) {
                 current_haste += haste_delta * Time.deltaTime;
             } else {
-                ResolveCurrentHealth();
-                ResolveMovement();
-                ResolveStealth();
-                ResolveFriendAndFoe();
-                ResolveAttacks();
-                ResolveRuinControl();
-                current_haste = 0;
+                if (Healthy()) {
+                    TakeAction();
+                    current_haste = 0;
+                }
             }
+
             yield return null;
         }
+    }
+
+
+    private void TakeAction()
+    {
+        ResolveSightings();
+        ResolveMovement();
+        ResolveFriendAndFoe();
+        ResolveAttacks();
+        ResolveRuinControl();
     }
 }

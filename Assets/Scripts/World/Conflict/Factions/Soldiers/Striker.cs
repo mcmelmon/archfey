@@ -5,10 +5,10 @@ using UnityEngine;
 public class Striker : MonoBehaviour {
 
     public float perception_range = 20f;
-    public float perception_rating = 0.15f;
+    public int perception_rating = 15;
     public float speed = 2f;
-    public float stealth_persistence = 0f;
-    public float stealth_rating = 0.25f;
+    public int stealth_persistence = 0;
+    public int stealth_rating = 25;
 
     Actor actor;
     Geography geography;

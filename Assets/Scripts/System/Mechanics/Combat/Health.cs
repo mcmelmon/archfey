@@ -76,12 +76,14 @@ public class Health : MonoBehaviour {
     }
 
 
-    public void PersistOrPerish()
+    public bool Persist()
     {
         if (current_health <= 0) {
-            // Objects being destroyed suddenly probably lack health configuration stats...
             Destroy(gameObject);
+            return false;
         }
+
+        return true;
     }
 
 

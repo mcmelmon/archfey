@@ -29,9 +29,14 @@ public class Movement : MonoBehaviour {
     }
 
 
+    private void Start()
+    {
+        StartCoroutine(MonitorProgress());
+    }
+
+
     void Update () {
-        if (ReachedNearObjective()) GetNextObjective();
-        if (ObjectiveComplete()) GetNewObjective();
+
     }
 
 
@@ -55,14 +60,16 @@ public class Movement : MonoBehaviour {
 
     public void ResetPath()
     {
-        if (agent.isOnNavMesh) agent.ResetPath();
+        if (agent.isOnNavMesh) 
+            agent.ResetPath();
     }
 
 
     public void SetDestination(Vector3 destination)
     {
-        destination.y = 0;
-        if (agent.isOnNavMesh) agent.SetDestination(destination);
+        destination.y = transform.position.y;
+        if (agent.isOnNavMesh) 
+            agent.SetDestination(destination);
     }
 
 
@@ -87,6 +94,19 @@ public class Movement : MonoBehaviour {
     {
         route.SetNext();
         agent.SetDestination(route.current);
+    }
+
+
+    private IEnumerator MonitorProgress()
+    {
+        while (agent.hasPath) {
+            if (ReachedNearObjective()) GetNextObjective();
+            if (ObjectiveComplete()) GetNewObjective();
+            if (Vector3.Distance(transform.position, agent.destination) < .4f)
+                agent.ResetPath();
+
+            yield return null;
+        }
     }
 
 
