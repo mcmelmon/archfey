@@ -10,10 +10,6 @@ public class Turn : MonoBehaviour {
 
     Actor actor;
     Health health;
-    Attack attack;
-    Movement movement;
-    Senses senses;
-    Stealth stealth;
 
     // Unity
 
@@ -21,12 +17,6 @@ public class Turn : MonoBehaviour {
     private void Awake () {
         actor = GetComponent<Actor>();
         health = GetComponent<Health>();
-        attack = GetComponent<Attack>();
-        movement = GetComponent<Movement>();
-        senses = GetComponent<Senses>();
-        stealth = GetComponent<Stealth>();
-
-        actor.SetComponents();
     }
 
 
@@ -35,58 +25,14 @@ public class Turn : MonoBehaviour {
     }
 
 
-    // public
-
-    public void SetStealth(Stealth _stealth)
-    {
-        stealth = _stealth;
-    }
-
-
     // private
-
-
-    private void ResolveAttacks()
-    {
-        attack.ManageAttacks();
-    }
 
 
     private bool Healthy()
     {
-        health.RecoverHealth(health.recovery_rate * health.starting_health);
+        health.RecoverHealth(health.recovery_amount);
         // TODO: health.ApplyDamageOverTime
         return health.Persist();
-    }
-
-
-    private void ResolveFriendAndFoe()
-    {
-        actor.FriendAndFoe();
-    }
-
-
-    private void ResolveMovement()
-    {
-        if (movement == null) return;
-
-        if (actor.enemies_abound) {
-            GameObject enemy = actor.GetAnEnemy();
-            if (enemy != null)
-                movement.SetDestination(enemy.transform.position);
-        }
-    }
-
-
-    private void ResolveRuinControl()
-    {
-        actor.EstablishRuinControl();
-    }
-
-
-    private void ResolveSightings()
-    {
-        senses.Sight();
     }
 
 
@@ -109,10 +55,6 @@ public class Turn : MonoBehaviour {
 
     private void TakeAction()
     {
-        ResolveSightings();
-        ResolveMovement();
-        ResolveFriendAndFoe();
-        ResolveAttacks();
-        ResolveRuinControl();
+        actor.ActOnTurn();
     }
 }

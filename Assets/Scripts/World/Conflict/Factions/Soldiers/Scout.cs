@@ -79,7 +79,7 @@ public class Scout : MonoBehaviour {
         stealth = gameObject.AddComponent<Stealth>();
         stealth.stealth_rating = stealth_rating;
         stealth.stealh_persistence = stealth_persistence;
-        GetComponent<Turn>().SetStealth(stealth);
+        actor.SetStealth(stealth);
     }
 
 

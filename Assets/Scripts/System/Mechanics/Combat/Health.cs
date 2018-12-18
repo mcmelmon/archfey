@@ -4,11 +4,9 @@ using UnityEngine;
 
 public class Health : MonoBehaviour {
 
-    public float starting_health;
-    public float current_health;
-    public float recovery_rate;
-    public bool taken_damage;
-    readonly Dictionary<GameObject, float> damagers = new Dictionary<GameObject, float>();
+    public int starting_health;
+    public int current_health;
+    public int recovery_amount;
     Actor actor;
 
     // Unity
@@ -22,8 +20,8 @@ public class Health : MonoBehaviour {
 
     private void OnValidate()
     {
-        if (starting_health < 1f) starting_health = 1f;
-        if (current_health < 0f) current_health = 1f;
+        if (starting_health < 1) starting_health = 1;
+        if (current_health < 0f) current_health = 0;
     }
 
 
@@ -36,40 +34,21 @@ public class Health : MonoBehaviour {
     // public 
 
 
-    public void AddDamager(GameObject _attacker, float _damage)
-    {
-        if (!damagers.ContainsKey(_attacker)) {
-            damagers[_attacker] = _damage;
-        } else {
-            damagers[_attacker] += _damage;
-        }
-    }
-
-
     public void ApplyDamageOverTime()
     {
         // TODO
     }
 
 
-    public Dictionary<GameObject, float> GetDamagers()
-    {
-        return damagers;
-    }
-
-
     public void LoseHealth(float amount)
     {
-        float modified_amount = amount;     // TODO: handle resistances/armore/etc
-
-        current_health -= modified_amount;
-        taken_damage = true;                // even if it turns out to be no damage after modifications, there's a bruise
+        current_health -= Mathf.RoundToInt(amount);
     }
 
 
-    public void RecoverHealth(float amount)
+    public void RecoverHealth(int amount)
     {
-        if (Mathf.Approximately(current_health, starting_health) || Mathf.Approximately(recovery_rate, 0)) return;
+        if (amount == 0 || current_health == starting_health) return;
 
         current_health += amount;
         if (current_health > starting_health) current_health = starting_health;
@@ -87,13 +66,13 @@ public class Health : MonoBehaviour {
     }
 
 
-    public void SetRecoveryRate(float rate)
+    public void SetRecoveryAmount(int amount)
     {
-        recovery_rate = rate;
+        recovery_amount = amount;
     }
 
 
-    public void SetStartingHealth(float amount)
+    public void SetStartingHealth(int amount)
     {
         starting_health = amount;
         current_health = amount;

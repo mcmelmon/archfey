@@ -5,18 +5,21 @@ using UnityEngine;
 
 public static class ConfigureFey {
 
-    // Defense attributes
-    public static Dictionary<string, float> agility_rating = new Dictionary<string, float>();
-    public static Dictionary<string, float> armor_rating = new Dictionary<string, float>();
-    public static Dictionary<string, float> corporeal_rating = new Dictionary<string, float>();
-    public static Dictionary<string, float> counter = new Dictionary<string, float>();
-    public static Dictionary<string, float> force_rating = new Dictionary<string, float>();
+    // Versatile attributes
+    public static Dictionary<Soldier.Clasification, int> agility_rating = new Dictionary<Soldier.Clasification, int>();
+    public static Dictionary<Soldier.Clasification, int> strength_rating = new Dictionary<Soldier.Clasification, int>();
 
-    public static Dictionary<string, Dictionary<Weapon.DamageType, float>> resistances = new Dictionary<string, Dictionary<Weapon.DamageType, float>>();
+    // Defense attributes
+    public static Dictionary<Soldier.Clasification, int> armor_rating = new Dictionary<Soldier.Clasification, int>();
+    public static Dictionary<Soldier.Clasification, int> corporeal_rating = new Dictionary<Soldier.Clasification, int>();
+    public static Dictionary<Soldier.Clasification, int> counter = new Dictionary<Soldier.Clasification, int>();
+    public static Dictionary<Soldier.Clasification, int> force_rating = new Dictionary<Soldier.Clasification, int>();
+
+    public static Dictionary<Soldier.Clasification, Dictionary<Weapon.DamageType, int>> resistances = new Dictionary<Soldier.Clasification, Dictionary<Weapon.DamageType, int>>();
 
     // Health attributes
-    public static Dictionary<string, float> recovery_rate = new Dictionary<string, float>();
-    public static Dictionary<string, float> starting_health = new Dictionary<string, float>();
+    public static Dictionary<Soldier.Clasification, int> recovery_amount = new Dictionary<Soldier.Clasification, int>();
+    public static Dictionary<Soldier.Clasification, int> starting_health = new Dictionary<Soldier.Clasification, int>();
 
 
     // static
@@ -34,26 +37,29 @@ public static class ConfigureFey {
 
     private static void PopulateAttributes()
     {
+        // versatile
+        agility_rating[Soldier.Clasification.Ent] = 0;
+        strength_rating[Soldier.Clasification.Ent] = 6;
+
         // defense
-        agility_rating["ent"] = 0f;
-        armor_rating["ent"] = 0.35f;
-        corporeal_rating["ent"] = 0f;
-        counter["ent"] = 5f;
-        force_rating["ent"] = 0f;
+        armor_rating[Soldier.Clasification.Ent] = 4;
+        corporeal_rating[Soldier.Clasification.Ent] = 0;
+        counter[Soldier.Clasification.Ent] = 10;
+        force_rating[Soldier.Clasification.Ent] = 0;
 
         // health
-        recovery_rate["ent"] = 0.075f;
-        starting_health["ent"] = 500;
+        recovery_amount[Soldier.Clasification.Ent] = 15;
+        starting_health[Soldier.Clasification.Ent] = 500;
     }
 
     private static void PopulateResistances()
     {
-        resistances["ent"] = new Dictionary<Weapon.DamageType, float>();
-        resistances["ent"][Weapon.DamageType.Arcane] = 0f;
-        resistances["ent"][Weapon.DamageType.Blunt] = 0.5f;
-        resistances["ent"][Weapon.DamageType.Elemental] = 0f;
-        resistances["ent"][Weapon.DamageType.Piercing] = .2f;
-        resistances["ent"][Weapon.DamageType.Poison] = .2f;
-        resistances["ent"][Weapon.DamageType.Slashing] = .4f;
+        resistances[Soldier.Clasification.Ent] = new Dictionary<Weapon.DamageType, int>();
+        resistances[Soldier.Clasification.Ent][Weapon.DamageType.Arcane] = 0;
+        resistances[Soldier.Clasification.Ent][Weapon.DamageType.Blunt] = 50;
+        resistances[Soldier.Clasification.Ent][Weapon.DamageType.Elemental] = 0;
+        resistances[Soldier.Clasification.Ent][Weapon.DamageType.Piercing] = 60;
+        resistances[Soldier.Clasification.Ent][Weapon.DamageType.Poison] = 40;
+        resistances[Soldier.Clasification.Ent][Weapon.DamageType.Slashing] = 40;
     }
 }

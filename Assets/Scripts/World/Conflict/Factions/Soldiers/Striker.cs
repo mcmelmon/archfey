@@ -55,9 +55,10 @@ public class Striker : MonoBehaviour {
         senses = GetComponent<Senses>();
         senses.perception_rating = perception_rating;
         senses.SetRange(perception_range);
-        //stealth = gameObject.AddComponent<Stealth>();
-        //stealth.stealth_rating = stealth_rating;
-        //stealth.stealh_persistence = stealth_persistence;
+        stealth = gameObject.AddComponent<Stealth>();
+        stealth.stealth_rating = stealth_rating;
+        stealth.stealh_persistence = stealth_persistence;
+        actor.SetStealth(stealth);
     }
 
 

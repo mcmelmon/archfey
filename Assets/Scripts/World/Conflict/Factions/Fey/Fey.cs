@@ -12,6 +12,7 @@ public class Fey : MonoBehaviour {
     {
         SetDefenseStats();
         SetHealthStats();
+        SetOffenseStats();
     }
 
 
@@ -25,12 +26,12 @@ public class Fey : MonoBehaviour {
 
         if (GetComponent<Ent>() != null)
         {
-            defend.SetAgilityRating(ConfigureFey.agility_rating["ent"]);
-            defend.SetArmorRating(ConfigureFey.armor_rating["ent"]);
-            defend.SetCorporealRating(ConfigureFey.corporeal_rating["ent"]);
-            defend.SetCounter(ConfigureFey.counter["ent"]);
-            defend.SetForceRating(ConfigureFey.force_rating["ent"]);
-            defend.SetResistances(ConfigureFey.resistances["ent"]);
+            defend.agility_rating = ConfigureFey.agility_rating[Soldier.Clasification.Ent];
+            defend.armor_rating = ConfigureFey.armor_rating[Soldier.Clasification.Ent];
+            defend.corporeal_rating = ConfigureFey.corporeal_rating[Soldier.Clasification.Ent];
+            defend.counter = ConfigureFey.counter[Soldier.Clasification.Ent];
+            defend.force_rating = ConfigureFey.force_rating[Soldier.Clasification.Ent];
+            defend.SetResistances(ConfigureFey.resistances[Soldier.Clasification.Ent]);
         }
     }
 
@@ -42,8 +43,20 @@ public class Fey : MonoBehaviour {
 
         if (GetComponent<Ent>() != null)
         {
-            health.SetStartingHealth(ConfigureFey.starting_health["ent"]);
-            health.SetRecoveryRate(ConfigureFey.recovery_rate["ent"]);
+            health.SetStartingHealth(ConfigureFey.starting_health[Soldier.Clasification.Ent]);
+            health.SetRecoveryAmount(ConfigureFey.recovery_amount[Soldier.Clasification.Ent]);
+        }
+    }
+
+
+    private void SetOffenseStats()
+    {
+        Attack attack = GetComponent<Attack>();
+        if (attack == null) return;
+
+        if (GetComponent<Ent>() != null) {
+            attack.agility_rating = ConfigureFey.agility_rating[Soldier.Clasification.Ent];
+            attack.strength_rating = ConfigureFey.strength_rating[Soldier.Clasification.Ent];
         }
     }
 }

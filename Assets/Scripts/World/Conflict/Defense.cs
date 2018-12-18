@@ -6,8 +6,10 @@ public class Defense : MonoBehaviour
 {
 
     public static Defense defense_instance;
+    public static Conflict.Faction faction;
     public static List<GameObject> units = new List<GameObject>();
 
+    Geography geography;
     Ghaddim ghaddim;
     Mhoddim mhoddim;
     Ruins ruins;
@@ -54,7 +56,7 @@ public class Defense : MonoBehaviour
                 case Ruins.Category.Primary:
                     Formation block_formation = Formation.CreateFormation(circle.Value.center, Formation.Profile.Circle);
 
-                    for (int i = 0; i < 14; i++) {
+                    for (int i = 0; i < 16; i++) {
                         GameObject _heavy = Spawn(circle.Value.RandomContainedPoint());
                         _heavy.AddComponent<Heavy>();
                         block_formation.JoinFormation(_heavy);
@@ -80,8 +82,10 @@ public class Defense : MonoBehaviour
     private void SetComponents()
     {
         ruins = GetComponentInParent<World>().GetComponentInChildren<Ruins>();
+        geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();
         ghaddim = GetComponentInParent<Ghaddim>();
         mhoddim = GetComponentInParent<Mhoddim>();
+        faction = (ghaddim != null) ? Conflict.Faction.Ghaddim : Conflict.Faction.Mhoddim;
     }
 
 
@@ -90,6 +94,7 @@ public class Defense : MonoBehaviour
         GameObject _soldier = (ghaddim != null) ? ghaddim.SpawnUnit() : mhoddim.SpawnUnit();
         _soldier.transform.position = point;
         _soldier.transform.parent = transform;
+        _soldier.GetComponent<Actor>().role = Conflict.Role.Defense;
         units.Add(_soldier);
         return _soldier;
     }

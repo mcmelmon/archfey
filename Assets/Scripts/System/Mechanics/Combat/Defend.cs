@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class Defend : MonoBehaviour
 {
-    public float agility_rating;    // move out of harm's way to some extent
-    public float armor_rating;      // percentage reduction of incoming damage
-    public float corporeal_rating;  // ignore some damage
-    public float counter;            // damage returned to attackers
-    public float force_rating;      // percentage reduction of non DoT
+    public int agility_rating;    // move out of harm's way
+    public int armor_rating;      // deflect incoming attacks
+    public int corporeal_rating;  // ignore some damage
+    public int counter;           // damage returned to attackers
+    public int force_rating;      // deflect incoming attacks
 
-    public Dictionary<Weapon.DamageType, float> resistances;
+    public Dictionary<Weapon.DamageType, int> resistances;
 
     float computed_damage;       // final health loss
 
@@ -23,17 +23,17 @@ public class Defend : MonoBehaviour
 
     private void OnValidate()
     {
-        if (corporeal_rating > 100f) corporeal_rating = 100f;
-        if (corporeal_rating < 0f) corporeal_rating = 0f;
+        if (corporeal_rating > 10) corporeal_rating = 10;
+        if (corporeal_rating < 0) corporeal_rating = 0;
 
-        if (agility_rating > 100f) agility_rating = 100f;
-        if (agility_rating < 0f) agility_rating = 0f;
+        if (agility_rating > 10) agility_rating = 10;
+        if (agility_rating < 0) agility_rating = 0;
 
-        if (armor_rating > 100f) armor_rating = 100f;
-        if (armor_rating < 0f) armor_rating = 0f;
+        if (armor_rating > 10) armor_rating = 10;
+        if (armor_rating < 0) armor_rating = 0;
 
-        if (force_rating > 100f) force_rating = 100f;
-        if (force_rating < 0f) force_rating = 0f;
+        if (force_rating > 10) force_rating = 10;
+        if (force_rating < 0) force_rating = 0;
     }
 
 
@@ -63,37 +63,7 @@ public class Defend : MonoBehaviour
     }
 
 
-    public void SetAgilityRating(float rate)
-    {
-        agility_rating = rate;
-    }
-
-
-    public void SetArmorRating(float rate)
-    {
-        armor_rating = rate;
-    }
-
-
-    public void SetCorporealRating(float rate)
-    {
-        corporeal_rating = rate;
-    }
-
-
-    public void SetCounter(float rate)
-    {
-        counter = rate;
-    }
-
-
-    public void SetForceRating(float rate)
-    {
-        force_rating = rate;
-    }
-
-
-    public void SetResistances(Dictionary<Weapon.DamageType, float> _resistances)
+    public void SetResistances(Dictionary<Weapon.DamageType, int> _resistances)
     {
         resistances = _resistances;
     }
@@ -104,21 +74,23 @@ public class Defend : MonoBehaviour
 
     private void ApplyArmor()
     {
+        // Armor rating deflects some damage
+
         if (computed_damage <= 0) return;
 
         switch (weapon.damage_type)
         {
             case Weapon.DamageType.Blunt:
-                computed_damage -= armor_rating * computed_damage;
+                computed_damage -= armor_rating * 1.2f;
                 break;
             case Weapon.DamageType.Piercing:
-                computed_damage -= (armor_rating * computed_damage) * 0.8f;  // TODO: configure type effect on armor
+                computed_damage -= armor_rating;
                 break;
             case Weapon.DamageType.Slashing:
-                computed_damage -= (armor_rating * computed_damage) * 1.2f;
+                computed_damage -= armor_rating * 2f;
                 break;
             case Weapon.DamageType.Elemental:
-                computed_damage -= (armor_rating * computed_damage) * 0.4f;
+                computed_damage -= armor_rating * 0.5f;
                 break;
             default:
                 break;
@@ -128,20 +100,22 @@ public class Defend : MonoBehaviour
 
     private void ApplyAgility()
     {
+        // Agility rating avoids some damage by shifting location struck
+
         if (computed_damage <= 0) return;
 
         switch (weapon.damage_type) {
             case Weapon.DamageType.Blunt:
-                computed_damage -= agility_rating * computed_damage;
+                computed_damage -= agility_rating;
                 break;
             case Weapon.DamageType.Piercing:
-                computed_damage -= (armor_rating * computed_damage) * 1.5f;
+                computed_damage -= agility_rating * 1.2f;
                 break;
             case Weapon.DamageType.Slashing:
-                computed_damage -= (armor_rating * computed_damage) * 1.2f;
+                computed_damage -= agility_rating * 1.2f;
                 break;
             case Weapon.DamageType.Elemental:
-                computed_damage -= (armor_rating * computed_damage) * 0.2f;
+                computed_damage -= agility_rating * 0.5f;
                 break;
             default:
                 break;
@@ -151,29 +125,33 @@ public class Defend : MonoBehaviour
 
     private void ApplyCorporeal()
     {
+        // (Non-)corporeal rating phases some damage out of existence
+
         if (computed_damage <= 0) return;
 
-        computed_damage -= corporeal_rating * computed_damage;
+        computed_damage -= corporeal_rating;
 
     }
 
 
     private void ApplyForce()
     {
+        // Force rating deflects some damage
+
         if (computed_damage <= 0) return;
 
         switch (weapon.damage_type) {
             case Weapon.DamageType.Blunt:
-                computed_damage -= force_rating * computed_damage;
+                computed_damage -= force_rating;
                 break;
             case Weapon.DamageType.Piercing:
-                computed_damage -= (force_rating * computed_damage);
+                computed_damage -= force_rating;
                 break;
             case Weapon.DamageType.Slashing:
-                computed_damage -= (force_rating * computed_damage);
+                computed_damage -= force_rating;
                 break;
             case Weapon.DamageType.Elemental:
-                computed_damage -= (force_rating * computed_damage);
+                computed_damage -= force_rating * 2f;
                 break;
             default:
                 break;
@@ -185,6 +163,6 @@ public class Defend : MonoBehaviour
     {
         if (computed_damage <= 0 || resistances == null) return;
 
-        computed_damage -= resistances[weapon.damage_type] * computed_damage;
+        computed_damage -= computed_damage * (resistances[weapon.damage_type] / 100);
     }
 }

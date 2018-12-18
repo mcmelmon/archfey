@@ -11,10 +11,10 @@ public class Weapon : MonoBehaviour {
 
     public Range range;             // melee or ranged
     public DamageType damage_type;  // what is the nature of the damage caused by the weapon?
-    public float instant_damage;    // how much damage does the weapon cause when it hits?
-    public float damage_over_time;  // how much ongoing damage does the weapon cause?
-    public float penetration;       // how effectively does the weapon circumvent armor?
-    public float potency;           // how effectively does the weapon overcome resistance to its type?
+    public int instant_damage;    // how much damage does the weapon cause when it hits?
+    public int damage_over_time;  // how much ongoing damage does the weapon cause?
+    public int penetration;       // how effectively does the weapon circumvent armor?
+    public int potency;           // how effectively does the weapon overcome resistance to its type?
     public float projectile_speed;
 
     public Transform ranged_attack_origin;
@@ -25,6 +25,7 @@ public class Weapon : MonoBehaviour {
     GameObject target;
     Health target_health;
     Defend target_defend;
+    Threat target_threat;
 
 
     // Unity
@@ -70,11 +71,12 @@ public class Weapon : MonoBehaviour {
     {
         target_health = target.GetComponent<Health>();
         target_defend = target.GetComponent<Defend>();
+        target_threat = target.GetComponent<Threat>();
 
         if (target_health != null && target_defend != null) {
             float damage_inflicted = target_defend.HandleAttack(this, this.transform.parent.gameObject);
             target_health.LoseHealth(damage_inflicted);
-            target_health.AddDamager(transform.parent.gameObject, damage_inflicted);
+            target_threat.AddThreat(transform.parent.gameObject, damage_inflicted);
             SpreadThreat();
 
             // TODO: counter damage should be handled like a weapon
