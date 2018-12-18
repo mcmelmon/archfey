@@ -35,7 +35,7 @@ public class Offense : MonoBehaviour
 
     private void Start()
     {
-        if (scouts.Count == 0) SpawnScouts();
+        //if (scouts.Count == 0) SpawnScouts();
     }
 
 

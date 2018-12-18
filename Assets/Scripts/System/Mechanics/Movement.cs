@@ -56,16 +56,16 @@ public class Movement : MonoBehaviour {
 
     public void SetDestination(Vector3 destination)
     {
-        destination.y = transform.position.y;
         if (agent.isOnNavMesh) 
-            agent.SetDestination(destination);
+            agent.SetDestination(new Vector3(destination.x, 0, destination.z));  // TODO: sample the height at the destination from terrain
     }
 
 
     public void SetRoute(Route _route)
     {
+        if (route != null) _route.AccumulateRoutes(route);
         route = _route;
-        agent.SetDestination(route.current);
+        agent.SetDestination(new Vector3(route.current.x, 0, route.current.z));  // TODO: sample the height at the destination from terrain
         StartCoroutine(MonitorProgress());
     }
 

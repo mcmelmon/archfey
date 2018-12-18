@@ -17,10 +17,12 @@ public class Actor : MonoBehaviour {
     List<GameObject> enemies = new List<GameObject>();
     List<GameObject> friends = new List<GameObject>();
 
+    Attack attack;
     Health health;
     Senses senses;
     Movement movement;
     RuinControlPoint objective;
+    Stealth stealth;
 
 
     // Unity
@@ -29,10 +31,21 @@ public class Actor : MonoBehaviour {
     private void Awake()
     {
         enemies_abound = false;
+        SetComponents();
     }
 
 
     // public
+
+
+    public void Action()
+    {
+        ResolveSightings();
+        ResolveMovement();
+        FriendAndFoe();
+        ResolveAttacks();
+        EstablishRuinControl();
+    }
 
 
     public void EstablishRuinControl()
@@ -123,7 +136,7 @@ public class Actor : MonoBehaviour {
     public void ReachedControlPoint()
     {
         // TODO: attack opposing faction in control
-
+        
         if (objective == null) {
             EstablishRuinControl();
         } else if (!objective.IsOccupied()) {
@@ -134,24 +147,15 @@ public class Actor : MonoBehaviour {
     }
 
 
-    public void SetComponents()
-    {
-        mhoddim = GetComponent<Mhoddim>();
-        ghaddim = GetComponent<Ghaddim>();
-        fey = GetComponent<Fey>();
-        movement = GetComponent<Movement>();
-        health = GetComponent<Health>();
-        senses = GetComponent<Senses>();
-        faction = (fey != null) ? Conflict.Faction.Fey : (ghaddim != null) ? Conflict.Faction.Ghaddim : Conflict.Faction.Mhoddim;
-        role = Conflict.Role.None;  // offense and defense set this role for mortals
-
-        SetRuinControlRating(5);  // TODO: pass this in unit by unit
-    }
-
-
     public void SetRuinControlRating(int _rating)
     {
         ruin_control_rating = _rating;
+    }
+
+
+    public void SetStealth(Stealth _stealth)
+    {
+        stealth = _stealth;
     }
 
 
@@ -201,5 +205,46 @@ public class Actor : MonoBehaviour {
         }
 
         return closest_ruin;
+    }
+
+
+    private void ResolveAttacks()
+    {
+        attack.ManageAttacks();
+    }
+
+
+    private void ResolveMovement()
+    {
+        if (movement == null) return;
+
+        if (enemies_abound) {
+            GameObject enemy = GetAnEnemy();
+            if (enemy != null) {
+                movement.SetRoute(Route.Linear(transform.position, enemy.transform.position));
+            }
+        }
+    }
+
+
+    private void ResolveSightings()
+    {
+        senses.Sight();
+    }
+
+
+    private void SetComponents()
+    {
+        attack = GetComponent<Attack>();
+        mhoddim = GetComponent<Mhoddim>();
+        ghaddim = GetComponent<Ghaddim>();
+        fey = GetComponent<Fey>();
+        movement = GetComponent<Movement>();
+        health = GetComponent<Health>();
+        senses = GetComponent<Senses>();
+        faction = (fey != null) ? Conflict.Faction.Fey : (ghaddim != null) ? Conflict.Faction.Ghaddim : Conflict.Faction.Mhoddim;
+        role = Conflict.Role.None;  // offense and defense set this role for mortals
+
+        SetRuinControlRating(5);  // TODO: pass this in unit by unit
     }
 }

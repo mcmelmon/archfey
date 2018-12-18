@@ -58,6 +58,7 @@ public class Striker : MonoBehaviour {
         stealth = gameObject.AddComponent<Stealth>();
         stealth.stealth_rating = stealth_rating;
         stealth.stealh_persistence = stealth_persistence;
+        actor.SetStealth(stealth);
     }
 
 
