@@ -55,6 +55,6 @@ public class Turn : MonoBehaviour {
 
     private void TakeAction()
     {
-        actor.Action();
+        actor.ActOnTurn();
     }
 }

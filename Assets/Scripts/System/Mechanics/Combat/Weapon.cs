@@ -25,6 +25,7 @@ public class Weapon : MonoBehaviour {
     GameObject target;
     Health target_health;
     Defend target_defend;
+    Threat target_threat;
 
 
     // Unity
@@ -70,11 +71,12 @@ public class Weapon : MonoBehaviour {
     {
         target_health = target.GetComponent<Health>();
         target_defend = target.GetComponent<Defend>();
+        target_threat = target.GetComponent<Threat>();
 
         if (target_health != null && target_defend != null) {
             float damage_inflicted = target_defend.HandleAttack(this, this.transform.parent.gameObject);
             target_health.LoseHealth(damage_inflicted);
-            target_health.AddDamager(transform.parent.gameObject, damage_inflicted);
+            target_threat.AddThreat(transform.parent.gameObject, damage_inflicted);
             SpreadThreat();
 
             // TODO: counter damage should be handled like a weapon

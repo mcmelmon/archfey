@@ -7,7 +7,6 @@ public class Health : MonoBehaviour {
     public int starting_health;
     public int current_health;
     public int recovery_amount;
-    readonly Dictionary<GameObject, float> damagers = new Dictionary<GameObject, float>();
     Actor actor;
 
     // Unity
@@ -35,25 +34,9 @@ public class Health : MonoBehaviour {
     // public 
 
 
-    public void AddDamager(GameObject _attacker, float _damage)
-    {
-        if (!damagers.ContainsKey(_attacker)) {
-            damagers[_attacker] = _damage;
-        } else {
-            damagers[_attacker] += _damage;
-        }
-    }
-
-
     public void ApplyDamageOverTime()
     {
         // TODO
-    }
-
-
-    public Dictionary<GameObject, float> GetDamagers()
-    {
-        return damagers;
     }
 
 

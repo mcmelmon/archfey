@@ -199,10 +199,12 @@ public class RuinControlPoint : MonoBehaviour
 
     private IEnumerator CheckControl()
     {
+        // TODO: reimplement control collider sphere - countdown to unoccupied if occupier "departs"
+
         while (true) {
             yield return new WaitForSeconds(Turn.action_threshold);
 
-            if (IsOccupied()) {
+            if (IsOccupied() && occupier != null) {
                 Actor actor = occupier.GetComponent<Actor>();
 
                 current_resistance_points -= (actor.ruin_control_rating - control_resistance_rating);
@@ -211,6 +213,11 @@ public class RuinControlPoint : MonoBehaviour
                     current_resistance_points = starting_resistance_points;
                     transform.Find("Marker").GetComponent<Renderer>().material.color = Color.red;
                 }
+            } else {
+                occupier = null;
+                occupied = false;
+                faction = Conflict.Faction.None;
+                transform.Find("Marker").GetComponent<Renderer>().material.color = Color.white;
             }
         }
     }

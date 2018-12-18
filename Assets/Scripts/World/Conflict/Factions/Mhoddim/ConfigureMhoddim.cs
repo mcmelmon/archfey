@@ -51,7 +51,7 @@ public static class ConfigureMhoddim
         armor_rating[Soldier.Clasification.Heavy] = 3;
         corporeal_rating[Soldier.Clasification.Heavy] = 0;
         counter[Soldier.Clasification.Heavy] = 0;
-        force_rating[Soldier.Clasification.Heavy] = 10;
+        force_rating[Soldier.Clasification.Heavy] = 3;
 
         armor_rating[Soldier.Clasification.Scout] = 1;
         corporeal_rating[Soldier.Clasification.Scout] = 0;

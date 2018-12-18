@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -19,10 +20,11 @@ public class Actor : MonoBehaviour {
 
     Attack attack;
     Health health;
-    Senses senses;
     Movement movement;
     RuinControlPoint objective;
+    Senses senses;
     Stealth stealth;
+    Threat threat;
 
 
     // Unity
@@ -38,8 +40,21 @@ public class Actor : MonoBehaviour {
     // public
 
 
-    public void Action()
+    public void ActOnTurn()
     {
+        // Priorities:
+        //
+        // Am I under attack?
+        StartCoroutine(UnderAttack());
+
+
+        // Do I see something attacking my allies?
+        // Do I see an enemy?
+        // Do I have somewhere to be?
+        //    1) I am injured and need to find a controlled ruin
+        //    2) I am scouting for ruins 
+        //    3) I am near an uncontrolled ruin control point
+
         ResolveSightings();
         ResolveMovement();
         FriendAndFoe();
@@ -109,13 +124,13 @@ public class Actor : MonoBehaviour {
 
     public GameObject GetAFriend()
     {
-        return friends.Count > 0 ? friends[Random.Range(0, friends.Count)] : null;
+        return friends.Count > 0 ? friends[UnityEngine.Random.Range(0, friends.Count)] : null;
     }
 
 
     public GameObject GetAnEnemy()
     {
-        return enemies.Count > 0 ? enemies[Random.Range(0, enemies.Count)] : null;
+        return enemies.Count > 0 ? enemies[UnityEngine.Random.Range(0, enemies.Count)] : null;
     }
 
 
@@ -125,7 +140,6 @@ public class Actor : MonoBehaviour {
         if (IsMyRole(_unit)) return true;  // but don't automatically return false if not my role (I might be a scout, it might be fey)
         if (GetComponent<Scout>() != null) return true; // we are a scout, and scouts do not engage unless damaged
         if (GetComponent<Ent>() != null) return false; // we are an Ent, and ents engage mortals; Fey have same role and will already have returned true
-        if (HasDamagedMe(_unit)) return false;
         if (IsAttackingMyFaction(_unit)) return false;
         if (_unit.GetComponent<Fey>() != null) return true; // fey are neutral until individual units (e.g. Ents) attack (and get added to damagers)
 
@@ -162,9 +176,9 @@ public class Actor : MonoBehaviour {
     // private
 
 
-    private bool HasDamagedMe(GameObject _unit)
+    private bool IsAThreat(GameObject _unit)
     {
-        return health.GetDamagers().Keys.ToArray().Contains(_unit);
+        return threat.IsAThreat(_unit);
     }
 
 
@@ -242,9 +256,26 @@ public class Actor : MonoBehaviour {
         movement = GetComponent<Movement>();
         health = GetComponent<Health>();
         senses = GetComponent<Senses>();
+        threat = gameObject.AddComponent<Threat>();
         faction = (fey != null) ? Conflict.Faction.Fey : (ghaddim != null) ? Conflict.Faction.Ghaddim : Conflict.Faction.Mhoddim;
         role = Conflict.Role.None;  // offense and defense set this role for mortals
 
         SetRuinControlRating(5);  // TODO: pass this in unit by unit
+    }
+
+
+
+    private IEnumerator UnderAttack()
+    {
+        while (threat.GetThreats().Count > 0) {
+            GameObject _attacker = threat.BiggestThreat();
+
+            if (transform != null && _attacker != null) {   // we or they may have been destroyed...
+                if (movement != null) 
+                    movement.SetRoute(Route.Linear(transform.position, _attacker.transform.position));
+            }
+
+            yield return new WaitForSeconds(Turn.action_threshold);
+        }
     }
 }
