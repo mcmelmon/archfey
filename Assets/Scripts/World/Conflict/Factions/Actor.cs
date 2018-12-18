@@ -17,7 +17,7 @@ public class Actor : MonoBehaviour {
 
     List<GameObject> enemies = new List<GameObject>();
     List<GameObject> friends = new List<GameObject>();
-
+    
     Attack attack;
     Health health;
     Movement movement;
@@ -42,54 +42,18 @@ public class Actor : MonoBehaviour {
 
     public void ActOnTurn()
     {
-        // Priorities:
-        //
         // Am I under attack?
-        StartCoroutine(UnderAttack());
-
+        StartCoroutine(ResolveUnderAttack());
 
         // Do I see something attacking my allies?
         // Do I see an enemy?
+        ResolveAttacks();
+
         // Do I have somewhere to be?
         //    1) I am injured and need to find a controlled ruin
         //    2) I am scouting for ruins 
         //    3) I am near an uncontrolled ruin control point
-
-        ResolveSightings();
-        ResolveMovement();
-        FriendAndFoe();
-        ResolveAttacks();
-        EstablishRuinControl();
-    }
-
-
-    public void EstablishRuinControl()
-    {
-        if (fey != null) return;
-
-        if (objective != null) {
-            if (objective.OccupiedBy(gameObject)) {
-                // we occupy the objective, keep it
-                return;
-            } else if (!objective.IsOccupied()){
-                // the objective is still up for grabs, don't pick another
-                return;
-            } else  {
-                // someone else has occupied our objective, pick another; TODO: fight other faction
-                movement.ResetPath();
-                objective = null;
-            }
-        }
-
-        Ruin ruin = GetNearestUnoccupiedRuin();
-        if (ruin != null) {
-            GameObject control_point = ruin.GetNearestUnoccupiedControlPoint(transform.position);
-
-            if (control_point != null) {
-                objective = control_point.GetComponent<RuinControlPoint>();
-                movement.SetRoute(Route.Linear(transform.position, control_point.transform.position, ReachedControlPoint));
-            }
-        }
+        ResolveRuinControl();
     }
 
 
@@ -152,11 +116,49 @@ public class Actor : MonoBehaviour {
         // TODO: attack opposing faction in control
         
         if (objective == null) {
-            EstablishRuinControl();
+            ResolveRuinControl();
         } else if (!objective.IsOccupied()) {
             objective.Occupy(gameObject);
         } else {
-            EstablishRuinControl();
+            ResolveRuinControl();
+        }
+    }
+
+
+    public void ResolveRuinControl()
+    {
+        if (fey != null) return;
+
+        if (objective != null)
+        {
+            if (objective.OccupiedBy(gameObject))
+            {
+                // we occupy the objective, keep it
+                return;
+            }
+            else if (!objective.IsOccupied())
+            {
+                // the objective is still up for grabs, don't pick another
+                return;
+            }
+            else
+            {
+                // someone else has occupied our objective, pick another; TODO: fight other faction
+                movement.ResetPath();
+                objective = null;
+            }
+        }
+
+        Ruin ruin = GetNearestUnoccupiedRuin();
+        if (ruin != null)
+        {
+            GameObject control_point = ruin.GetNearestUnoccupiedControlPoint(transform.position);
+
+            if (control_point != null)
+            {
+                objective = control_point.GetComponent<RuinControlPoint>();
+                movement.SetRoute(Route.Linear(transform.position, control_point.transform.position, ReachedControlPoint));
+            }
         }
     }
 
@@ -174,6 +176,21 @@ public class Actor : MonoBehaviour {
 
 
     // private
+
+
+    private void CloseWithEnemies()
+    {
+        if (movement == null) return;
+
+        if (enemies_abound)
+        {
+            GameObject enemy = GetAnEnemy();
+            if (enemy != null)
+            {
+                movement.SetRoute(Route.Linear(transform.position, enemy.transform.position));
+            }
+        }
+    }
 
 
     private bool IsAThreat(GameObject _unit)
@@ -224,26 +241,28 @@ public class Actor : MonoBehaviour {
 
     private void ResolveAttacks()
     {
+        senses.Sight();
+        FriendAndFoe();
+        CloseWithEnemies();
         attack.ManageAttacks();
     }
 
 
-    private void ResolveMovement()
+    private IEnumerator ResolveUnderAttack()
     {
-        if (movement == null) return;
+        // We will pursue something that is attacking us even if it is out of our "sight"
+        // TODO: figure out when to run away ourselves
 
-        if (enemies_abound) {
-            GameObject enemy = GetAnEnemy();
-            if (enemy != null) {
-                movement.SetRoute(Route.Linear(transform.position, enemy.transform.position));
+        while (threat.GetThreats().Count > 0) {
+            GameObject _attacker = threat.BiggestThreat();
+
+            if (transform != null && _attacker != null) {   // we or they may have been destroyed...
+                if (movement != null) 
+                    movement.SetRoute(Route.Linear(transform.position, _attacker.transform.position));
             }
+
+            yield return new WaitForSeconds(Turn.action_threshold);
         }
-    }
-
-
-    private void ResolveSightings()
-    {
-        senses.Sight();
     }
 
 
@@ -261,21 +280,5 @@ public class Actor : MonoBehaviour {
         role = Conflict.Role.None;  // offense and defense set this role for mortals
 
         SetRuinControlRating(5);  // TODO: pass this in unit by unit
-    }
-
-
-
-    private IEnumerator UnderAttack()
-    {
-        while (threat.GetThreats().Count > 0) {
-            GameObject _attacker = threat.BiggestThreat();
-
-            if (transform != null && _attacker != null) {   // we or they may have been destroyed...
-                if (movement != null) 
-                    movement.SetRoute(Route.Linear(transform.position, _attacker.transform.position));
-            }
-
-            yield return new WaitForSeconds(Turn.action_threshold);
-        }
     }
 }

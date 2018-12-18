@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class Mhoddim : MonoBehaviour {
 
-    public static Dictionary<GameObject, float> faction_threats = new Dictionary<GameObject, float>();
-
     public Mhoddim mhoddim_prefab;
 
+    Threat threat;
 
     // Unity
+
+    private void Awake()
+    {
+        threat = gameObject.AddComponent<Threat>();
+    }
 
 
     // public
@@ -17,20 +21,19 @@ public class Mhoddim : MonoBehaviour {
 
     public void AddFactionThreat(GameObject _foe, float _threat)
     {
-        // TODO: differentiate between how Ghaddim and Mhoddim perceive threats
-        // TODO: handle destroyed object as key
+        threat.AddThreat(_foe, _threat);
+    }
 
-        if (!faction_threats.ContainsKey(_foe)) {
-            faction_threats[_foe] = _threat;
-        } else {
-            faction_threats[_foe] += _threat;
-        }
+
+    public GameObject BiggestFactionThreat()
+    {
+        return threat.BiggestThreat();
     }
 
 
     public bool IsFactionThreat(GameObject _sighting)
     {
-        return faction_threats.ContainsKey(_sighting);
+        return threat.IsAThreat(_sighting);
     }
 
 

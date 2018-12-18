@@ -33,12 +33,6 @@ public class Offense : MonoBehaviour
     }
 
 
-    private void Start()
-    {
-        //if (scouts.Count == 0) SpawnScouts();
-    }
-
-
     // public
 
 
@@ -50,7 +44,7 @@ public class Offense : MonoBehaviour
         // Striker units will spawn to either side.
         // Offense will try to advance from its border to the opposite
 
-        //SpawnScouts();
+        SpawnScouts();
     }
 
 

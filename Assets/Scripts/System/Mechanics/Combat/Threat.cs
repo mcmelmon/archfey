@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Threat : MonoBehaviour {
 
-    List<Threats> threats = new List<Threats>();
+    private List<Threats> threats = new List<Threats>();
 
     public struct Threats
     {
@@ -81,12 +81,14 @@ public class Threat : MonoBehaviour {
 
     public GameObject BiggestThreat()
     {
+        threats.Sort((x, y) => x.threat.CompareTo(y.threat));
         return threats[0].attacker;
     }
 
 
     public List<Threats> GetThreats()
     {
+        threats.Sort((x, y) => x.threat.CompareTo(y.threat));
         return threats;
     }
 

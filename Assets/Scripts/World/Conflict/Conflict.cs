@@ -66,7 +66,7 @@ public class Conflict : MonoBehaviour {
     private void FirstWave()
     {
         GetComponentInChildren<Defense>().Setup();
-        //GetComponentInChildren<Offense>().Setup();
+        GetComponentInChildren<Offense>().Setup();
     }
 
 
