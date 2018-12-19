@@ -331,16 +331,24 @@ public class Actor : MonoBehaviour {
     public void SetState()
     {
         if (InCombat()) {
-            state = State.InCombat;
+            GameObject _enemy = threat.BiggestThreat();
+            if (_enemy != null) {
+                if (!enemies.Contains(_enemy)) enemies.Add(_enemy);
+                state = State.InCombat;
+            } else {
+                SheathWeapon();
+                state = State.Idle;
+            }
             return;
         }
         else if (UnderAttack())
         {
             GameObject _enemy = threat.BiggestThreat();
             if (_enemy != null) {
-                enemies.Add(_enemy);
+                if (!enemies.Contains(_enemy)) enemies.Add(_enemy);
                 state = State.UnderAttack;
             } else {
+                SheathWeapon();
                 state = State.Idle;
             }
             return;
@@ -349,7 +357,7 @@ public class Actor : MonoBehaviour {
         {
             GameObject _enemy = (faction == Conflict.Faction.Ghaddim) ? ghaddim.BiggestFactionThreat() : mhoddim.BiggestFactionThreat();
             if (_enemy != null) {
-                enemies.Add(_enemy);
+                if (!enemies.Contains(_enemy)) enemies.Add(_enemy);
                 state = State.AlliesUnderAttack;
             } else {
                 state = State.Idle;
@@ -358,6 +366,7 @@ public class Actor : MonoBehaviour {
         }
         else if (OccupyingRuin())
         {
+            SheathWeapon();
             state = State.OccupyingRuin;
             return;
         }
@@ -368,17 +377,30 @@ public class Actor : MonoBehaviour {
         }
         else if (HasObjective())
         {
+            SheathWeapon();
             state = State.HasObjective;
             return;
         }
         else if (OnWatch())
         {
+            SheathWeapon();
             state = State.OnWatch;
             return;
         }
         else {
+            SheathWeapon();
             state = State.Idle;
             return;
+        }
+    }
+
+
+    private void SheathWeapon()
+    {
+        Weapon equipped_weapon = attack.GetWeapon();
+        if (equipped_weapon != null)
+        {
+            Destroy(equipped_weapon.gameObject);
         }
     }
 

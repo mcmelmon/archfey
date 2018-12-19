@@ -4,58 +4,12 @@ using UnityEngine;
 
 public class Threat : MonoBehaviour {
 
-    private List<Threats> threats = new List<Threats>();
-
-    public struct Threats
-    {
-        public readonly GameObject attacker;
-        public float threat;
-
-        public Threats(GameObject attacker, float threat)
-        {
-            this.attacker = attacker;
-            this.threat = threat;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Threats))
-            {
-                return false;
-            }
-
-            var threats = (Threats)obj;
-            return EqualityComparer<GameObject>.Default.Equals(attacker, threats.attacker);
-        }
-
-        public override int GetHashCode()
-        {
-            return 1619755646 + EqualityComparer<GameObject>.Default.GetHashCode(attacker);
-        }
-
-        public static bool operator ==(Threats t1, Threats t2)
-        {
-            if (t1.attacker == t2.attacker)
-            {
-                return t1.Equals(t2);
-            }
-            return false;
-        }
-
-        public static bool operator !=(Threats t1, Threats t2)
-        {
-            if (t1.attacker != t2.attacker)
-            {
-                return !t1.Equals(t2);
-            }
-            return false;
-        }
-    }
+    Dictionary<GameObject, float> threats = new Dictionary<GameObject, float>();
 
 
     // Unity
 
-    private void Start()
+    private void Awake()
     {
         StartCoroutine(PruneThreats());
     }
@@ -66,36 +20,41 @@ public class Threat : MonoBehaviour {
 
     public void AddThreat(GameObject _attacker, float _damage)
     {
-        Threats new_threat = new Threats(_attacker, _damage);
 
-        if (!threats.Contains(new_threat)) {
-            threats.Add(new_threat);
+        if (!threats.ContainsKey(_attacker) ) {
+            threats[_attacker] = _damage;
         } else {
-            Threats existing_threat = threats.Find(threats => threats.attacker == _attacker);
-            existing_threat.threat += _damage;
+            threats[_attacker] += _damage;
         }
-
-        threats.Sort((x, y) => x.threat.CompareTo(y.threat));
     }
 
 
     public GameObject BiggestThreat()
     {
-        threats.Sort((x, y) => x.threat.CompareTo(y.threat));
-        return threats[0].attacker;
+        GameObject biggest_threat = null;
+        float value = 0f;
+
+        foreach (KeyValuePair<GameObject, float> threat in threats) {
+            if (threat.Key == null) continue;  // don't modify the dictionary by removing while iterating
+            if (threat.Value > value) {
+                value = threat.Value;
+                biggest_threat = threat.Key;
+            }
+        }
+
+        return biggest_threat;
     }
 
 
-    public List<Threats> GetThreats()
+    public Dictionary<GameObject, float> GetThreats()
     {
-        threats.Sort((x, y) => x.threat.CompareTo(y.threat));
         return threats;
     }
 
 
     public bool IsAThreat(GameObject _unit)
     {
-        return threats.Find(threats => threats.attacker == _unit).attacker != null;
+        return threats.ContainsKey(_unit);
     }
 
 
@@ -121,7 +80,17 @@ public class Threat : MonoBehaviour {
     {
         while (true) {
             yield return new WaitForSeconds(Turn.action_threshold);
-            threats.FindAll(threats => threats.attacker == null).Clear();
+            List<GameObject> removals = new List<GameObject>();
+            Dictionary<GameObject, float>.KeyCollection keys = threats.Keys;
+
+            foreach (var key in keys) {
+                if (key == null) removals.Add(key);
+            }
+
+            // don't modify the dictionary while iterating through it
+            for (int i = 0; i < removals.Count; i++) {
+                threats.Remove(removals[i]);
+            }
         }
     }
 }

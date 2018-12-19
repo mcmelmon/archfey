@@ -28,17 +28,23 @@ public class Attack : MonoBehaviour {
     // public
 
 
+    public void AttackEnemiesInRange()
+    {
+        EnemyAtMeleeOrRange();
+        SelectEnemy();
+        StrikeEnemy();
+    }
+
+
     public bool Engaged()
     {
         return current_melee_targets.Count > 0 || current_ranged_targets.Count > 0;
     }
 
 
-    public void AttackEnemiesInRange()
+    public Weapon GetWeapon()
     {
-        EnemyAtMeleeOrRange();
-        SelectEnemy();
-        StrikeEnemy();
+        return equipped_weapon;
     }
 
 

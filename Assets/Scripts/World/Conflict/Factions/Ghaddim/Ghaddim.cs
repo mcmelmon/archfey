@@ -35,7 +35,7 @@ public class Ghaddim : MonoBehaviour {
 
     public bool IsFactionThreat(GameObject _sighting)
     {
-        return threat.IsAThreat(_sighting);
+        return _sighting != null && threat.IsAThreat(_sighting);
     }
 
 
