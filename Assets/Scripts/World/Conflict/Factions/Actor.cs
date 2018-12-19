@@ -6,7 +6,8 @@ using UnityEngine;
 
 public class Actor : MonoBehaviour {
 
-    public bool enemies_abound;
+    public enum State { Idle = 0, UnderAttack = 1, AlliesUnderAttack = 2, HostilesSighted = 3, OccupyingRuin = 4, HasObjective = 5, OnWatch = 6, InCombat = 7};
+
     public Conflict.Faction faction;
     public Conflict.Role role;
     public int ruin_control_rating;
@@ -17,12 +18,14 @@ public class Actor : MonoBehaviour {
 
     List<GameObject> enemies = new List<GameObject>();
     List<GameObject> friends = new List<GameObject>();
-    
+
+
     Attack attack;
     Health health;
     Movement movement;
-    RuinControlPoint objective;
+    RuinControlPoint ruin_control_point;
     Senses senses;
+    State state;
     Stealth stealth;
     Threat threat;
 
@@ -32,7 +35,6 @@ public class Actor : MonoBehaviour {
 
     private void Awake()
     {
-        enemies_abound = false;
         SetComponents();
     }
 
@@ -42,35 +44,37 @@ public class Actor : MonoBehaviour {
 
     public void ActOnTurn()
     {
-        // Am I under attack?
-        StartCoroutine(ResolveUnderAttack());
+        SetState();
 
-        // Do I see something attacking my allies?
-        // Do I see an enemy?
-        ResolveAttacks();
-
-        // Do I have somewhere to be?
-        //    1) I am injured and need to find a controlled ruin
-        //    2) I am scouting for ruins 
-        //    3) I am near an uncontrolled ruin control point
-        ResolveRuinControl();
-    }
-
-
-    public void FriendAndFoe()
-    {
-        enemies.Clear();
-        friends.Clear();
-
-        foreach (var sighting in senses.GetSightings()) {
-            if (sighting == gameObject || IsMyFaction(sighting)) {
-                friends.Add(sighting);
-            } else if (!IsFriendOrNeutral(sighting) && !enemies.Contains(sighting)) {
-                enemies.Add(sighting);
-            }
+        switch (state) {
+            case State.AlliesUnderAttack:
+                CloseWithEnemies();
+                break;
+            case State.HasObjective:
+                // evaluate available objectives
+                break;
+            case State.HostilesSighted:
+                CloseWithEnemies();
+                break;
+            case State.Idle:
+                // put away weapons and go back to work
+                ResolveRuinControl();
+                break;
+            case State.InCombat:
+                attack.AttackEnemiesInRange();
+                break;
+            case State.OccupyingRuin:
+                // evaluate moving to superior unoccupied control point to cement control
+                break;
+            case State.OnWatch:
+                // engage enemies that appear, but return to post quickly
+                break;
+            case State.UnderAttack:
+                CloseWithEnemies();
+                break;
+            default:
+                break;
         }
-
-        enemies_abound = enemies.Count > 0 ? true : false;
     }
 
 
@@ -104,62 +108,9 @@ public class Actor : MonoBehaviour {
         if (IsMyRole(_unit)) return true;  // but don't automatically return false if not my role (I might be a scout, it might be fey)
         if (GetComponent<Scout>() != null) return true; // we are a scout, and scouts do not engage unless damaged
         if (GetComponent<Ent>() != null) return false; // we are an Ent, and ents engage mortals; Fey have same role and will already have returned true
-        if (IsAttackingMyFaction(_unit)) return false;
         if (_unit.GetComponent<Fey>() != null) return true; // fey are neutral until individual units (e.g. Ents) attack (and get added to damagers)
 
         return false;  // if none of the above, it's probably the other faction and no exceptions apply
-    }
-
-
-    public void ReachedControlPoint()
-    {
-        // TODO: attack opposing faction in control
-        
-        if (objective == null) {
-            ResolveRuinControl();
-        } else if (!objective.IsOccupied()) {
-            objective.Occupy(gameObject);
-        } else {
-            ResolveRuinControl();
-        }
-    }
-
-
-    public void ResolveRuinControl()
-    {
-        if (fey != null) return;
-
-        if (objective != null)
-        {
-            if (objective.OccupiedBy(gameObject))
-            {
-                // we occupy the objective, keep it
-                return;
-            }
-            else if (!objective.IsOccupied())
-            {
-                // the objective is still up for grabs, don't pick another
-                return;
-            }
-            else
-            {
-                // someone else has occupied our objective, pick another; TODO: fight other faction
-                movement.ResetPath();
-                objective = null;
-            }
-        }
-
-        Ruin ruin = GetNearestUnoccupiedRuin();
-        if (ruin != null)
-        {
-            GameObject control_point = ruin.GetNearestUnoccupiedControlPoint(transform.position);
-
-            if (control_point != null)
-            {
-                objective = control_point.GetComponent<RuinControlPoint>();
-                movement.SetRoute(Route.Linear(transform.position, control_point.transform.position, ReachedControlPoint));
-            }
-        }
     }
 
 
@@ -178,18 +129,62 @@ public class Actor : MonoBehaviour {
     // private
 
 
-    private void CloseWithEnemies()
+    private bool AlliesUnderAttack()
     {
-        if (movement == null) return;
-
-        if (enemies_abound)
-        {
-            GameObject enemy = GetAnEnemy();
-            if (enemy != null)
-            {
-                movement.SetRoute(Route.Linear(transform.position, enemy.transform.position));
+        foreach (var sighting in senses.GetSightings()) {
+            if (IsAttackingMyFaction(sighting)) {
+                return true;
             }
         }
+
+        return false;
+    }
+
+
+    private void CloseWithEnemies()
+    {
+        if (movement == null) {
+            attack.AttackEnemiesInRange();
+        } else {
+            GameObject _enemy = GetAnEnemy();
+
+            if (transform != null && _enemy != null)
+            {   // we or they may have been destroyed...
+                movement.SetRoute(Route.Linear(transform.position, _enemy.transform.position));
+            }
+            attack.AttackEnemiesInRange();
+        }
+    }
+
+
+    private bool HasObjective()
+    {
+        if (movement != null) {
+            return movement.GetRoute() != null && !movement.GetRoute().completed;
+        }
+
+        return false;
+    }
+
+
+    private bool HostilesSighted()
+    {
+        enemies.Clear();
+        foreach (var sighting in senses.GetSightings())
+        {
+            if (!IsFriendOrNeutral(sighting) && !enemies.Contains(sighting))
+            {
+                enemies.Add(sighting);
+            }
+        }
+
+        return enemies.Count > 0;
+    }
+
+
+    private bool InCombat()
+    {
+        return attack.Engaged();
     }
 
 
@@ -201,7 +196,13 @@ public class Actor : MonoBehaviour {
 
     private bool IsAttackingMyFaction(GameObject _unit)
     {
-        return faction != Conflict.Faction.Fey && (faction == Conflict.Faction.Ghaddim) ? (ghaddim.IsFactionThreat(_unit)) : (mhoddim.IsFactionThreat(_unit));
+        bool attacker;
+        if (faction == Conflict.Faction.Fey || faction == Conflict.Faction.None) {  // the "Quick Fix" is a lie...
+            attacker = false;
+        } else {
+            attacker = (faction == Conflict.Faction.Ghaddim) ? (ghaddim.IsFactionThreat(_unit)) : (mhoddim.IsFactionThreat(_unit));
+        }
+        return attacker;
     }
 
 
@@ -239,29 +240,72 @@ public class Actor : MonoBehaviour {
     }
 
 
-    private void ResolveAttacks()
+    private bool OccupyingRuin()
     {
-        senses.Sight();
-        FriendAndFoe();
-        CloseWithEnemies();
-        attack.ManageAttacks();
+        return ruin_control_point != null && ruin_control_point.OccupiedBy(gameObject);
     }
 
 
-    private IEnumerator ResolveUnderAttack()
+    private bool OnWatch()
     {
-        // We will pursue something that is attacking us even if it is out of our "sight"
-        // TODO: figure out when to run away ourselves
+        // TODO: implement notion of sentry
+        return false;
+    }
 
-        while (threat.GetThreats().Count > 0) {
-            GameObject _attacker = threat.BiggestThreat();
 
-            if (transform != null && _attacker != null) {   // we or they may have been destroyed...
-                if (movement != null) 
-                    movement.SetRoute(Route.Linear(transform.position, _attacker.transform.position));
+    private void ReachedControlPoint()
+    {
+        // TODO: attack opposing faction in control
+
+        if (ruin_control_point == null)
+        {
+            ResolveRuinControl();
+        }
+        else if (!ruin_control_point.IsOccupied())
+        {
+            ruin_control_point.Occupy(gameObject);
+        }
+        else
+        {
+            ResolveRuinControl();
+        }
+    }
+
+
+    private void ResolveRuinControl()
+    {
+        if (fey != null) return;
+
+        if (ruin_control_point != null)
+        {
+            if (ruin_control_point.OccupiedBy(gameObject))
+            {
+                // we occupy the objective, keep it
+                return;
             }
+            else if (!ruin_control_point.IsOccupied())
+            {
+                // the objective is still up for grabs, don't pick another
+                return;
+            }
+            else
+            {
+                // someone else has occupied our objective, pick another; TODO: fight other faction
+                movement.ResetPath();
+                ruin_control_point = null;
+            }
+        }
 
-            yield return new WaitForSeconds(Turn.action_threshold);
+        Ruin ruin = GetNearestUnoccupiedRuin();
+        if (ruin != null)
+        {
+            GameObject control_point = ruin.GetNearestUnoccupiedControlPoint(transform.position);
+
+            if (control_point != null)
+            {
+                ruin_control_point = control_point.GetComponent<RuinControlPoint>();
+                movement.SetRoute(Route.Linear(transform.position, control_point.transform.position, ReachedControlPoint));
+            }
         }
     }
 
@@ -278,7 +322,69 @@ public class Actor : MonoBehaviour {
         threat = gameObject.AddComponent<Threat>();
         faction = (fey != null) ? Conflict.Faction.Fey : (ghaddim != null) ? Conflict.Faction.Ghaddim : Conflict.Faction.Mhoddim;
         role = Conflict.Role.None;  // offense and defense set this role for mortals
+        state = State.Idle;
 
         SetRuinControlRating(5);  // TODO: pass this in unit by unit
+    }
+
+
+    public void SetState()
+    {
+        if (InCombat()) {
+            state = State.InCombat;
+            return;
+        }
+        else if (UnderAttack())
+        {
+            GameObject _enemy = threat.BiggestThreat();
+            if (_enemy != null) {
+                enemies.Add(_enemy);
+                state = State.UnderAttack;
+            } else {
+                state = State.Idle;
+            }
+            return;
+        }
+        else if (AlliesUnderAttack())
+        {
+            GameObject _enemy = (faction == Conflict.Faction.Ghaddim) ? ghaddim.BiggestFactionThreat() : mhoddim.BiggestFactionThreat();
+            if (_enemy != null) {
+                enemies.Add(_enemy);
+                state = State.AlliesUnderAttack;
+            } else {
+                state = State.Idle;
+            }
+            return;
+        }
+        else if (OccupyingRuin())
+        {
+            state = State.OccupyingRuin;
+            return;
+        }
+        else if (HostilesSighted())
+        {
+            state = State.HostilesSighted;
+            return;
+        }
+        else if (HasObjective())
+        {
+            state = State.HasObjective;
+            return;
+        }
+        else if (OnWatch())
+        {
+            state = State.OnWatch;
+            return;
+        }
+        else {
+            state = State.Idle;
+            return;
+        }
+    }
+
+
+    private bool UnderAttack()
+    {
+        return threat.GetThreats().Count > 0;
     }
 }

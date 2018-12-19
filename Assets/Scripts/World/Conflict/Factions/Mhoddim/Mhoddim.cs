@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class Mhoddim : MonoBehaviour {
 
+    public static Threat threat;
+
     public Mhoddim mhoddim_prefab;
 
-    Threat threat;
 
     // Unity
 

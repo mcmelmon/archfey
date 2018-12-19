@@ -36,6 +36,7 @@ public class Senses : MonoBehaviour {
 
     public List<GameObject> GetSightings()
     {
+        Sight();
         return sightings;
     }
 

@@ -28,14 +28,17 @@ public class Attack : MonoBehaviour {
     // public
 
 
-    public void ManageAttacks()
+    public bool Engaged()
     {
-        if (actor == null) actor = GetComponent<Actor>();
-        if (actor.enemies_abound) {
-            EnemyAtMeleeOrRange();
-            SelectEnemy();
-            StrikeEnemy();
-        }
+        return current_melee_targets.Count > 0 || current_ranged_targets.Count > 0;
+    }
+
+
+    public void AttackEnemiesInRange()
+    {
+        EnemyAtMeleeOrRange();
+        SelectEnemy();
+        StrikeEnemy();
     }
 
 

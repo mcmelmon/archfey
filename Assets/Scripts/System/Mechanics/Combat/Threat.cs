@@ -66,13 +66,13 @@ public class Threat : MonoBehaviour {
 
     public void AddThreat(GameObject _attacker, float _damage)
     {
-        Threats _threat = new Threats(_attacker, _damage);
+        Threats new_threat = new Threats(_attacker, _damage);
 
-        if (!threats.Contains(_threat)) {
-            threats.Add(_threat);
+        if (!threats.Contains(new_threat)) {
+            threats.Add(new_threat);
         } else {
-            _threat = threats.Find(threats => threats.attacker == _attacker);
-            _threat.threat += _damage;
+            Threats existing_threat = threats.Find(threats => threats.attacker == _attacker);
+            existing_threat.threat += _damage;
         }
 
         threats.Sort((x, y) => x.threat.CompareTo(y.threat));
@@ -96,6 +96,21 @@ public class Threat : MonoBehaviour {
     public bool IsAThreat(GameObject _unit)
     {
         return threats.Find(threats => threats.attacker == _unit).attacker != null;
+    }
+
+
+    public void SpreadThreat(GameObject _attacker, float _damage)
+    {
+        Conflict.Faction _faction = GetComponent<Actor>().faction;
+
+        if (_faction == Conflict.Faction.Ghaddim)
+        {
+            GetComponent<Ghaddim>().AddFactionThreat(_attacker, _damage);
+        }
+        else if (_faction == Conflict.Faction.Mhoddim)
+        {
+            GetComponent<Mhoddim>().AddFactionThreat(_attacker, _damage);
+        }
     }
 
 

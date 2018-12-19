@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Ghaddim : MonoBehaviour {
 
-    public static Dictionary<GameObject, float> faction_threats = new Dictionary<GameObject, float>();
+    public static Threat threat;
 
     public Ghaddim ghaddim_prefab;
 
@@ -12,22 +12,30 @@ public class Ghaddim : MonoBehaviour {
     // Unity
 
 
+    private void Awake()
+    {
+        threat = gameObject.AddComponent<Threat>();
+    }
+
+
     // public
 
 
     public void AddFactionThreat(GameObject _foe, float _threat)
     {
-        if (!faction_threats.ContainsKey(_foe)) {
-            faction_threats[_foe] = _threat;
-        } else {
-            faction_threats[_foe] += _threat;
-        }
+        threat.AddThreat(_foe, _threat);
+    }
+
+
+    public GameObject BiggestFactionThreat()
+    {
+        return threat.BiggestThreat();
     }
 
 
     public bool IsFactionThreat(GameObject _sighting)
     {
-        return faction_threats.ContainsKey(_sighting);
+        return threat.IsAThreat(_sighting);
     }
 
 
