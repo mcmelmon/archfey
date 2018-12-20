@@ -52,6 +52,6 @@ public class Ent : MonoBehaviour {
 
     private void SetStats()
     {
-        actor.fey.SetStats();
+        actor.Fey.SetStats();
     }
 }

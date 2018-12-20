@@ -12,7 +12,6 @@ public class Scout : MonoBehaviour {
     public int stealth_rating = 50;
 
     Actor actor;
-    Geography geography;
     Movement movement;
     Senses senses;
     Stealth stealth;
@@ -42,12 +41,12 @@ public class Scout : MonoBehaviour {
     {
         // Create a new path around the center with a shorter radius
 
-        float distance_to_center = Vector3.Distance(geography.GetCenter(), transform.position);
-        Circle scouting_path = Circle.CreateCircle(geography.GetCenter(), distance_to_center - 20f);
+        float distance_to_center = Vector3.Distance(Geography.Instance.GetCenter(), transform.position);
+        Circle scouting_path = Circle.CreateCircle(Geography.Instance.GetCenter(), distance_to_center - 20f);
         Vector3 nearest_vertex = scouting_path.VertexClosestTo(transform.position);
 
         Route new_route = Route.Circular(nearest_vertex, scouting_path, Restrategize);
-        new_route.AccumulateRoutes(movement.GetRoute());  // store our old routes in the new route in case we want to backtrack
+        new_route.AccumulateRoutes(movement.Route);  // store our old routes in the new route in case we want to backtrack
         movement.SetRoute(new_route);
     }
   
@@ -56,8 +55,8 @@ public class Scout : MonoBehaviour {
     {
         // move around the map in a circle with a radius equal to my distance from the map center
 
-        float distance_to_center = Mathf.Min(Vector3.Distance(geography.GetCenter(), transform.position), geography.GetResolution() - 20f);
-        Circle scouting_path = Circle.CreateCircle(geography.GetCenter(), distance_to_center);
+        float distance_to_center = Mathf.Min(Vector3.Distance(Geography.Instance.GetCenter(), transform.position), Geography.Instance.GetResolution() - 20f);
+        Circle scouting_path = Circle.CreateCircle(Geography.Instance.GetCenter(), distance_to_center);
         Vector3 nearest_vertex = scouting_path.VertexClosestTo(transform.position);
 
         movement.SetRoute(Route.Circular(nearest_vertex, scouting_path, Restrategize));
@@ -70,25 +69,24 @@ public class Scout : MonoBehaviour {
     private void SetComponents()
     {
         actor = GetComponent<Actor>();
-        geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();
         movement = GetComponent<Movement>();
-        movement.GetAgent().speed = speed;
+        movement.Agent.speed = speed;
         senses = GetComponent<Senses>();
         senses.perception_rating = perception_rating;
         senses.SetRange(perception_range);
         stealth = gameObject.AddComponent<Stealth>();
         stealth.stealth_rating = stealth_rating;
         stealth.stealh_persistence = stealth_persistence;
-        actor.SetStealth(stealth);
+        actor.Stealth = stealth;
     }
 
 
     private void SetStats()
     {
-        if (actor.ghaddim != null) {
-            actor.ghaddim.SetStats();
-        } else if (actor.mhoddim != null) {
-            actor.mhoddim.SetStats();
+        if (actor.Ghaddim != null) {
+            actor.Ghaddim.SetStats();
+        } else if (actor.Mhoddim != null) {
+            actor.Mhoddim.SetStats();
         }
     }
 }

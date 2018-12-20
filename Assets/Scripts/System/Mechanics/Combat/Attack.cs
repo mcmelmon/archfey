@@ -55,7 +55,7 @@ public class Attack : MonoBehaviour {
     {
         ClearTargets();
 
-        foreach (var enemy in actor.GetEnemies()) {
+        foreach (var enemy in actor.Enemies) {
             if (enemy == null) continue;
 
             float grounded_center_distance = Vector3.Distance(new Vector3(enemy.transform.position.x, 0, enemy.transform.position.z), new Vector3(transform.position.x, 0, transform.position.z));

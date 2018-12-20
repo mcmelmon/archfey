@@ -189,7 +189,7 @@ GameObject:
   - component: {fileID: 244895861}
   - component: {fileID: 244895862}
   m_Layer: 0
-  m_Name: Ghaddim
+  m_Name: Defense
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -218,11 +218,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 244895860}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 843f0e01e2c994a8e9abea9a484d8a9c, type: 3}
+  m_Script: {fileID: 11500000, guid: d3c989ae5335d4a58ae9e8d7b39b7781, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ghaddim_prefab: {fileID: 114127286258734026, guid: 023e71d7833984f6fbf62ca90915a2a3,
-    type: 3}
 --- !u!1 &264195861
 GameObject:
   m_ObjectHideFlags: 3
@@ -247,7 +245,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 264195861}
-  m_LocalRotation: {x: -0.06402388, y: -0.07527278, z: -0.6965525, w: 0.7106685}
+  m_LocalRotation: {x: -0.06454189, y: -0.07344788, z: -0.69896233, w: 0.708443}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -559,7 +557,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 465733991}
-  m_LocalRotation: {x: 0.14950104, y: -0.011904251, z: 0.0018000597, w: 0.9886883}
+  m_LocalRotation: {x: 0.14943093, y: -0.0132774105, z: 0.0020067703, w: 0.98868096}
   m_LocalPosition: {x: 174.441, y: 10.240227, z: 153.75574}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -925,7 +923,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 829675727}
-  m_LocalRotation: {x: -0.000000059604645, y: 0.00027447473, z: 0.34386456, w: 0.93901926}
+  m_LocalRotation: {x: -0.000000029802326, y: -0.000000026077034, z: 0.34580436, w: 0.9383067}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1205,7 +1203,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963679513}
-  m_LocalRotation: {x: -0.022899857, y: -0.046647366, z: -0.7053877, w: 0.7069143}
+  m_LocalRotation: {x: -0.087651454, y: -0.0050427057, z: -0.7114012, w: 0.6972805}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1450,9 +1448,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4408801ba2ae4a628d6ebb4b4cd8d9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fey: {fileID: 1162440785}
-  ghaddim: {fileID: 244895860}
-  mhoddim: {fileID: 1768810315}
+  ghaddim_prefab: {fileID: 114127286258734026, guid: 023e71d7833984f6fbf62ca90915a2a3,
+    type: 3}
+  mhoddim_prefab: {fileID: 114736850986846170, guid: 8f2959a8036b642a79856e38e5ab84f0,
+    type: 3}
 --- !u!1 &1162440785
 GameObject:
   m_ObjectHideFlags: 0
@@ -2466,7 +2465,7 @@ GameObject:
   - component: {fileID: 1768810316}
   - component: {fileID: 1768810317}
   m_Layer: 0
-  m_Name: Mhoddim
+  m_Name: Offense
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2495,11 +2494,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1768810315}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 881721a9845c741949e94809a4563f8c, type: 3}
+  m_Script: {fileID: 11500000, guid: 906f1cfd409c947c8b28dbdd5f2a1c4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mhoddim_prefab: {fileID: 114736850986846170, guid: 8f2959a8036b642a79856e38e5ab84f0,
-    type: 3}
 --- !u!1 &1820443082
 GameObject:
   m_ObjectHideFlags: 0

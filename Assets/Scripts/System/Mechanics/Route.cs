@@ -6,19 +6,26 @@ using UnityEngine;
 
 public class Route
 {
-    public bool completed;
-    public Vector3 current, finish, next, start;
-    public bool looping;
-    public List<Vector3> points = new List<Vector3>();
-    public bool retracing;
-    public List<Route> routes_followed = new List<Route>();
-    Action when_complete;
+    public static float reached_threshold = 4f;
 
+
+    // properties
+
+    public bool Completed { get; set; }
+    public Vector3 Current { get; set; }
+    public Vector3 Finish { get; set; }
+    public bool Looping { get; set; }
+    public Vector3 Next { get; set; }
+    public List<Vector3> Points { get; set; }
+    public bool Retracing { get; set; }
+    public List<Route> RoutesFollowed { get; set; }
+    public Vector3 Start { get; set; }
+    public Action WhenComplete { get; set; }
 
     public void AccumulateRoutes(Route previous_route)
     {
-        routes_followed = previous_route.routes_followed;
-        routes_followed.Add(previous_route);
+        RoutesFollowed = previous_route.RoutesFollowed;
+        RoutesFollowed.Add(previous_route);
     }
 
 
@@ -26,7 +33,7 @@ public class Route
     {
         // This will "work" for a circle, but kind of awkward
 
-        points.Add(_point);
+        Points.Add(_point);
     }
 
 
@@ -34,16 +41,19 @@ public class Route
     {
         Route route = new Route
         {
-            current = _start,
-            start = _start,
-            completed = false,
-            looping = _looping,
-            retracing = _retracing,
-            when_complete = _when_complete
+            Current = _start,
+            Start = _start,
+            Completed = false,
+            Looping = _looping,
+            Retracing = _retracing,
+            WhenComplete = _when_complete
         };
 
+        route.Points = new List<Vector3>();
+        route.RoutesFollowed = new List<Route>();
+
         foreach (var vertex in _circle.vertices) {
-            route.points.Add(vertex);
+            route.Points.Add(vertex);
         }
 
         route.SetNext();
@@ -56,16 +66,20 @@ public class Route
     {
         Route route = new Route
         {
-            current = _next,
-            start = _start,
-            completed = false,
-            looping = _looping,
-            retracing = _retracing,
-            when_complete = _when_complete
+            Current = _next,
+            Start = _start,
+            Completed = false,
+            Looping = _looping,
+            Retracing = _retracing,
+            WhenComplete = _when_complete
         };
 
-        route.points.Add(_start);
-        route.points.Add(_next);
+        route.Points = new List<Vector3> {
+            _start,
+            _next
+        };
+
+        route.RoutesFollowed = new List<Route>();
 
         return route;
     }
@@ -73,27 +87,21 @@ public class Route
 
     public bool ReachedCurrent(Vector3 unit_position)
     {
-        return (Vector3.Distance(current, unit_position) < 5f) ? true : false;
-    }
-
-
-    public Action GetWhenComplete()
-    {
-        return when_complete;
+        return (Vector3.Distance(Current, unit_position) < reached_threshold) ? true : false;
     }
 
 
     public void SetNext()
     {
-        bool keep_going = (looping || retracing);
-        if (completed && !keep_going) return;
+        bool keep_going = (Looping || Retracing);
+        if (Completed && !keep_going) return;
 
         int next_index;
-        int current_index = points.IndexOf(current);
-        next_index = (next == start && retracing) ? ((current_index - 1) + (points.Count)) % points.Count : (current_index + 1) % points.Count;
-        next = points[next_index];
-        current = next;
+        int current_index = Points.IndexOf(Current);
+        next_index = (Next == Start && Retracing) ? ((current_index - 1) + (Points.Count)) % Points.Count : (current_index + 1) % Points.Count;
+        Next = Points[next_index];
+        Current = Next;
 
-        if (next == start) completed = !looping || !retracing;
+        if (Next == Start) Completed = !Looping || !Retracing;
     }
 }

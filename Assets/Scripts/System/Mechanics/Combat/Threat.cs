@@ -60,7 +60,7 @@ public class Threat : MonoBehaviour {
 
     public void SpreadThreat(GameObject _attacker, float _damage)
     {
-        Conflict.Faction _faction = GetComponent<Actor>().faction;
+        Conflict.Faction _faction = GetComponent<Actor>().Faction;
 
         if (_faction == Conflict.Faction.Ghaddim)
         {

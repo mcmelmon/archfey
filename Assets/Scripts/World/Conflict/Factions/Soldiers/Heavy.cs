@@ -46,7 +46,7 @@ public class Heavy : MonoBehaviour {
     {
         actor = GetComponent<Actor>();
         movement = GetComponent<Movement>();
-        movement.GetAgent().speed = speed;
+        movement.Agent.speed = speed;
         senses = GetComponent<Senses>();
         senses.perception_rating = perception_rating;
         senses.SetRange(perception_range);
@@ -55,10 +55,12 @@ public class Heavy : MonoBehaviour {
 
     private void SetStats()
     {
-        if (actor.ghaddim != null) {
-            actor.ghaddim.SetStats();
-        } else if (actor.mhoddim != null) {
-            actor.mhoddim.SetStats();
+        // can't do in Actor until the Heavy component has been attached
+
+        if (actor.Ghaddim != null) {
+            actor.Ghaddim.SetStats();
+        } else if (actor.Mhoddim != null) {
+            actor.Mhoddim.SetStats();
         }
     }
 }

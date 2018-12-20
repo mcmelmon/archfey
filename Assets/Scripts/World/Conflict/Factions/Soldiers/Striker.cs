@@ -11,7 +11,6 @@ public class Striker : MonoBehaviour {
     public int stealth_rating = 25;
 
     Actor actor;
-    Geography geography;
     Movement movement;
     Senses senses;
     Stealth stealth;
@@ -49,25 +48,26 @@ public class Striker : MonoBehaviour {
     private void SetComponents()
     {
         actor = GetComponent<Actor>();
-        geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();
         movement = GetComponent<Movement>();
-        movement.GetAgent().speed = speed;
+        movement.Agent.speed = speed;
         senses = GetComponent<Senses>();
         senses.perception_rating = perception_rating;
         senses.SetRange(perception_range);
         stealth = gameObject.AddComponent<Stealth>();
         stealth.stealth_rating = stealth_rating;
         stealth.stealh_persistence = stealth_persistence;
-        actor.SetStealth(stealth);
+        actor.Stealth = stealth;
     }
 
 
     private void SetStats()
     {
-        if (actor.ghaddim != null) {
-            actor.ghaddim.SetStats();
-        } else if (actor.mhoddim != null) {
-            actor.mhoddim.SetStats();
+        // can't do in Actor until the Striker component has been attached
+
+        if (actor.Ghaddim != null) {
+            actor.Ghaddim.SetStats();
+        } else if (actor.Mhoddim != null) {
+            actor.Mhoddim.SetStats();
         }
     }
 }

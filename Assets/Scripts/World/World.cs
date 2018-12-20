@@ -4,22 +4,21 @@ using UnityEngine;
 
 public class World : MonoBehaviour {
 
-    public static World world_instance;
+    // properties
 
+    public static World Instance { get; set; }
 
     // Unity
 
 
     private void Awake()
     {
-        if (world_instance != null)
-        {
+        if (Instance != null) {
             Debug.LogError("More than one world instance!");
             Destroy(this);
             return;
         }
-
-        world_instance = this;
+        Instance = this;
     }
 
 

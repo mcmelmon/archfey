@@ -4,9 +4,21 @@ using UnityEngine;
 
 public class Ghaddim : MonoBehaviour {
 
-    public static Threat threat;
+    // properties
 
-    public Ghaddim ghaddim_prefab;
+    public static Threat Threat { get; set; }
+
+
+    // static
+
+
+    public static GameObject SpawnUnit()
+    {
+        Ghaddim _ghaddim = Instantiate(Conflict.Instance.ghaddim_prefab, Conflict.Instance.ghaddim_prefab.transform.position, Conflict.Instance.ghaddim_prefab.transform.rotation);
+        _ghaddim.gameObject.AddComponent<Soldier>();
+
+        return _ghaddim.gameObject;
+    }
 
 
     // Unity
@@ -14,7 +26,7 @@ public class Ghaddim : MonoBehaviour {
 
     private void Awake()
     {
-        threat = gameObject.AddComponent<Threat>();
+        Threat = gameObject.AddComponent<Threat>();
     }
 
 
@@ -23,19 +35,19 @@ public class Ghaddim : MonoBehaviour {
 
     public void AddFactionThreat(GameObject _foe, float _threat)
     {
-        threat.AddThreat(_foe, _threat);
+        Threat.AddThreat(_foe, _threat);
     }
 
 
     public GameObject BiggestFactionThreat()
     {
-        return threat.BiggestThreat();
+        return Threat.BiggestThreat();
     }
 
 
     public bool IsFactionThreat(GameObject _sighting)
     {
-        return _sighting != null && threat.IsAThreat(_sighting);
+        return _sighting != null && Threat.IsAThreat(_sighting);
     }
 
 
@@ -44,15 +56,6 @@ public class Ghaddim : MonoBehaviour {
         SetDefenseStats();
         SetHealthStats();
         SetOffenseStats();
-    }
-
-
-    public GameObject SpawnUnit()
-    {
-        Ghaddim _ghaddim = Instantiate(ghaddim_prefab, ghaddim_prefab.transform.position, ghaddim_prefab.transform.rotation);
-        _ghaddim.gameObject.AddComponent<Soldier>();
-
-        return _ghaddim.gameObject;
     }
 
 

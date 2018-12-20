@@ -78,7 +78,7 @@ public class Stealth : MonoBehaviour {
             RecoverStealth();
 
             if (!spotted && !attacking) {
-                GameObject[] canopies = GetComponentInParent<World>().GetComponentInChildren<Flora>().GetCanopy();
+                GameObject[] canopies = Flora.Instance.GetCanopy();
                 if (canopies.Length > 0)
                     my_renderer.material = canopies[0].GetComponent<Renderer>().material;
             } else {

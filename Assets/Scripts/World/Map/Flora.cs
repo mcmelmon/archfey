@@ -4,15 +4,11 @@ using UnityEngine;
 
 public class Flora : MonoBehaviour {
 
-    public static Flora flora_instance;
-
     public Tree tree_prefab;
     public float tree_coverage;
     public int canopy_layers;
     public List<Canopy> leaves = new List<Canopy>();
 
-    Map map;
-    Geography geography;
     Biosphere biosphere;
     List<Tree> trees = new List<Tree>();
     GameObject[] canopy;
@@ -27,17 +23,21 @@ public class Flora : MonoBehaviour {
         public Color color;
     }
 
+
+    // properties
+
+    public static Flora Instance { get; set; }
+
     // Unity
 
 
     void Awake () {
-        if (flora_instance != null) {
+        if (Instance != null) {
             Debug.LogError("More than one Flora");
             Destroy(this);
             return;
         }
-
-        flora_instance = this;
+        Instance = this;
     }
 
 
@@ -88,7 +88,7 @@ public class Flora : MonoBehaviour {
         float[,] _carpet = noise.GenerateNoiseMap(width, depth, seed, scale, octaves, persistance, lacunarity, offset);
         carpet = Layer(_carpet);
         carpet.transform.localScale = new Vector3(75, 1, 75);
-        carpet.transform.position = new Vector3(geography.GetResolution() / 2f, 0.1f, geography.GetResolution() / 2f);
+        carpet.transform.position = new Vector3(Geography.Instance.GetResolution() / 2f, 0.1f, Geography.Instance.GetResolution() / 2f);
         carpet.name = "Carpet";
     }
 
@@ -110,7 +110,7 @@ public class Flora : MonoBehaviour {
             float[,] _canopy = noise.GenerateNoiseMap(width, depth, seed, scale, octaves, persistance, lacunarity, offset);
             canopy[i] = Layer(_canopy, true);
             canopy[i].transform.localScale = new Vector3(75, -1, 75);
-            canopy[i].transform.position = new Vector3(geography.GetResolution() / 2f, 50f + (i * 25f), geography.GetResolution() / 2f);
+            canopy[i].transform.position = new Vector3(Geography.Instance.GetResolution() / 2f, 50f + (i * 25f), Geography.Instance.GetResolution() / 2f);
             canopy[i].name = "Canopy";
 
 
@@ -158,9 +158,9 @@ public class Flora : MonoBehaviour {
 
     private void PlantTrees()
     {
-        int number_of_trees = Mathf.RoundToInt((geography.GetResolution()) * (tree_coverage / 100f));
+        int number_of_trees = Mathf.RoundToInt((Geography.Instance.GetResolution()) * (tree_coverage / 100f));
         for (int i = 0; i < number_of_trees; i++) {
-            Vector3 position = geography.RandomLocation();
+            Vector3 position = Geography.Instance.RandomLocation();
             Quaternion rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
             Tree _tree = Instantiate(tree_prefab, position, rotation, transform);
             float scale_boost = Random.Range(0.2f, 2f);
@@ -175,10 +175,8 @@ public class Flora : MonoBehaviour {
     private void SetComponents()
     {
         biosphere = transform.GetComponentInParent<Biosphere>();
-        map = transform.GetComponentInParent<Map>();
-        geography = map.GetComponentInChildren<Geography>();
         canopy = new GameObject[canopy_layers];
-        width = geography.GetResolution();
+        width = Geography.Instance.GetResolution();
         depth = width;
     }
 }

@@ -4,16 +4,28 @@ using UnityEngine;
 
 public class Mhoddim : MonoBehaviour {
 
-    public static Threat threat;
+    // properties
 
-    public Mhoddim mhoddim_prefab;
+    public static Threat Threat { get; set; }
+
+
+    // static
+
+
+    public static GameObject SpawnUnit()
+    {
+        Mhoddim _mhoddim = Instantiate(Conflict.Instance.mhoddim_prefab, Conflict.Instance.mhoddim_prefab.transform.position, Conflict.Instance.mhoddim_prefab.transform.rotation);
+        _mhoddim.gameObject.AddComponent<Soldier>();
+
+        return _mhoddim.gameObject;
+    }
 
 
     // Unity
 
     private void Awake()
     {
-        threat = gameObject.AddComponent<Threat>();
+        Threat = gameObject.AddComponent<Threat>();
     }
 
 
@@ -22,19 +34,19 @@ public class Mhoddim : MonoBehaviour {
 
     public void AddFactionThreat(GameObject _foe, float _threat)
     {
-        threat.AddThreat(_foe, _threat);
+        Threat.AddThreat(_foe, _threat);
     }
 
 
     public GameObject BiggestFactionThreat()
     {
-        return threat.BiggestThreat();
+        return Threat.BiggestThreat();
     }
 
 
     public bool IsFactionThreat(GameObject _sighting)
     {
-        return _sighting != null && threat.IsAThreat(_sighting);
+        return _sighting != null && Threat.IsAThreat(_sighting);
     }
 
 
@@ -43,15 +55,6 @@ public class Mhoddim : MonoBehaviour {
         SetDefenseStats();
         SetHealthStats();
         SetOffenseStats();
-    }
-
-
-    public GameObject SpawnUnit()
-    {
-        Mhoddim _mhoddim = Instantiate(mhoddim_prefab, mhoddim_prefab.transform.position, mhoddim_prefab.transform.rotation);
-        _mhoddim.gameObject.AddComponent<Soldier>();
-
-        return _mhoddim.gameObject;
     }
 
 
