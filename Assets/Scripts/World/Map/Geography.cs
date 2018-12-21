@@ -5,26 +5,27 @@ using UnityEditor;
 
 public class Geography : MonoBehaviour {
 
-    public static Geography geography_instance;
     public Obstacle obstacle_prefab;
     public float obstacle_coverage;
 
-    List<Obstacle> obstacles = new List<Obstacle>();
 
-    Map map;
-    Terrain terrain;
-    TerrainData terrain_data;
+    // properties
+
+    public static Geography Instance { get; set; }
+    public static List<Obstacle> Obstacles { get; set; }
+    public static Terrain Terrain { get; set; }
+    public static TerrainData TerrainData { get; set; }
+
 
     // Unity
 
     private void Awake () {
-        if (geography_instance != null){
+        if (Instance != null){
             Debug.LogError("More than one geography instance!");
             Destroy(this);
             return;
         }
-
-        geography_instance = this;
+        Instance = this;
         SetComponents();
     }
 
@@ -43,7 +44,7 @@ public class Geography : MonoBehaviour {
     {
         Dictionary<Map.Cardinal, float> distances = new Dictionary<Map.Cardinal, float>();
 
-        foreach (KeyValuePair<Map.Cardinal, Vector3[]> boundary in map.boundaries)
+        foreach (KeyValuePair<Map.Cardinal, Vector3[]> boundary in Map.Instance.Boundaries)
         {
             float distance = HandleUtility.DistancePointLine(_from, boundary.Value[1], boundary.Value[0]);
             distances[boundary.Key] = distance;
@@ -56,7 +57,7 @@ public class Geography : MonoBehaviour {
     public Vector3[] GetBorder(Map.Cardinal cardinal)
     {
         Vector3[] border = new Vector3[2];
-        float resolution = terrain.terrainData.heightmapResolution;
+        float resolution = TerrainData.heightmapResolution;
 
         switch (cardinal){
             case Map.Cardinal.North:
@@ -87,19 +88,13 @@ public class Geography : MonoBehaviour {
 
     public Vector3 GetCenter()
     {
-        return new Vector3(terrain_data.heightmapResolution / 2, 0, terrain_data.heightmapResolution / 2);  // TODO: sample height
+        return new Vector3(TerrainData.heightmapResolution / 2, 0, TerrainData.heightmapResolution / 2);  // TODO: sample height
     }
 
 
     public int GetResolution()
     {
-        return terrain_data.heightmapResolution;
-    }
-
-
-    public Terrain GetOrCreateTerrain()
-    {
-        return terrain ?? GetComponentInChildren<Terrain>();
+        return TerrainData.heightmapResolution;
     }
 
 
@@ -128,16 +123,16 @@ public class Geography : MonoBehaviour {
         {
             // TODO: use sampled height
             case 0:
-                point = new Vector3(Random.Range(0, terrain_data.heightmapResolution), 0, terrain_data.heightmapResolution); 
+                point = new Vector3(Random.Range(0, TerrainData.heightmapResolution), 0, TerrainData.heightmapResolution); 
                 break;
             case 1:
-                point = new Vector3(terrain_data.heightmapResolution, 0, Random.Range(0, terrain_data.heightmapResolution));
+                point = new Vector3(TerrainData.heightmapResolution, 0, Random.Range(0, TerrainData.heightmapResolution));
                 break;
             case 2:
-                point = new Vector3(Random.Range(0, terrain_data.heightmapResolution), 0, 0);
+                point = new Vector3(Random.Range(0, TerrainData.heightmapResolution), 0, 0);
                 break;
             case 3:
-                point = new Vector3(0, 0, Random.Range(0, terrain_data.heightmapResolution));
+                point = new Vector3(0, 0, Random.Range(0, TerrainData.heightmapResolution));
                 break;
         }
 
@@ -147,9 +142,9 @@ public class Geography : MonoBehaviour {
 
     public Vector3 RandomLocation()
     {
-        int _w = Random.Range(0, terrain_data.heightmapResolution);
-        int _d = Random.Range(0, terrain_data.heightmapResolution);
-        float _h = terrain.SampleHeight(new Vector3(_d, 0, _w));
+        int _w = Random.Range(0, TerrainData.heightmapResolution);
+        int _d = Random.Range(0, TerrainData.heightmapResolution);
+        float _h = Terrain.SampleHeight(new Vector3(_d, 0, _w));
 
         return new Vector3(_w, _h, _d);
     }
@@ -158,7 +153,7 @@ public class Geography : MonoBehaviour {
     public Vector3 RandomLocation(float distance_from_edge)
     {
         Vector3 point = Vector3.zero;
-        Circle extent = Circle.CreateCircle(GetCenter(), (terrain_data.heightmapResolution / 2) - distance_from_edge);
+        Circle extent = Circle.CreateCircle(GetCenter(), (TerrainData.heightmapResolution / 2) - distance_from_edge);
         return extent.RandomContainedPoint();
     }
 
@@ -174,22 +169,21 @@ public class Geography : MonoBehaviour {
 
     private void SetComponents()
     {
-        map = GetComponentInParent<Map>();
-        terrain = GetComponentInChildren<Terrain>();
-        terrain_data = terrain.terrainData;
+        Terrain = GetComponentInChildren<Terrain>();
+        TerrainData = Terrain.terrainData;
     }
 
 
     private void PlaceObstacles()
     {
-        int number_of_obstacles = Mathf.RoundToInt(terrain_data.heightmapResolution * (obstacle_coverage / 100f));
+        int number_of_obstacles = Mathf.RoundToInt(TerrainData.heightmapResolution * (obstacle_coverage / 100f));
         GameObject obstacles_parent = new GameObject { name = "Obstacles" };
         obstacles_parent.transform.parent = transform;
 
         for (int i = 0; i < number_of_obstacles; i++)
         {
             Obstacle _obstacle = obstacle_prefab.InstantiateScaledObstacle(RandomLocation(), obstacles_parent.transform);
-            if (_obstacle != null) obstacles.Add(_obstacle);
+            if (_obstacle != null) Obstacles.Add(_obstacle);
         }
     }
 }

@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class Heavy : MonoBehaviour {
 
-    public float perception_range = 20f;
-    public int perception_rating = 0;
-    public float speed = 1.5f;
+    // properties
 
-    Actor actor;
-    Movement movement;
-    Senses senses;
+    public Actor Actor { get; set; }
+    public float PerceptionRange { get; set; }
+    public int PerceptionRating { get; set; }
+    public float Speed { get; set; }
 
 
     // Unity
@@ -44,21 +43,26 @@ public class Heavy : MonoBehaviour {
 
     private void SetComponents()
     {
-        actor = GetComponent<Actor>();
-        movement = GetComponent<Movement>();
-        movement.GetAgent().speed = speed;
-        senses = GetComponent<Senses>();
-        senses.perception_rating = perception_rating;
-        senses.SetRange(perception_range);
+        PerceptionRange = 20f;
+        PerceptionRating = 10;
+        Speed = 1.5f;
+
+        Actor = GetComponent<Actor>();
+        Actor.RuinControlRating = 20;
+        Actor.Movement.Agent.speed = Speed;
+        Actor.Senses.PerceptionRating = PerceptionRating;
+        Actor.Senses.SetRange(PerceptionRange);
     }
 
 
     private void SetStats()
     {
-        if (actor.ghaddim != null) {
-            actor.ghaddim.SetStats();
-        } else if (actor.mhoddim != null) {
-            actor.mhoddim.SetStats();
+        // can't do in Actor until the Heavy component has been attached
+
+        if (Actor.Ghaddim != null) {
+            Actor.Ghaddim.SetStats();
+        } else if (Actor.Mhoddim != null) {
+            Actor.Mhoddim.SetStats();
         }
     }
 }

@@ -4,20 +4,22 @@ using UnityEngine;
 
 public class Biosphere : MonoBehaviour {
 
-    public static Biosphere biosphere_instance;
+    // properties
+
+    public static Biosphere Instance { get; set; }
+
+
     // Unity
 
 
     private void Awake()
     {
-        if (biosphere_instance != null)
-        {
+        if (Instance != null) {
             Debug.LogError("More than one biosphere instance!");
             Destroy(this);
             return;
         }
-
-        biosphere_instance = this;
+        Instance = this;
     }
 
 
@@ -29,6 +31,7 @@ public class Biosphere : MonoBehaviour {
         // TODO: place fauna
         PlaceVegetation();
     }
+
 
     // private
 

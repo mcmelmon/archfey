@@ -4,17 +4,14 @@ using UnityEngine;
 
 public class Striker : MonoBehaviour {
 
-    public float perception_range = 20f;
-    public int perception_rating = 15;
-    public float speed = 2f;
-    public int stealth_persistence = 0;
-    public int stealth_rating = 25;
+    // properties
 
-    Actor actor;
-    Geography geography;
-    Movement movement;
-    Senses senses;
-    Stealth stealth;
+    public Actor Actor { get; set; }
+    public float PerceptionRange { get; set; }
+    public int PerceptionRating { get; set; }
+    public float Speed { get; set; }
+    public int StealthPersistence { get; set; }
+    public int StealthRating { get; set; }
 
 
     // Unity
@@ -48,26 +45,31 @@ public class Striker : MonoBehaviour {
 
     private void SetComponents()
     {
-        actor = GetComponent<Actor>();
-        geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();
-        movement = GetComponent<Movement>();
-        movement.GetAgent().speed = speed;
-        senses = GetComponent<Senses>();
-        senses.perception_rating = perception_rating;
-        senses.SetRange(perception_range);
-        stealth = gameObject.AddComponent<Stealth>();
-        stealth.stealth_rating = stealth_rating;
-        stealth.stealh_persistence = stealth_persistence;
-        actor.SetStealth(stealth);
+        PerceptionRange = 20f;
+        PerceptionRating = 15;
+        Speed = 2f;
+        StealthPersistence = 0;
+        StealthRating = 25;
+    
+        Actor = GetComponent<Actor>();
+        Actor.RuinControlRating = 20;
+        Actor.Movement.Agent.speed = Speed;
+        Actor.Senses.PerceptionRating = PerceptionRating;
+        Actor.Senses.SetRange(PerceptionRange);
+        Actor.Stealth = gameObject.AddComponent<Stealth>();
+        Actor.Stealth.stealth_rating = StealthRating;
+        Actor.Stealth.stealh_persistence = StealthPersistence;
     }
 
 
     private void SetStats()
     {
-        if (actor.ghaddim != null) {
-            actor.ghaddim.SetStats();
-        } else if (actor.mhoddim != null) {
-            actor.mhoddim.SetStats();
+        // we can't do this in Actor until the Striker component has been attached
+
+        if (Actor.Ghaddim != null) {
+            Actor.Ghaddim.SetStats();
+        } else if (Actor.Mhoddim != null) {
+            Actor.Mhoddim.SetStats();
         }
     }
 }

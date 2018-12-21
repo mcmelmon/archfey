@@ -189,7 +189,7 @@ GameObject:
   - component: {fileID: 244895861}
   - component: {fileID: 244895862}
   m_Layer: 0
-  m_Name: Ghaddim
+  m_Name: Defense
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -218,11 +218,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 244895860}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 843f0e01e2c994a8e9abea9a484d8a9c, type: 3}
+  m_Script: {fileID: 11500000, guid: d3c989ae5335d4a58ae9e8d7b39b7781, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ghaddim_prefab: {fileID: 114127286258734026, guid: 023e71d7833984f6fbf62ca90915a2a3,
-    type: 3}
 --- !u!1 &264195861
 GameObject:
   m_ObjectHideFlags: 3
@@ -247,7 +245,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 264195861}
-  m_LocalRotation: {x: -0.063546985, y: -0.039191224, z: -0.7005866, w: 0.7096509}
+  m_LocalRotation: {x: -0.06351523, y: -0.07638197, z: -0.69890785, w: 0.70827925}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -407,7 +405,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 2
-  m_FollowOffset: {x: 0, y: 7, z: -44.55467}
+  m_FollowOffset: {x: 0, y: 7, z: -26.35394}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -559,8 +557,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 465733991}
-  m_LocalRotation: {x: 0.09795126, y: -0.011790355, z: 0.0011605427, w: 0.99512076}
-  m_LocalPosition: {x: 174.441, y: 10.240227, z: 135.55501}
+  m_LocalRotation: {x: 0.14943372, y: -0.011835548, z: 0.001788845, w: 0.98869926}
+  m_LocalPosition: {x: 174.441, y: 10.240227, z: 153.75574}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 625565791}
@@ -718,11 +716,11 @@ MonoBehaviour:
   m_SplineCurvature: 0.425
   m_Orbits:
   - m_Height: 15
-    m_Radius: 44.55467
+    m_Radius: 26.35394
   - m_Height: 7
-    m_Radius: 44.55467
+    m_Radius: 26.35394
   - m_Height: -2
-    m_Radius: 44.55467
+    m_Radius: 26.35394
   m_LegacyHeadingBias: 3.4028235e+38
   m_Rigs:
   - {fileID: 963679515}
@@ -925,7 +923,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 829675727}
-  m_LocalRotation: {x: 0.000000029802319, y: -0.000011595896, z: 0.3348086, w: 0.94228613}
+  m_LocalRotation: {x: -0, y: 9.313227e-10, z: 0.34454954, w: 0.93876815}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1205,7 +1203,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963679513}
-  m_LocalRotation: {x: -0.08145896, y: -0.005977232, z: -0.7087524, w: 0.7007131}
+  m_LocalRotation: {x: -0.022579553, y: -0.060794253, z: -0.7049545, w: 0.7062815}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1450,9 +1448,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4408801ba2ae4a628d6ebb4b4cd8d9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fey: {fileID: 1162440785}
-  ghaddim: {fileID: 244895860}
-  mhoddim: {fileID: 1768810315}
+  ghaddim_prefab: {fileID: 114127286258734026, guid: 023e71d7833984f6fbf62ca90915a2a3,
+    type: 3}
+  mhoddim_prefab: {fileID: 114736850986846170, guid: 8f2959a8036b642a79856e38e5ab84f0,
+    type: 3}
 --- !u!1 &1162440785
 GameObject:
   m_ObjectHideFlags: 0
@@ -1569,7 +1568,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 2
-  m_FollowOffset: {x: 0, y: 7, z: -44.55467}
+  m_FollowOffset: {x: 0, y: 7, z: -26.35394}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -1831,7 +1830,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 2
-  m_FollowOffset: {x: 0, y: 7, z: -44.55467}
+  m_FollowOffset: {x: 0, y: 7, z: -26.35394}
   m_XDamping: 4.27
   m_YDamping: 1
   m_ZDamping: 5.85
@@ -2466,7 +2465,7 @@ GameObject:
   - component: {fileID: 1768810316}
   - component: {fileID: 1768810317}
   m_Layer: 0
-  m_Name: Mhoddim
+  m_Name: Offense
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2495,11 +2494,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1768810315}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 881721a9845c741949e94809a4563f8c, type: 3}
+  m_Script: {fileID: 11500000, guid: 906f1cfd409c947c8b28dbdd5f2a1c4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mhoddim_prefab: {fileID: 114736850986846170, guid: 8f2959a8036b642a79856e38e5ab84f0,
-    type: 3}
 --- !u!1 &1820443082
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class Map : MonoBehaviour {
 
-    public static Map map_instance;
     public enum Cardinal { North = 0, East = 1, South = 2, West = 3, Sky = 4 };
-    public Dictionary<Cardinal, Vector3[]> boundaries = new Dictionary<Cardinal, Vector3[]>();
 
-    Geography geography;
-    Terrain terrain;
     readonly int sky_height = 100;
+
+    // properties
+
+    public Dictionary<Cardinal, Vector3[]> Boundaries { get; set; }
+    public static Map Instance { get; set; }
+    public static Terrain Terrain { get; set; }
 
 
     public struct HeavenAndEarth
@@ -25,13 +27,12 @@ public class Map : MonoBehaviour {
 
     private void Awake ()
     {
-        if (map_instance != null){
+        if (Instance != null){
             Debug.LogError("More than one map instance!");
             Destroy(this);
             return;
         }
-
-        map_instance = this;
+        Instance = this;
         SetComponents();
     }
 
@@ -56,7 +57,7 @@ public class Map : MonoBehaviour {
         bounds.transform.parent = transform;
         bounds.name = "Bounds";
 
-        foreach (KeyValuePair <Cardinal, Vector3[]> boundary in boundaries)
+        foreach (KeyValuePair <Cardinal, Vector3[]> boundary in Boundaries)
         {
             GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
             wall.transform.parent = bounds.transform;
@@ -68,7 +69,7 @@ public class Map : MonoBehaviour {
             if (boundary.Key == Cardinal.East || boundary.Key == Cardinal.West) wall.transform.rotation = Quaternion.Euler(new Vector3(0, 90, 90));
 
             if (boundary.Key == Cardinal.Sky) {
-                wall.transform.position = new Vector3(terrain.terrainData.heightmapResolution / 2, sky_height, terrain.terrainData.heightmapResolution / 2);
+                wall.transform.position = new Vector3(Terrain.terrainData.heightmapResolution / 2, sky_height, Terrain.terrainData.heightmapResolution / 2);
                 wall.transform.rotation = Quaternion.Euler(new Vector3(90, 0, 90));
             } else {
                 wall.transform.position = boundary.Value[0] + heading / 2;
@@ -89,15 +90,15 @@ public class Map : MonoBehaviour {
     {
         // using a dictionary instead of list or array to ensure accurate lookup by edge name (e.g. "north")
 
-        boundaries[Cardinal.North] = geography.GetBorder(Cardinal.North);
-        boundaries[Cardinal.East] = geography.GetBorder(Cardinal.East);
-        boundaries[Cardinal.South] = geography.GetBorder(Cardinal.South);
-        boundaries[Cardinal.West] = geography.GetBorder(Cardinal.West);
+        Boundaries[Cardinal.North] = Geography.Instance.GetBorder(Cardinal.North);
+        Boundaries[Cardinal.East] = Geography.Instance.GetBorder(Cardinal.East);
+        Boundaries[Cardinal.South] = Geography.Instance.GetBorder(Cardinal.South);
+        Boundaries[Cardinal.West] = Geography.Instance.GetBorder(Cardinal.West);
 
         Vector3[] sky = new Vector3[2];
-        sky[0] = boundaries[Cardinal.North][0];
-        sky[1] = boundaries[Cardinal.South][0];
-        boundaries[Cardinal.Sky] = sky;
+        sky[0] = Boundaries[Cardinal.North][0];
+        sky[1] = Boundaries[Cardinal.South][0];
+        Boundaries[Cardinal.Sky] = sky;
 
         AddDirectionBoundaries();
     }
@@ -105,8 +106,8 @@ public class Map : MonoBehaviour {
 
     private void SetComponents()
     {
-        geography = GetComponentInChildren<Geography>();
-        terrain = GetComponentInChildren<Terrain>();
+        Terrain = GetComponentInChildren<Terrain>();
+        Boundaries = new Dictionary<Cardinal, Vector3[]>();
     }
 
 

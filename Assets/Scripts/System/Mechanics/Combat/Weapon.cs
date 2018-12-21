@@ -77,7 +77,7 @@ public class Weapon : MonoBehaviour {
             float damage_inflicted = target_defend.HandleAttack(this, this.transform.parent.gameObject);
             target_health.LoseHealth(damage_inflicted);
             target_threat.AddThreat(transform.parent.gameObject, damage_inflicted);
-            SpreadThreat();
+            target_threat.SpreadThreat(transform.parent.gameObject, damage_inflicted);
 
             // TODO: counter damage should be handled like a weapon
             float counter_damage = target_defend.GetCounterDamage();
@@ -121,15 +121,5 @@ public class Weapon : MonoBehaviour {
 
             yield return null;
         }
-    }
-
-
-    private void SpreadThreat()
-    {
-        Mhoddim mhoddim_faction = target.GetComponent<Mhoddim>();
-        Ghaddim ghaddim_faction = target.GetComponent<Ghaddim>();
-
-        if (mhoddim_faction != null) mhoddim_faction.AddFactionThreat(transform.parent.gameObject, instant_damage);
-        if (ghaddim_faction != null) ghaddim_faction.AddFactionThreat(transform.parent.gameObject, instant_damage);
     }
 }

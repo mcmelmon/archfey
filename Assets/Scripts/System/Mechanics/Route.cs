@@ -6,44 +6,40 @@ using UnityEngine;
 
 public class Route
 {
-    public bool completed;
-    public Vector3 current, finish, next, start;
-    public bool looping;
-    public List<Vector3> points = new List<Vector3>();
-    public bool retracing;
-    public List<Route> routes_followed = new List<Route>();
-    Action when_complete;
+    public static float reached_threshold = 4f;
+
+    // properties
+
+    public Vector3 Current { get; set; }
+    public bool Looping { get; set; }
+    public Vector3 Next { get; set; }
+    public List<Vector3> Points { get; set; }
+    public bool Retracing { get; set; }
+    public List<Route> RoutesFollowed { get; set; }
+    public Vector3 Start { get; set; }
+    public Action WhenComplete { get; set; }
 
 
-    public void AccumulateRoutes(Route previous_route)
-    {
-        routes_followed = previous_route.routes_followed;
-        routes_followed.Add(previous_route);
-    }
-
-
-    public void Add(Vector3 _point)
-    {
-        // This will "work" for a circle, but kind of awkward
-
-        points.Add(_point);
-    }
+    // static
 
 
     public static Route Circular(Vector3 _start, Circle _circle, Action _when_complete = null, bool _retracing = false, bool _looping = false)
     {
         Route route = new Route
         {
-            current = _start,
-            start = _start,
-            completed = false,
-            looping = _looping,
-            retracing = _retracing,
-            when_complete = _when_complete
+            Current = _start,
+            Start = _start,
+            Looping = _looping,
+            Retracing = _retracing,
+            WhenComplete = _when_complete
         };
 
-        foreach (var vertex in _circle.vertices) {
-            route.points.Add(vertex);
+        route.Points = new List<Vector3>();
+        route.RoutesFollowed = new List<Route>();
+
+        foreach (var vertex in _circle.vertices)
+        {
+            route.Points.Add(vertex);
         }
 
         route.SetNext();
@@ -56,44 +52,64 @@ public class Route
     {
         Route route = new Route
         {
-            current = _next,
-            start = _start,
-            completed = false,
-            looping = _looping,
-            retracing = _retracing,
-            when_complete = _when_complete
+            Current = _next,
+            Start = _start,
+            Looping = _looping,
+            Retracing = _retracing,
+            WhenComplete = _when_complete
         };
 
-        route.points.Add(_start);
-        route.points.Add(_next);
+        route.Points = new List<Vector3> {
+            _start,
+            _next
+        };
+
+        route.RoutesFollowed = new List<Route>();
 
         return route;
     }
 
 
+    // public
+
+
+    public void AccumulateRoutes(Route previous_route)
+    {
+        RoutesFollowed = previous_route.RoutesFollowed;
+        RoutesFollowed.Add(previous_route);
+    }
+
+
+    public void Add(Vector3 _point)
+    {
+        // This will "work" for a circle, but kind of awkward
+
+        Points.Add(_point);
+    }
+
+
+    public bool Completed()
+    {
+        return (Next == Start) && !Looping && !Retracing;
+    }
+
+
     public bool ReachedCurrent(Vector3 unit_position)
     {
-        return (Vector3.Distance(current, unit_position) < 5f) ? true : false;
+        return Vector3.Distance(Current, unit_position) < reached_threshold;
     }
 
 
-    public Action GetWhenComplete()
+    public Vector3 SetNext()
     {
-        return when_complete;
-    }
-
-
-    public void SetNext()
-    {
-        bool keep_going = (looping || retracing);
-        if (completed && !keep_going) return;
+        bool keep_going = (Looping || Retracing);
+        if (Completed() && !keep_going) return Current;
 
         int next_index;
-        int current_index = points.IndexOf(current);
-        next_index = (next == start && retracing) ? ((current_index - 1) + (points.Count)) % points.Count : (current_index + 1) % points.Count;
-        next = points[next_index];
-        current = next;
-
-        if (next == start) completed = !looping || !retracing;
+        int current_index = Points.IndexOf(Current);
+        next_index = (Next == Start && Retracing) ? ((current_index - 1) + (Points.Count)) % Points.Count : (current_index + 1) % Points.Count;
+        Next = Points[next_index];
+        Current = Next;
+        return Current;
     }
 }

@@ -28,14 +28,23 @@ public class Attack : MonoBehaviour {
     // public
 
 
-    public void ManageAttacks()
+    public void AttackEnemiesInRange()
     {
-        if (actor == null) actor = GetComponent<Actor>();
-        if (actor.enemies_abound) {
-            EnemyAtMeleeOrRange();
-            SelectEnemy();
-            StrikeEnemy();
-        }
+        EnemyAtMeleeOrRange();
+        SelectEnemy();
+        StrikeEnemy();
+    }
+
+
+    public bool Engaged()
+    {
+        return current_melee_targets.Count > 0 || current_ranged_targets.Count > 0;
+    }
+
+
+    public Weapon GetWeapon()
+    {
+        return equipped_weapon;
     }
 
 
@@ -46,7 +55,7 @@ public class Attack : MonoBehaviour {
     {
         ClearTargets();
 
-        foreach (var enemy in actor.GetEnemies()) {
+        foreach (var enemy in actor.Enemies) {
             if (enemy == null) continue;
 
             float grounded_center_distance = Vector3.Distance(new Vector3(enemy.transform.position.x, 0, enemy.transform.position.z), new Vector3(transform.position.x, 0, transform.position.z));

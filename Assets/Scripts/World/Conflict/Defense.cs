@@ -5,28 +5,23 @@ using UnityEngine;
 public class Defense : MonoBehaviour
 {
 
-    public static Defense defense_instance;
-    public static Conflict.Faction faction;
-    public static List<GameObject> units = new List<GameObject>();
+    // properties
 
-    Geography geography;
-    Ghaddim ghaddim;
-    Mhoddim mhoddim;
-    Ruins ruins;
-
+    public Conflict.Faction Faction { get; set; }
+    public static Defense Instance { get; set; }
+    public static List<GameObject> Units { get; set; }
 
     // Unity
 
 
     private void Awake()
     {
-        if (defense_instance != null)
-        {
+        if (Instance != null) {
             Debug.LogError("More than one defense instance");
             Destroy(this);
             return;
         }
-        defense_instance = this;
+        Instance = this;
         SetComponents();
     }
 
@@ -34,68 +29,55 @@ public class Defense : MonoBehaviour
     // public
 
 
-    public void Setup()
+    public void Deploy()
     {
-        Deploy();
-    }
+        // must be called by Conflict instead of Start to ensure Map setup complete
 
-
-    public List<GameObject> GetUnits()
-    {
-        return units;
-    }
-
-
-    // private
-
-
-    private void Deploy()
-    {
-        foreach (KeyValuePair<Ruins.Category, Circle> circle in Ruins.ruin_circles) {
+        foreach (KeyValuePair<Ruins.Category, Circle> circle in Ruins.Circles) {
             switch (circle.Key) {
                 case Ruins.Category.Primary:
                     Formation block_formation = Formation.CreateFormation(circle.Value.center, Formation.Profile.Circle);
 
-                    for (int i = 0; i < 16; i++) {
+                    for (int i = 0; i < 10; i++) {
                         GameObject _heavy = Spawn(circle.Value.RandomContainedPoint());
                         _heavy.AddComponent<Heavy>();
                         block_formation.JoinFormation(_heavy);
                         _heavy.GetComponent<Soldier>().SetFormation(block_formation);
                     }
                     break;
-                case Ruins.Category.Secondary:
-                    Formation strike_formation = Formation.CreateFormation(circle.Value.center, Formation.Profile.Rectangle);
+                //case Ruins.Category.Secondary:
+                    //Formation strike_formation = Formation.CreateFormation(circle.Value.center, Formation.Profile.Rectangle);
 
-                    for (int i = 0; i < 6; i++) {
-                        GameObject _striker = Spawn(circle.Value.RandomContainedPoint());
-                        _striker.AddComponent<Striker>();
-                        strike_formation.JoinFormation(_striker);
-                        _striker.GetComponent<Soldier>().SetFormation(strike_formation);
+                    //for (int i = 0; i < 6; i++) {
+                    //    GameObject _striker = Spawn(circle.Value.RandomContainedPoint());
+                    //    _striker.AddComponent<Striker>();
+                    //    strike_formation.JoinFormation(_striker);
+                    //    _striker.GetComponent<Soldier>().SetFormation(strike_formation);
 
-                    }
-                    break;
+                    //}
+                    //break;
             }
         }
     }
 
 
+    // private
+
+
     private void SetComponents()
     {
-        ruins = GetComponentInParent<World>().GetComponentInChildren<Ruins>();
-        geography = GetComponentInParent<World>().GetComponentInChildren<Geography>();
-        ghaddim = GetComponentInParent<Ghaddim>();
-        mhoddim = GetComponentInParent<Mhoddim>();
-        faction = (ghaddim != null) ? Conflict.Faction.Ghaddim : Conflict.Faction.Mhoddim;
+        Units = new List<GameObject>();
     }
 
 
     private GameObject Spawn(Vector3 point)
     {
-        GameObject _soldier = (ghaddim != null) ? ghaddim.SpawnUnit() : mhoddim.SpawnUnit();
+        GameObject _soldier = (Faction == Conflict.Faction.Ghaddim) ? Ghaddim.SpawnUnit() : Mhoddim.SpawnUnit();
         _soldier.transform.position = point;
         _soldier.transform.parent = transform;
-        _soldier.GetComponent<Actor>().role = Conflict.Role.Defense;
-        units.Add(_soldier);
+        _soldier.GetComponent<Actor>().Role = Conflict.Role.Defense;
+        Units.Add(_soldier);
+        Conflict.Units.Add(_soldier);
         return _soldier;
     }
 }

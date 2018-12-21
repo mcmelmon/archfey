@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Senses : MonoBehaviour {
 
-    public int perception_rating;
-    public float radius;
+    // properties
 
-    List<GameObject> sightings = new List<GameObject>();
+    public int PerceptionRating { get; set; }
+    public float PerceptionRange { get; set; }
+    public List<GameObject> Sightings { get; set; }
 
 
     // Unity
@@ -15,15 +16,14 @@ public class Senses : MonoBehaviour {
 
     private void Awake()
     {
-        transform.gameObject.AddComponent<SphereCollider>();
-        GetComponent<SphereCollider>().isTrigger = true;
+        SetComponents();
     }
 
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
-        foreach (var sighting in sightings)
+        foreach (var sighting in Sightings)
         {
             if (sighting == null) continue;
             Gizmos.DrawRay(transform.position, (sighting.transform.position - transform.position));
@@ -34,22 +34,17 @@ public class Senses : MonoBehaviour {
     // public
 
 
-    public List<GameObject> GetSightings()
-    {
-        return sightings;
-    }
-
     public void SetRange(float _range)
     {
-        GetComponent<SphereCollider>().radius = radius = _range;
+        GetComponent<SphereCollider>().radius = PerceptionRange = _range;
     }
 
 
     public void Sight()
     {
-        sightings.Clear();
+        Sightings.Clear();
 
-        Collider[] colliders = Physics.OverlapSphere(transform.position, radius);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, PerceptionRange);
 
         for (int i = 0; i < colliders.Length; i++) {
             GameObject sighting = colliders[i].gameObject;
@@ -57,10 +52,20 @@ public class Senses : MonoBehaviour {
             if (sighting.tag == "Actor" && sighting != gameObject) {  // don't sight ourselves
                 Stealth sighting_stealth = sighting.GetComponent<Stealth>();
 
-                if (sighting_stealth == null || sighting_stealth.Spotted(gameObject, perception_rating) && !sightings.Contains(sighting)) {
-                    sightings.Add(colliders[i].gameObject);
+                if (sighting_stealth == null || sighting_stealth.Spotted(gameObject, PerceptionRating) && !Sightings.Contains(sighting)) {
+                    Sightings.Add(colliders[i].gameObject);
                 }
             }
         }
+    }
+
+
+    // private
+
+    private void SetComponents()
+    {
+        transform.gameObject.AddComponent<SphereCollider>();
+        GetComponent<SphereCollider>().isTrigger = true;
+        Sightings = new List<GameObject>();
     }
 }

@@ -4,12 +4,30 @@ using UnityEngine;
 
 public class Ghaddim : MonoBehaviour {
 
-    public static Dictionary<GameObject, float> faction_threats = new Dictionary<GameObject, float>();
+    // properties
 
-    public Ghaddim ghaddim_prefab;
+    public static Threat Threat { get; set; }
+
+
+    // static
+
+
+    public static GameObject SpawnUnit()
+    {
+        Ghaddim _ghaddim = Instantiate(Conflict.Instance.ghaddim_prefab, Conflict.Instance.ghaddim_prefab.transform.position, Conflict.Instance.ghaddim_prefab.transform.rotation);
+        _ghaddim.gameObject.AddComponent<Soldier>();
+
+        return _ghaddim.gameObject;
+    }
 
 
     // Unity
+
+
+    private void Awake()
+    {
+        Threat = gameObject.AddComponent<Threat>();
+    }
 
 
     // public
@@ -17,17 +35,19 @@ public class Ghaddim : MonoBehaviour {
 
     public void AddFactionThreat(GameObject _foe, float _threat)
     {
-        if (!faction_threats.ContainsKey(_foe)) {
-            faction_threats[_foe] = _threat;
-        } else {
-            faction_threats[_foe] += _threat;
-        }
+        Threat.AddThreat(_foe, _threat);
+    }
+
+
+    public GameObject BiggestFactionThreat()
+    {
+        return Threat.BiggestThreat();
     }
 
 
     public bool IsFactionThreat(GameObject _sighting)
     {
-        return faction_threats.ContainsKey(_sighting);
+        return _sighting != null && Threat.IsAThreat(_sighting);
     }
 
 
@@ -36,15 +56,6 @@ public class Ghaddim : MonoBehaviour {
         SetDefenseStats();
         SetHealthStats();
         SetOffenseStats();
-    }
-
-
-    public GameObject SpawnUnit()
-    {
-        Ghaddim _ghaddim = Instantiate(ghaddim_prefab, ghaddim_prefab.transform.position, ghaddim_prefab.transform.rotation);
-        _ghaddim.gameObject.AddComponent<Soldier>();
-
-        return _ghaddim.gameObject;
     }
 
 

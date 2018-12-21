@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Conflict : MonoBehaviour {
-
-    public static Conflict conflict_instance;
+public class Conflict : MonoBehaviour
+{
 
     public enum Faction { None = 0, Ghaddim = 1, Mhoddim = 2, Fey = 3 };
     public enum Role { None = 0, Defense = 1, Offense = 2 };
 
-    public GameObject fey;
-    public GameObject ghaddim;
-    public GameObject mhoddim;
+    public Ghaddim ghaddim_prefab;
+    public Mhoddim mhoddim_prefab;
+
+    // properties
+
+    public static Conflict Instance { get; set; }
+    public static List<GameObject> Units { get; set; }
 
 
     // Unity
@@ -20,13 +23,13 @@ public class Conflict : MonoBehaviour {
 
     private void Awake()
     {
-        if (conflict_instance != null)
-        {
+        if (Instance != null) {
             Debug.LogError("More than one conflict instance");
             Destroy(this);
             return;
         }
-        conflict_instance = this;
+        Instance = this;
+        Units = new List<GameObject>();
     }
 
 
@@ -36,25 +39,12 @@ public class Conflict : MonoBehaviour {
     public void Hajime()
     {
         GenerateStats();
-        AssignFactionRoles();
         CreateNavigationMesh();
         FirstWave();
     }
 
 
     // private
-
-
-    private void AssignFactionRoles()
-    {
-        if (Random.Range(0,2) < 1) {
-            ghaddim.AddComponent<Offense>();
-            mhoddim.AddComponent<Defense>();
-        } else {
-            ghaddim.AddComponent<Defense>();
-            mhoddim.AddComponent<Offense>();
-        }
-    }
 
 
     private void CreateNavigationMesh()
@@ -65,8 +55,16 @@ public class Conflict : MonoBehaviour {
 
     private void FirstWave()
     {
-        GetComponentInChildren<Defense>().Setup();
-        GetComponentInChildren<Offense>().Setup();
+        if (Random.Range(0,2) < 1) {
+            Defense.Instance.Faction = Faction.Ghaddim;
+            Offense.Instance.Faction = Faction.Mhoddim;
+        } else {
+            Defense.Instance.Faction = Faction.Mhoddim;
+            Offense.Instance.Faction = Faction.Ghaddim;
+        }
+
+        Defense.Instance.Deploy();
+        Offense.Instance.Deploy();
     }
 
 

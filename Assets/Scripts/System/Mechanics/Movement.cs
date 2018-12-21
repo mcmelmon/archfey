@@ -6,8 +6,10 @@ using System;
 
 public class Movement : MonoBehaviour {
 
-    NavMeshAgent agent;
-    Route route;
+    // properties
+
+    public NavMeshAgent Agent { get; set; }
+    public Route Route { get; set; }
 
 
     // Unity
@@ -15,16 +17,16 @@ public class Movement : MonoBehaviour {
 
     private void Awake()
     {
-        agent = GetComponent<NavMeshAgent>();
+        Agent = GetComponent<NavMeshAgent>();
     }
 
 
     private void OnDrawGizmos()
     {
-        if (route != null)
+        if (Route != null)
         {
             Gizmos.color = Color.blue;
-            Gizmos.DrawRay(transform.position, (route.current - gameObject.transform.position));
+            Gizmos.DrawRay(transform.position, (Route.Current - gameObject.transform.position));
         }
     }
 
@@ -35,38 +37,35 @@ public class Movement : MonoBehaviour {
     // TODO: deal with an agent that is stuck
     // TODO: if a destination is unreachable, choose the nearest reachable one
 
-    public NavMeshAgent GetAgent()
-    {
-        return agent;
-    }
 
-
-    public Route GetRoute()
+    public void Advance()
     {
-        return route;
+        if (ReachedNearObjective())
+            GetNextObjective();
+        if (ObjectiveComplete())
+            GetNewObjective();
     }
 
 
     public void ResetPath()
     {
-        if (agent.isOnNavMesh) 
-            agent.ResetPath();
+        if (Agent.isOnNavMesh) 
+            Agent.ResetPath();
     }
 
 
     public void SetDestination(Vector3 destination)
     {
-        if (agent.isOnNavMesh) 
-            agent.SetDestination(new Vector3(destination.x, 0, destination.z));  // TODO: sample the height at the destination from terrain
+        if (Agent.isOnNavMesh) 
+            Agent.SetDestination(new Vector3(destination.x, 0, destination.z));  // TODO: sample the height at the destination from terrain
     }
 
 
     public void SetRoute(Route _route)
     {
-        if (route != null) _route.AccumulateRoutes(route);
-        route = _route;
-        agent.SetDestination(new Vector3(route.current.x, 0, route.current.z));  // TODO: sample the height at the destination from terrain
-        StartCoroutine(MonitorProgress());
+        if (Route != null) _route.AccumulateRoutes(Route);
+        Route = _route;
+        Agent.SetDestination(new Vector3(Route.Current.x, 0, Route.Current.z));  // TODO: sample the height at the destination from terrain
     }
 
 
@@ -75,40 +74,30 @@ public class Movement : MonoBehaviour {
 
     private void GetNewObjective()
     {
-        Action when_completed = route.GetWhenComplete();
-        when_completed();
+        Agent.ResetPath();
+        Action new_task = Route.WhenComplete;
+        new_task();
     }
 
 
     private void GetNextObjective()
     {
-        route.SetNext();
-        if (!route.completed)
-            agent.SetDestination(route.current);
-    }
-
-
-    private IEnumerator MonitorProgress()
-    {
-        while (true) {
-            if (ReachedNearObjective()) 
-                GetNextObjective();
-            if (ObjectiveComplete()) 
-                GetNewObjective();
-
-            yield return null;
+        if (!Route.Completed()) {
+            SetDestination(Route.SetNext());
+        } else {
+            ResetPath();
         }
     }
 
 
     private bool ObjectiveComplete()
     {
-        return route != null && route.completed ? true : false;
+        return Route != null && Route.Completed();
     }
 
 
     private bool ReachedNearObjective()
     {
-        return agent != null && route != null && route.ReachedCurrent(agent.transform.position);
+        return Agent != null && Route != null && Route.ReachedCurrent(Agent.transform.position);
     }
 }
