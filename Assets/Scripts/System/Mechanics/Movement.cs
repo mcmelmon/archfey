@@ -40,12 +40,10 @@ public class Movement : MonoBehaviour {
 
     public void Advance()
     {
-        if (ReachedNearObjective()) {
+        if (ReachedNearObjective())
             GetNextObjective();
-        }
-        else if (ObjectiveComplete()) {
+        if (ObjectiveComplete())
             GetNewObjective();
-        }
     }
 
 
@@ -84,20 +82,22 @@ public class Movement : MonoBehaviour {
 
     private void GetNextObjective()
     {
-        Route.SetNext();
-        if (!Route.Completed)
-            Agent.SetDestination(Route.Current);
+        if (!Route.Completed()) {
+            SetDestination(Route.SetNext());
+        } else {
+            ResetPath();
+        }
     }
 
 
     private bool ObjectiveComplete()
     {
-        return Route != null && Route.Completed ? true : false;
+        return Route != null && Route.Completed();
     }
 
 
     private bool ReachedNearObjective()
     {
-        return Agent != null && Route != null && !Route.Completed && Route.ReachedCurrent(Agent.transform.position);
+        return Agent != null && Route != null && Route.ReachedCurrent(Agent.transform.position);
     }
 }

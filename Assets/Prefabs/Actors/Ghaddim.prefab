@@ -142,8 +142,8 @@ Rigidbody:
   m_GameObject: {fileID: 1837594824673670}
   serializedVersion: 2
   m_Mass: 20
-  m_Drag: 10
-  m_AngularDrag: 5
+  m_Drag: 2
+  m_AngularDrag: 1
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -195,8 +195,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 843f0e01e2c994a8e9abea9a484d8a9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ghaddim_prefab: {fileID: 114127286258734026, guid: 023e71d7833984f6fbf62ca90915a2a3,
-    type: 3}
 --- !u!114 &114490496335929734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -209,8 +207,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f7ee7b2470a746268eab7b8c5a267d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  perception_rating: 0
-  radius: 20
 --- !u!114 &114399145179561114
 MonoBehaviour:
   m_ObjectHideFlags: 0

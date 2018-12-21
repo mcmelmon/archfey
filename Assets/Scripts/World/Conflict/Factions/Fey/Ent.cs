@@ -5,15 +5,14 @@ using UnityEngine.AI;
 
 public class Ent : MonoBehaviour {
 
-    public float perception_range = 30f;
-    public int perception_rating = 75;
-    public float speed = 2f;
-    public int stealth_persistence = 5;
-    public int stealth_rating = 35;
+    // properties
 
-    Actor actor;
-    Senses senses;
-    Stealth stealth;
+    public Actor Actor { get; set; }
+    public float PerceptionRange { get; set; }
+    public int PerceptionRating { get; set; }
+    public float Speed { get; set; }
+    public int StealthPersistence { get; set; }
+    public int StealthRating { get; set; }
 
 
     // Unity
@@ -40,18 +39,22 @@ public class Ent : MonoBehaviour {
 
     private void SetComponents()
     {
-        actor = GetComponent<Actor>();
-        senses = GetComponent<Senses>();
-        senses.SetRange(perception_range / transform.localScale.y);  // radius inflated by scale, and y is the biggest scale for an Ent
-        senses.perception_rating = perception_rating;
-        stealth = gameObject.AddComponent<Stealth>();
-        stealth.stealth_rating = stealth_rating;
-        stealth.stealh_persistence = stealth_persistence;
+        PerceptionRange = 30f;
+        PerceptionRating = 75;
+        StealthPersistence= 5;
+        StealthRating = 35;
+
+        Actor = GetComponent<Actor>();
+        Actor.Senses.PerceptionRating = PerceptionRating;
+        Actor.Senses.SetRange(PerceptionRange);
+        Actor.Stealth = gameObject.AddComponent<Stealth>();
+        Actor.Stealth.stealth_rating = StealthRating;
+        Actor.Stealth.stealh_persistence = StealthPersistence;
     }
 
 
     private void SetStats()
     {
-        actor.Fey.SetStats();
+        Actor.Fey.SetStats();
     }
 }

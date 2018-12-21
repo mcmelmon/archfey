@@ -11,7 +11,6 @@ public class Actor : MonoBehaviour
 
     State state;
 
-
     // properties
 
     public Attack Attack { get; set; }
@@ -49,45 +48,39 @@ public class Actor : MonoBehaviour
 
         switch (state) {
             case State.AlliesUnderAttack:
+                // Freedom!
                 CloseWithEnemies();
                 break;
             case State.HasObjective:
+                // Stay on target
                 Movement.Advance();
                 break;
             case State.HostilesSighted:
+                // Freedom!
                 CloseWithEnemies();
                 break;
             case State.Idle:
-                // put away weapons and go back to work
-                ResolveRuinControl();
+                // Try to control a ruin
+                ControlRuin();
                 break;
             case State.InCombat:
+                // Freedom!
                 Attack.AttackEnemiesInRange();
                 break;
             case State.OccupyingRuin:
-                // sit tight for now
+                // Our Precious
+                ConfirmOccupation();
                 break;
             case State.OnWatch:
                 // engage enemies that appear, but return to post quickly
                 break;
             case State.UnderAttack:
+                // Freedom!
                 CloseWithEnemies();
                 break;
             default:
                 break;
         }
-    }
-
-
-    public GameObject GetAFriend()
-    {
-        return Friends.Count > 0 ? Friends[UnityEngine.Random.Range(0, Friends.Count)] : null;
-    }
-
-
-    public GameObject GetAnEnemy()
-    {
-        return Enemies.Count > 0 ? Enemies[UnityEngine.Random.Range(0, Enemies.Count)] : null;
     }
 
 
@@ -108,7 +101,7 @@ public class Actor : MonoBehaviour
 
     private bool AlliesUnderAttack()
     {
-        foreach (var sighting in Senses.GetSightings()) {
+        foreach (var sighting in Senses.Sightings) {
             if (IsAttackingMyFaction(sighting)) {
                 return true;
             }
@@ -123,31 +116,64 @@ public class Actor : MonoBehaviour
         if (Movement == null) {
             Attack.AttackEnemiesInRange();
         } else {
-            GameObject _enemy = GetAnEnemy();
+            GameObject nearest_enemy = null;
+            float shortest_distance = float.MaxValue;
+            float distance;
 
-            if (transform != null && _enemy != null)
-            {   // we or they may have been destroyed...
-                Movement.SetRoute(Route.Linear(transform.position, _enemy.transform.position));
+            if (transform != null) {   // we have not been destroyed
+                foreach (var enemy in Enemies) {
+                    distance = Vector3.Distance(transform.position, enemy.transform.position);
+                    if (distance < shortest_distance) {
+                        shortest_distance = distance;
+                        nearest_enemy = enemy;
+                    }
+                }
+                Movement.SetRoute(Route.Linear(transform.position, nearest_enemy.transform.position));
             }
-            Attack.AttackEnemiesInRange();
+        }
+    }
+
+
+    private void ConfirmOccupation()
+    {
+        // if we've tricked ourselves into believing we are the occupier, pick a new control point
+
+        if (RuinControlPoint.ConfirmOccupation() != this) {
+            // find another ruin
+            RuinControlPoint = null;
+            ControlRuin();
+        }
+    }
+
+
+    private void ControlRuin()
+    {
+        if (Fey != null) return;
+
+        RuinControlPoint ruin_control_point = Ruins.Instance.GetNearestUnoccupiedControlPoint(gameObject);
+        if (ruin_control_point != null && ruin_control_point != RuinControlPoint) {
+            RuinControlPoint = ruin_control_point;
+            Movement.SetRoute(Route.Linear(transform.position, ruin_control_point.transform.position, ReachedControlPoint));
         }
     }
 
 
     private bool HasObjective()
     {
-        if (Movement != null) {
-            return Movement.Route != null && !Movement.Route.Completed;
+        if (RuinControlPoint != null && RuinControlPoint.Occupier != null && RuinControlPoint.Occupier != this) {
+            RuinControlPoint = null;
+            ControlRuin();
+            return true;
         }
 
-        return false;
+        return Movement != null && Movement.Route != null && !Movement.Route.Completed();
     }
 
 
     private bool HostilesSighted()
     {
         Enemies.Clear();
-        foreach (var sighting in Senses.GetSightings())
+        foreach (var sighting in Senses.Sightings)
         {
             if (!IsFriendOrNeutral(sighting) && !Enemies.Contains(sighting))
             {
@@ -197,7 +223,7 @@ public class Actor : MonoBehaviour
 
     private bool OccupyingRuin()
     {
-        return RuinControlPoint != null && RuinControlPoint.Occupied == gameObject;
+        return RuinControlPoint != null && RuinControlPoint.Occupier == this;
     }
 
 
@@ -214,34 +240,9 @@ public class Actor : MonoBehaviour
         // We want to wait until the control point is controlled, and then find another near unoccupied one
         // That will reset Movement
 
-        if (RuinControlPoint.Occupier != gameObject) {
+        if (RuinControlPoint != null && RuinControlPoint.Occupier != this) {
             RuinControlPoint = null;
-            ResolveRuinControl();
-        } else {
-            Movement.Route.Completed = true;
-            Movement.ResetPath();
-        }
-    }
-
-
-    private void ResolveRuinControl()
-    {
-        if (Fey != null) return;
-
-        if (RuinControlPoint != null) {
-            if (RuinControlPoint.Occupied == gameObject) {
-                // we occupy the objective, keep it
-                return;
-            } else if (!RuinControlPoint.Occupied) {
-                // the objective is still up for grabs, don't pick another
-                return;
-            }
-        }
-
-        RuinControlPoint ruin_control_point = Ruins.Instance.GetNearestUnoccupiedControlPoint(gameObject);
-        if (ruin_control_point != null) {
-                RuinControlPoint = ruin_control_point;
-                Movement.SetRoute(Route.Linear(transform.position, ruin_control_point.transform.position, ReachedControlPoint));
+            ControlRuin();
         }
     }
 
@@ -249,6 +250,8 @@ public class Actor : MonoBehaviour
     private void SetComponents()
     {
         Attack = GetComponent<Attack>();
+        Enemies = new List<GameObject>();
+        Friends = new List<GameObject>();
         Mhoddim = GetComponent<Mhoddim>();
         Ghaddim = GetComponent<Ghaddim>();
         Fey = GetComponent<Fey>();
@@ -259,15 +262,13 @@ public class Actor : MonoBehaviour
         Faction = (Fey != null) ? Conflict.Faction.Fey : (Ghaddim != null) ? Conflict.Faction.Ghaddim : Conflict.Faction.Mhoddim;
         Role = Conflict.Role.None;  // offense and defense set this role for mortals
         state = State.Idle;
-
-        Enemies = new List<GameObject>();
-        Friends = new List<GameObject>();
-        RuinControlRating = 5;  // TODO: pass this in unit by unit
     }
 
 
     public void SetState()
     {
+        Senses.Sight();
+
         if (InCombat()) {
             GameObject _enemy = Threat.BiggestThreat();
             if (_enemy != null) {
@@ -305,9 +306,6 @@ public class Actor : MonoBehaviour
         else if (OccupyingRuin())
         {
             SheathWeapon();
-            if (Movement != null) {
-                Movement.Advance(); // be sure to finish out our Route to trigger ReachedControlPoint
-            }
             state = State.OccupyingRuin;
             return;
         }

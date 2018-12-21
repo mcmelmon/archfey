@@ -13,7 +13,6 @@ public class Ruin : MonoBehaviour
     // properties
 
     public Conflict.Faction Control { get; set; }
-    public static float ControlDistance { get; set; }
     public bool Controlled { get; set; }
     public List<RuinControlPoint> ControlPoints { get; set; }
     public static float MinimumRuinSpacing { get; set; }
@@ -89,6 +88,7 @@ public class Ruin : MonoBehaviour
         Control = Conflict.Faction.None;
         Controlled = false;
         ControlPoints = new List<RuinControlPoint>();
+        MinimumRuinSpacing = 20f;
         SetControlPoints();
         StartCoroutine(CheckControl());
     }
@@ -148,6 +148,22 @@ public class RuinControlPoint : MonoBehaviour
     }
 
 
+    // public
+
+
+    public Actor ConfirmOccupation()
+    {
+        if (Occupier != NearestActor) {
+            if (Occupier.Ghaddim == NearestActor.Ghaddim && Occupier.Mhoddim == NearestActor.Mhoddim) {
+                Occupier.GetComponent<Renderer>().material.color = Color.white;
+                Occupier.RuinControlPoint = null;
+                Occupier = NearestActor;
+            }
+        }
+        return Occupier;
+    }
+
+
     // private
 
 
@@ -163,13 +179,14 @@ public class RuinControlPoint : MonoBehaviour
                 yield return new WaitForSeconds(Turn.action_threshold);
 
                 float distance = (NearestActor != null) ? Vector3.Distance(NearestActor.transform.position, transform.position) : float.MaxValue;
+
                 if (!Occupied && distance < Route.reached_threshold) {
                     CurrentResistancePoints -= Mathf.Clamp((NearestActor.RuinControlRating - ControlResistanceRating) + Assitance(), 0, NearestActor.RuinControlRating);
                     if (CurrentResistancePoints <= 0) {
                         CurrentResistancePoints = 0;
-                        NearestActor.RuinControlPoint = this;
                         Occupied = true;
                         Occupier = NearestActor;
+                        Occupier.GetComponent<Renderer>().material.color = Color.red;
                         Faction = NearestActor.GetComponent<Actor>().Faction;
 
                         GameObject marker = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -179,8 +196,9 @@ public class RuinControlPoint : MonoBehaviour
                         marker.transform.parent = transform;
                         marker.GetComponent<Renderer>().material.color = Color.red;
                     }
-                } else if (Occupied && distance > Route.reached_threshold) {
-                    CurrentResistancePoints += ControlResistanceRating + 0.5f;
+                } else if (Occupied && Vector3.Distance(Occupier.transform.position, transform.position) > Route.reached_threshold) {
+                    Occupier.GetComponent<Renderer>().material.color = Color.white;
+                    CurrentResistancePoints += ControlResistanceRating;
                     if (CurrentResistancePoints >= StartingResistancePoints) {
                         CurrentResistancePoints = StartingResistancePoints;
                         Occupied = false;
@@ -238,8 +256,8 @@ public class RuinControlPoint : MonoBehaviour
 
     private void SetComponents()
     {
-        ControlResistanceRating = 2;
-        CurrentResistancePoints = StartingResistancePoints = 12;
+        ControlResistanceRating = Random.Range(1,6);
+        CurrentResistancePoints = StartingResistancePoints = 100 + Random.Range(0,8);
         Faction = Conflict.Faction.None;
         Occupied = false;
 

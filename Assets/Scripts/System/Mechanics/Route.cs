@@ -8,12 +8,9 @@ public class Route
 {
     public static float reached_threshold = 4f;
 
-
     // properties
 
-    public bool Completed { get; set; }
     public Vector3 Current { get; set; }
-    public Vector3 Finish { get; set; }
     public bool Looping { get; set; }
     public Vector3 Next { get; set; }
     public List<Vector3> Points { get; set; }
@@ -22,19 +19,8 @@ public class Route
     public Vector3 Start { get; set; }
     public Action WhenComplete { get; set; }
 
-    public void AccumulateRoutes(Route previous_route)
-    {
-        RoutesFollowed = previous_route.RoutesFollowed;
-        RoutesFollowed.Add(previous_route);
-    }
 
-
-    public void Add(Vector3 _point)
-    {
-        // This will "work" for a circle, but kind of awkward
-
-        Points.Add(_point);
-    }
+    // static
 
 
     public static Route Circular(Vector3 _start, Circle _circle, Action _when_complete = null, bool _retracing = false, bool _looping = false)
@@ -43,7 +29,6 @@ public class Route
         {
             Current = _start,
             Start = _start,
-            Completed = false,
             Looping = _looping,
             Retracing = _retracing,
             WhenComplete = _when_complete
@@ -52,7 +37,8 @@ public class Route
         route.Points = new List<Vector3>();
         route.RoutesFollowed = new List<Route>();
 
-        foreach (var vertex in _circle.vertices) {
+        foreach (var vertex in _circle.vertices)
+        {
             route.Points.Add(vertex);
         }
 
@@ -68,7 +54,6 @@ public class Route
         {
             Current = _next,
             Start = _start,
-            Completed = false,
             Looping = _looping,
             Retracing = _retracing,
             WhenComplete = _when_complete
@@ -85,23 +70,46 @@ public class Route
     }
 
 
-    public bool ReachedCurrent(Vector3 unit_position)
+    // public
+
+
+    public void AccumulateRoutes(Route previous_route)
     {
-        return (Vector3.Distance(Current, unit_position) < reached_threshold) ? true : false;
+        RoutesFollowed = previous_route.RoutesFollowed;
+        RoutesFollowed.Add(previous_route);
     }
 
 
-    public void SetNext()
+    public void Add(Vector3 _point)
+    {
+        // This will "work" for a circle, but kind of awkward
+
+        Points.Add(_point);
+    }
+
+
+    public bool Completed()
+    {
+        return (Next == Start) && !Looping && !Retracing;
+    }
+
+
+    public bool ReachedCurrent(Vector3 unit_position)
+    {
+        return Vector3.Distance(Current, unit_position) < reached_threshold;
+    }
+
+
+    public Vector3 SetNext()
     {
         bool keep_going = (Looping || Retracing);
-        if (Completed && !keep_going) return;
+        if (Completed() && !keep_going) return Current;
 
         int next_index;
         int current_index = Points.IndexOf(Current);
         next_index = (Next == Start && Retracing) ? ((current_index - 1) + (Points.Count)) % Points.Count : (current_index + 1) % Points.Count;
         Next = Points[next_index];
         Current = Next;
-
-        if (Next == Start) Completed = !Looping || !Retracing;
+        return Current;
     }
 }

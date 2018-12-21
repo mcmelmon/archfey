@@ -4,21 +4,22 @@ using UnityEngine;
 
 public class Civilization : MonoBehaviour {
 
-    public static Civilization civilization_instance;
+    // properties
+
+    public static Civilization Instance { get; set; }
+
 
     // Unity
 
 
     private void Awake()
     {
-        if (civilization_instance != null)
-        {
+        if (Instance != null) {
             Debug.LogError("More than one civilization instance!");
             Destroy(this);
             return;
         }
-
-        civilization_instance = this;
+        Instance = this;
     }
 
 
@@ -35,6 +36,6 @@ public class Civilization : MonoBehaviour {
 
     private void LayRuins()
     {
-        GetComponentInChildren<Ruins>().ErectRuins();
+        Ruins.Instance.ErectRuins();
     }
 }
