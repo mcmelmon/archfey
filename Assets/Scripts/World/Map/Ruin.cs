@@ -8,7 +8,6 @@ public class Ruin : MonoBehaviour
     public Material ghaddim_skin;
     public Material mhoddim_skin;
     public Material unclaimed_skin;
-    
 
     // properties
 
@@ -19,14 +18,18 @@ public class Ruin : MonoBehaviour
     public GameObject NearestActor { get; set; }
 
 
-    // Unity
+    // static
 
 
-    private void Awake()
+    public static Ruin InstantiateRuin(Ruin prefab, Vector3 point, Ruins _ruins)
     {
-        SetComponents();
-    }
+        Ruin _ruin = Instantiate(prefab, point, _ruins.transform.rotation, _ruins.transform);
+        _ruin.transform.localScale += new Vector3(4, 16, 4);
+        _ruin.transform.position += new Vector3(0, _ruin.transform.localScale.y / 2, 0);
+        _ruin.SetComponents();
 
+        return _ruin;
+    }
 
     // public
 
@@ -96,15 +99,15 @@ public class Ruin : MonoBehaviour
 
     private void SetControlPoints()
     {
-        Circle _center = Circle.CreateCircle(transform.position, 10f, 3);
+        Circle _center = Circle.CreateCircle(new Vector3 (transform.position.x, 0, transform.position.z), 10f, 3);
 
         foreach (var vertex in _center.vertices)
         {
-            RuinControlPoint control_point = RuinControlPoint.CreateControlPoint(vertex);
+            RuinControlPoint control_point = RuinControlPoint.New(vertex);
             control_point.Ruin = this;
             control_point.transform.parent = Ruins.Instance.transform; // using the Ruin transform scales the point out
             ControlPoints.Add(control_point);
-            Ruins.AllRuinControlPoints.Add(control_point.GetComponent<RuinControlPoint>());
+            Ruins.RuinControlPoints.Add(control_point.GetComponent<RuinControlPoint>());
         }
 
     }
@@ -137,7 +140,7 @@ public class RuinControlPoint : MonoBehaviour
     // static
 
 
-    public static RuinControlPoint CreateControlPoint(Vector3 _position)
+    public static RuinControlPoint New(Vector3 _position)
     {
         GameObject ruin_control_point = new GameObject { name = "Control Point" };
         ruin_control_point.transform.position = _position;
@@ -145,6 +148,13 @@ public class RuinControlPoint : MonoBehaviour
         ruin_control_point.GetComponent<RuinControlPoint>().SetComponents();
 
         return ruin_control_point.GetComponent<RuinControlPoint>();
+    }
+
+
+    private void Start()
+    {
+        StartCoroutine(CheckOccupation());
+        StartCoroutine(FindNearestActor());
     }
 
 
@@ -198,7 +208,7 @@ public class RuinControlPoint : MonoBehaviour
                     }
                 } else if (Occupied && Vector3.Distance(Occupier.transform.position, transform.position) > Route.reached_threshold) {
                     Occupier.GetComponent<Renderer>().material.color = Color.white;
-                    CurrentResistancePoints += ControlResistanceRating;
+                    CurrentResistancePoints += ControlResistanceRating * Time.deltaTime;
                     if (CurrentResistancePoints >= StartingResistancePoints) {
                         CurrentResistancePoints = StartingResistancePoints;
                         Occupied = false;
@@ -232,7 +242,8 @@ public class RuinControlPoint : MonoBehaviour
                 }
             }
 
-            NearestActor = nearest_actor.GetComponent<Actor>();
+            if (nearest_actor != null)
+                NearestActor = nearest_actor.GetComponent<Actor>();
         }
     }
 
@@ -260,8 +271,5 @@ public class RuinControlPoint : MonoBehaviour
         CurrentResistancePoints = StartingResistancePoints = 100 + Random.Range(0,8);
         Faction = Conflict.Faction.None;
         Occupied = false;
-
-        StartCoroutine(CheckOccupation());
-        StartCoroutine(FindNearestActor());
     }
 }

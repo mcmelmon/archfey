@@ -4,33 +4,33 @@ using UnityEngine;
 
 public class Formation
 {
-    // A formation manages homogenous units.  
+    public enum Alignment { Circle = 0, Grid = 1 };
+    Alignment alignment;
 
-    // TODO: manage heterogenous groups of units.
 
-    public enum Profile { Circle = 0, Rectangle = 1 };
+    // properties
 
-    public bool has_objective = false;
-    public Profile profile;
-    public Vector3 anchor;
-    readonly List<GameObject> units = new List<GameObject>();
+    public bool Objective { get; set; }
+    public Vector3 Anchor { get; set; }
+    public List<GameObject> Units { get; set; }
     Circle circular_formation;
-    Rectangle rectangular_formation;
-    float spacing;
-    Route route;
+    Grid rectangular_formation;
+    public float Spacing { get; set; }
+    public Route Route { get; set; }
 
 
     // static
 
 
-    public static Formation CreateFormation(Vector3 _anchor, Profile _profile, float _spacing = 5f)
+    public static Formation New(Vector3 _anchor, Alignment _profile, float _spacing = 5f)
     {
         Formation _formation = new Formation
         {
-            profile = _profile,
-            anchor = _anchor,
-            spacing = _spacing
-        };
+            alignment = _profile,
+            Anchor = _anchor,
+            Spacing = _spacing,
+            Units = new List<GameObject>()
+    };
 
         return _formation;
     }
@@ -41,17 +41,17 @@ public class Formation
 
     public void Face(Vector3 facing)
     {
-        switch (profile)
+        switch (alignment)
         {
-            case Profile.Circle:
-                foreach (var unit in units) {
-                    facing = unit.transform.position - anchor;
+            case Alignment.Circle:
+                foreach (var unit in Units) {
+                    facing = unit.transform.position - Anchor;
                     facing.y = 0;
                     unit.transform.rotation = Quaternion.LookRotation(facing);
                 }
                 break;
-            case Profile.Rectangle:
-                foreach (var unit in units)
+            case Alignment.Grid:
+                foreach (var unit in Units)
                 {
                     facing.y = 0;
                     unit.transform.rotation = Quaternion.LookRotation(facing);
@@ -63,17 +63,17 @@ public class Formation
 
     public void JoinFormation(GameObject unit)
     {
-        units.Add(unit);
+        Units.Add(unit);
 
-        switch (profile)
+        switch (alignment)
         {
-            case Profile.Circle:
-                circular_formation = Circle.CreateCircle(anchor, units.Count, units.Count);
+            case Alignment.Circle:
+                circular_formation = Circle.CreateCircle(Anchor, Units.Count, Units.Count);
                 PositionCircle(circular_formation);
                 break;
-            case Profile.Rectangle:
-                rectangular_formation = Rectangle.CreateRectangle(anchor, Mathf.RoundToInt(Mathf.Sqrt(units.Count)) + 1, Mathf.RoundToInt(Mathf.Sqrt(units.Count)) + 1, spacing);
-                PositionRectangle(rectangular_formation);
+            case Alignment.Grid:
+                rectangular_formation = Grid.New(Anchor, Mathf.RoundToInt(Mathf.Sqrt(Units.Count)) + 1, Mathf.RoundToInt(Mathf.Sqrt(Units.Count)) + 1, Spacing);
+                PositionInGrid(rectangular_formation);
                 break;
         }
     }
@@ -84,11 +84,6 @@ public class Formation
 
     }
 
-
-    public void SetRoute(Route _route)
-    {
-        route = _route;
-    }
 
     public void Strategize()
     {
@@ -101,27 +96,27 @@ public class Formation
 
     private void March()
     {
-        foreach (var unit in units) {
-            if (route != null) {
-                unit.GetComponent<Movement>().SetRoute(route);
+        foreach (var unit in Units) {
+            if (Route != null) {
+                unit.GetComponent<Movement>().SetRoute(Route);
             }
         }
     }
 
     private void PositionCircle(Circle formation)
     {
-        for (int i = 0; i < units.Count; i++)
+        for (int i = 0; i < Units.Count; i++)
         {
-            units[i].transform.position = formation.vertices[i];
+            Units[i].transform.position = formation.vertices[i];
         }
         Face(Vector3.zero);
     }
 
 
-    private void PositionRectangle(Rectangle formation)
+    private void PositionInGrid(Grid formation)
     {
-        for (int i = 0; i < units.Count; i++) {
-            units[i].transform.position = formation.points[i];
+        for (int i = 0; i < Units.Count; i++) {
+            Units[i].transform.position = formation.Elements[i];
         }
         Face(rectangular_formation.GetDepthDirection());
     }

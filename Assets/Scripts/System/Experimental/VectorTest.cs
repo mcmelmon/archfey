@@ -32,7 +32,7 @@ public class VectorTest : MonoBehaviour {
 
 
     void Start () {
-        Rectangle rectangle = Rectangle.CreateRectangle(new Vector3(10, 0, 10), 5, 5, 5f, true);
+        Grid grid = Grid.New(new Vector3(10, 0, 10), 5, 5, 5f, true);
         //SetMilestones();
         //LayPath();
     }

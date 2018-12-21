@@ -34,7 +34,7 @@ public class Stealth : MonoBehaviour {
 
     private void Start()
     {
-        StartCoroutine(Camouflage());
+        if (Flora.Instance != null) StartCoroutine(Camouflage());
     }
 
 

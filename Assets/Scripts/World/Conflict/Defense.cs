@@ -33,30 +33,16 @@ public class Defense : MonoBehaviour
     {
         // must be called by Conflict instead of Start to ensure Map setup complete
 
-        foreach (KeyValuePair<Ruins.Category, Circle> circle in Ruins.Circles) {
-            switch (circle.Key) {
-                case Ruins.Category.Primary:
-                    Formation block_formation = Formation.CreateFormation(circle.Value.center, Formation.Profile.Circle);
+        // spawn the defense randomly, give them time to claim some ruins, then spawn offense
 
-                    for (int i = 0; i < 10; i++) {
-                        GameObject _heavy = Spawn(circle.Value.RandomContainedPoint());
-                        _heavy.AddComponent<Heavy>();
-                        block_formation.JoinFormation(_heavy);
-                        _heavy.GetComponent<Soldier>().SetFormation(block_formation);
-                    }
-                    break;
-                //case Ruins.Category.Secondary:
-                    //Formation strike_formation = Formation.CreateFormation(circle.Value.center, Formation.Profile.Rectangle);
+        for (int i = 0; i < 14; i++) {
+            GameObject _heavy = Spawn(Geography.Instance.RandomLocation(Geography.Instance.GetResolution() / 4f));
+            _heavy.AddComponent<Heavy>();
+        }
 
-                    //for (int i = 0; i < 6; i++) {
-                    //    GameObject _striker = Spawn(circle.Value.RandomContainedPoint());
-                    //    _striker.AddComponent<Striker>();
-                    //    strike_formation.JoinFormation(_striker);
-                    //    _striker.GetComponent<Soldier>().SetFormation(strike_formation);
-
-                    //}
-                    //break;
-            }
+        for (int i = 0; i < 6; i++) {
+            GameObject _striker = Spawn(Geography.Instance.RandomLocation(Geography.Instance.GetResolution() / 4f));
+            _striker.AddComponent<Striker>();
         }
     }
 
