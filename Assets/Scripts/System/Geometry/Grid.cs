@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,7 +22,7 @@ public class Grid
     {
         Grid _grid = new Grid
         {
-            TopLeft = _top_left,
+            TopLeft = _top_left + new Vector3((_spacing / 2) - 1, 0, 0) - new Vector3(0, 0, (_spacing / 2) - 1),
             Width = _width,
             Depth = _depth,
             Spacing = _spacing,
@@ -35,15 +36,42 @@ public class Grid
     }
 
 
-    public Vector3 GetDepthDirection()
+    public Vector3 RandomPoint()
     {
-        return TopLeft - ElementArray[0, Depth - 1];
+        UnityEngine.Random.InitState(DateTime.Now.Millisecond);
+        int _w = UnityEngine.Random.Range(0, Width);
+        int _d = UnityEngine.Random.Range(0, Depth);
+        return ElementArray[_w, _d];
     }
 
 
-    public Vector3 GetWidthDirection()
+    public Vector3 RandomPoint(int distance_from_edge)
     {
-        return TopLeft - ElementArray[Width - 1, 0];
+        UnityEngine.Random.InitState(DateTime.Now.Millisecond);
+
+        if (distance_from_edge > Width / Spacing || distance_from_edge > Depth / Spacing) distance_from_edge = (int)Math.Min(Width / Spacing, Depth / Spacing);
+
+        UnityEngine.Random.InitState((int)Time.time);
+        return ElementArray[UnityEngine.Random.Range(distance_from_edge, Width - distance_from_edge), UnityEngine.Random.Range(distance_from_edge, Depth - distance_from_edge)];
+    }
+
+
+    public Vector3 RandomPoint(Map.Cardinal cardinal)
+    {
+        UnityEngine.Random.InitState(DateTime.Now.Millisecond);
+
+        switch (cardinal) {
+            case Map.Cardinal.North:
+                return ElementArray[UnityEngine.Random.Range(0, Width), Depth];
+            case Map.Cardinal.East:
+                return ElementArray[Width, UnityEngine.Random.Range(0, Depth)];
+            case Map.Cardinal.South:
+                return ElementArray[UnityEngine.Random.Range(0, Width), 0];
+            case Map.Cardinal.West:
+                return ElementArray[0, UnityEngine.Random.Range(0, Depth)];
+        }
+
+        return Vector3.zero;
     }
 
 
@@ -61,7 +89,7 @@ public class Grid
                     GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     cube.name = "Point";
                     cube.transform.position = ElementArray[w, d];
-                    cube.transform.localScale = new Vector3(2, 10, 2);
+                    cube.transform.localScale = new Vector3(Spacing, 1, Spacing);
                     cube.GetComponent<Renderer>().material.color = new Color(0, 1, 0, 1);
                 }
             }

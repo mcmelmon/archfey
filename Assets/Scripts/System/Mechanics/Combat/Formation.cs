@@ -123,6 +123,5 @@ public class Formation
         for (int i = 0; i < Units.Count; i++) {
             Units[i].transform.position = formation.Elements[i];
         }
-        Face(rectangular_formation.GetDepthDirection());
     }
 }

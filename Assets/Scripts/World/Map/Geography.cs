@@ -1,9 +1,14 @@
 ﻿using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
 public class Geography : MonoBehaviour {
+
+    public enum GridType { Unit = 0 };
+
+    public static int unit_spacing = 8;
 
     public Obstacle obstacle_prefab;
     public float obstacle_coverage;
@@ -11,10 +16,12 @@ public class Geography : MonoBehaviour {
 
     // properties
 
+    public static Dictionary<GridType, Grid> Grids { get; set; }
     public static Geography Instance { get; set; }
     public static List<Obstacle> Obstacles { get; set; }
     public static Terrain Terrain { get; set; }
     public static TerrainData TerrainData { get; set; }
+    public static List<Tile> Tiles { get; set; }
 
 
     // Unity
@@ -108,6 +115,8 @@ public class Geography : MonoBehaviour {
 
     public Vector3 PointBetween(Vector3 _from, Vector3 _to, float step_percentage, bool grounded)
     {
+        // TODO: convert this to a grid point
+
         Vector3 heading = TowardLocation(_from, _to);
         if (grounded) heading.y = 0;
         float distance = heading.magnitude * step_percentage;
@@ -115,46 +124,63 @@ public class Geography : MonoBehaviour {
     }
 
 
-    public Vector3 RandomBorderLocation()
+    public Vector3 RandomBorderLocation(GridType grid_type = GridType.Unit)
     {
-        Vector3 point = Vector3.zero;
-
-        switch (Random.Range(0,4))
+        switch (UnityEngine.Random.Range(0, 4))
         {
-            // TODO: use sampled height
             case 0:
-                point = new Vector3(Random.Range(0, TerrainData.heightmapResolution), 0, TerrainData.heightmapResolution); 
-                break;
+                return Grids[grid_type].RandomPoint(Map.Cardinal.North);
             case 1:
-                point = new Vector3(TerrainData.heightmapResolution, 0, Random.Range(0, TerrainData.heightmapResolution));
-                break;
+                return Grids[grid_type].RandomPoint(Map.Cardinal.East);
             case 2:
-                point = new Vector3(Random.Range(0, TerrainData.heightmapResolution), 0, 0);
-                break;
+                return Grids[grid_type].RandomPoint(Map.Cardinal.South);
             case 3:
-                point = new Vector3(0, 0, Random.Range(0, TerrainData.heightmapResolution));
-                break;
+                return Grids[grid_type].RandomPoint(Map.Cardinal.West);
         }
 
-        return point;
+        return Vector3.zero;
     }
 
 
-    public Vector3 RandomLocation()
+    public Vector3 RandomLocation(GridType grid_type = GridType.Unit)
     {
-        // TODO: This is returning crap
-
-        Random.InitState((int)Time.time);
-        Circle _circle = Circle.CreateCircle(GetCenter(), Random.Range(10, GetResolution() - 10));
-        return _circle.RandomVertex();
+        return Grids[grid_type].RandomPoint();
     }
 
 
-    public Vector3 RandomLocation(int distance_from_edge)
+    public Vector3 RandomLocation(int distance_from_edge, GridType grid_type = GridType.Unit)
     {
-        Random.InitState((int)Time.time);
-        Circle _circle = Circle.CreateCircle(GetCenter(), Random.Range(10, GetResolution()/2 - distance_from_edge));
-        return _circle.RandomVertex();
+        return Grids[grid_type].RandomPoint(distance_from_edge);
+    }
+
+
+    public List<Tile> RandomTiles(int _number)
+    {
+        UnityEngine.Random.InitState(DateTime.Now.Millisecond);
+
+        List<Tile> randomized_tiles = new List<Tile>(Tiles);
+
+        for (int i = 0; i < randomized_tiles.Count; i++) {
+            Tile temp = randomized_tiles[i];
+            int random_index = UnityEngine.Random.Range(i, randomized_tiles.Count);
+            randomized_tiles[i] = randomized_tiles[random_index];
+            randomized_tiles[random_index] = temp;
+        }
+
+        return randomized_tiles.GetRange(0, _number);
+    }
+
+
+    public Tile RandomUnoccupiedTile()
+    {
+        List<Tile> randomized_tiles = RandomTiles(Tiles.Count);
+
+        for (int i = 0; i < randomized_tiles.Count * 5; i++) {
+            // If we can't find an empty tile after five times through them all, it's a full map
+            if (randomized_tiles[i].Unoccupied()) return randomized_tiles[i];
+        }
+
+        return null;
     }
 
 
@@ -169,8 +195,18 @@ public class Geography : MonoBehaviour {
 
     private void SetComponents()
     {
+        Grids = new Dictionary<GridType, Grid>();
         Terrain = GetComponentInChildren<Terrain>();
         TerrainData = Terrain.terrainData;
+
+        Grids[GridType.Unit] = Grid.New(new Vector3(1, 0, GetResolution() - 2), GetResolution()/unit_spacing, GetResolution()/unit_spacing, unit_spacing, false);
+        Tiles = new List<Tile>();
+
+        foreach (var location in Grids[GridType.Unit].Elements) {
+            // tiles will help manage the initial contents of locations on the map
+            Tile _tile = Tile.New(location);
+            Tiles.Add(_tile);
+        }
     }
 
 

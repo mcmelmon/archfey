@@ -12,9 +12,9 @@ public class Mhoddim : MonoBehaviour {
     // static
 
 
-    public static GameObject SpawnUnit()
+    public static GameObject SpawnUnit(Vector3 _point)
     {
-        Mhoddim _mhoddim = Instantiate(Conflict.Instance.mhoddim_prefab, Conflict.Instance.mhoddim_prefab.transform.position, Conflict.Instance.mhoddim_prefab.transform.rotation);
+        Mhoddim _mhoddim = Instantiate(Conflict.Instance.mhoddim_prefab, _point + new Vector3(0, 4, 0), Conflict.Instance.mhoddim_prefab.transform.rotation);
         _mhoddim.gameObject.AddComponent<Soldier>();
 
         return _mhoddim.gameObject;

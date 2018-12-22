@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,7 +12,6 @@ public class Ruins : MonoBehaviour {
     // properties
 
     public static List<Ruin> RuinBlocks { get; set; }
-    public static List<Grid> RuinComplexes { get; set; }
     public static List<RuinControlPoint> RuinControlPoints { get; set; }
     public static Ruins Instance { get; set; }
 
@@ -60,68 +60,50 @@ public class Ruins : MonoBehaviour {
     }
 
 
+    public Ruin RuinClosestTo(Vector3 location)
+    {
+        Ruin _ruin = null;
+        float shortest_distance = float.MaxValue;
+        float distance;
+
+        foreach (var ruin in RuinBlocks) {
+            distance = Vector3.Distance(location, ruin.transform.position);
+            if (distance < shortest_distance) {
+                shortest_distance = distance;
+                _ruin = ruin;
+            }
+        }
+
+        return _ruin;
+    }
+
+
     // private
 
 
     private void Construct()
     {
-        Grid ruin_grid = Grid.New(Locate(200), Random.Range(5, 8), Random.Range(5, 8), Spacing());
-        RuinComplex _complex = RuinComplex.New(ruin_grid, ruin_prefab, this);
-        if (_complex.RuinBlocks.Count > 0) {
-            RuinBlocks.AddRange(_complex.RuinBlocks);
-            RuinControlPoints.AddRange(_complex.RuinControlPoints);
+        // pick a set of random tiles, build a ruin on each, and add all of the ruins into a complex
+
+        UnityEngine.Random.InitState(DateTime.Now.Millisecond);
+
+        foreach (var tile in Geography.Instance.RandomTiles(20)) {
+            if (tile.Location.x < 20 || tile.Location.x > Geography.Instance.GetResolution() - 20 || tile.Location.z < 20 || tile.Location.z > Geography.Instance.GetResolution() - 20) continue;
+
+            Ruin nearest_ruin = RuinClosestTo(tile.Location);
+            if (nearest_ruin != null && Vector3.Distance(nearest_ruin.transform.position, tile.Location) < Ruin.MinimumRuinSpacing) continue;
+
+            Ruin _ruin = Ruin.InstantiateRuin(ruin_prefab, tile.Location, this);
+            RuinBlocks.Add(_ruin);
+            RuinControlPoints.AddRange(_ruin.ControlPoints);
+            tile.Ruin = _ruin;
         }
-    }
-
-
-    private Vector3 Locate(int distance_from_edge)
-    {
-        return Geography.Instance.RandomLocation(distance_from_edge);
     }
 
 
     private void SetComponents()
     {
         RuinBlocks = new List<Ruin>();
-        RuinComplexes = new List<Grid>();
         RuinControlPoints = new List<RuinControlPoint>();
-    }
-
-
-    private float Spacing()
-    {
-        return ruin_prefab.transform.localScale.x * ruin_prefab.transform.localScale.x + ruin_prefab.transform.localScale.z * ruin_prefab.transform.localScale.z;
-    }
-}
-
-
-public class RuinComplex
-{
-    // properties
-
-    public Grid Grid { get; set; }
-    public List<Ruin> RuinBlocks { get; set; }
-    public List<RuinControlPoint> RuinControlPoints { get; set; }
-
-
-    public static RuinComplex New(Grid _grid, Ruin prefab, Ruins _ruins)
-    {
-        RuinComplex _complex = new RuinComplex
-        {
-            Grid = _grid,
-            RuinBlocks = new List<Ruin>(),
-            RuinControlPoints = new List<RuinControlPoint>()
-        };
-
-        foreach (var location in _complex.Grid.Elements) {
-            if (Random.Range(0, 99) < 40)
-            {
-                Ruin _ruin = Ruin.InstantiateRuin(prefab, location, _ruins);
-                _complex.RuinBlocks.Add(_ruin);
-                _complex.RuinControlPoints.AddRange(_ruin.ControlPoints);
-            }
-        }
-
-        return _complex;
     }
 }

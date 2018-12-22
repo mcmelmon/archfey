@@ -12,9 +12,9 @@ public class Ghaddim : MonoBehaviour {
     // static
 
 
-    public static GameObject SpawnUnit()
+    public static GameObject SpawnUnit(Vector3 _point)
     {
-        Ghaddim _ghaddim = Instantiate(Conflict.Instance.ghaddim_prefab, Conflict.Instance.ghaddim_prefab.transform.position, Conflict.Instance.ghaddim_prefab.transform.rotation);
+        Ghaddim _ghaddim = Instantiate(Conflict.Instance.ghaddim_prefab, _point + new Vector3(0, 4, 0), Conflict.Instance.ghaddim_prefab.transform.rotation);
         _ghaddim.gameObject.AddComponent<Soldier>();
 
         return _ghaddim.gameObject;
