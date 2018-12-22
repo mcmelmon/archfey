@@ -55,8 +55,8 @@ public class Fey : MonoBehaviour {
         if (attack == null) return;
 
         if (GetComponent<Ent>() != null) {
-            attack.agility_rating = ConfigureFey.agility_rating[Soldier.Clasification.Ent];
-            attack.strength_rating = ConfigureFey.strength_rating[Soldier.Clasification.Ent];
+            attack.AgilityRating = ConfigureFey.agility_rating[Soldier.Clasification.Ent];
+            attack.StrengthRating = ConfigureFey.strength_rating[Soldier.Clasification.Ent];
         }
     }
 }

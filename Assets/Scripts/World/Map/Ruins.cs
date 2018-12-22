@@ -65,7 +65,7 @@ public class Ruins : MonoBehaviour {
 
     private void Construct()
     {
-        Grid ruin_grid = Grid.New(Locate(200f), Random.Range(5, 8), Random.Range(5, 8), Spacing());
+        Grid ruin_grid = Grid.New(Locate(200), Random.Range(5, 8), Random.Range(5, 8), Spacing());
         RuinComplex _complex = RuinComplex.New(ruin_grid, ruin_prefab, this);
         if (_complex.RuinBlocks.Count > 0) {
             RuinBlocks.AddRange(_complex.RuinBlocks);
@@ -74,7 +74,7 @@ public class Ruins : MonoBehaviour {
     }
 
 
-    private Vector3 Locate(float distance_from_edge)
+    private Vector3 Locate(int distance_from_edge)
     {
         return Geography.Instance.RandomLocation(distance_from_edge);
     }

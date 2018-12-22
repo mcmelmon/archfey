@@ -4,9 +4,13 @@ using UnityEngine;
 
 public class World : MonoBehaviour {
 
+    public Light the_sun;
+
+
     // properties
 
     public static World Instance { get; set; }
+
 
     // Unity
 
@@ -19,6 +23,9 @@ public class World : MonoBehaviour {
             return;
         }
         Instance = this;
+        Vector3 sun_rotation = new Vector3(60, 90, 0);
+        the_sun.transform.rotation = Quaternion.Euler(sun_rotation);
+
     }
 
 
@@ -29,6 +36,12 @@ public class World : MonoBehaviour {
 
 
     // public
+
+
+    public Light Sun()
+    {
+        return the_sun;
+    }
 
 
     // private

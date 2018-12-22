@@ -39,16 +39,16 @@ public static class ConfigureMhoddim
     {
 
         // versatile
-        agility_rating[Soldier.Clasification.Heavy] = 0;
-        agility_rating[Soldier.Clasification.Scout] = 3;
-        agility_rating[Soldier.Clasification.Striker] = 1;
+        agility_rating[Soldier.Clasification.Heavy] = 1;
+        agility_rating[Soldier.Clasification.Scout] = 4;
+        agility_rating[Soldier.Clasification.Striker] = 2;
 
         strength_rating[Soldier.Clasification.Heavy] = 2;
         strength_rating[Soldier.Clasification.Scout] = 0;
         strength_rating[Soldier.Clasification.Striker] = 2;
 
         // defense
-        armor_rating[Soldier.Clasification.Heavy] = 3;
+        armor_rating[Soldier.Clasification.Heavy] = 4;
         corporeal_rating[Soldier.Clasification.Heavy] = 0;
         counter[Soldier.Clasification.Heavy] = 0;
         force_rating[Soldier.Clasification.Heavy] = 3;
@@ -56,12 +56,12 @@ public static class ConfigureMhoddim
         armor_rating[Soldier.Clasification.Scout] = 1;
         corporeal_rating[Soldier.Clasification.Scout] = 0;
         counter[Soldier.Clasification.Scout] = 5;
-        force_rating[Soldier.Clasification.Scout] = 0;
+        force_rating[Soldier.Clasification.Scout] = 1;
 
         armor_rating[Soldier.Clasification.Striker] = 2;
         corporeal_rating[Soldier.Clasification.Striker] = 0;
         counter[Soldier.Clasification.Striker] = 0;
-        force_rating[Soldier.Clasification.Striker] = 0;
+        force_rating[Soldier.Clasification.Striker] = 2;
 
         // health
         starting_health[Soldier.Clasification.Heavy] = 130;

@@ -35,6 +35,18 @@ public class Offense : MonoBehaviour
         // must be called by Conflict instead of Start to ensure Map setup complete
 
         //SpawnScouts();
+
+        for (int i = 0; i < 1; i++)
+        {
+            GameObject _heavy = Spawn(Geography.Instance.RandomLocation());
+            _heavy.AddComponent<Heavy>();
+        }
+
+        for (int i = 0; i < 1; i++)
+        {
+            GameObject _striker = Spawn(Geography.Instance.RandomLocation());
+            _striker.AddComponent<Striker>();
+        }
     }
 
 
@@ -60,8 +72,8 @@ public class Offense : MonoBehaviour
     private GameObject Spawn(Vector3 point)
     {
         GameObject _soldier = (Faction == Conflict.Faction.Ghaddim) ? Ghaddim.SpawnUnit() : Mhoddim.SpawnUnit();
-        _soldier.transform.position = point;
         _soldier.transform.parent = transform;
+        _soldier.transform.position = point;
         _soldier.GetComponent<Actor>().Role = Conflict.Role.Offense;
         Units.Add(_soldier);
         Conflict.Units.Add(_soldier);

@@ -66,9 +66,9 @@ public static class ConfigureGhaddim
         starting_health[Soldier.Clasification.Scout] = 70;
         starting_health[Soldier.Clasification.Striker] = 100;
 
-        recovery_amount[Soldier.Clasification.Heavy] = 8;
-        recovery_amount[Soldier.Clasification.Scout] = 5;
-        recovery_amount[Soldier.Clasification.Striker] = 5;
+        recovery_amount[Soldier.Clasification.Heavy] = 3;
+        recovery_amount[Soldier.Clasification.Scout] = 1;
+        recovery_amount[Soldier.Clasification.Striker] = 2;
     }
 
 

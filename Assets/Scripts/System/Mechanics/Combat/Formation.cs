@@ -44,17 +44,20 @@ public class Formation
         switch (alignment)
         {
             case Alignment.Circle:
-                foreach (var unit in Units) {
-                    facing = unit.transform.position - Anchor;
+                for (int i = 0; i < Units.Count; i++) {
+                    GameObject _unit = Units[i];
+                    if (_unit == null) continue;
+                    facing = _unit.transform.position - Anchor;
                     facing.y = 0;
-                    unit.transform.rotation = Quaternion.LookRotation(facing);
+                    _unit.transform.rotation = Quaternion.LookRotation(facing);
                 }
                 break;
             case Alignment.Grid:
-                foreach (var unit in Units)
-                {
+                for (int i = 0; i < Units.Count; i++) {
+                    GameObject _unit = Units[i];
+                    if (_unit == null) continue;
                     facing.y = 0;
-                    unit.transform.rotation = Quaternion.LookRotation(facing);
+                    _unit.transform.rotation = Quaternion.LookRotation(facing);
                 }
                 break;
         }
@@ -94,14 +97,16 @@ public class Formation
     // private
 
 
-    private void March()
+    private void March(Route _route)
     {
-        foreach (var unit in Units) {
-            if (Route != null) {
-                unit.GetComponent<Movement>().SetRoute(Route);
-            }
+        for (int i = 0; i < Units.Count; i++) {
+            GameObject _unit = Units[i];
+            if (_unit == null) continue;
+            if (Route != null)
+                _unit.GetComponent<Movement>().SetRoute(_route);
         }
     }
+
 
     private void PositionCircle(Circle formation)
     {

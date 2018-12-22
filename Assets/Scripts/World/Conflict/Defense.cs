@@ -35,13 +35,13 @@ public class Defense : MonoBehaviour
 
         // spawn the defense randomly, give them time to claim some ruins, then spawn offense
 
-        for (int i = 0; i < 14; i++) {
-            GameObject _heavy = Spawn(Geography.Instance.RandomLocation(Geography.Instance.GetResolution() / 4f));
+        for (int i = 0; i < 1; i++) {
+            GameObject _heavy = Spawn(Geography.Instance.RandomLocation());
             _heavy.AddComponent<Heavy>();
         }
 
-        for (int i = 0; i < 6; i++) {
-            GameObject _striker = Spawn(Geography.Instance.RandomLocation(Geography.Instance.GetResolution() / 4f));
+        for (int i = 0; i < 1; i++) {
+            GameObject _striker = Spawn(Geography.Instance.RandomLocation());
             _striker.AddComponent<Striker>();
         }
     }
@@ -59,8 +59,8 @@ public class Defense : MonoBehaviour
     private GameObject Spawn(Vector3 point)
     {
         GameObject _soldier = (Faction == Conflict.Faction.Ghaddim) ? Ghaddim.SpawnUnit() : Mhoddim.SpawnUnit();
-        _soldier.transform.position = point;
         _soldier.transform.parent = transform;
+        _soldier.transform.position = point;
         _soldier.GetComponent<Actor>().Role = Conflict.Role.Defense;
         Units.Add(_soldier);
         Conflict.Units.Add(_soldier);

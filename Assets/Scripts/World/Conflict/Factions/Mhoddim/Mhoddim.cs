@@ -115,14 +115,14 @@ public class Mhoddim : MonoBehaviour {
         if (attack == null) return;
 
         if (GetComponent<Heavy>() != null) {
-            attack.agility_rating = ConfigureMhoddim.starting_health[Soldier.Clasification.Heavy];
-            attack.strength_rating = ConfigureMhoddim.starting_health[Soldier.Clasification.Heavy];
+            attack.AgilityRating = ConfigureMhoddim.starting_health[Soldier.Clasification.Heavy];
+            attack.StrengthRating = ConfigureMhoddim.starting_health[Soldier.Clasification.Heavy];
         } else if (GetComponent<Scout>() != null) {
-            attack.agility_rating = ConfigureMhoddim.starting_health[Soldier.Clasification.Scout];
-            attack.strength_rating = ConfigureMhoddim.starting_health[Soldier.Clasification.Scout];
+            attack.AgilityRating = ConfigureMhoddim.starting_health[Soldier.Clasification.Scout];
+            attack.StrengthRating = ConfigureMhoddim.starting_health[Soldier.Clasification.Scout];
         } else if (GetComponent<Striker>() != null) {
-            attack.agility_rating = ConfigureMhoddim.starting_health[Soldier.Clasification.Striker];
-            attack.strength_rating = ConfigureMhoddim.starting_health[Soldier.Clasification.Striker];
+            attack.AgilityRating = ConfigureMhoddim.starting_health[Soldier.Clasification.Striker];
+            attack.StrengthRating = ConfigureMhoddim.starting_health[Soldier.Clasification.Striker];
         }
     }
 }

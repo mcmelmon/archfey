@@ -14,6 +14,7 @@ public class Conflict : MonoBehaviour
 
     // properties
 
+    public Conflict.Role NextWave { get; set; }
     public static Conflict Instance { get; set; }
     public static List<GameObject> Units { get; set; }
 
@@ -40,7 +41,8 @@ public class Conflict : MonoBehaviour
     {
         GenerateStats();
         CreateNavigationMesh();
-        FirstWave();
+        ChooseSides();
+        StartCoroutine(Waves());
     }
 
 
@@ -53,7 +55,7 @@ public class Conflict : MonoBehaviour
     }
 
 
-    private void FirstWave()
+    private void ChooseSides()
     {
         if (Random.Range(0,2) < 1) {
             Defense.Instance.Faction = Faction.Ghaddim;
@@ -64,7 +66,7 @@ public class Conflict : MonoBehaviour
         }
 
         Defense.Instance.Deploy();
-        Offense.Instance.Deploy();
+        NextWave = Role.Offense;
     }
 
 
@@ -73,5 +75,26 @@ public class Conflict : MonoBehaviour
         ConfigureFey.GenerateStats();
         ConfigureGhaddim.GenerateStats();
         ConfigureMhoddim.GenerateStats();
+    }
+
+
+    private IEnumerator Waves()
+    {
+        while (true) {
+            yield return new WaitForSeconds(60f);
+
+            Light the_sun = World.Instance.Sun();
+
+            switch (NextWave) {
+                case Role.Defense:
+                    Defense.Instance.Deploy();
+                    NextWave = Role.Offense;
+                    break;
+                case Role.Offense:
+                    Offense.Instance.Deploy();
+                    NextWave = Role.Defense;
+                    break;
+            }
+        }
     }
 }

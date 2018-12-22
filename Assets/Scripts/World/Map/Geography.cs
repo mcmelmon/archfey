@@ -142,19 +142,19 @@ public class Geography : MonoBehaviour {
 
     public Vector3 RandomLocation()
     {
-        int _w = Random.Range(0, TerrainData.heightmapResolution);
-        int _d = Random.Range(0, TerrainData.heightmapResolution);
-        float _h = Terrain.SampleHeight(new Vector3(_d, 0, _w));
+        // TODO: This is returning crap
 
-        return new Vector3(_w, _h, _d);
+        Random.InitState((int)Time.time);
+        Circle _circle = Circle.CreateCircle(GetCenter(), Random.Range(10, GetResolution() - 10));
+        return _circle.RandomVertex();
     }
 
 
-    public Vector3 RandomLocation(float distance_from_edge)
+    public Vector3 RandomLocation(int distance_from_edge)
     {
-        Vector3 point = Vector3.zero;
-        Circle extent = Circle.CreateCircle(GetCenter(), (TerrainData.heightmapResolution / 2) - distance_from_edge);
-        return extent.RandomContainedPoint();
+        Random.InitState((int)Time.time);
+        Circle _circle = Circle.CreateCircle(GetCenter(), Random.Range(10, GetResolution()/2 - distance_from_edge));
+        return _circle.RandomVertex();
     }
 
 

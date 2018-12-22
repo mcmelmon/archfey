@@ -2,26 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Attack : MonoBehaviour {
+public class Attack : MonoBehaviour
+{
 
-    public int agility_rating;
     public List<Weapon> available_weapons;
-    public int strength_rating;
 
-    private readonly List<GameObject> available_melee_targets = new List<GameObject>();
-    private readonly List<GameObject> available_ranged_targets = new List<GameObject>();
-    private readonly List<GameObject> current_melee_targets = new List<GameObject>();
-    private readonly List<GameObject> current_ranged_targets = new List<GameObject>();
 
-    Actor actor;
-    Weapon equipped_weapon;
+    // properties
+
+    public Actor Actor { get; set; }
+    public int AgilityRating { get; set; }
+    public List<GameObject> AvailableMeleeTargets { get; set; }
+    public List<GameObject> AvailableRangedTargets { get; set; }
+    public List<GameObject> CurrentMeleeTargets { get; set; }
+    public List<GameObject> CurrentRangedTargets { get; set; }
+    public int StrengthRating { get; set; }
+    public Weapon Weapon { get; set; }
+
 
     // Unity
 
 
     private void Awake()
     {
-        actor = GetComponent<Actor>();
+        SetComponents();
     }
 
 
@@ -36,15 +40,22 @@ public class Attack : MonoBehaviour {
     }
 
 
+    public List<Weapon> AvailableWeapons()
+    {
+        return available_weapons;
+    }
+
+
     public bool Engaged()
     {
-        return current_melee_targets.Count > 0 || current_ranged_targets.Count > 0;
+        AttackEnemiesInRange();
+        return CurrentMeleeTargets.Count > 0 || CurrentRangedTargets.Count > 0;
     }
 
 
     public Weapon GetWeapon()
     {
-        return equipped_weapon;
+        return Weapon;
     }
 
 
@@ -55,18 +66,19 @@ public class Attack : MonoBehaviour {
     {
         ClearTargets();
 
-        foreach (var enemy in actor.Enemies) {
-            if (enemy == null) continue;
+        for (int i = 0; i < Actor.Enemies.Count; i++) {
+            GameObject _enemy = Actor.Enemies[i];
+            if (_enemy == null || transform == null) continue;
 
-            float grounded_center_distance = Vector3.Distance(new Vector3(enemy.transform.position.x, 0, enemy.transform.position.z), new Vector3(transform.position.x, 0, transform.position.z));
-            float combined_radius = (enemy.GetComponent<CapsuleCollider>().radius * enemy.transform.localScale.x) + (GetComponent<CapsuleCollider>().radius * transform.localScale.x);
+            float grounded_center_distance = Vector3.Distance(new Vector3(_enemy.transform.position.x, 0, _enemy.transform.position.z), new Vector3(transform.position.x, 0, transform.position.z));
+            float combined_radius = (_enemy.GetComponent<CapsuleCollider>().radius * _enemy.transform.localScale.x) + (GetComponent<CapsuleCollider>().radius * transform.localScale.x);
             float separation = grounded_center_distance - combined_radius;
 
             if (separation <= LongestMeleeRange()) {
-                available_melee_targets.Add(enemy);
+                AvailableMeleeTargets.Add(_enemy);
             } else if (separation <= LongestRangedRange()) {
                 // targets in melee range are also potential ranged targets
-                available_ranged_targets.Add(enemy);
+                AvailableRangedTargets.Add(_enemy);
             }
         }
     }
@@ -74,10 +86,10 @@ public class Attack : MonoBehaviour {
 
     private void ClearTargets()
     {
-        available_melee_targets.Clear();
-        available_ranged_targets.Clear();
-        current_melee_targets.Clear();
-        current_ranged_targets.Clear();
+        AvailableMeleeTargets.Clear();
+        AvailableRangedTargets.Clear();
+        CurrentMeleeTargets.Clear();
+        CurrentRangedTargets.Clear();
     }
 
 
@@ -85,7 +97,7 @@ public class Attack : MonoBehaviour {
     {
         float longest_range = float.MinValue;
 
-        foreach (var weapon in available_weapons) {
+        foreach (var weapon in AvailableWeapons()) {
             if (weapon.melee_attack_range > longest_range) {
                 longest_range = weapon.melee_attack_range;
             }
@@ -99,7 +111,7 @@ public class Attack : MonoBehaviour {
     {
         float longest_range = float.MinValue;
 
-        foreach (var weapon in available_weapons) {
+        foreach (var weapon in AvailableWeapons()) {
             if (weapon.ranged_attack_range > longest_range) {
                 longest_range = weapon.ranged_attack_range;
             }
@@ -113,41 +125,45 @@ public class Attack : MonoBehaviour {
     {
         // attack targets in melee range before those at distance
 
-        if (available_melee_targets.Count > 0)
-        {
-            current_melee_targets.Add(TargetMelee());
+        if (AvailableMeleeTargets.Count > 0) {
+            CurrentMeleeTargets.Add(TargetMelee());
+        } else if (AvailableRangedTargets.Count > 0) {
+            CurrentRangedTargets.Add(TargetRanged());
         }
-        else if (available_ranged_targets.Count > 0)
-        {
-            current_ranged_targets.Add(TargetRanged());
-        }
+    }
+
+
+    private void SetComponents()
+    {
+        Actor = GetComponent<Actor>();
+        AvailableMeleeTargets = new List<GameObject>();
+        AvailableRangedTargets = new List<GameObject>();
+        CurrentMeleeTargets = new List<GameObject>();
+        CurrentRangedTargets = new List<GameObject>();
     }
 
 
     private void StrikeAtMelee()
     {
-        if (current_melee_targets.Count == 0) return;
+        if (CurrentMeleeTargets.Count == 0) return;
 
-        GameObject _target = current_melee_targets[Random.Range(0, current_melee_targets.Count)];
+        GameObject _target = CurrentMeleeTargets[Random.Range(0, CurrentMeleeTargets.Count)];
+        if (_target == null || transform == null) return;
+
         Vector3 swing_direction = _target.transform.position - transform.position;
         swing_direction.y = transform.position.y;
 
-        foreach (var weapon in available_weapons)
-        {
-            if (weapon.range == Weapon.Range.Melee)
-            {
-                if (equipped_weapon == null)
-                {
-                    equipped_weapon = Instantiate(weapon, transform.Find("MeleeAttackOrigin").transform.position, transform.rotation);  // TODO: make enums
-                    equipped_weapon.transform.position += 0.2f * swing_direction.normalized;  // TODO: give melee weapons a length
-                    equipped_weapon.transform.parent = transform;
-                    equipped_weapon.name = "Melee Weapon";
+        foreach (var weapon in AvailableWeapons()) {
+            if (weapon.range == Weapon.Range.Melee) {
+                if (Weapon == null) {
+                    Weapon = Instantiate(weapon, transform.Find("MeleeAttackOrigin").transform.position, transform.rotation);  // TODO: make enums
+                    Weapon.transform.position += 0.2f * swing_direction.normalized;  // TODO: give melee weapons a length
+                    Weapon.transform.parent = transform;
+                    Weapon.name = "Melee Weapon";
                 }
-                equipped_weapon.SetTarget(_target);
-                equipped_weapon.Hit();
-            }
-            else if (weapon.range == Weapon.Range.Ranged)
-            {
+                Weapon.SetTarget(_target);
+                Weapon.Hit();
+            } else if (weapon.range == Weapon.Range.Ranged) {
 
                 // we have no available melee weapon, so use range on melee target
 
@@ -162,17 +178,15 @@ public class Attack : MonoBehaviour {
 
     private void StrikeAtRanged()
     {
-        if (current_ranged_targets.Count == 0) return;
+        if (CurrentRangedTargets.Count == 0) return;
 
-        foreach (var weapon in available_weapons)
-        {
+        foreach (var weapon in AvailableWeapons()) {
 
             // TODO: potentially disadvantage ranged attacks against melee targets
 
-            GameObject _target = current_ranged_targets[Random.Range(0, current_ranged_targets.Count)];
+            GameObject _target = CurrentRangedTargets[Random.Range(0, CurrentRangedTargets.Count)];
 
-            if (weapon.range == Weapon.Range.Ranged)
-            {
+            if (weapon.range == Weapon.Range.Ranged) {
                 Weapon _ranged = Instantiate(weapon, transform.Find("RangedAttackOrigin").transform.position, transform.rotation);  // TODO: make enums
                 _ranged.transform.parent = transform;
                 _ranged.name = "Ranged Weapon";
@@ -188,7 +202,7 @@ public class Attack : MonoBehaviour {
 
         // If any targets are in melee range, strike at them ahead of ranged
 
-        if (current_melee_targets.Count == 0 && current_ranged_targets.Count == 0) return;
+        if (CurrentMeleeTargets.Count == 0 && CurrentRangedTargets.Count == 0) return;
 
         // TODO: allow stealth to be recovered, e.g. "Vanish" and even attacking from stealth for a short while, etc.
         Stealth stealth = GetComponent<Stealth>();
@@ -197,7 +211,7 @@ public class Attack : MonoBehaviour {
             stealth.spotted = true;
         }
 
-        if (current_melee_targets.Count > 0) {
+        if (CurrentMeleeTargets.Count > 0) {
             StrikeAtMelee();
         } else { 
             StrikeAtRanged();
@@ -210,9 +224,8 @@ public class Attack : MonoBehaviour {
         // select a random melee target
         GameObject _target = null;
 
-        if (available_melee_targets.Count > 0)
-        {
-            _target = available_melee_targets[Random.Range(0, available_melee_targets.Count)];
+        if (AvailableMeleeTargets.Count > 0) {
+            _target = AvailableMeleeTargets[Random.Range(0, AvailableMeleeTargets.Count)];
         }
 
         return _target;
@@ -225,9 +238,8 @@ public class Attack : MonoBehaviour {
 
         GameObject _target = null;
 
-        if (available_ranged_targets.Count > 0)
-        {
-            _target = available_ranged_targets[Random.Range(0, available_ranged_targets.Count)];
+        if (AvailableRangedTargets.Count > 0) {
+            _target = AvailableRangedTargets[Random.Range(0, AvailableRangedTargets.Count)];
         }
 
         return _target;
