@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Ruin : MonoBehaviour
 {
@@ -58,30 +59,88 @@ public class Ruin : MonoBehaviour
         while (true) {
             yield return new WaitForSeconds(Turn.action_threshold);
 
-            Conflict.Faction contending_faction = Conflict.Faction.None;
+            Conflict.Faction new_faction = Conflict.Faction.None;
+            Conflict.Faction previous_faction = Control;
 
             foreach (var control_point in ControlPoints) {
                 RuinControlPoint _point = control_point.GetComponent<RuinControlPoint>();
-                Conflict.Faction _faction = _point.Faction;
+                Conflict.Faction point_faction = _point.Faction;
 
-                if (contending_faction == Conflict.Faction.None)
-                    contending_faction = _faction;
+                if (new_faction == Conflict.Faction.None)
+                    // We have just entered the loop
+                    new_faction = point_faction;
 
-                if ((_faction == Conflict.Faction.None)) {
-                    Control = contending_faction = Conflict.Faction.None;
+                if ((point_faction == Conflict.Faction.None)) {
+                    Control = new_faction = Conflict.Faction.None;
                     Controlled = false;
                     GetComponent<Renderer>().material = unclaimed_skin;
                     break;
-                } else if (contending_faction != _faction) {
-                    Control = contending_faction = Conflict.Faction.None;
+                } else if (new_faction != point_faction) {
+                    Control = new_faction = Conflict.Faction.None;
                     Controlled = false;
                     GetComponent<Renderer>().material = unclaimed_skin;
                     break;
                 }
             }
 
-            if (contending_faction != Conflict.Faction.None)
-                TransferControl(contending_faction);
+            if (new_faction != Conflict.Faction.None) {
+                TransferControl(new_faction, previous_faction);
+            }
+        }
+    }
+
+
+    private void PresentRuinControl(Conflict.Faction new_faction, Conflict.Faction previous_faction)
+    {
+        GameObject ruin_control = Ruins.Instance.ruin_control_ui;
+
+        if (new_faction != Conflict.Faction.None) {
+            Transform _captured = ruin_control.transform.Find("RuinCaptured");
+            Transform _text = _captured.Find("Text");
+            Transform _faction = _text.Find("Faction");
+            Transform _summary = _text.Find("Summary");
+            TextMeshProUGUI faction_text = _faction.GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI summary_text = _summary.GetComponent<TextMeshProUGUI>();
+
+
+            switch (new_faction) {
+                case Conflict.Faction.Ghaddim:
+                    Ghaddim.Ruins.Add(this);
+                    faction_text.text = "Ashen";
+                    summary_text.text = "Ashen control " + Ghaddim.Ruins.Count + ((Ghaddim.Ruins.Count == 1) ? " ruin!" : " ruins!");
+                    _captured.gameObject.SetActive(true);
+                    break;
+                case Conflict.Faction.Mhoddim:
+                    Mhoddim.Ruins.Add(this);
+                    faction_text.text = "Nibelung";
+                    summary_text.text = "Nibelung control " + Mhoddim.Ruins.Count + ((Mhoddim.Ruins.Count == 1) ? " ruin!" : " ruins!");
+                    _captured.gameObject.SetActive(true);
+                    break;
+            }
+        } else {
+            Transform _lost = ruin_control.transform.Find("RuinLost");
+            Transform _text = _lost.Find("Text");
+            Transform _faction = _text.Find("Faction");
+            Transform _summary = _text.Find("Summary");
+            TextMeshProUGUI faction_text = _faction.GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI summary_text = _summary.GetComponent<TextMeshProUGUI>();
+
+            switch (previous_faction) {
+                case Conflict.Faction.Ghaddim:
+                    Ghaddim.Ruins.Remove(this);
+                    faction_text.text = "Ashen";
+                    summary_text.text = "Ashen control " + Ghaddim.Ruins.Count + ((Ghaddim.Ruins.Count == 1) ? " ruin!" : " ruins!");
+                    _lost.gameObject.SetActive(true);
+                    break;
+                case Conflict.Faction.Mhoddim:
+                    Mhoddim.Ruins.Remove(this);
+                    faction_text.text = "Nibelung";
+                    summary_text.text = "Nibelung control " + Mhoddim.Ruins.Count + ((Mhoddim.Ruins.Count == 1) ? " ruin!" : " ruins!");
+                    _lost.gameObject.SetActive(true);
+                    break;
+                case Conflict.Faction.None:
+                    break;
+            }
         }
     }
 
@@ -113,11 +172,12 @@ public class Ruin : MonoBehaviour
     }
 
 
-    private void TransferControl(Conflict.Faction faction)
+    private void TransferControl(Conflict.Faction new_faction, Conflict.Faction previous_faction)
     {
-        Control = faction;
+        Control = new_faction;
         Controlled = true;
         GetComponent<Renderer>().material = (Control == Conflict.Faction.Ghaddim) ? ghaddim_skin : mhoddim_skin;
+        PresentRuinControl(new_faction, previous_faction);
     }
 }
 

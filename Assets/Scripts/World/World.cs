@@ -23,7 +23,7 @@ public class World : MonoBehaviour {
             return;
         }
         Instance = this;
-        Vector3 sun_rotation = new Vector3(30, 60, 0);
+        Vector3 sun_rotation = new Vector3(25, 70, 0);
         the_sun.transform.rotation = Quaternion.Euler(sun_rotation);
 
     }

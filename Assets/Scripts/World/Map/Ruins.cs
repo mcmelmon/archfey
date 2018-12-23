@@ -6,7 +6,9 @@ using UnityEngine;
 public class Ruins : MonoBehaviour {
 
     public enum Category { Primary = 0, Secondary = 1, Tertiary = 2 };
-    public Ruin ruin_prefab;
+
+    public GameObject ruin_control_ui;
+    public Ruin ruin_prefab; // changin this requires updating Inspector
 
 
     // properties

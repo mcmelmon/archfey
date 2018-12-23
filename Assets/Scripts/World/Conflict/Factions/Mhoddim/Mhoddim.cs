@@ -6,6 +6,7 @@ public class Mhoddim : MonoBehaviour {
 
     // properties
 
+    public static List<Ruin> Ruins { get; set; }
     public static Threat Threat { get; set; }
 
 
@@ -25,6 +26,7 @@ public class Mhoddim : MonoBehaviour {
 
     private void Awake()
     {
+        Ruins = new List<Ruin>();
         Threat = gameObject.AddComponent<Threat>();
     }
 

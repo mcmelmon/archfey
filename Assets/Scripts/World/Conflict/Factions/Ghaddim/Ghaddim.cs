@@ -6,6 +6,7 @@ public class Ghaddim : MonoBehaviour {
 
     // properties
 
+    public static List<Ruin> Ruins { get; set; }
     public static Threat Threat { get; set; }
 
 
@@ -26,6 +27,7 @@ public class Ghaddim : MonoBehaviour {
 
     private void Awake()
     {
+        Ruins = new List<Ruin>();
         Threat = gameObject.AddComponent<Threat>();
     }
 
