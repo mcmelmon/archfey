@@ -14,7 +14,7 @@ public class Defend : MonoBehaviour
 
     float computed_damage;       // final health loss
 
-    GameObject attacker;
+    Attack attacker;
     Weapon weapon;
 
 
@@ -40,12 +40,12 @@ public class Defend : MonoBehaviour
     // public
 
 
-    public float HandleAttack(Weapon _weapon, GameObject _attacker)
+    public float HandleAttack(Weapon _weapon, Attack _attacker)
     {
         // Apply our defense characteristics to an attack and compute damage
         attacker = _attacker;
         weapon = _weapon;
-        computed_damage = weapon.instant_damage;  // TODO: handle damage over time
+        computed_damage = weapon.instant_damage + attacker.AgilityRating + attacker.StrengthRating;  // TODO: handle damage over time
 
         ApplyAgility();
         ApplyCorporeal();

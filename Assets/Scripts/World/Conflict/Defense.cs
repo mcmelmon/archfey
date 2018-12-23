@@ -33,30 +33,21 @@ public class Defense : MonoBehaviour
     {
         // must be called by Conflict instead of Start to ensure Map setup complete
 
-        foreach (KeyValuePair<Ruins.Category, Circle> circle in Ruins.Circles) {
-            switch (circle.Key) {
-                case Ruins.Category.Primary:
-                    Formation block_formation = Formation.CreateFormation(circle.Value.center, Formation.Profile.Circle);
+        // spawn the defense randomly, give them time to claim some ruins, then spawn offense
 
-                    for (int i = 0; i < 10; i++) {
-                        GameObject _heavy = Spawn(circle.Value.RandomContainedPoint());
-                        _heavy.AddComponent<Heavy>();
-                        block_formation.JoinFormation(_heavy);
-                        _heavy.GetComponent<Soldier>().SetFormation(block_formation);
-                    }
-                    break;
-                //case Ruins.Category.Secondary:
-                    //Formation strike_formation = Formation.CreateFormation(circle.Value.center, Formation.Profile.Rectangle);
+        for (int i = 0; i < 14; i++) {
+            Tile tile = Geography.Instance.RandomUnoccupiedTile();
+            GameObject _heavy = Spawn(tile.Location);
+            _heavy.AddComponent<Heavy>();
+            tile.Occupier = _heavy.GetComponent<Actor>();
+        }
 
-                    //for (int i = 0; i < 6; i++) {
-                    //    GameObject _striker = Spawn(circle.Value.RandomContainedPoint());
-                    //    _striker.AddComponent<Striker>();
-                    //    strike_formation.JoinFormation(_striker);
-                    //    _striker.GetComponent<Soldier>().SetFormation(strike_formation);
-
-                    //}
-                    //break;
-            }
+        for (int i = 0; i < 6; i++)
+        {
+            Tile tile = Geography.Instance.RandomUnoccupiedTile();
+            GameObject _striker = Spawn(tile.Location);
+            _striker.AddComponent<Striker>();
+            tile.Occupier = _striker.GetComponent<Actor>();
         }
     }
 
@@ -70,10 +61,9 @@ public class Defense : MonoBehaviour
     }
 
 
-    private GameObject Spawn(Vector3 point)
+    private GameObject Spawn(Vector3 _point)
     {
-        GameObject _soldier = (Faction == Conflict.Faction.Ghaddim) ? Ghaddim.SpawnUnit() : Mhoddim.SpawnUnit();
-        _soldier.transform.position = point;
+        GameObject _soldier = (Faction == Conflict.Faction.Ghaddim) ? Ghaddim.SpawnUnit(_point) : Mhoddim.SpawnUnit(_point);
         _soldier.transform.parent = transform;
         _soldier.GetComponent<Actor>().Role = Conflict.Role.Defense;
         Units.Add(_soldier);

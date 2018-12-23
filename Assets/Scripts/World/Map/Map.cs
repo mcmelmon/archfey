@@ -80,9 +80,9 @@ public class Map : MonoBehaviour {
 
     private void SetFoundations()
     {
-        GetComponentInChildren<Geography>().LayTheLand();
-        GetComponentInChildren<Biosphere>().Eden();
-        GetComponentInChildren<Civilization>().DawnOfMhoddim();
+        if (Geography.Instance != null) Geography.Instance.LayTheLand();
+        if (Biosphere.Instance != null) Biosphere.Instance.Eden();
+        if (Civilization.Instance != null) Civilization.Instance.DawnOfMhoddim();
     }
 
 

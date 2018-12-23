@@ -2,62 +2,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tile : MonoBehaviour {
+public class Tile {
 
-    // TODO: Tile no longer builds the map, but should define an "actable area"
+    // properties
 
-    public Dictionary<string, int> coordinates = new Dictionary<string, int>();
-    public Ruin ruin;
-    public Actor occupier;
-    public List<Obstacle> obstacles = new List<Obstacle>();
-    public List<Tree> trees = new List<Tree>();
-
-    Geography geography;
+    public Vector3 Location { get; set; }
+    public Ruin Ruin { get; set; }
+    public Actor Occupier { get; set; }
+    public List<Obstacle> Obstacles { get; set; }
+    public List<Tree> Trees { get; set; }
 
 
-    // Unity
+    // static
 
 
-    void Awake ()
+    public static Tile New(Vector3 _location)
     {
-        geography = transform.GetComponentInParent<Geography>();
-	}
-
-
-    // public
-
-
-    public void AddObstacle(Obstacle _obstacle)
-    {
-        _obstacle.transform.position = transform.position + new Vector3(0, (obstacles.Count + 1), 0);
-        obstacles.Add(_obstacle);
-    }
-
-
-    public Dictionary<string, Tile> GetNeighbors()
-    {
-        // TODO: return near objects
-        Dictionary<string, Tile> neighbors = new Dictionary<string, Tile>();
-
-        return neighbors;
-    }
-
-
-    public Tile InstantiateScaledTile(int w, int h, int d, int scale, Geography geography)
-    {
-        Vector3 location = new Vector3(w * scale, h, d * scale);
-        Tile _tile = Instantiate(this, location, transform.rotation, geography.transform);
-        _tile.transform.localScale = new Vector3(scale, 1, scale);
-        _tile.coordinates["w"] = w; 
-        _tile.coordinates["h"] = h;
-        _tile.coordinates["d"] = d;
+        Tile _tile = new Tile
+        {
+            Location = _location,
+            Ruin = null,
+            Occupier = null,
+            Obstacles = new List<Obstacle>(),
+            Trees = new List<Tree>()
+        };
 
         return _tile;
     }
 
 
-    public void RemoveObstacle(Obstacle _obstacle)
+    // public
+
+
+    public bool Unoccupied()
     {
-        if (obstacles.Contains(_obstacle)) obstacles.Remove(_obstacle);
+        return Ruin == null && Occupier == null && Obstacles.Count == 0 && Trees.Count == 0;
     }
 }

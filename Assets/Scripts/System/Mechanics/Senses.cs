@@ -20,15 +20,14 @@ public class Senses : MonoBehaviour {
     }
 
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.green;
-        foreach (var sighting in Sightings)
-        {
-            if (sighting == null) continue;
-            Gizmos.DrawRay(transform.position, (sighting.transform.position - transform.position));
-        }
-    }
+    //private void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.green;
+    //    foreach (var sighting in Sightings) {
+    //        if (sighting == null) continue;
+    //        Gizmos.DrawRay(transform.position, (sighting.transform.position - transform.position));
+    //    }
+    //}
 
 
     // public
@@ -49,7 +48,7 @@ public class Senses : MonoBehaviour {
         for (int i = 0; i < colliders.Length; i++) {
             GameObject sighting = colliders[i].gameObject;
 
-            if (sighting.tag == "Actor" && sighting != gameObject) {  // don't sight ourselves
+            if (sighting.tag == "Actor" && sighting != gameObject && sighting != null) {  // don't sight ourselves
                 Stealth sighting_stealth = sighting.GetComponent<Stealth>();
 
                 if (sighting_stealth == null || sighting_stealth.Spotted(gameObject, PerceptionRating) && !Sightings.Contains(sighting)) {

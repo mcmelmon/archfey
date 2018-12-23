@@ -37,6 +37,6 @@ public class Biosphere : MonoBehaviour {
 
     private void PlaceVegetation()
     {
-        transform.GetComponentInChildren<Flora>().Grow();
+        Flora.Instance.Grow();
     }
 }

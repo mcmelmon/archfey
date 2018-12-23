@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -43,11 +44,13 @@ public class Circle {
     {
         if (center == Vector3.zero) return Vector3.zero;
 
+        UnityEngine.Random.InitState(DateTime.Now.Millisecond);
+
         Vector3 point_3;
         Vector2 point_2 = new Vector2(center.x, center.z);
         Vector2 _center = new Vector2(center.x, center.z);
 
-        point_2 = _center + Random.insideUnitCircle * radius;
+        point_2 = _center + UnityEngine.Random.insideUnitCircle * radius;
         point_3 = new Vector3(point_2.x, 0, point_2.y);
         return point_3;
     }
@@ -55,7 +58,9 @@ public class Circle {
 
     public Vector3 RandomVertex()
     {
-        return vertices[Random.Range(0, vertices.Count)];
+        UnityEngine.Random.InitState(DateTime.Now.Millisecond);
+
+        return vertices[UnityEngine.Random.Range(0, vertices.Count)];
     }
 
 

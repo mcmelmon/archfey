@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Threat : MonoBehaviour {
@@ -62,12 +63,9 @@ public class Threat : MonoBehaviour {
     {
         Conflict.Faction _faction = GetComponent<Actor>().Faction;
 
-        if (_faction == Conflict.Faction.Ghaddim)
-        {
+        if (_faction == Conflict.Faction.Ghaddim) {
             GetComponent<Ghaddim>().AddFactionThreat(_attacker, _damage);
-        }
-        else if (_faction == Conflict.Faction.Mhoddim)
-        {
+        } else if (_faction == Conflict.Faction.Mhoddim) {
             GetComponent<Mhoddim>().AddFactionThreat(_attacker, _damage);
         }
     }
@@ -80,16 +78,11 @@ public class Threat : MonoBehaviour {
     {
         while (true) {
             yield return new WaitForSeconds(Turn.action_threshold);
-            List<GameObject> removals = new List<GameObject>();
-            Dictionary<GameObject, float>.KeyCollection keys = threats.Keys;
+            var keys = threats.Keys.ToArray();
 
-            foreach (var key in keys) {
-                if (key == null) removals.Add(key);
-            }
-
-            // don't modify the dictionary while iterating through it
-            for (int i = 0; i < removals.Count; i++) {
-                threats.Remove(removals[i]);
+            for (int i = 0; i < keys.Length; i++) {
+                GameObject _key = keys[i];
+                if (_key == null) threats.Remove(_key);
             }
         }
     }

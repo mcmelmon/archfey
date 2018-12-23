@@ -34,7 +34,7 @@ public class Stealth : MonoBehaviour {
 
     private void Start()
     {
-        StartCoroutine(Camouflage());
+        if (Flora.Instance != null) StartCoroutine(Camouflage());
     }
 
 
@@ -78,7 +78,7 @@ public class Stealth : MonoBehaviour {
             RecoverStealth();
 
             if (!spotted && !attacking) {
-                GameObject[] canopies = Flora.Instance.GetCanopy();
+                GameObject[] canopies = Flora.Instance.ForestLayers;
                 if (canopies.Length > 0)
                     my_renderer.material = canopies[0].GetComponent<Renderer>().material;
             } else {

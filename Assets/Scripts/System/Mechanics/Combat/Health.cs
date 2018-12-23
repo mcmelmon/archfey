@@ -4,24 +4,27 @@ using UnityEngine;
 
 public class Health : MonoBehaviour {
 
-    public int starting_health;
-    public int current_health;
-    public int recovery_amount;
-    Actor actor;
+    // properties
+
+    public Actor Actor { get; set; }
+    public int CurrentHealth { get; set; }
+    public int RecoveryAmount { get; set; }
+    public int StartingHealth { get; set; }
+
 
     // Unity
 
 
     private void Awake()
     {
-        actor = GetComponent<Actor>();
+        Actor = GetComponent<Actor>();
     }
 
 
     private void OnValidate()
     {
-        if (starting_health < 1) starting_health = 1;
-        if (current_health < 0f) current_health = 0;
+        if (StartingHealth < 1) StartingHealth = 1;
+        if (CurrentHealth < 0f) CurrentHealth = 0;
     }
 
 
@@ -42,22 +45,23 @@ public class Health : MonoBehaviour {
 
     public void LoseHealth(float amount)
     {
-        current_health -= Mathf.RoundToInt(amount);
+        CurrentHealth -= Mathf.RoundToInt(amount);
     }
 
 
     public void RecoverHealth(int amount)
     {
-        if (amount == 0 || current_health == starting_health) return;
+        if (amount == 0 || CurrentHealth == StartingHealth) return;
 
-        current_health += amount;
-        if (current_health > starting_health) current_health = starting_health;
+        CurrentHealth += amount;
+        if (CurrentHealth > StartingHealth) CurrentHealth = StartingHealth;
     }
 
 
     public bool Persist()
     {
-        if (current_health <= 0) {
+        if (CurrentHealth <= 0) {
+            Conflict.Instance.AddCasualty(Actor.Faction);
             Destroy(gameObject);
             return false;
         }
@@ -68,13 +72,13 @@ public class Health : MonoBehaviour {
 
     public void SetRecoveryAmount(int amount)
     {
-        recovery_amount = amount;
+        RecoveryAmount = amount;
     }
 
 
     public void SetStartingHealth(int amount)
     {
-        starting_health = amount;
-        current_health = amount;
+        StartingHealth = amount;
+        CurrentHealth = amount;
     }
 }

@@ -3,7 +3,11 @@ guid: 8fdc5809f6f1b4086b088de15947bb75
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - ghaddim_skin: {instanceID: 0}
+  - mhoddim_skin: {instanceID: 0}
+  - unclaimed_skin: {instanceID: 0}
+  - prefab: {fileID: 114188019553596920, guid: 1e23d15d78b024e7a944e59d822aab57, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

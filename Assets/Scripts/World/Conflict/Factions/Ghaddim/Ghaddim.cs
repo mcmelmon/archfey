@@ -12,9 +12,9 @@ public class Ghaddim : MonoBehaviour {
     // static
 
 
-    public static GameObject SpawnUnit()
+    public static GameObject SpawnUnit(Vector3 _point)
     {
-        Ghaddim _ghaddim = Instantiate(Conflict.Instance.ghaddim_prefab, Conflict.Instance.ghaddim_prefab.transform.position, Conflict.Instance.ghaddim_prefab.transform.rotation);
+        Ghaddim _ghaddim = Instantiate(Conflict.Instance.ghaddim_prefab, _point + new Vector3(0, 4, 0), Conflict.Instance.ghaddim_prefab.transform.rotation);
         _ghaddim.gameObject.AddComponent<Soldier>();
 
         return _ghaddim.gameObject;
@@ -116,15 +116,15 @@ public class Ghaddim : MonoBehaviour {
         if (attack == null) return;
 
         if (GetComponent<Heavy>() != null) {
-            attack.agility_rating = ConfigureGhaddim.starting_health[Soldier.Clasification.Heavy];
-            attack.strength_rating = ConfigureGhaddim.starting_health[Soldier.Clasification.Heavy];
+            attack.AgilityRating = ConfigureGhaddim.starting_health[Soldier.Clasification.Heavy];
+            attack.StrengthRating = ConfigureGhaddim.starting_health[Soldier.Clasification.Heavy];
         }
         else if (GetComponent<Scout>() != null) {
-            attack.agility_rating = ConfigureGhaddim.starting_health[Soldier.Clasification.Scout];
-            attack.strength_rating = ConfigureGhaddim.starting_health[Soldier.Clasification.Scout];
+            attack.AgilityRating = ConfigureGhaddim.starting_health[Soldier.Clasification.Scout];
+            attack.StrengthRating = ConfigureGhaddim.starting_health[Soldier.Clasification.Scout];
         } else if (GetComponent<Striker>() != null) {
-            attack.agility_rating = ConfigureGhaddim.starting_health[Soldier.Clasification.Striker];
-            attack.strength_rating = ConfigureGhaddim.starting_health[Soldier.Clasification.Striker];
+            attack.AgilityRating = ConfigureGhaddim.starting_health[Soldier.Clasification.Striker];
+            attack.StrengthRating = ConfigureGhaddim.starting_health[Soldier.Clasification.Striker];
         }
     }
 }

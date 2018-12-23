@@ -75,8 +75,7 @@ public class Movement : MonoBehaviour {
     private void GetNewObjective()
     {
         Agent.ResetPath();
-        Action new_task = Route.WhenComplete;
-        new_task();
+        Route.WhenComplete?.Invoke();
     }
 
 

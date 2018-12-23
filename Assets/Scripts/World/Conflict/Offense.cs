@@ -34,7 +34,21 @@ public class Offense : MonoBehaviour
     {
         // must be called by Conflict instead of Start to ensure Map setup complete
 
-        //SpawnScouts();
+        for (int i = 0; i < 14; i++)
+        {
+            Tile tile = Geography.Instance.RandomUnoccupiedTile();
+            GameObject _heavy = Spawn(tile.Location);
+            _heavy.AddComponent<Heavy>();
+            tile.Occupier = _heavy.GetComponent<Actor>();
+        }
+
+        for (int i = 0; i < 6; i++)
+        {
+            Tile tile = Geography.Instance.RandomUnoccupiedTile();
+            GameObject _striker = Spawn(tile.Location);
+            _striker.AddComponent<Striker>();
+            tile.Occupier = _striker.GetComponent<Actor>();
+        }
     }
 
 
@@ -57,10 +71,9 @@ public class Offense : MonoBehaviour
     }
 
 
-    private GameObject Spawn(Vector3 point)
+    private GameObject Spawn(Vector3 _point)
     {
-        GameObject _soldier = (Faction == Conflict.Faction.Ghaddim) ? Ghaddim.SpawnUnit() : Mhoddim.SpawnUnit();
-        _soldier.transform.position = point;
+        GameObject _soldier = (Faction == Conflict.Faction.Ghaddim) ? Ghaddim.SpawnUnit(_point) : Mhoddim.SpawnUnit(_point);
         _soldier.transform.parent = transform;
         _soldier.GetComponent<Actor>().Role = Conflict.Role.Offense;
         Units.Add(_soldier);

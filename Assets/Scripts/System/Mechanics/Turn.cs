@@ -30,7 +30,7 @@ public class Turn : MonoBehaviour {
 
     private bool Healthy()
     {
-        health.RecoverHealth(health.recovery_amount);
+        health.RecoverHealth(health.RecoveryAmount);
         // TODO: health.ApplyDamageOverTime
         return health.Persist();
     }

@@ -9,12 +9,6 @@ public class Flora : MonoBehaviour {
     public int canopy_layers;
     public List<Canopy> leaves = new List<Canopy>();
 
-    Biosphere biosphere;
-    List<Tree> trees = new List<Tree>();
-    GameObject[] canopy;
-    GameObject carpet;
-    int width, depth;
-
     [System.Serializable]
     public struct Canopy
     {
@@ -26,7 +20,13 @@ public class Flora : MonoBehaviour {
 
     // properties
 
+    public GameObject Carpet { get; set; }
+    public int Depth { get; set; }
+    public GameObject[] ForestLayers { get; set; }
     public static Flora Instance { get; set; }
+    public List<Tree> Trees { get; set; }
+    public int Width { get; set; }
+
 
     // Unity
 
@@ -42,24 +42,6 @@ public class Flora : MonoBehaviour {
 
 
     // public
-
-
-    public List<Tree> GetTrees()
-    {
-        return trees;
-    }
-
-
-    public GameObject[] GetCanopy()
-    {
-        return canopy;
-    }
-
-
-    public GameObject GetCarpet()
-    {
-        return carpet;
-    }
 
 
     public void Grow()
@@ -85,11 +67,11 @@ public class Flora : MonoBehaviour {
         Vector2 offset = new Vector2(0,0);
 
         Noise noise = new Noise();
-        float[,] _carpet = noise.GenerateNoiseMap(width, depth, seed, scale, octaves, persistance, lacunarity, offset);
-        carpet = Layer(_carpet);
-        carpet.transform.localScale = new Vector3(75, 1, 75);
-        carpet.transform.position = new Vector3(Geography.Instance.GetResolution() / 2f, 0.1f, Geography.Instance.GetResolution() / 2f);
-        carpet.name = "Carpet";
+        float[,] _carpet = noise.GenerateNoiseMap(Width, Depth, seed, scale, octaves, persistance, lacunarity, offset);
+        Carpet = Layer(_carpet);
+        Carpet.transform.localScale = new Vector3(75, 1, 75);
+        Carpet.transform.position = new Vector3(Geography.Instance.GetResolution() / 2f, 0.1f, Geography.Instance.GetResolution() / 2f);
+        Carpet.name = "Carpet";
     }
 
 
@@ -107,29 +89,27 @@ public class Flora : MonoBehaviour {
             Vector2 offset = new Vector2(Random.Range(0,20), Random.Range(0,20));
 
             Noise noise = new Noise();
-            float[,] _canopy = noise.GenerateNoiseMap(width, depth, seed, scale, octaves, persistance, lacunarity, offset);
-            canopy[i] = Layer(_canopy, true);
-            canopy[i].transform.localScale = new Vector3(75, -1, 75);
-            canopy[i].transform.position = new Vector3(Geography.Instance.GetResolution() / 2f, 50f + (i * 25f), Geography.Instance.GetResolution() / 2f);
-            canopy[i].name = "Canopy";
-
-
+            float[,] _canopy = noise.GenerateNoiseMap(Width, Depth, seed, scale, octaves, persistance, lacunarity, offset);
+            ForestLayers[i] = Layer(_canopy, true);
+            ForestLayers[i].transform.localScale = new Vector3(75, -1, 75);
+            ForestLayers[i].transform.position = new Vector3(Geography.Instance.GetResolution() / 2f, 50f + (i * 25f), Geography.Instance.GetResolution() / 2f);
+            ForestLayers[i].name = "Canopy";
         }
     }
 
 
     private GameObject Layer(float[,] _canopy, bool enable_transparency = false)
     {
-        Texture2D texture = new Texture2D(width, depth);
+        Texture2D texture = new Texture2D(Width, Depth);
 
-        Color[] colors = new Color[width * depth];
-        for (int w = 0; w < width; w++) {
-            for (int d = 0; d < depth; d++) {
+        Color[] colors = new Color[Width * Depth];
+        for (int w = 0; w < Width; w++) {
+            for (int d = 0; d < Depth; d++) {
                 foreach (var layer in leaves) {
                     if (_canopy[w,d] <= layer.height) {
                         float alpha = 1f - _canopy[w,d];
-                        colors[w * width + d] = layer.color;
-                        colors[w * width + d].a = alpha;
+                        colors[w * Width + d] = layer.color;
+                        colors[w * Width + d].a = alpha;
                         break;
                     }
                 }
@@ -159,24 +139,26 @@ public class Flora : MonoBehaviour {
     private void PlantTrees()
     {
         int number_of_trees = Mathf.RoundToInt((Geography.Instance.GetResolution()) * (tree_coverage / 100f));
-        for (int i = 0; i < number_of_trees; i++) {
-            Vector3 position = Geography.Instance.RandomLocation();
+
+        foreach (var tile in Geography.Instance.RandomTiles(number_of_trees)) {
+            Vector3 position = tile.Location;
             Quaternion rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
             Tree _tree = Instantiate(tree_prefab, position, rotation, transform);
             float scale_boost = Random.Range(0.2f, 2f);
             _tree.transform.localScale = new Vector3(scale_boost, scale_boost, scale_boost);
             _tree.transform.position += new Vector3(0, -scale_boost, 0);
 
-            trees.Add(_tree);
+            tile.Trees.Add(_tree);
+            Trees.Add(_tree);
         }
     }
 
 
     private void SetComponents()
     {
-        biosphere = transform.GetComponentInParent<Biosphere>();
-        canopy = new GameObject[canopy_layers];
-        width = Geography.Instance.GetResolution();
-        depth = width;
+        Depth = Geography.Instance.GetResolution();
+        ForestLayers = new GameObject[canopy_layers];
+        Trees = new List<Tree>();
+        Width = Depth;
     }
 }

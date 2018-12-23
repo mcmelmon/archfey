@@ -15,9 +15,9 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
   m_Fog: 1
-  m_FogColor: {r: 0.10980392, g: 0.14509805, b: 0.078431375, a: 1}
-  m_FogMode: 2
-  m_FogDensity: 0.01
+  m_FogColor: {r: 0.18039216, g: 0.12941177, b: 0.050980393, a: 1}
+  m_FogMode: 3
+  m_FogDensity: 0.015
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
@@ -245,7 +245,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 264195861}
-  m_LocalRotation: {x: -0.06351523, y: -0.07638197, z: -0.69890785, w: 0.70827925}
+  m_LocalRotation: {x: -0.18016283, y: 0.034814317, z: -0.7072844, w: 0.68269914}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -557,7 +557,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 465733991}
-  m_LocalRotation: {x: 0.14943372, y: -0.011835548, z: 0.001788845, w: 0.98869926}
+  m_LocalRotation: {x: 0.14943373, y: -0.011835536, z: 0.0017888434, w: 0.98869926}
   m_LocalPosition: {x: 174.441, y: 10.240227, z: 153.75574}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -923,7 +923,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 829675727}
-  m_LocalRotation: {x: -0, y: 9.313227e-10, z: 0.34454954, w: 0.93876815}
+  m_LocalRotation: {x: -0, y: 0.000000030733645, z: 0.34747884, w: 0.9376878}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1203,7 +1203,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963679513}
-  m_LocalRotation: {x: -0.022579553, y: -0.060794253, z: -0.7049545, w: 0.7062815}
+  m_LocalRotation: {x: -0.022711858, y: -0.12278164, z: -0.69434357, w: 0.7087283}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1359,7 +1359,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 8
   m_Type: 1
-  m_Color: {r: 0.089444645, g: 0.2830189, b: 0.12310958, a: 1}
+  m_Color: {r: 0.7647059, g: 0.57254905, b: 0.27058825, a: 1}
   m_Intensity: 1
   m_Range: 1500
   m_SpotAngle: 30
@@ -1394,13 +1394,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1134764492}
-  m_LocalRotation: {x: 0.5735764, y: 0, z: 0, w: 0.8191521}
+  m_LocalRotation: {x: 0.22414392, y: 0.48296294, z: -0.12940955, w: 0.8365163}
   m_LocalPosition: {x: 235.9, y: 1000, z: -134.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 460771912}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 70, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 30, y: 60, z: 0}
 --- !u!1 &1154486183
 GameObject:
   m_ObjectHideFlags: 0
@@ -1757,6 +1757,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97ad63185fed54c238f58c424d84da9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  the_sun: {fileID: 1134764493}
 --- !u!1 &1503180718
 GameObject:
   m_ObjectHideFlags: 3
@@ -2796,25 +2797,22 @@ MonoBehaviour:
   leaves:
   - name: Dark
     height: 0.1
-    color: {r: 0.15842417, g: 0.33962262, b: 0.12335349, a: 0}
-  - name: Gloom
-    height: 0.15
-    color: {r: 0.22475472, g: 0.38679248, b: 0.11859204, a: 0}
+    color: {r: 0.020635847, g: 0.13207549, b: 0.008098972, a: 0}
   - name: Deep
     height: 0.2
-    color: {r: 0.091224626, g: 0.4716981, b: 0.1546369, a: 0}
-  - name: Forest
-    height: 0.25
-    color: {r: 0.19339623, g: 0.7735849, b: 0.25636247, a: 0}
-  - name: Light
+    color: {r: 0.09974316, g: 0.20754719, b: 0.071466714, a: 0}
+  - name: Dim
     height: 0.3
-    color: {r: 0.5740423, g: 1, b: 0.2971698, a: 0}
-  - name: Bright
-    height: 0.35
-    color: {r: 0.76891375, g: 0.9716981, b: 0.637104, a: 0}
-  - name: Fey
+    color: {r: 0.04258634, g: 0.31132078, b: 0.15569317, a: 0}
+  - name: Forest
     height: 0.4
-    color: {r: 0.9539933, g: 1, b: 0.5801887, a: 0}
+    color: {r: 0.031713527, g: 0.5943396, b: 0, a: 0}
+  - name: Bright
+    height: 0.5
+    color: {r: 0.15574935, g: 0.9433962, b: 0.17042117, a: 0}
+  - name: Fey
+    height: 0.6
+    color: {r: 0.8160488, g: 1, b: 0.24056602, a: 0}
 --- !u!1 &2048047799
 GameObject:
   m_ObjectHideFlags: 0

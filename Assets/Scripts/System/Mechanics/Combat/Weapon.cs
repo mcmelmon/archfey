@@ -7,8 +7,6 @@ public class Weapon : MonoBehaviour {
     public enum Range { Melee = 0, Ranged = 1 };
     public enum DamageType { Blunt = 0, Piercing = 1, Slashing = 2, Poison = 3, Elemental = 4, Arcane = 5 };
 
-    public GameObject impact_prefab;
-
     public Range range;             // melee or ranged
     public DamageType damage_type;  // what is the nature of the damage caused by the weapon?
     public int instant_damage;    // how much damage does the weapon cause when it hits?
@@ -17,15 +15,19 @@ public class Weapon : MonoBehaviour {
     public int potency;           // how effectively does the weapon overcome resistance to its type?
     public float projectile_speed;
 
+    public GameObject impact_prefab;
     public Transform ranged_attack_origin;
     public Transform melee_attack_origin;
     public float ranged_attack_range;
     public float melee_attack_range;
 
-    GameObject target;
-    Health target_health;
-    Defend target_defend;
-    Threat target_threat;
+
+    // properties
+
+    public GameObject Target { get; set; }
+    public Health TargetHealth { get; set; }
+    public Defend TargetDefend { get; set; }
+    public Threat TargetThreat { get; set; }
 
 
     // Unity
@@ -33,7 +35,7 @@ public class Weapon : MonoBehaviour {
 
     void Start()
     {
-        StartCoroutine(Seek());
+        if (range == Range.Melee) StartCoroutine(Seek());
     }
 
 
@@ -48,9 +50,7 @@ public class Weapon : MonoBehaviour {
 
     public void Hit()
     {
-        if (target != null) {
-            target_defend = target.GetComponent<Defend>();          // TODO: incorporate possibility of miss 
-
+        if (Target != null) {
             Impact();
             ApplyDamage();
             CleanUpAmmunition();
@@ -60,7 +60,10 @@ public class Weapon : MonoBehaviour {
 
     public void SetTarget(GameObject _target)
     {
-        target = _target;
+        Target = _target;
+        TargetHealth = Target.GetComponent<Health>();
+        TargetDefend = Target.GetComponent<Defend>();
+        TargetThreat = Target.GetComponent<Threat>();
     }
 
 
@@ -69,19 +72,11 @@ public class Weapon : MonoBehaviour {
 
     private void ApplyDamage()
     {
-        target_health = target.GetComponent<Health>();
-        target_defend = target.GetComponent<Defend>();
-        target_threat = target.GetComponent<Threat>();
-
-        if (target_health != null && target_defend != null) {
-            float damage_inflicted = target_defend.HandleAttack(this, this.transform.parent.gameObject);
-            target_health.LoseHealth(damage_inflicted);
-            target_threat.AddThreat(transform.parent.gameObject, damage_inflicted);
-            target_threat.SpreadThreat(transform.parent.gameObject, damage_inflicted);
-
-            // TODO: counter damage should be handled like a weapon
-            float counter_damage = target_defend.GetCounterDamage();
-            GetComponentInParent<Health>().LoseHealth(counter_damage);
+        if (TargetHealth != null && TargetDefend != null && this.transform.parent.gameObject != null) {
+            float damage_inflicted = TargetDefend.HandleAttack(this, this.transform.parent.gameObject.GetComponent<Attack>());
+            TargetHealth.LoseHealth(damage_inflicted);
+            TargetThreat.AddThreat(transform.parent.gameObject, damage_inflicted);
+            TargetThreat.SpreadThreat(transform.parent.gameObject, damage_inflicted);
         }
     }
 
@@ -105,16 +100,16 @@ public class Weapon : MonoBehaviour {
     {
         while (true) {
             if (range == Range.Ranged) {
-                if (target == null) {
+                if (Target == null) {
                     Destroy(gameObject);  // destroy ranged "ammunition"
                     yield return null;
                 }
 
                 float separation = float.MaxValue;
-                Vector3 direction = target.transform.position - transform.position;
+                Vector3 direction = Target.transform.position - transform.position;
                 float distance = projectile_speed * Time.deltaTime;
                 transform.position += distance * direction;
-                separation = Vector3.Distance(target.transform.position, transform.position);
+                separation = Vector3.Distance(Target.transform.position, transform.position);
 
                 if (separation <= .5f) Hit();
             }

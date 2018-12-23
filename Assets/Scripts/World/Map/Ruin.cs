@@ -8,7 +8,6 @@ public class Ruin : MonoBehaviour
     public Material ghaddim_skin;
     public Material mhoddim_skin;
     public Material unclaimed_skin;
-    
 
     // properties
 
@@ -19,14 +18,18 @@ public class Ruin : MonoBehaviour
     public GameObject NearestActor { get; set; }
 
 
-    // Unity
+    // static
 
 
-    private void Awake()
+    public static Ruin InstantiateRuin(Ruin prefab, Vector3 point, Ruins _ruins)
     {
-        SetComponents();
-    }
+        Ruin _ruin = Instantiate(prefab, point, _ruins.transform.rotation, _ruins.transform);
+        _ruin.transform.localScale += new Vector3(4, 16, 4);
+        _ruin.transform.position += new Vector3(0, _ruin.transform.localScale.y / 2, 0);
+        _ruin.SetComponents();
 
+        return _ruin;
+    }
 
     // public
 
@@ -96,15 +99,15 @@ public class Ruin : MonoBehaviour
 
     private void SetControlPoints()
     {
-        Circle _center = Circle.CreateCircle(transform.position, 10f, 3);
+        Circle _center = Circle.CreateCircle(new Vector3 (transform.position.x, 0, transform.position.z), 10f, 3);
 
         foreach (var vertex in _center.vertices)
         {
-            RuinControlPoint control_point = RuinControlPoint.CreateControlPoint(vertex);
+            RuinControlPoint control_point = RuinControlPoint.New(vertex);
             control_point.Ruin = this;
             control_point.transform.parent = Ruins.Instance.transform; // using the Ruin transform scales the point out
             ControlPoints.Add(control_point);
-            Ruins.AllRuinControlPoints.Add(control_point.GetComponent<RuinControlPoint>());
+            Ruins.RuinControlPoints.Add(control_point.GetComponent<RuinControlPoint>());
         }
 
     }
@@ -137,7 +140,7 @@ public class RuinControlPoint : MonoBehaviour
     // static
 
 
-    public static RuinControlPoint CreateControlPoint(Vector3 _position)
+    public static RuinControlPoint New(Vector3 _position)
     {
         GameObject ruin_control_point = new GameObject { name = "Control Point" };
         ruin_control_point.transform.position = _position;
@@ -148,6 +151,13 @@ public class RuinControlPoint : MonoBehaviour
     }
 
 
+    private void Start()
+    {
+        StartCoroutine(CheckOccupation());
+        StartCoroutine(FindNearestActor());
+    }
+
+
     // public
 
 
@@ -155,7 +165,6 @@ public class RuinControlPoint : MonoBehaviour
     {
         if (Occupier != NearestActor) {
             if (Occupier.Ghaddim == NearestActor.Ghaddim && Occupier.Mhoddim == NearestActor.Mhoddim) {
-                Occupier.GetComponent<Renderer>().material.color = Color.white;
                 Occupier.RuinControlPoint = null;
                 Occupier = NearestActor;
             }
@@ -174,10 +183,10 @@ public class RuinControlPoint : MonoBehaviour
                 Occupied = false;
                 Occupier = null;
                 Faction = Conflict.Faction.None;
-                yield return null;
-            } else {
-                yield return new WaitForSeconds(Turn.action_threshold);
-
+            } else if (Occupier != null && NearestActor.Faction != Occupier.Faction) {
+                CurrentResistancePoints += ControlResistanceRating;
+            }
+            else {
                 float distance = (NearestActor != null) ? Vector3.Distance(NearestActor.transform.position, transform.position) : float.MaxValue;
 
                 if (!Occupied && distance < Route.reached_threshold) {
@@ -186,7 +195,6 @@ public class RuinControlPoint : MonoBehaviour
                         CurrentResistancePoints = 0;
                         Occupied = true;
                         Occupier = NearestActor;
-                        Occupier.GetComponent<Renderer>().material.color = Color.red;
                         Faction = NearestActor.GetComponent<Actor>().Faction;
 
                         GameObject marker = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -194,10 +202,9 @@ public class RuinControlPoint : MonoBehaviour
                         marker.transform.position = transform.position;
                         marker.transform.localScale = new Vector3(1, 5, 1);
                         marker.transform.parent = transform;
-                        marker.GetComponent<Renderer>().material.color = Color.red;
+                        marker.GetComponent<Renderer>().material.color = Color.blue;
                     }
-                } else if (Occupied && Vector3.Distance(Occupier.transform.position, transform.position) > Route.reached_threshold) {
-                    Occupier.GetComponent<Renderer>().material.color = Color.white;
+                } else if (Occupied && (Occupier == null || Occupier.Faction != Faction || Vector3.Distance(Occupier.transform.position, transform.position) > Route.reached_threshold)) {
                     CurrentResistancePoints += ControlResistanceRating;
                     if (CurrentResistancePoints >= StartingResistancePoints) {
                         CurrentResistancePoints = StartingResistancePoints;
@@ -209,6 +216,8 @@ public class RuinControlPoint : MonoBehaviour
                     }
                 }
             }
+
+            yield return new WaitForSeconds(Turn.action_threshold);
         }
     }
 
@@ -222,17 +231,19 @@ public class RuinControlPoint : MonoBehaviour
             float distance;
             GameObject nearest_actor = null;
 
-            foreach (var unit in Conflict.Units) {
-                if (unit == null) continue;
-                distance = Vector3.Distance(transform.position, unit.transform.position);
-                if (distance < shortest_distance)
-                {
+            for (int i = 0; i < Conflict.Units.Count; i++) {
+                GameObject _unit = Conflict.Units[i];
+                if (_unit == null || transform == null) continue;
+
+                distance = Vector3.Distance(transform.position, _unit.transform.position);
+                if (distance < shortest_distance) {
                     shortest_distance = distance;
-                    nearest_actor = unit;
+                    nearest_actor = _unit;
                 }
             }
 
-            NearestActor = nearest_actor.GetComponent<Actor>();
+            if (nearest_actor != null)
+                NearestActor = nearest_actor.GetComponent<Actor>();
         }
     }
 
@@ -242,11 +253,12 @@ public class RuinControlPoint : MonoBehaviour
         float assistance = 0;
         float distance;
 
-        foreach (var unit in Conflict.Units) {
-            if (unit == null) continue;
-            distance = Vector3.Distance(transform.position, unit.transform.position);
+        for (int i = 0; i < Conflict.Units.Count; i++) {
+            GameObject _unit = Conflict.Units[i];
+            if (_unit == null || transform == null) continue;
+            distance = Vector3.Distance(transform.position, _unit.transform.position);
             if (distance < Route.reached_threshold) {
-                assistance += Mathf.Clamp(unit.GetComponent<Actor>().RuinControlRating - ControlResistanceRating, 0, unit.GetComponent<Actor>().RuinControlRating);
+                assistance += Mathf.Clamp(_unit.GetComponent<Actor>().RuinControlRating - ControlResistanceRating, 0, _unit.GetComponent<Actor>().RuinControlRating);
             }
         }
 
@@ -260,8 +272,5 @@ public class RuinControlPoint : MonoBehaviour
         CurrentResistancePoints = StartingResistancePoints = 100 + Random.Range(0,8);
         Faction = Conflict.Faction.None;
         Occupied = false;
-
-        StartCoroutine(CheckOccupation());
-        StartCoroutine(FindNearestActor());
     }
 }
