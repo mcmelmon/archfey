@@ -147,7 +147,7 @@ public class Attack : MonoBehaviour
     {
         if (CurrentMeleeTargets.Count == 0) return;
 
-        GameObject _target = CurrentMeleeTargets[Random.Range(0, CurrentMeleeTargets.Count)];
+        GameObject _target = CurrentMeleeTargets[0];
         if (_target == null || transform == null) return;
 
         Vector3 swing_direction = _target.transform.position - transform.position;
@@ -184,7 +184,7 @@ public class Attack : MonoBehaviour
 
             // TODO: potentially disadvantage ranged attacks against melee targets
 
-            GameObject _target = CurrentRangedTargets[Random.Range(0, CurrentRangedTargets.Count)];
+            GameObject _target = CurrentRangedTargets[0];
 
             if (weapon.range == Weapon.Range.Ranged) {
                 Weapon _ranged = Instantiate(weapon, transform.Find("RangedAttackOrigin").transform.position, transform.rotation);  // TODO: make enums
@@ -221,11 +221,12 @@ public class Attack : MonoBehaviour
 
     private GameObject TargetMelee()
     {
-        // select a random melee target
+        // TODO: attack the biggest threat
+
         GameObject _target = null;
 
         if (AvailableMeleeTargets.Count > 0) {
-            _target = AvailableMeleeTargets[Random.Range(0, AvailableMeleeTargets.Count)];
+            _target = AvailableMeleeTargets[0];
         }
 
         return _target;
@@ -234,12 +235,12 @@ public class Attack : MonoBehaviour
 
     private GameObject TargetRanged()
     {
-        // select a random ranged target
+        // TODO: attack the biggest threat
 
         GameObject _target = null;
 
         if (AvailableRangedTargets.Count > 0) {
-            _target = AvailableRangedTargets[Random.Range(0, AvailableRangedTargets.Count)];
+            _target = AvailableRangedTargets[0];
         }
 
         return _target;

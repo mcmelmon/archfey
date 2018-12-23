@@ -165,7 +165,6 @@ public class RuinControlPoint : MonoBehaviour
     {
         if (Occupier != NearestActor) {
             if (Occupier.Ghaddim == NearestActor.Ghaddim && Occupier.Mhoddim == NearestActor.Mhoddim) {
-                Occupier.GetComponent<Renderer>().material.color = Color.white;
                 Occupier.RuinControlPoint = null;
                 Occupier = NearestActor;
             }
@@ -184,13 +183,10 @@ public class RuinControlPoint : MonoBehaviour
                 Occupied = false;
                 Occupier = null;
                 Faction = Conflict.Faction.None;
-                yield return null;
             } else if (Occupier != null && NearestActor.Faction != Occupier.Faction) {
                 CurrentResistancePoints += ControlResistanceRating;
             }
             else {
-                yield return new WaitForSeconds(Turn.action_threshold);
-
                 float distance = (NearestActor != null) ? Vector3.Distance(NearestActor.transform.position, transform.position) : float.MaxValue;
 
                 if (!Occupied && distance < Route.reached_threshold) {
@@ -206,9 +202,9 @@ public class RuinControlPoint : MonoBehaviour
                         marker.transform.position = transform.position;
                         marker.transform.localScale = new Vector3(1, 5, 1);
                         marker.transform.parent = transform;
-                        marker.GetComponent<Renderer>().material.color = Color.red;
+                        marker.GetComponent<Renderer>().material.color = Color.blue;
                     }
-                } else if (Occupied && Vector3.Distance(Occupier.transform.position, transform.position) > Route.reached_threshold) {
+                } else if (Occupied && (Occupier == null || Occupier.Faction != Faction || Vector3.Distance(Occupier.transform.position, transform.position) > Route.reached_threshold)) {
                     CurrentResistancePoints += ControlResistanceRating;
                     if (CurrentResistancePoints >= StartingResistancePoints) {
                         CurrentResistancePoints = StartingResistancePoints;
@@ -220,6 +216,8 @@ public class RuinControlPoint : MonoBehaviour
                     }
                 }
             }
+
+            yield return new WaitForSeconds(Turn.action_threshold);
         }
     }
 

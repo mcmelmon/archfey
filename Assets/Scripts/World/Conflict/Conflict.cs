@@ -14,6 +14,7 @@ public class Conflict : MonoBehaviour
 
     // properties
 
+    public Dictionary<Faction, int> Casualties { get; set; }
     public Conflict.Role NextWave { get; set; }
     public static Conflict Instance { get; set; }
     public static List<GameObject> Units { get; set; }
@@ -31,10 +32,21 @@ public class Conflict : MonoBehaviour
         }
         Instance = this;
         Units = new List<GameObject>();
+        Casualties = new Dictionary<Faction, int>();
     }
 
 
     // public
+
+
+    public void AddCasualty(Faction _faction)
+    {
+        if (Casualties.ContainsKey(_faction)) {
+            Casualties[_faction]++;
+        } else {
+            Casualties[_faction] = 1;
+        }
+    }
 
 
     public void Hajime()

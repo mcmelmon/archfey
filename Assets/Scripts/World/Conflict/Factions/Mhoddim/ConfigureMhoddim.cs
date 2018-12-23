@@ -45,7 +45,7 @@ public static class ConfigureMhoddim
 
         strength_rating[Soldier.Clasification.Heavy] = 2;
         strength_rating[Soldier.Clasification.Scout] = 0;
-        strength_rating[Soldier.Clasification.Striker] = 2;
+        strength_rating[Soldier.Clasification.Striker] = 1;
 
         // defense
         armor_rating[Soldier.Clasification.Heavy] = 4;

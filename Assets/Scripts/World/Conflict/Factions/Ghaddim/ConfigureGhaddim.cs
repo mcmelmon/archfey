@@ -47,28 +47,28 @@ public static class ConfigureGhaddim
 
         // defense
         armor_rating[Soldier.Clasification.Heavy] = 0;
-        corporeal_rating[Soldier.Clasification.Heavy] = 0;
+        corporeal_rating[Soldier.Clasification.Heavy] = 2;
         counter[Soldier.Clasification.Heavy] = 10;
         force_rating[Soldier.Clasification.Heavy] = 0;
 
         armor_rating[Soldier.Clasification.Scout] = 0;
-        corporeal_rating[Soldier.Clasification.Scout] = 0;
+        corporeal_rating[Soldier.Clasification.Scout] = 1;
         counter[Soldier.Clasification.Scout] = 5;
         force_rating[Soldier.Clasification.Scout] = 0;
 
         armor_rating[Soldier.Clasification.Striker] = 0;
-        corporeal_rating[Soldier.Clasification.Striker] = 0;
+        corporeal_rating[Soldier.Clasification.Striker] = 1;
         counter[Soldier.Clasification.Striker] = 5;
         force_rating[Soldier.Clasification.Striker] = 0;
 
         // health
-        starting_health[Soldier.Clasification.Heavy] = 130;
-        starting_health[Soldier.Clasification.Scout] = 70;
-        starting_health[Soldier.Clasification.Striker] = 100;
+        starting_health[Soldier.Clasification.Heavy] = 150;
+        starting_health[Soldier.Clasification.Scout] = 90;
+        starting_health[Soldier.Clasification.Striker] = 120;
 
-        recovery_amount[Soldier.Clasification.Heavy] = 3;
-        recovery_amount[Soldier.Clasification.Scout] = 1;
-        recovery_amount[Soldier.Clasification.Striker] = 2;
+        recovery_amount[Soldier.Clasification.Heavy] = 4;
+        recovery_amount[Soldier.Clasification.Scout] = 2;
+        recovery_amount[Soldier.Clasification.Striker] = 3;
     }
 
 
@@ -76,7 +76,7 @@ public static class ConfigureGhaddim
     {
         resistances[Soldier.Clasification.Heavy] = new Dictionary<Weapon.DamageType, int>();
         resistances[Soldier.Clasification.Heavy][Weapon.DamageType.Arcane] = 0;
-        resistances[Soldier.Clasification.Heavy][Weapon.DamageType.Blunt] = 15;
+        resistances[Soldier.Clasification.Heavy][Weapon.DamageType.Blunt] = 25;
         resistances[Soldier.Clasification.Heavy][Weapon.DamageType.Elemental] = 0;
         resistances[Soldier.Clasification.Heavy][Weapon.DamageType.Piercing] = 10;
         resistances[Soldier.Clasification.Heavy][Weapon.DamageType.Poison] = 70;
@@ -84,7 +84,7 @@ public static class ConfigureGhaddim
 
         resistances[Soldier.Clasification.Scout] = new Dictionary<Weapon.DamageType, int>();
         resistances[Soldier.Clasification.Scout][Weapon.DamageType.Arcane] = 0;
-        resistances[Soldier.Clasification.Scout][Weapon.DamageType.Blunt] = 10;
+        resistances[Soldier.Clasification.Scout][Weapon.DamageType.Blunt] = 15;
         resistances[Soldier.Clasification.Scout][Weapon.DamageType.Elemental] = 0;
         resistances[Soldier.Clasification.Scout][Weapon.DamageType.Piercing] = 10;
         resistances[Soldier.Clasification.Scout][Weapon.DamageType.Poison] = 70;
@@ -92,7 +92,7 @@ public static class ConfigureGhaddim
 
         resistances[Soldier.Clasification.Striker] = new Dictionary<Weapon.DamageType, int>();
         resistances[Soldier.Clasification.Striker][Weapon.DamageType.Arcane] = 0;
-        resistances[Soldier.Clasification.Striker][Weapon.DamageType.Blunt] = 0;
+        resistances[Soldier.Clasification.Striker][Weapon.DamageType.Blunt] = 20;
         resistances[Soldier.Clasification.Striker][Weapon.DamageType.Elemental] = 0;
         resistances[Soldier.Clasification.Striker][Weapon.DamageType.Piercing] = 15;
         resistances[Soldier.Clasification.Striker][Weapon.DamageType.Poison] = 70;
