@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Route
 {
-    public static float reached_threshold = 4f;
+    public static float reached_threshold = 5f;
 
     // properties
 

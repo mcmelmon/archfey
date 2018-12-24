@@ -12,7 +12,7 @@ public class Threat : MonoBehaviour {
 
     private void Awake()
     {
-        StartCoroutine(PruneThreats());
+        StartCoroutine(DecayThreat());
     }
 
 
@@ -74,15 +74,16 @@ public class Threat : MonoBehaviour {
     // private
 
 
-    private IEnumerator PruneThreats()
+    private IEnumerator DecayThreat()
     {
         while (true) {
             yield return new WaitForSeconds(Turn.action_threshold);
             var keys = threats.Keys.ToArray();
 
             for (int i = 0; i < keys.Length; i++) {
-                GameObject _key = keys[i];
-                if (_key == null) threats.Remove(_key);
+                // use for loop to avoid modifying collection in foreach
+                threats[keys[i]] -= 20;  // TODO: configure by unit; base on average weapon damage
+                if (threats[keys[i]] <= 0) threats.Remove(keys[i]);
             }
         }
     }

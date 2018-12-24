@@ -5,24 +5,30 @@ using Cinemachine;
 
 public class Player : MonoBehaviour {
 
+    // Inspector settings
     public CinemachineFreeLook viewport;
     public float speed = 12f;
     public float agility = 30f;
 
+
+    // properties
+
+    public static Player Instance { get; set; }
+
     // Unity
 
-	void Start () {
 
-	}
-	
-	void Update () {
-        AdjustCameraDistance();
-        Move();
-
+    void Awake()
+    {
+        if (Instance != null)
+        {
+            Debug.LogError("More than one player");
+            Destroy(this);
+            return;
+        }
+        Instance = this;
+        StartCoroutine(Move());
     }
-
-
-    // public
 
 
     // private
@@ -30,27 +36,29 @@ public class Player : MonoBehaviour {
     private void AdjustCameraDistance()
     {
         float proximity = Input.GetAxis("Mouse ScrollWheel") * 20f;
-        if (!Mathf.Approximately(proximity, 0f))
-        {
+        if (!Mathf.Approximately(proximity, 0f)) {
             CinemachineFreeLook.Orbit[] orbits = viewport.m_Orbits;
-            for (int i = 0; i < orbits.Length; i++)
-            {
+            for (int i = 0; i < orbits.Length; i++) {
                 orbits[i].m_Radius -= Mathf.Lerp(0, proximity, Time.deltaTime * 5f);
             }
         }
     }
 
 
-    private void Move()
+    private IEnumerator Move()
     {
-        Vector3 movement = Vector3.zero;
+        while (true) {
+            yield return null;
+            Vector3 movement = Vector3.zero;
 
-        float forward = Input.GetAxis("Vertical") * speed * Time.deltaTime;
-        float rotation = Input.GetAxis("Horizontal") * agility * Time.deltaTime;
+            float forward = Input.GetAxis("Vertical") * speed * Time.deltaTime;
+            float rotation = Input.GetAxis("Horizontal") * agility * Time.deltaTime;
 
-        if (!Mathf.Approximately(forward, 0) || !Mathf.Approximately(rotation, 0)) {
-            transform.rotation *= Quaternion.AngleAxis(rotation, Vector3.up);
-            transform.position += transform.TransformDirection(Vector3.forward) * forward;
+            if (!Mathf.Approximately(forward, 0) || !Mathf.Approximately(rotation, 0)) {
+                transform.rotation *= Quaternion.AngleAxis(rotation, Vector3.up);
+                transform.position += transform.TransformDirection(Vector3.forward) * forward;
+                AdjustCameraDistance();
+            }
         }
     }
 

@@ -11,7 +11,7 @@ public class Map : MonoBehaviour {
     // properties
 
     public Dictionary<Cardinal, Vector3[]> Boundaries { get; set; }
-    public static Map Instance { get; set; }
+    public static Map Instance { get; set; }  // singletons may become an issue when we move on to the next "level" 
     public static Terrain Terrain { get; set; }
 
 

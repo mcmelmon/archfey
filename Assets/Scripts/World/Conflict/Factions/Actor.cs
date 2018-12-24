@@ -65,8 +65,8 @@ public class Actor : MonoBehaviour
                 ControlRuin();
                 break;
             case State.InCombat:
-                Movement.ResetPath();
                 // Freedom!
+                CloseWithEnemies();
                 break;
             case State.OccupyingRuin:
                 // Our Precious
@@ -80,6 +80,7 @@ public class Actor : MonoBehaviour
                 CloseWithEnemies();
                 break;
             default:
+                ControlRuin();
                 break;
         }
     }
@@ -145,6 +146,11 @@ public class Actor : MonoBehaviour
             // find another ruin
             RuinControlPoint = null;
             ControlRuin();
+        } else if (Vector3.Distance(transform.position, RuinControlPoint.transform.position) > Route.reached_threshold) {
+            // combat has pulled us away from our control point.  Choose the nearest unoccupied point.
+            // the ruin handles abandonment by a previous occupier.
+            RuinControlPoint = null;
+            state = State.Idle;
         }
     }
 

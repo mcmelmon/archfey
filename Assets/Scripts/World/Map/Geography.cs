@@ -21,7 +21,7 @@ public class Geography : MonoBehaviour {
     public static List<Obstacle> Obstacles { get; set; }
     public static Terrain Terrain { get; set; }
     public static TerrainData TerrainData { get; set; }
-    public static List<Tile> Tiles { get; set; }
+    public static List<MapTile> Tiles { get; set; }
 
 
     // Unity
@@ -154,14 +154,14 @@ public class Geography : MonoBehaviour {
     }
 
 
-    public List<Tile> RandomTiles(int _number)
+    public List<MapTile> RandomTiles(int _number)
     {
         UnityEngine.Random.InitState(DateTime.Now.Millisecond);
 
-        List<Tile> randomized_tiles = new List<Tile>(Tiles);
+        List<MapTile> randomized_tiles = new List<MapTile>(Tiles);
 
         for (int i = 0; i < randomized_tiles.Count; i++) {
-            Tile temp = randomized_tiles[i];
+            MapTile temp = randomized_tiles[i];
             int random_index = UnityEngine.Random.Range(i, randomized_tiles.Count);
             randomized_tiles[i] = randomized_tiles[random_index];
             randomized_tiles[random_index] = temp;
@@ -171,9 +171,9 @@ public class Geography : MonoBehaviour {
     }
 
 
-    public Tile RandomUnoccupiedTile()
+    public MapTile RandomUnoccupiedTile()
     {
-        List<Tile> randomized_tiles = RandomTiles(Tiles.Count);
+        List<MapTile> randomized_tiles = RandomTiles(Tiles.Count);
 
         for (int i = 0; i < randomized_tiles.Count * 5; i++) {
             // If we can't find an empty tile after five times through them all, it's a full map
@@ -200,11 +200,11 @@ public class Geography : MonoBehaviour {
         TerrainData = Terrain.terrainData;
 
         Grids[GridType.Unit] = Grid.New(new Vector3(1, 0, GetResolution() - 2), GetResolution()/unit_spacing, GetResolution()/unit_spacing, unit_spacing, false);
-        Tiles = new List<Tile>();
+        Tiles = new List<MapTile>();
 
         foreach (var location in Grids[GridType.Unit].Elements) {
             // tiles will help manage the initial contents of locations on the map
-            Tile _tile = Tile.New(location);
+            MapTile _tile = MapTile.New(location);
             Tiles.Add(_tile);
         }
     }

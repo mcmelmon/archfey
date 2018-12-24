@@ -90,7 +90,7 @@ public class Weapon : MonoBehaviour {
 
 
     private void Impact() {
-        GameObject _impact = Instantiate(impact_prefab, transform.position + new Vector3(0, 2f, 0), transform.rotation);
+        GameObject _impact = Instantiate(impact_prefab, transform.parent.transform.position + new Vector3(0, 4f, 0), transform.rotation);
         _impact.name = "Impact";
         Destroy(_impact, 2f);
     }
