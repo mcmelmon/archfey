@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Flora : MonoBehaviour {
 
+    // Inspector settings
+
     public Tree tree_prefab;
     public float tree_coverage;
     public int canopy_layers;
