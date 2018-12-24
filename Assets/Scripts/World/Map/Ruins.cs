@@ -7,15 +7,16 @@ public class Ruins : MonoBehaviour {
 
     public enum Category { Primary = 0, Secondary = 1, Tertiary = 2 };
 
-    public GameObject ruin_control_ui;
+    //public GameObject ruin_control_ui;
     public Ruin ruin_prefab; // changin this requires updating Inspector
 
 
     // properties
 
+    public static Dictionary<Conflict.Faction, List<Ruin>> ForFaction { get; set; }
+    public static Ruins Instance { get; set; }
     public static List<Ruin> RuinBlocks { get; set; }
     public static List<RuinControlPoint> RuinControlPoints { get; set; }
-    public static Ruins Instance { get; set; }
 
 
     // Unity
@@ -33,6 +34,15 @@ public class Ruins : MonoBehaviour {
 
 
     // public
+
+
+    public void AccountForControl(Conflict.Faction new_faction, Conflict.Faction previous_faction, Ruin _ruin)
+    {
+        if (!ForFaction[new_faction].Contains(_ruin)) {
+            ForFaction[new_faction].Add(_ruin);
+            ForFaction[previous_faction].Remove(_ruin);
+        }
+    }
 
 
     public void ErectRuins()
@@ -98,6 +108,7 @@ public class Ruins : MonoBehaviour {
             Ruin _ruin = Ruin.InstantiateRuin(ruin_prefab, tile.Location, this);
             RuinBlocks.Add(_ruin);
             RuinControlPoints.AddRange(_ruin.ControlPoints);
+            ForFaction[Conflict.Faction.None].Add(_ruin);
             tile.Ruin = _ruin;
         }
     }
@@ -107,5 +118,12 @@ public class Ruins : MonoBehaviour {
     {
         RuinBlocks = new List<Ruin>();
         RuinControlPoints = new List<RuinControlPoint>();
+        ForFaction = new Dictionary<Conflict.Faction, List<Ruin>>
+        {
+            [Conflict.Faction.Ghaddim] = new List<Ruin>(),
+            [Conflict.Faction.Mhoddim] = new List<Ruin>(),
+            [Conflict.Faction.None] = new List<Ruin>()
+        };
+
     }
 }

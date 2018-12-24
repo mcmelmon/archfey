@@ -6,7 +6,6 @@ public class Ghaddim : MonoBehaviour {
 
     // properties
 
-    public static List<Ruin> Ruins { get; set; }
     public static Threat Threat { get; set; }
 
 
@@ -27,7 +26,6 @@ public class Ghaddim : MonoBehaviour {
 
     private void Awake()
     {
-        Ruins = new List<Ruin>();
         Threat = gameObject.AddComponent<Threat>();
     }
 
@@ -118,15 +116,15 @@ public class Ghaddim : MonoBehaviour {
         if (attack == null) return;
 
         if (GetComponent<Heavy>() != null) {
-            attack.AgilityRating = ConfigureGhaddim.starting_health[Soldier.Clasification.Heavy];
-            attack.StrengthRating = ConfigureGhaddim.starting_health[Soldier.Clasification.Heavy];
+            attack.AgilityRating = ConfigureGhaddim.agility_rating[Soldier.Clasification.Heavy];
+            attack.StrengthRating = ConfigureGhaddim.strength_rating[Soldier.Clasification.Heavy];
         }
         else if (GetComponent<Scout>() != null) {
-            attack.AgilityRating = ConfigureGhaddim.starting_health[Soldier.Clasification.Scout];
-            attack.StrengthRating = ConfigureGhaddim.starting_health[Soldier.Clasification.Scout];
+            attack.AgilityRating = ConfigureGhaddim.agility_rating[Soldier.Clasification.Scout];
+            attack.StrengthRating = ConfigureGhaddim.strength_rating[Soldier.Clasification.Scout];
         } else if (GetComponent<Striker>() != null) {
-            attack.AgilityRating = ConfigureGhaddim.starting_health[Soldier.Clasification.Striker];
-            attack.StrengthRating = ConfigureGhaddim.starting_health[Soldier.Clasification.Striker];
+            attack.AgilityRating = ConfigureGhaddim.agility_rating[Soldier.Clasification.Striker];
+            attack.StrengthRating = ConfigureGhaddim.strength_rating[Soldier.Clasification.Striker];
         }
     }
 }

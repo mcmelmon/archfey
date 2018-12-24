@@ -14,7 +14,7 @@ public class Conflict : MonoBehaviour
 
     // properties
 
-    public Dictionary<Faction, int> Casualties { get; set; }
+    public static Dictionary<Faction, int> Casualties { get; set; }
     public Conflict.Role NextWave { get; set; }
     public static Conflict Instance { get; set; }
     public static List<GameObject> Units { get; set; }
@@ -31,8 +31,7 @@ public class Conflict : MonoBehaviour
             return;
         }
         Instance = this;
-        Units = new List<GameObject>();
-        Casualties = new Dictionary<Faction, int>();
+        SetComponents();
     }
 
 
@@ -87,6 +86,17 @@ public class Conflict : MonoBehaviour
         ConfigureFey.GenerateStats();
         ConfigureGhaddim.GenerateStats();
         ConfigureMhoddim.GenerateStats();
+    }
+
+
+    private void SetComponents()
+    {
+        Units = new List<GameObject>();
+        Casualties = new Dictionary<Faction, int>
+        {
+            [Faction.Ghaddim] = 0,
+            [Faction.Mhoddim] = 0
+        };
     }
 
 

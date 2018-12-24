@@ -71,75 +71,16 @@ public class Ruin : MonoBehaviour
                     new_faction = point_faction;
 
                 if ((point_faction == Conflict.Faction.None)) {
-                    Control = new_faction = Conflict.Faction.None;
-                    Controlled = false;
-                    GetComponent<Renderer>().material = unclaimed_skin;
+                    new_faction = Conflict.Faction.None;
                     break;
                 } else if (new_faction != point_faction) {
-                    Control = new_faction = Conflict.Faction.None;
-                    Controlled = false;
-                    GetComponent<Renderer>().material = unclaimed_skin;
+                    new_faction = Conflict.Faction.None;
                     break;
                 }
             }
 
-            if (new_faction != Conflict.Faction.None) {
+            if (new_faction != previous_faction) {
                 TransferControl(new_faction, previous_faction);
-            }
-        }
-    }
-
-
-    private void PresentRuinControl(Conflict.Faction new_faction, Conflict.Faction previous_faction)
-    {
-        GameObject ruin_control = Ruins.Instance.ruin_control_ui;
-
-        if (new_faction != Conflict.Faction.None) {
-            Transform _captured = ruin_control.transform.Find("RuinCaptured");
-            Transform _text = _captured.Find("Text");
-            Transform _faction = _text.Find("Faction");
-            Transform _summary = _text.Find("Summary");
-            TextMeshProUGUI faction_text = _faction.GetComponent<TextMeshProUGUI>();
-            TextMeshProUGUI summary_text = _summary.GetComponent<TextMeshProUGUI>();
-
-
-            switch (new_faction) {
-                case Conflict.Faction.Ghaddim:
-                    Ghaddim.Ruins.Add(this);
-                    faction_text.text = "Ashen";
-                    summary_text.text = "Ashen control " + Ghaddim.Ruins.Count + ((Ghaddim.Ruins.Count == 1) ? " ruin!" : " ruins!");
-                    _captured.gameObject.SetActive(true);
-                    break;
-                case Conflict.Faction.Mhoddim:
-                    Mhoddim.Ruins.Add(this);
-                    faction_text.text = "Nibelung";
-                    summary_text.text = "Nibelung control " + Mhoddim.Ruins.Count + ((Mhoddim.Ruins.Count == 1) ? " ruin!" : " ruins!");
-                    _captured.gameObject.SetActive(true);
-                    break;
-            }
-        } else {
-            Transform _lost = ruin_control.transform.Find("RuinLost");
-            Transform _text = _lost.Find("Text");
-            Transform _faction = _text.Find("Faction");
-            Transform _summary = _text.Find("Summary");
-            TextMeshProUGUI faction_text = _faction.GetComponent<TextMeshProUGUI>();
-            TextMeshProUGUI summary_text = _summary.GetComponent<TextMeshProUGUI>();
-
-            switch (previous_faction) {
-                case Conflict.Faction.Ghaddim:
-                    Ghaddim.Ruins.Remove(this);
-                    faction_text.text = "Ashen";
-                    summary_text.text = "Ashen control " + Ghaddim.Ruins.Count + ((Ghaddim.Ruins.Count == 1) ? " ruin!" : " ruins!");
-                    _lost.gameObject.SetActive(true);
-                    break;
-                case Conflict.Faction.Mhoddim:
-                    Mhoddim.Ruins.Remove(this);
-                    faction_text.text = "Nibelung";
-                    summary_text.text = "Nibelung control " + Mhoddim.Ruins.Count + ((Mhoddim.Ruins.Count == 1) ? " ruin!" : " ruins!");
-                    _lost.gameObject.SetActive(true);
-                    break;
-                case Conflict.Faction.None:
-                    break;
             }
         }
     }
@@ -174,10 +115,24 @@ public class Ruin : MonoBehaviour
 
     private void TransferControl(Conflict.Faction new_faction, Conflict.Faction previous_faction)
     {
-        Control = new_faction;
         Controlled = true;
-        GetComponent<Renderer>().material = (Control == Conflict.Faction.Ghaddim) ? ghaddim_skin : mhoddim_skin;
-        PresentRuinControl(new_faction, previous_faction);
+        Control = new_faction;
+
+        switch (Control) {
+            case Conflict.Faction.Ghaddim:
+                GetComponent<Renderer>().material = ghaddim_skin;
+                break;
+            case Conflict.Faction.Mhoddim:
+                GetComponent<Renderer>().material = mhoddim_skin;
+                break;
+            case Conflict.Faction.None:
+                GetComponent<Renderer>().material = unclaimed_skin;
+                break;
+        }
+
+        Ruins.Instance.AccountForControl(new_faction, previous_faction, this);
+        RuinControlUI.Instance.ChangeInControl(Control, previous_faction);
+        RuinControlUI.Instance.MostRecentFlip = this;
     }
 }
 
