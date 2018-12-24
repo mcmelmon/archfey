@@ -36,7 +36,7 @@ public class Defense : MonoBehaviour
         // spawn the defense randomly, give them time to claim some ruins, then spawn offense
 
         for (int i = 0; i < 8; i++) {
-            Tile tile = Geography.Instance.RandomUnoccupiedTile();
+            MapTile tile = Geography.Instance.RandomUnoccupiedTile();
             GameObject _heavy = Spawn(tile.Location);
             _heavy.AddComponent<Heavy>();
             tile.Occupier = _heavy.GetComponent<Actor>();
@@ -44,7 +44,7 @@ public class Defense : MonoBehaviour
 
         for (int i = 0; i < 2; i++)
         {
-            Tile tile = Geography.Instance.RandomUnoccupiedTile();
+            MapTile tile = Geography.Instance.RandomUnoccupiedTile();
             GameObject _striker = Spawn(tile.Location);
             _striker.AddComponent<Striker>();
             tile.Occupier = _striker.GetComponent<Actor>();

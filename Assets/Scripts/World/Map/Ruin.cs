@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
+using UnityEngine.UI;
 
 public class Ruin : MonoBehaviour
 {
-
+    // Inspector settings
+    public RuinControlPoint control_point_prefab;
     public Material ghaddim_skin;
     public Material mhoddim_skin;
     public Material unclaimed_skin;
@@ -101,15 +102,13 @@ public class Ruin : MonoBehaviour
     {
         Circle _center = Circle.CreateCircle(new Vector3 (transform.position.x, 0, transform.position.z), 10f, 3);
 
-        foreach (var vertex in _center.vertices)
-        {
-            RuinControlPoint control_point = RuinControlPoint.New(vertex);
+        foreach (var vertex in _center.vertices) {
+            RuinControlPoint control_point = Instantiate(control_point_prefab, vertex + new Vector3(0,1,0), transform.rotation);
             control_point.Ruin = this;
-            control_point.transform.parent = Ruins.Instance.transform; // using the Ruin transform scales the point out
+            control_point.transform.parent = transform; // using the Ruin transform scales the point out
             ControlPoints.Add(control_point);
-            Ruins.RuinControlPoints.Add(control_point.GetComponent<RuinControlPoint>());
+            Ruins.RuinControlPoints.Add(control_point);
         }
-
     }
 
 
@@ -133,159 +132,5 @@ public class Ruin : MonoBehaviour
         Ruins.Instance.AccountForControl(new_faction, previous_faction, this);
         RuinControlUI.Instance.ChangeInControl(Control, previous_faction);
         RuinControlUI.Instance.MostRecentFlip = this;
-    }
-}
-
-
-public class RuinControlPoint : MonoBehaviour
-{
-
-    // properties
-
-    public float ControlResistanceRating { get; set; }
-    public float CurrentResistancePoints { get; set; }
-    public Conflict.Faction Faction { get; set; }
-    public Actor NearestActor { get; set; }
-    public bool Occupied { get; set; }
-    public Actor Occupier { get; set; }
-    public Ruin Ruin { get; set; }
-    public float StartingResistancePoints { get; set; }
-
-
-    // static
-
-
-    public static RuinControlPoint New(Vector3 _position)
-    {
-        GameObject ruin_control_point = new GameObject { name = "Control Point" };
-        ruin_control_point.transform.position = _position;
-        ruin_control_point.AddComponent<RuinControlPoint>();
-        ruin_control_point.GetComponent<RuinControlPoint>().SetComponents();
-
-        return ruin_control_point.GetComponent<RuinControlPoint>();
-    }
-
-
-    private void Start()
-    {
-        StartCoroutine(CheckOccupation());
-        StartCoroutine(FindNearestActor());
-    }
-
-
-    // public
-
-
-    public Actor ConfirmOccupation()
-    {
-        if (Occupier != NearestActor) {
-            if (Occupier.Ghaddim == NearestActor.Ghaddim && Occupier.Mhoddim == NearestActor.Mhoddim) {
-                Occupier.RuinControlPoint = null;
-                Occupier = NearestActor;
-            }
-        }
-        return Occupier;
-    }
-
-
-    // private
-
-
-    private IEnumerator CheckOccupation()
-    {
-        while (true) {
-            if (NearestActor == null) {
-                Occupied = false;
-                Occupier = null;
-                Faction = Conflict.Faction.None;
-            } else if (Occupier != null && NearestActor.Faction != Occupier.Faction) {
-                CurrentResistancePoints += ControlResistanceRating;
-            }
-            else {
-                float distance = (NearestActor != null) ? Vector3.Distance(NearestActor.transform.position, transform.position) : float.MaxValue;
-
-                if (!Occupied && distance < Route.reached_threshold) {
-                    CurrentResistancePoints -= Mathf.Clamp((NearestActor.RuinControlRating - ControlResistanceRating) + Assitance(), 0, NearestActor.RuinControlRating);
-                    if (CurrentResistancePoints <= 0) {
-                        CurrentResistancePoints = 0;
-                        Occupied = true;
-                        Occupier = NearestActor;
-                        Faction = NearestActor.GetComponent<Actor>().Faction;
-
-                        GameObject marker = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                        marker.name = "Marker";
-                        marker.transform.position = transform.position;
-                        marker.transform.localScale = new Vector3(1, 5, 1);
-                        marker.transform.parent = transform;
-                        marker.GetComponent<Renderer>().material.color = Color.blue;
-                    }
-                } else if (Occupied && (Occupier == null || Occupier.Faction != Faction || Vector3.Distance(Occupier.transform.position, transform.position) > Route.reached_threshold)) {
-                    CurrentResistancePoints += ControlResistanceRating;
-                    if (CurrentResistancePoints >= StartingResistancePoints) {
-                        CurrentResistancePoints = StartingResistancePoints;
-                        Occupied = false;
-                        if (Occupier != null) Occupier.GetComponent<Actor>().RuinControlPoint = null;
-                        Occupier = null;
-                        Faction = Conflict.Faction.None;
-                        Destroy(transform.Find("Marker").gameObject);
-                    }
-                }
-            }
-
-            yield return new WaitForSeconds(Turn.action_threshold);
-        }
-    }
-
-
-    private IEnumerator FindNearestActor()
-    {
-        while (true) {
-            yield return new WaitForSeconds(Turn.action_threshold);
-
-            float shortest_distance = float.MaxValue;
-            float distance;
-            GameObject nearest_actor = null;
-
-            for (int i = 0; i < Conflict.Units.Count; i++) {
-                GameObject _unit = Conflict.Units[i];
-                if (_unit == null || transform == null) continue;
-
-                distance = Vector3.Distance(transform.position, _unit.transform.position);
-                if (distance < shortest_distance) {
-                    shortest_distance = distance;
-                    nearest_actor = _unit;
-                }
-            }
-
-            if (nearest_actor != null)
-                NearestActor = nearest_actor.GetComponent<Actor>();
-        }
-    }
-
-
-    private float Assitance()
-    {
-        float assistance = 0;
-        float distance;
-
-        for (int i = 0; i < Conflict.Units.Count; i++) {
-            GameObject _unit = Conflict.Units[i];
-            if (_unit == null || transform == null) continue;
-            distance = Vector3.Distance(transform.position, _unit.transform.position);
-            if (distance < Route.reached_threshold) {
-                assistance += Mathf.Clamp(_unit.GetComponent<Actor>().RuinControlRating - ControlResistanceRating, 0, _unit.GetComponent<Actor>().RuinControlRating);
-            }
-        }
-
-        return assistance;
-    }
-
-
-    private void SetComponents()
-    {
-        ControlResistanceRating = Random.Range(1,6);
-        CurrentResistancePoints = StartingResistancePoints = 100 + Random.Range(0,8);
-        Faction = Conflict.Faction.None;
-        Occupied = false;
     }
 }

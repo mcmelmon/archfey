@@ -5,11 +5,8 @@ using UnityEngine;
 
 public class Ruins : MonoBehaviour {
 
-    public enum Category { Primary = 0, Secondary = 1, Tertiary = 2 };
-
-    //public GameObject ruin_control_ui;
-    public Ruin ruin_prefab; // changin this requires updating Inspector
-
+    // Inspector settings
+    public Ruin ruin_prefab;
 
     // properties
 
@@ -99,7 +96,7 @@ public class Ruins : MonoBehaviour {
 
         UnityEngine.Random.InitState(DateTime.Now.Millisecond);
 
-        foreach (var tile in Geography.Instance.RandomTiles(20)) {
+        foreach (var tile in Geography.Instance.RandomTiles(17)) {
             if (tile.Location.x < 20 || tile.Location.x > Geography.Instance.GetResolution() - 20 || tile.Location.z < 20 || tile.Location.z > Geography.Instance.GetResolution() - 20) continue;
 
             Ruin nearest_ruin = RuinClosestTo(tile.Location);

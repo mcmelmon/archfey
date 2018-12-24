@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tile {
+public class MapTile {
 
     // properties
 
@@ -16,9 +16,9 @@ public class Tile {
     // static
 
 
-    public static Tile New(Vector3 _location)
+    public static MapTile New(Vector3 _location)
     {
-        Tile _tile = new Tile
+        MapTile _tile = new MapTile
         {
             Location = _location,
             Ruin = null,

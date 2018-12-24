@@ -6,6 +6,13 @@ using TMPro;
 
 public class RuinControlUI : MonoBehaviour
 {
+    // Inspector settings
+    public Transform ruin_captured;
+    public Transform ruin_lost;
+    public Transform ruin_captured_faction;
+    public Transform ruin_lost_faction;
+
+
     // properties
 
     public static List<GameObject> ActiveUIElements { get; set; }
@@ -35,44 +42,38 @@ public class RuinControlUI : MonoBehaviour
     public void ChangeInControl(Conflict.Faction new_faction, Conflict.Faction previous_faction)
     {
         if (new_faction != Conflict.Faction.None) {
-            Transform _captured = transform.Find("RuinCaptured");
-            Transform _text = _captured.Find("Text");
-            Transform _faction = _text.Find("Faction");
-            TextMeshProUGUI faction_text = _faction.GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI faction_text = ruin_captured_faction.GetComponent<TextMeshProUGUI>();
 
             switch (new_faction)
             {
                 case Conflict.Faction.Ghaddim:
                     int ghaddim_count = Ruins.ForFaction[Conflict.Faction.Ghaddim].Count;
                     faction_text.text = "Unaussprechlichen";
-                    _captured.gameObject.SetActive(true);
-                    ActiveUIElements.Add(_captured.gameObject);
+                    ruin_captured.gameObject.SetActive(true);
+                    ActiveUIElements.Add(ruin_captured.gameObject);
                     break;
                 case Conflict.Faction.Mhoddim:
                     int mhoddim_count = Ruins.ForFaction[Conflict.Faction.Mhoddim].Count;
                     faction_text.text = "Nibelung";
-                    _captured.gameObject.SetActive(true);
-                    ActiveUIElements.Add(_captured.gameObject);
+                    ruin_captured.gameObject.SetActive(true);
+                    ActiveUIElements.Add(ruin_captured.gameObject);
                     break;
             }
         } else {
-            Transform _lost = transform.Find("RuinLost");
-            Transform _text = _lost.Find("Text");
-            Transform _faction = _text.Find("Faction");
-            TextMeshProUGUI faction_text = _faction.GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI faction_text = ruin_lost_faction.GetComponent<TextMeshProUGUI>();
 
             switch (previous_faction) {
                 case Conflict.Faction.Ghaddim:
                     int ghaddim_count = Ruins.ForFaction[Conflict.Faction.Ghaddim].Count;
                     faction_text.text = "Unaussprechlichen";
-                    _lost.gameObject.SetActive(true);
-                    ActiveUIElements.Add(_lost.gameObject);
+                    ruin_lost.gameObject.SetActive(true);
+                    ActiveUIElements.Add(ruin_lost.gameObject);
                     break;
                 case Conflict.Faction.Mhoddim:
                     int mhoddim_count = Ruins.ForFaction[Conflict.Faction.Mhoddim].Count;
                     faction_text.text = "Nibelung";
-                    _lost.gameObject.SetActive(true);
-                    ActiveUIElements.Add(_lost.gameObject);
+                    ruin_lost.gameObject.SetActive(true);
+                    ActiveUIElements.Add(ruin_lost.gameObject);
                     break;
                 case Conflict.Faction.None:
                     break;
