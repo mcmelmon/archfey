@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class CommandBarOne : MonoBehaviour {
 
@@ -18,6 +19,9 @@ public class CommandBarOne : MonoBehaviour {
 
     public static CommandBarOne Instance { get; set; }
 
+
+    private IEnumerator healing_touch_coroutine;
+    private IEnumerator poison_touch_coroutine;
 
     // Unity
 
@@ -41,6 +45,27 @@ public class CommandBarOne : MonoBehaviour {
     // public
 
 
+    public void DireOak()
+    {
+        Vector3 starting_position = new Vector3(player_transform.position.x, 0f, player_transform.position.z) + new Vector3(0, ent_prefab.transform.position.y, 0);
+        Vector3 summon_position = starting_position + player_transform.TransformDirection(Vector3.forward) * 20f;
+        Ent _ent = ent_prefab.SummonEnt(summon_position, fey_transform);
+    }
+
+
+    public void HealingTouch(Toggle _toggle)
+    {
+        if (_toggle.isOn)
+        {
+            if (healing_touch_coroutine != null) StopCoroutine(healing_touch_coroutine);
+            healing_touch_coroutine = HealTheTouched(_toggle);
+            StartCoroutine(healing_touch_coroutine);
+        } else if (healing_touch_coroutine != null) {
+            StopCoroutine(healing_touch_coroutine);
+        }
+    }
+
+
     public IEnumerator Metrics()
     {
         while (true) {
@@ -54,28 +79,47 @@ public class CommandBarOne : MonoBehaviour {
     }
 
 
-    public void EntangleUnits()
+    public void PoisonTouch(Toggle _toggle)
+    {
+        if (_toggle.isOn)
+        {
+            if (poison_touch_coroutine != null) StopCoroutine(poison_touch_coroutine);
+            poison_touch_coroutine = PoisonTheTouched(_toggle);
+            StartCoroutine(poison_touch_coroutine);
+        }
+        else if (poison_touch_coroutine != null)
+        {
+            StopCoroutine(poison_touch_coroutine);
+        }
+
+    }
+
+
+    public void Raven()
     {
 
     }
 
 
-    public void HealUnits()
-    {
+    // private
 
+
+    private IEnumerator HealTheTouched(Toggle _toggle)
+    {
+        while (_toggle.isOn) {
+            if (Mouse.HoveredObject != null)
+                Mouse.HoveredObject.Health.RecoverHealth(15);
+            yield return new WaitForSeconds(Turn.action_threshold / 4f);
+        }
     }
 
 
-    public void SummonEnt()
+    private IEnumerator PoisonTheTouched(Toggle _toggle)
     {
-        Vector3 starting_position = new Vector3(player_transform.position.x, 0f, player_transform.position.z) + new Vector3(0, ent_prefab.transform.position.y, 0);
-        Vector3 summon_position = starting_position + player_transform.TransformDirection(Vector3.forward) * 20f;
-        Ent _ent = ent_prefab.SummonEnt(summon_position, fey_transform);
-    }
-
-
-    public void SummonRaven()
-    {
-
+        while (_toggle.isOn) {
+            if (Mouse.HoveredObject != null)
+                Mouse.HoveredObject.Health.LoseHealth(15);
+            yield return new WaitForSeconds(Turn.action_threshold / 4f);
+        }
     }
 }

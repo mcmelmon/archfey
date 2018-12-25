@@ -10,8 +10,8 @@ public class Mouse : MonoBehaviour
 
     // properties
 
-    public Actor HoveredObject { get; set; }
-    public Actor SelectedObject { get; set; }
+    public static Actor HoveredObject { get; set; }
+    public static Actor SelectedObject { get; set; }
 
     void Start()
     {
