@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class World : MonoBehaviour {
 
+    // Inspector settings
+
+    public bool battleground;
     public Light the_sun;
 
 

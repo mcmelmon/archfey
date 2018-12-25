@@ -53,7 +53,11 @@ public class Conflict : MonoBehaviour
         GenerateStats();
         CreateNavigationMesh();
         ChooseSides();
-        StartCoroutine(Waves());
+        if (World.Instance.battleground) {
+            Offense.Instance.Deploy();  // defense has already deployed
+        } else {
+            StartCoroutine(Waves());
+        }
     }
 
 

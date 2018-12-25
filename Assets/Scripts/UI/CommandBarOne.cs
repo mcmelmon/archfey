@@ -5,9 +5,14 @@ using TMPro;
 
 public class CommandBarOne : MonoBehaviour {
 
-    public Transform player_transform;  // TODO: name other transforms using _transform convention
-    public Transform fey_transform;
+    // Inspector settings
     public Ent ent_prefab;
+    public Transform fey_transform;
+    public TextMeshProUGUI ghaddim_deaths;
+    public TextMeshProUGUI ghaddim_captures;
+    public TextMeshProUGUI mhoddim_deaths;
+    public TextMeshProUGUI mhoddim_captures;
+    public Transform player_transform;
 
     // properties
 
@@ -40,20 +45,8 @@ public class CommandBarOne : MonoBehaviour {
     {
         while (true) {
             yield return new WaitForSeconds(Turn.action_threshold);
-
-            Transform _ghaddim = transform.Find("Ghaddim");
-            Transform ghaddim_casualties = _ghaddim.Find("Casualties");
-            Transform ghaddim_ruins = _ghaddim.Find("Ruins");
-            TextMeshProUGUI ghaddim_deaths = ghaddim_casualties.GetComponent<TextMeshProUGUI>();
-            TextMeshProUGUI ghaddim_captures = ghaddim_ruins.GetComponent<TextMeshProUGUI>();
             ghaddim_deaths.text = "Deaths: " + Conflict.Casualties[Conflict.Faction.Ghaddim].ToString();
             ghaddim_captures.text = "Ruins: " + Ruins.ForFaction[Conflict.Faction.Ghaddim].Count;
-
-            Transform _mhoddim = transform.Find("Mhoddim");
-            Transform mhoddim_casualties = _mhoddim.Find("Casualties");
-            Transform mhoddim_ruins = _mhoddim.Find("Ruins");
-            TextMeshProUGUI mhoddim_deaths = mhoddim_casualties.GetComponent<TextMeshProUGUI>();
-            TextMeshProUGUI mhoddim_captures = mhoddim_ruins.GetComponent<TextMeshProUGUI>();
             mhoddim_deaths.text = "Deaths: " + Conflict.Casualties[Conflict.Faction.Mhoddim].ToString();
             mhoddim_captures.text = "Ruins: " + Ruins.ForFaction[Conflict.Faction.Mhoddim].Count;
         }

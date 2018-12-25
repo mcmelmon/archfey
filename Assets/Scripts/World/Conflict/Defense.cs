@@ -34,20 +34,13 @@ public class Defense : MonoBehaviour
         // must be called by Conflict instead of Start to ensure Map setup complete
 
         // spawn the defense randomly, give them time to claim some ruins, then spawn offense
+        int adjustment = (Faction == Conflict.Faction.Ghaddim) ? 3 : 0;
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 10 + adjustment; i++) {
             MapTile tile = Geography.Instance.RandomUnoccupiedTile();
             GameObject _heavy = Spawn(tile.Location);
             _heavy.AddComponent<Heavy>();
             tile.Occupier = _heavy.GetComponent<Actor>();
-        }
-
-        for (int i = 0; i < 2; i++)
-        {
-            MapTile tile = Geography.Instance.RandomUnoccupiedTile();
-            GameObject _striker = Spawn(tile.Location);
-            _striker.AddComponent<Striker>();
-            tile.Occupier = _striker.GetComponent<Actor>();
         }
     }
 

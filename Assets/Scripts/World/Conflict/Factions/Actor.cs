@@ -66,7 +66,6 @@ public class Actor : MonoBehaviour
                 break;
             case State.InCombat:
                 // Freedom!
-                CloseWithEnemies();
                 break;
             case State.OccupyingRuin:
                 // Our Precious
@@ -333,6 +332,7 @@ public class Actor : MonoBehaviour
         }
         else {
             SheathWeapon();
+            RuinControlPoint = null;
             state = State.Idle;
             return;
         }
