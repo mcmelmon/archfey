@@ -13,6 +13,7 @@ public class Actor : MonoBehaviour
 
     // properties
 
+    public List<GameObject> AppliedUIEffects { get; set; }
     public Attack Attack { get; set; }
     public Conflict.Faction Faction { get; set; }
     public List<GameObject> Enemies { get; set; }
@@ -66,7 +67,6 @@ public class Actor : MonoBehaviour
                 break;
             case State.InCombat:
                 // Freedom!
-                CloseWithEnemies();
                 break;
             case State.OccupyingRuin:
                 // Our Precious
@@ -256,6 +256,7 @@ public class Actor : MonoBehaviour
 
     private void SetComponents()
     {
+        AppliedUIEffects = new List<GameObject>();
         Attack = GetComponent<Attack>();
         Enemies = new List<GameObject>();
         Friends = new List<GameObject>();
@@ -333,6 +334,7 @@ public class Actor : MonoBehaviour
         }
         else {
             SheathWeapon();
+            RuinControlPoint = null;
             state = State.Idle;
             return;
         }

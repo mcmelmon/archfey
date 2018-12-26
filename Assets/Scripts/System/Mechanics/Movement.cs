@@ -40,10 +40,14 @@ public class Movement : MonoBehaviour {
 
     public void Advance()
     {
-        if (ReachedNearObjective())
-            GetNextObjective();
-        if (ObjectiveComplete())
-            GetNewObjective();
+        if (Agent.hasPath) {
+            if (ReachedNearObjective())
+                GetNextObjective();
+            if (ObjectiveComplete())
+                GetNewObjective();
+        } else {
+            Debug.Log("No path");
+        }
     }
 
 
@@ -61,9 +65,9 @@ public class Movement : MonoBehaviour {
     }
 
 
-    public void SetRoute(Route _route)
+    public void SetRoute(Route _route, bool accumulate = false)
     {
-        if (Route != null) _route.AccumulateRoutes(Route);
+        if (Route != null && accumulate) _route.AccumulateRoutes(Route);
         Route = _route;
         Agent.SetDestination(new Vector3(Route.Current.x, 0, Route.Current.z));  // TODO: sample the height at the destination from terrain
     }
@@ -74,8 +78,13 @@ public class Movement : MonoBehaviour {
 
     private void GetNewObjective()
     {
-        Agent.ResetPath();
-        Route.WhenComplete?.Invoke();
+        if (Route.WhenComplete != null) {
+            Route.WhenComplete.Invoke();
+        } else if (Route.RoutesFollowed.Count > 0) {
+            Route = Route.RoutesFollowed[Route.RoutesFollowed.Count -1];
+        } else {
+            Route = null;
+        }
     }
 
 

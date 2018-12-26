@@ -6,13 +6,14 @@ using Cinemachine;
 public class Player : MonoBehaviour {
 
     // Inspector settings
-    public CinemachineFreeLook viewport;
-    public float speed = 12f;
     public float agility = 30f;
+    public float speed = 12f;
+    public CinemachineFreeLook viewport;
 
 
     // properties
 
+    public Spellcasting Spellcasting { get; set; }
     public static Player Instance { get; set; }
 
     // Unity
@@ -20,18 +21,19 @@ public class Player : MonoBehaviour {
 
     void Awake()
     {
-        if (Instance != null)
-        {
+        if (Instance != null) {
             Debug.LogError("More than one player");
             Destroy(this);
             return;
         }
         Instance = this;
-        StartCoroutine(Move());
+        Spellcasting = GetComponent<Spellcasting>();
+        StartCoroutine(Movement());
     }
 
 
     // private
+
 
     private void AdjustCameraDistance()
     {
@@ -45,7 +47,7 @@ public class Player : MonoBehaviour {
     }
 
 
-    private IEnumerator Move()
+    private IEnumerator Movement()
     {
         while (true) {
             yield return null;

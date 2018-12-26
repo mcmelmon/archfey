@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class World : MonoBehaviour {
 
+    // Inspector settings
+
+    public bool battleground;
     public Light the_sun;
 
 
@@ -23,7 +26,7 @@ public class World : MonoBehaviour {
             return;
         }
         Instance = this;
-        Vector3 sun_rotation = new Vector3(25, 70, 0);
+        Vector3 sun_rotation = new Vector3(45, 70, 0);
         the_sun.transform.rotation = Quaternion.Euler(sun_rotation);
 
     }

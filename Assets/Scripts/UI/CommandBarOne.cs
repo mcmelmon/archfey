@@ -1,18 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class CommandBarOne : MonoBehaviour {
 
-    public Transform player_transform;  // TODO: name other transforms using _transform convention
-    public Transform fey_transform;
+    // Inspector settings
     public Ent ent_prefab;
+    public Transform fey_transform;
+    public Slider mana_bar;
+    public Transform player_transform;
+
+
+    //public TextMeshProUGUI ghaddim_deaths;
+    //public TextMeshProUGUI ghaddim_captures;
+    //public TextMeshProUGUI mhoddim_deaths;
+    //public TextMeshProUGUI mhoddim_captures;
 
     // properties
 
     public static CommandBarOne Instance { get; set; }
-
 
     // Unity
 
@@ -36,44 +44,7 @@ public class CommandBarOne : MonoBehaviour {
     // public
 
 
-    public IEnumerator Metrics()
-    {
-        while (true) {
-            yield return new WaitForSeconds(Turn.action_threshold);
-
-            Transform _ghaddim = transform.Find("Ghaddim");
-            Transform ghaddim_casualties = _ghaddim.Find("Casualties");
-            Transform ghaddim_ruins = _ghaddim.Find("Ruins");
-            TextMeshProUGUI ghaddim_deaths = ghaddim_casualties.GetComponent<TextMeshProUGUI>();
-            TextMeshProUGUI ghaddim_captures = ghaddim_ruins.GetComponent<TextMeshProUGUI>();
-            ghaddim_deaths.text = "Deaths: " + Conflict.Casualties[Conflict.Faction.Ghaddim].ToString();
-            ghaddim_captures.text = "Ruins: " + Ruins.ForFaction[Conflict.Faction.Ghaddim].Count;
-
-            Transform _mhoddim = transform.Find("Mhoddim");
-            Transform mhoddim_casualties = _mhoddim.Find("Casualties");
-            Transform mhoddim_ruins = _mhoddim.Find("Ruins");
-            TextMeshProUGUI mhoddim_deaths = mhoddim_casualties.GetComponent<TextMeshProUGUI>();
-            TextMeshProUGUI mhoddim_captures = mhoddim_ruins.GetComponent<TextMeshProUGUI>();
-            mhoddim_deaths.text = "Deaths: " + Conflict.Casualties[Conflict.Faction.Mhoddim].ToString();
-            mhoddim_captures.text = "Ruins: " + Ruins.ForFaction[Conflict.Faction.Mhoddim].Count;
-        }
-
-    }
-
-
-    public void EntangleUnits()
-    {
-
-    }
-
-
-    public void HealUnits()
-    {
-
-    }
-
-
-    public void SummonEnt()
+    public void DireOak()
     {
         Vector3 starting_position = new Vector3(player_transform.position.x, 0f, player_transform.position.z) + new Vector3(0, ent_prefab.transform.position.y, 0);
         Vector3 summon_position = starting_position + player_transform.TransformDirection(Vector3.forward) * 20f;
@@ -81,7 +52,28 @@ public class CommandBarOne : MonoBehaviour {
     }
 
 
-    public void SummonRaven()
+    public void FountainOfHealing()
+    {
+        Spells.Instance.FountainOfHealing(player_transform.gameObject, Mouse.SelectedObject, false);
+    }
+
+
+    public IEnumerator Metrics()
+    {
+        while (true) {
+            mana_bar.value = Player.Instance.Spellcasting.CurrentManaPercentage();
+            yield return new WaitForSeconds(Turn.action_threshold);
+
+            //ghaddim_deaths.text = "Deaths: " + Conflict.Casualties[Conflict.Faction.Ghaddim].ToString();
+            //ghaddim_captures.text = "Ruins: " + Ruins.ForFaction[Conflict.Faction.Ghaddim].Count;
+            //mhoddim_deaths.text = "Deaths: " + Conflict.Casualties[Conflict.Faction.Mhoddim].ToString();
+            //mhoddim_captures.text = "Ruins: " + Ruins.ForFaction[Conflict.Faction.Mhoddim].Count;
+        }
+
+    }
+
+
+    public void Raven()
     {
 
     }

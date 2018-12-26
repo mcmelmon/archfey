@@ -29,7 +29,7 @@ public class Biosphere : MonoBehaviour {
     public void Eden()
     {
         // TODO: place fauna
-        PlaceVegetation();
+        if (!World.Instance.battleground) PlaceVegetation();
     }
 
 

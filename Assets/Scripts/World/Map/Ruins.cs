@@ -95,8 +95,9 @@ public class Ruins : MonoBehaviour {
         // pick a set of random tiles, build a ruin on each, and add all of the ruins into a complex
 
         UnityEngine.Random.InitState(DateTime.Now.Millisecond);
+        int number_of_ruins = (World.Instance.battleground) ? 3 : 17;
 
-        foreach (var tile in Geography.Instance.RandomTiles(17)) {
+        foreach (var tile in Geography.Instance.RandomTiles(number_of_ruins)) {
             if (tile.Location.x < 20 || tile.Location.x > Geography.Instance.GetResolution() - 20 || tile.Location.z < 20 || tile.Location.z > Geography.Instance.GetResolution() - 20) continue;
 
             Ruin nearest_ruin = RuinClosestTo(tile.Location);
