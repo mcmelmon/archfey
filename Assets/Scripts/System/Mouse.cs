@@ -26,13 +26,14 @@ public class Mouse : MonoBehaviour
     {
         while (true) {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            int layer_mask = LayerMask.GetMask("Faction");
+            int faction_layer_mask = LayerMask.GetMask("Faction");
+            int ui_layer_mask = LayerMask.GetMask("UI");
 
             if (SelectedObject != null) {
                 SelectedObject.GetComponent<Renderer>().material.color = highlight_color;
             }
 
-            if (Physics.Raycast(ray, out RaycastHit hit, 150f, layer_mask, QueryTriggerInteraction.Ignore)) {
+            if (Physics.Raycast(ray, out RaycastHit hit, 150f, faction_layer_mask, QueryTriggerInteraction.Ignore)) {
                 // We've touched something on the Faction layer
 
                 GameObject hover = hit.transform.gameObject;
@@ -52,14 +53,15 @@ public class Mouse : MonoBehaviour
                     SelectedObject.GetComponent<Renderer>().material.color = highlight_color;
                 }
 
-            } else if (HoveredObject != null) {
-                // We have not hit something, so drop previous highlighting
+            } else {
+                // We have not hit a faction element, so drop previous highlighting
+                // TODO: decide whether to keep or drop selection
 
-                HoveredObject.GetComponent<Renderer>().material.color = OriginalColor(HoveredObject);
-                HoveredObject = null;
-            } else if (Input.GetMouseButtonDown(0) && SelectedObject != null) {
-                SelectedObject.GetComponent<Renderer>().material.color = OriginalColor(SelectedObject);
-                SelectedObject = null;
+                if (HoveredObject != null) {
+
+                    HoveredObject.GetComponent<Renderer>().material.color = OriginalColor(HoveredObject);
+                    HoveredObject = null;
+                }
             }
 
             yield return null;

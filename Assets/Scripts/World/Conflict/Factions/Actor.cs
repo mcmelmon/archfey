@@ -13,6 +13,7 @@ public class Actor : MonoBehaviour
 
     // properties
 
+    public List<GameObject> AppliedUIEffects { get; set; }
     public Attack Attack { get; set; }
     public Conflict.Faction Faction { get; set; }
     public List<GameObject> Enemies { get; set; }
@@ -255,6 +256,7 @@ public class Actor : MonoBehaviour
 
     private void SetComponents()
     {
+        AppliedUIEffects = new List<GameObject>();
         Attack = GetComponent<Attack>();
         Enemies = new List<GameObject>();
         Friends = new List<GameObject>();

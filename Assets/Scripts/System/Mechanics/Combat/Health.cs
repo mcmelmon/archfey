@@ -113,11 +113,17 @@ public class Health : MonoBehaviour {
 
     public void UpdateHealthBar()
     {
-        health_bar.value = CurrentHealthPercentage();
-        if (health_bar.value >= 1) {
-            health_bar.gameObject.SetActive(false);
-        } else {
-            health_bar.gameObject.SetActive(true);
+        if (health_bar != null)
+        {
+            health_bar.value = CurrentHealthPercentage();
+            if (health_bar.value >= 1)
+            {
+                health_bar.gameObject.SetActive(false);
+            }
+            else
+            {
+                health_bar.gameObject.SetActive(true);
+            }
         }
     }
 }
