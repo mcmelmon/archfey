@@ -38,7 +38,7 @@ public class Turn : MonoBehaviour {
 
     private IEnumerator ResolveTurns()
     {
-        while (true) {
+        while (!Conflict.Victory) {
             if (current_haste < action_threshold) {
                 current_haste += haste_delta * Time.deltaTime;
             } else {

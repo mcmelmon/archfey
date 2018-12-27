@@ -18,6 +18,14 @@ public class Conflict : MonoBehaviour
     public Conflict.Role NextWave { get; set; }
     public static Conflict Instance { get; set; }
     public static List<GameObject> Units { get; set; }
+    public static Faction Victor { get; set; }
+    public static bool Victory { get; set; }
+    public static Faction VictoryContender { get; set; }
+    public static int VictoryThreshold { get; set; }
+
+
+    private int victory_ticks;
+    private int current_tick;
 
 
     // Unity
@@ -32,6 +40,7 @@ public class Conflict : MonoBehaviour
         }
         Instance = this;
         SetComponents();
+        StartCoroutine(CheckForVictory());
     }
 
 
@@ -70,6 +79,39 @@ public class Conflict : MonoBehaviour
     }
 
 
+    private IEnumerator CheckForVictory()
+    {
+        while (!Victory && Ruins.Instance != null && VictoryThreshold > 0) {
+            if (Ruins.Instance.FactionControl(Faction.Ghaddim) > VictoryThreshold) {
+                if (VictoryContender == Faction.Ghaddim) {
+                    current_tick++;
+                    if (current_tick >= victory_ticks) {
+                        Victory = true;
+                        Victor = Faction.Ghaddim;
+                    }
+                } else {
+                    current_tick = 0;
+                }
+            } else if (Ruins.Instance.FactionControl(Faction.Mhoddim) > VictoryThreshold) {
+                if (VictoryContender == Faction.Mhoddim)
+                {
+                    current_tick++;
+                    if (current_tick >= victory_ticks)
+                    {
+                        Victory = true;
+                        Victor = Faction.Mhoddim;
+                    }
+                }
+                else
+                {
+                    current_tick = 0;
+                }
+            }
+            yield return new WaitForSeconds(Turn.action_threshold);
+        }
+    }
+
+
     private void ChooseSides()
     {
         if (Random.Range(0,2) < 1) {
@@ -95,18 +137,24 @@ public class Conflict : MonoBehaviour
 
     private void SetComponents()
     {
-        Units = new List<GameObject>();
         Casualties = new Dictionary<Faction, int>
         {
             [Faction.Ghaddim] = 0,
             [Faction.Mhoddim] = 0
         };
+        current_tick = 0;
+        Units = new List<GameObject>();
+        Victor = Faction.None;
+        Victory = false;
+        VictoryContender = Faction.None;
+        VictoryThreshold = 0;  // set from Ruins after it has completed constructing them
+        victory_ticks = 5;
     }
 
 
     private IEnumerator Waves()
     {
-        while (true) {
+        while (!Victory) {
             yield return new WaitForSeconds(60f);
 
             Light the_sun = World.Instance.Sun();

@@ -236,7 +236,7 @@ public class Actor : MonoBehaviour
 
     private bool OnWatch()
     {
-        // TODO: implement notion of sentry
+        // TODO: once a ruin is captured, switch to sentry and attack incoming enemies
         return false;
     }
 
