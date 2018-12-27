@@ -46,6 +46,13 @@ public class Ruins : MonoBehaviour {
     {
         SetComponents();
         Construct();
+        Conflict.VictoryThreshold = Mathf.RoundToInt(RuinBlocks.Count * 0.66f);
+    }
+
+
+    public float FactionControl(Conflict.Faction _faction)
+    {
+        return (float)ForFaction[_faction].Count / (float)RuinBlocks.Count;
     }
 
 
