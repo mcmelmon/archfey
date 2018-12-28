@@ -26,10 +26,10 @@ public class Fey : MonoBehaviour {
 
         if (GetComponent<Ent>() != null)
         {
-            defend.agility_rating = ConfigureFey.agility_rating[Soldier.Clasification.Ent];
-            defend.armor_rating = ConfigureFey.armor_rating[Soldier.Clasification.Ent];
-            defend.constitution_rating = ConfigureFey.constitution_rating[Soldier.Clasification.Ent];
-            defend.force_rating = ConfigureFey.force_rating[Soldier.Clasification.Ent];
+            defend.AgilityRating = ConfigureFey.agility_rating[Soldier.Clasification.Ent];
+            defend.ArmorRating = ConfigureFey.armor_rating[Soldier.Clasification.Ent];
+            defend.ConstitutionRating = ConfigureFey.constitution_rating[Soldier.Clasification.Ent];
+            defend.ForceRating = ConfigureFey.force_rating[Soldier.Clasification.Ent];
             defend.SetResistances(ConfigureFey.resistances[Soldier.Clasification.Ent]);
         }
     }

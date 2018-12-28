@@ -105,15 +105,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   range: 0
-  damage_type: 0
-  instant_damage: 15
+  damage_maximum: 8
+  damage_type: 2
   damage_over_time: 0
   penetration: 0
   potency: 0
   projectile_speed: 10
   impact_prefab: {fileID: 1710435542514214, guid: 21ad8cd3e2ef64a6e8adf8d98532382d,
     type: 3}
-  ranged_attack_origin: {fileID: 0}
   melee_attack_origin: {fileID: 0}
-  ranged_attack_range: 0
   melee_attack_range: 5
+  ranged_attack_range: 0
+  ranged_attack_origin: {fileID: 0}

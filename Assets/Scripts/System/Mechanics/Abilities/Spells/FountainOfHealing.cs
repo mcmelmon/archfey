@@ -34,6 +34,7 @@ public class FountainOfHealing : MonoBehaviour
         if (_target != null) {
             if (Abilities.CurrentMana >= ManaCost) {
                 Abilities.CurrentMana -= ManaCost;
+                CommandBarOne.Instance.mana_bar.value = Abilities.CurrentManaPercentage();
                 StartCoroutine(OverTime(_target));
             }
         }

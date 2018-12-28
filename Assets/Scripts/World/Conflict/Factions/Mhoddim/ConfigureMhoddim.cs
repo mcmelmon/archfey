@@ -47,8 +47,8 @@ public static class ConfigureMhoddim
         strength_rating[Soldier.Clasification.Striker] = 1;
 
         // defense
-        armor_rating[Soldier.Clasification.Heavy] = 4;
-        constituion_rating[Soldier.Clasification.Heavy] = 0;
+        armor_rating[Soldier.Clasification.Heavy] = 5;
+        constituion_rating[Soldier.Clasification.Heavy] = 3;
         force_rating[Soldier.Clasification.Heavy] = 3;
 
         armor_rating[Soldier.Clasification.Scout] = 2;
@@ -56,13 +56,13 @@ public static class ConfigureMhoddim
         force_rating[Soldier.Clasification.Scout] = 1;
 
         armor_rating[Soldier.Clasification.Striker] = 3;
-        constituion_rating[Soldier.Clasification.Striker] = 0;
+        constituion_rating[Soldier.Clasification.Striker] = 1;
         force_rating[Soldier.Clasification.Striker] = 2;
 
         // health
-        starting_health[Soldier.Clasification.Heavy] = 140;
-        starting_health[Soldier.Clasification.Scout] = 70;
-        starting_health[Soldier.Clasification.Striker] = 100;
+        starting_health[Soldier.Clasification.Heavy] = 60;
+        starting_health[Soldier.Clasification.Scout] = 30;
+        starting_health[Soldier.Clasification.Striker] = 40;
 
         recovery_amount[Soldier.Clasification.Heavy] = 0;
         recovery_amount[Soldier.Clasification.Scout] = 0;

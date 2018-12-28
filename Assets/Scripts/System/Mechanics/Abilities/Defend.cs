@@ -4,44 +4,51 @@ using UnityEngine;
 
 public class Defend : MonoBehaviour
 {
-    public int agility_rating;    // move out of harm's way
-    public int armor_rating;      // deflect incoming attacks
-    public int constitution_rating;  // walk it off
-    public int force_rating;      // deflect incoming attacks
 
     public Dictionary<Weapon.DamageType, int> resistances;
 
-    float computed_damage;       // final health loss
+    // properties
 
-    Attack attacker;
-    Weapon weapon;
+    public int AgilityRating { get; set; }
+    public int ArmorRating { get; set; }
+    public float ComputedDamage { get; set; }
+    public int ConstitutionRating { get; set; }
+    public Weapon.DamageType DamageType { get; set; }
+    public int DefenseRating { get; set; }
+    public int ForceRating { get; set; }
 
 
     // Unity
 
 
+    private void Awake()
+    {
+        DefenseRating = AgilityRating + ArmorRating + ConstitutionRating + ForceRating;
+    }
+
+
     private void OnValidate()
     {
-        if (agility_rating > 10) agility_rating = 10;
-        if (agility_rating < 0) agility_rating = 0;
+        if (AgilityRating > 10) AgilityRating = 10;
+        if (AgilityRating < 0) AgilityRating = 0;
 
-        if (armor_rating > 10) armor_rating = 10;
-        if (armor_rating < 0) armor_rating = 0;
+        if (ArmorRating > 10) ArmorRating = 10;
+        if (ArmorRating < 0) ArmorRating = 0;
 
-        if (force_rating > 10) force_rating = 10;
-        if (force_rating < 0) force_rating = 0;
+        if (ForceRating > 10) ForceRating = 10;
+        if (ForceRating < 0) ForceRating = 0;
     }
 
 
     // public
 
 
-    public float HandleAttack(Weapon _weapon, Attack _attacker)
+    public float DamageAfterDefenses(float _damage, Weapon.DamageType _type)
     {
         // Apply our defense characteristics to an attack and compute damage
-        attacker = _attacker;
-        weapon = _weapon;
-        computed_damage = weapon.instant_damage + attacker.AgilityRating + attacker.StrengthRating;  // TODO: handle damage over time
+
+        ComputedDamage = _damage;
+        DamageType = _type;
 
         ApplyAgility();
         ApplyConstitution();
@@ -49,7 +56,7 @@ public class Defend : MonoBehaviour
         ApplyArmor();
         ApplyResistance();
 
-        return computed_damage;
+        return ComputedDamage;
     }
 
 
@@ -66,21 +73,21 @@ public class Defend : MonoBehaviour
     {
         // Armor rating deflects some damage
 
-        if (computed_damage <= 0) return;
+        if (ComputedDamage <= 0) return;
 
-        switch (weapon.damage_type)
+        switch (DamageType)
         {
             case Weapon.DamageType.Blunt:
-                computed_damage -= armor_rating * 1.2f;
+                ComputedDamage -= ArmorRating * 1.2f;
                 break;
             case Weapon.DamageType.Piercing:
-                computed_damage -= armor_rating;
+                ComputedDamage -= ArmorRating;
                 break;
             case Weapon.DamageType.Slashing:
-                computed_damage -= armor_rating * 2f;
+                ComputedDamage -= ArmorRating * 2f;
                 break;
             case Weapon.DamageType.Elemental:
-                computed_damage -= armor_rating * 0.5f;
+                ComputedDamage -= ArmorRating * 0.5f;
                 break;
             default:
                 break;
@@ -92,20 +99,20 @@ public class Defend : MonoBehaviour
     {
         // Agility rating avoids some damage by shifting location struck
 
-        if (computed_damage <= 0) return;
+        if (ComputedDamage <= 0) return;
 
-        switch (weapon.damage_type) {
+        switch (DamageType) {
             case Weapon.DamageType.Blunt:
-                computed_damage -= agility_rating;
+                ComputedDamage -= AgilityRating;
                 break;
             case Weapon.DamageType.Piercing:
-                computed_damage -= agility_rating * 1.2f;
+                ComputedDamage -= AgilityRating * 1.2f;
                 break;
             case Weapon.DamageType.Slashing:
-                computed_damage -= agility_rating * 1.2f;
+                ComputedDamage -= AgilityRating * 1.2f;
                 break;
             case Weapon.DamageType.Elemental:
-                computed_damage -= agility_rating * 0.5f;
+                ComputedDamage -= AgilityRating * 0.5f;
                 break;
             default:
                 break;
@@ -117,21 +124,21 @@ public class Defend : MonoBehaviour
     {
         // Constitution resists pain and poison
 
-        if (computed_damage <= 0) return;
+        if (ComputedDamage <= 0) return;
 
-        switch (weapon.damage_type)
+        switch (DamageType)
         {
             case Weapon.DamageType.Blunt:
-                computed_damage -= constitution_rating * 0.5f;
+                ComputedDamage -= ConstitutionRating * 0.5f;
                 break;
             case Weapon.DamageType.Piercing:
-                computed_damage -= constitution_rating * 0.5f;
+                ComputedDamage -= ConstitutionRating * 0.5f;
                 break;
             case Weapon.DamageType.Poison:
-                computed_damage -= constitution_rating * 1.2f;
+                ComputedDamage -= ConstitutionRating * 1.2f;
                 break;
             case Weapon.DamageType.Slashing:
-                computed_damage -= constitution_rating * 0.5f;
+                ComputedDamage -= ConstitutionRating * 0.5f;
                 break;
             default:
                 break;
@@ -144,20 +151,20 @@ public class Defend : MonoBehaviour
     {
         // Force rating deflects some damage
 
-        if (computed_damage <= 0) return;
+        if (ComputedDamage <= 0) return;
 
-        switch (weapon.damage_type) {
+        switch (DamageType) {
             case Weapon.DamageType.Blunt:
-                computed_damage -= force_rating;
+                ComputedDamage -= ForceRating;
                 break;
             case Weapon.DamageType.Piercing:
-                computed_damage -= force_rating;
+                ComputedDamage -= ForceRating;
                 break;
             case Weapon.DamageType.Slashing:
-                computed_damage -= force_rating;
+                ComputedDamage -= ForceRating;
                 break;
             case Weapon.DamageType.Elemental:
-                computed_damage -= force_rating * 2f;
+                ComputedDamage -= ForceRating * 2f;
                 break;
             default:
                 break;
@@ -167,8 +174,8 @@ public class Defend : MonoBehaviour
 
     private void ApplyResistance()
     {
-        if (computed_damage <= 0 || resistances == null) return;
+        if (ComputedDamage <= 0 || resistances == null) return;
 
-        computed_damage -= computed_damage * (resistances[weapon.damage_type] / 100);
+        ComputedDamage -= ComputedDamage * (resistances[DamageType] / 100);
     }
 }

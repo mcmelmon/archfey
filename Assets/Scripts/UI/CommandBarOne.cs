@@ -7,23 +7,17 @@ using UnityEngine.UI;
 public class CommandBarOne : MonoBehaviour {
 
     // Inspector settings
+
     public Ent ent_prefab;
     public Transform fey_transform;
     public Slider mana_bar;
+    public Slider amber_bar;
     public Transform player_transform;
-
-
-    //public TextMeshProUGUI ghaddim_deaths;
-    //public TextMeshProUGUI ghaddim_captures;
-    //public TextMeshProUGUI mhoddim_deaths;
-    //public TextMeshProUGUI mhoddim_captures;
 
     // properties
 
     public static CommandBarOne Instance { get; set; }
-
-    // Unity
-
+    
 
     // Unity
 
@@ -38,6 +32,13 @@ public class CommandBarOne : MonoBehaviour {
         }
         Instance = this;
         StartCoroutine(Metrics());
+    }
+
+
+    private void Start()
+    {
+        amber_bar.value = 0;
+        mana_bar.value = 1;
     }
 
 
@@ -57,20 +58,15 @@ public class CommandBarOne : MonoBehaviour {
         foreach (var target in Mouse.SelectedObjects) {
             Player.Instance.GetComponentInChildren<FountainOfHealing>().Cast(target, false);
         }
-        mana_bar.value = Player.Instance.Abilities.CurrentManaPercentage();
     }
 
 
     public IEnumerator Metrics()
     {
-        while (true) {
+        while (true && Player.Instance.Abilities != null) {
+            amber_bar.value = Player.Instance.Abilities.CurrentAmberPercentage();
             mana_bar.value = Player.Instance.Abilities.CurrentManaPercentage();
             yield return new WaitForSeconds(Turn.action_threshold);
-
-            //ghaddim_deaths.text = "Deaths: " + Conflict.Casualties[Conflict.Faction.Ghaddim].ToString();
-            //ghaddim_captures.text = "Ruins: " + Ruins.ForFaction[Conflict.Faction.Ghaddim].Count;
-            //mhoddim_deaths.text = "Deaths: " + Conflict.Casualties[Conflict.Faction.Mhoddim].ToString();
-            //mhoddim_captures.text = "Ruins: " + Ruins.ForFaction[Conflict.Faction.Mhoddim].Count;
         }
 
     }

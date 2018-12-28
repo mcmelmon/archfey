@@ -373,10 +373,7 @@ public class Actor : MonoBehaviour
 
     private void SheathWeapon()
     {
-        Weapon equipped_weapon = Attack.GetWeapon();
-        if (equipped_weapon != null) {
-            Destroy(equipped_weapon.gameObject);
-        }
+        Attack.EquippedMeleeWeapon.gameObject.SetActive(false);
     }
 
 
