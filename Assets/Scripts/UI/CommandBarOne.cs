@@ -54,7 +54,9 @@ public class CommandBarOne : MonoBehaviour {
 
     public void FountainOfHealing()
     {
-        Player.Instance.GetComponentInChildren<FountainOfHealing>().Cast(Mouse.SelectedObject, false);
+        foreach (var target in Mouse.SelectedObjects) {
+            Player.Instance.GetComponentInChildren<FountainOfHealing>().Cast(target, false);
+        }
         mana_bar.value = Player.Instance.Abilities.CurrentManaPercentage();
     }
 

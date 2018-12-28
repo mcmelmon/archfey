@@ -6,8 +6,7 @@ public class Defend : MonoBehaviour
 {
     public int agility_rating;    // move out of harm's way
     public int armor_rating;      // deflect incoming attacks
-    public int corporeal_rating;  // ignore some damage
-    public int counter;           // damage returned to attackers
+    public int constitution_rating;  // walk it off
     public int force_rating;      // deflect incoming attacks
 
     public Dictionary<Weapon.DamageType, int> resistances;
@@ -23,9 +22,6 @@ public class Defend : MonoBehaviour
 
     private void OnValidate()
     {
-        if (corporeal_rating > 10) corporeal_rating = 10;
-        if (corporeal_rating < 0) corporeal_rating = 0;
-
         if (agility_rating > 10) agility_rating = 10;
         if (agility_rating < 0) agility_rating = 0;
 
@@ -48,18 +44,12 @@ public class Defend : MonoBehaviour
         computed_damage = weapon.instant_damage + attacker.AgilityRating + attacker.StrengthRating;  // TODO: handle damage over time
 
         ApplyAgility();
-        ApplyCorporeal();
+        ApplyConstitution();
         ApplyForce();
         ApplyArmor();
         ApplyResistance();
 
         return computed_damage;
-    }
-
-
-    public float GetCounterDamage()
-    {
-        return counter;  // TODO: give counter a "weapon" so that it can be handled by defend
     }
 
 
@@ -123,13 +113,29 @@ public class Defend : MonoBehaviour
     }
 
 
-    private void ApplyCorporeal()
+    private void ApplyConstitution()
     {
-        // (Non-)corporeal rating phases some damage out of existence
+        // Constitution resists pain and poison
 
         if (computed_damage <= 0) return;
 
-        computed_damage -= corporeal_rating;
+        switch (weapon.damage_type)
+        {
+            case Weapon.DamageType.Blunt:
+                computed_damage -= constitution_rating * 0.5f;
+                break;
+            case Weapon.DamageType.Piercing:
+                computed_damage -= constitution_rating * 0.5f;
+                break;
+            case Weapon.DamageType.Poison:
+                computed_damage -= constitution_rating * 1.2f;
+                break;
+            case Weapon.DamageType.Slashing:
+                computed_damage -= constitution_rating * 0.5f;
+                break;
+            default:
+                break;
+        }
 
     }
 

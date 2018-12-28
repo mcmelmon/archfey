@@ -498,7 +498,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 264195861}
-  m_LocalRotation: {x: -0.060535964, y: -0.0739981, z: -0.69896615, w: 0.7087356}
+  m_LocalRotation: {x: -0.062903374, y: -0.071981065, z: -0.6976907, w: 0.7099927}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -842,7 +842,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 465733991}
-  m_LocalRotation: {x: 0.15121135, y: -0.0108218985, z: 0.0016555304, w: 0.9884409}
+  m_LocalRotation: {x: 0.15121046, y: -0.010819296, z: 0.0016551224, w: 0.988441}
   m_LocalPosition: {x: 174.441, y: 28.240227, z: 154.13208}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2319,7 +2319,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 829675727}
-  m_LocalRotation: {x: -0, y: -0.0024482682, z: 0.34894642, w: 0.9371395}
+  m_LocalRotation: {x: 0.000000029802322, y: 0.000000017695129, z: 0.34805438, w: 0.93747437}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2787,7 +2787,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963679513}
-  m_LocalRotation: {x: -0.122740924, y: -0.007759398, z: -0.71021146, w: 0.69316244}
+  m_LocalRotation: {x: -0.021969117, y: -0.10885457, z: -0.69699144, w: 0.7084285}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -5167,11 +5167,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   energy_haste_factor: 1
   energy_pool_maximum: 1000
-  energy_potency: 1.15
+  energy_potency: 2
   energy_replenishment_rate: 0.01
   mana_haste_factor: 1
   mana_pool_maximum: 1000
-  magic_potency: 1.15
+  magic_potency: 2
   mana_replenishment_rate: 0.01
 --- !u!114 &1624025804
 MonoBehaviour:

@@ -10,8 +10,7 @@ public static class ConfigureMhoddim
 
     // Defense attributes
     public static Dictionary<Soldier.Clasification, int> armor_rating = new Dictionary<Soldier.Clasification, int>();
-    public static Dictionary<Soldier.Clasification, int> corporeal_rating = new Dictionary<Soldier.Clasification, int>();
-    public static Dictionary<Soldier.Clasification, int> counter = new Dictionary<Soldier.Clasification, int>();
+    public static Dictionary<Soldier.Clasification, int> constituion_rating = new Dictionary<Soldier.Clasification, int>();
     public static Dictionary<Soldier.Clasification, int> force_rating = new Dictionary<Soldier.Clasification, int>();
 
     public static Dictionary<Soldier.Clasification, Dictionary<Weapon.DamageType, int>> resistances = new Dictionary<Soldier.Clasification, Dictionary<Weapon.DamageType, int>>();
@@ -49,18 +48,15 @@ public static class ConfigureMhoddim
 
         // defense
         armor_rating[Soldier.Clasification.Heavy] = 4;
-        corporeal_rating[Soldier.Clasification.Heavy] = 0;
-        counter[Soldier.Clasification.Heavy] = 0;
+        constituion_rating[Soldier.Clasification.Heavy] = 0;
         force_rating[Soldier.Clasification.Heavy] = 3;
 
         armor_rating[Soldier.Clasification.Scout] = 2;
-        corporeal_rating[Soldier.Clasification.Scout] = 0;
-        counter[Soldier.Clasification.Scout] = 5;
+        constituion_rating[Soldier.Clasification.Scout] = 0;
         force_rating[Soldier.Clasification.Scout] = 1;
 
         armor_rating[Soldier.Clasification.Striker] = 3;
-        corporeal_rating[Soldier.Clasification.Striker] = 0;
-        counter[Soldier.Clasification.Striker] = 0;
+        constituion_rating[Soldier.Clasification.Striker] = 0;
         force_rating[Soldier.Clasification.Striker] = 2;
 
         // health

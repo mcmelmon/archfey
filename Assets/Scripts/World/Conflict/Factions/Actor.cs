@@ -13,7 +13,9 @@ public class Actor : MonoBehaviour
 
     // properties
 
+    public Abilities Abilities { get; set; }
     public Attack Attack { get; set; }
+    public Defend Defend { get; set; }
     public Conflict.Faction Faction { get; set; }
     public List<Actor> Enemies { get; set; }
     public Fey Fey { get; set; }
@@ -283,7 +285,9 @@ public class Actor : MonoBehaviour
 
     private void SetComponents()
     {
-        Attack = GetComponent<Attack>();
+        Abilities = GetComponentInChildren<Abilities>();
+        Attack = GetComponentInChildren<Attack>();
+        Defend = GetComponentInChildren<Defend>();
         Enemies = new List<Actor>();
         Friends = new List<Actor>();
         Mhoddim = GetComponent<Mhoddim>();

@@ -71,7 +71,7 @@ public class Attack : MonoBehaviour
             if (_enemy == null || transform == null) continue;
 
             float grounded_center_distance = Vector3.Distance(new Vector3(_enemy.transform.position.x, 0, _enemy.transform.position.z), new Vector3(transform.position.x, 0, transform.position.z));
-            float combined_radius = (_enemy.GetComponent<CapsuleCollider>().radius * _enemy.transform.localScale.x) + (GetComponent<CapsuleCollider>().radius * transform.localScale.x);
+            float combined_radius = (_enemy.GetComponent<CapsuleCollider>().radius * _enemy.transform.localScale.x) + (Actor.GetComponent<CapsuleCollider>().radius * transform.localScale.x);
             float separation = grounded_center_distance - combined_radius;
 
             if (separation <= LongestMeleeRange()) {
@@ -135,7 +135,7 @@ public class Attack : MonoBehaviour
 
     private void SetComponents()
     {
-        Actor = GetComponent<Actor>();
+        Actor = GetComponentInParent<Actor>();
         AvailableMeleeTargets = new List<Actor>();
         AvailableRangedTargets = new List<Actor>();
         CurrentMeleeTargets = new List<Actor>();
@@ -156,7 +156,7 @@ public class Attack : MonoBehaviour
         foreach (var weapon in AvailableWeapons()) {
             if (weapon.range == Weapon.Range.Melee) {
                 if (Weapon == null) {
-                    Weapon = Instantiate(weapon, transform.Find("MeleeAttackOrigin").transform.position, transform.rotation);  // TODO: make enums
+                    Weapon = Instantiate(weapon, transform.parent.Find("MeleeAttackOrigin").transform.position, transform.rotation);  // TODO: make enums
                     Weapon.transform.position += 0.2f * swing_direction.normalized;  // TODO: give melee weapons a length
                     Weapon.transform.parent = transform;
                     Weapon.name = "Melee Weapon";
@@ -167,7 +167,7 @@ public class Attack : MonoBehaviour
 
                 // we have no available melee weapon, so use range on melee target
 
-                Weapon _ranged = Instantiate(weapon, transform.Find("RangedAttackOrigin").transform.position, transform.rotation);  // TODO: make enums
+                Weapon _ranged = Instantiate(weapon, transform.parent.Find("RangedAttackOrigin").transform.position, transform.rotation);  // TODO: make enums
                 _ranged.transform.parent = transform;
                 _ranged.name = "Ranged Weapon";
                 _ranged.SetTarget(_target);
@@ -205,7 +205,7 @@ public class Attack : MonoBehaviour
         if (CurrentMeleeTargets.Count == 0 && CurrentRangedTargets.Count == 0) return;
 
         // TODO: allow stealth to be recovered, e.g. "Vanish" and even attacking from stealth for a short while, etc.
-        Stealth stealth = GetComponent<Stealth>();
+        Stealth stealth = Actor.Stealth;
         if (stealth != null) {
             stealth.attacking = true;
             stealth.spotted = true;

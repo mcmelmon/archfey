@@ -70,22 +70,19 @@ public class Ghaddim : MonoBehaviour {
         if (GetComponent<Heavy>() != null) {
             defend.agility_rating = ConfigureGhaddim.agility_rating[Soldier.Clasification.Heavy];
             defend.armor_rating = ConfigureGhaddim.armor_rating[Soldier.Clasification.Heavy];
-            defend.corporeal_rating = ConfigureGhaddim.corporeal_rating[Soldier.Clasification.Heavy];
-            defend.counter = ConfigureGhaddim.counter[Soldier.Clasification.Heavy];
+            defend.constitution_rating = ConfigureGhaddim.constitution_rating[Soldier.Clasification.Heavy];
             defend.force_rating = ConfigureGhaddim.force_rating[Soldier.Clasification.Heavy];
             defend.SetResistances(ConfigureGhaddim.resistances[Soldier.Clasification.Heavy]);
         } else if (GetComponent<Scout>() != null) {
             defend.agility_rating = ConfigureGhaddim.agility_rating[Soldier.Clasification.Scout];
             defend.armor_rating = ConfigureGhaddim.armor_rating[Soldier.Clasification.Scout];
-            defend.corporeal_rating = ConfigureGhaddim.corporeal_rating[Soldier.Clasification.Scout];
-            defend.counter = ConfigureGhaddim.counter[Soldier.Clasification.Scout];
+            defend.constitution_rating = ConfigureGhaddim.constitution_rating[Soldier.Clasification.Scout];
             defend.force_rating = ConfigureGhaddim.force_rating[Soldier.Clasification.Scout];
             defend.SetResistances(ConfigureGhaddim.resistances[Soldier.Clasification.Scout]);
         } else if (GetComponent<Striker>() != null) {
             defend.agility_rating = ConfigureGhaddim.agility_rating[Soldier.Clasification.Striker];
             defend.armor_rating = ConfigureGhaddim.armor_rating[Soldier.Clasification.Striker];
-            defend.corporeal_rating = ConfigureGhaddim.corporeal_rating[Soldier.Clasification.Striker];
-            defend.counter = ConfigureGhaddim.counter[Soldier.Clasification.Striker];
+            defend.constitution_rating = ConfigureGhaddim.constitution_rating[Soldier.Clasification.Striker];
             defend.force_rating = ConfigureGhaddim.force_rating[Soldier.Clasification.Striker];
             defend.SetResistances(ConfigureGhaddim.resistances[Soldier.Clasification.Striker]);
         }

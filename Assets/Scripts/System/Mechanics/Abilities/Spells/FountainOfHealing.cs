@@ -10,9 +10,11 @@ public class FountainOfHealing : MonoBehaviour
     // properties
 
     public Abilities Abilities { get; set; }
-    public Dictionary<Actor, int> AffectedTargets { get; set; }
     public int ManaCost { get; set; }
+    public int PrimaryHealthGainPerTurn { get; set; }
+    public int SecondaryHealthGainPerTurn { get; set; }
     public int Turns { get; set; }
+    public Dictionary<Actor, int> TurnsActive { get; set; }
 
 
     // Unity
@@ -20,10 +22,7 @@ public class FountainOfHealing : MonoBehaviour
 
     private void Awake()
     {
-        Abilities = GetComponent<Abilities>();
-        AffectedTargets = new Dictionary<Actor, int>();
-        ManaCost = 100;
-        Turns = 5;
+        SetComponents();
     }
 
 
@@ -46,22 +45,33 @@ public class FountainOfHealing : MonoBehaviour
 
     private IEnumerator OverTime(Actor _target)
     {
-        GameObject fountain = Instantiate(fountain_of_healing_prefab, Mouse.SelectedObject.transform.position, Mouse.SelectedObject.transform.rotation);
-        fountain.transform.position += new Vector3(0, 2, 0);
+        GameObject fountain = Instantiate(fountain_of_healing_prefab, _target.transform.position, _target.transform.rotation);
+        fountain.transform.position += new Vector3(0, 3, 0);
         fountain.transform.parent = _target.transform;
-        AffectedTargets[_target] = 0;
+        TurnsActive[_target] = 0;
 
-        while (AffectedTargets[_target] < Turns) {
-            _target.Health.RecoverHealth(Mathf.RoundToInt(10 * Abilities.magic_potency));
+        while (TurnsActive[_target] < Turns) {
+            _target.Health.RecoverHealth(Mathf.RoundToInt(PrimaryHealthGainPerTurn * Abilities.magic_potency));
             foreach (var friend in _target.IdentifyFriends()) {
-                friend.Health.RecoverHealth(Mathf.RoundToInt(5 * Abilities.magic_potency));
+                friend.Health.RecoverHealth(Mathf.RoundToInt(SecondaryHealthGainPerTurn * Abilities.magic_potency));
             }
-            AffectedTargets[_target]++;
+            TurnsActive[_target]++;
             yield return new WaitForSeconds(Turn.action_threshold);
         }
 
-        AffectedTargets.Remove(_target);
+        TurnsActive.Remove(_target);
         Destroy(fountain);
         StopCoroutine(OverTime(_target));
+    }
+
+
+    private void SetComponents()
+    {
+        Abilities = GetComponent<Abilities>();
+        ManaCost = 100;
+        PrimaryHealthGainPerTurn = 10;
+        SecondaryHealthGainPerTurn = 5;
+        Turns = 5;
+        TurnsActive = new Dictionary<Actor, int>();
     }
 }

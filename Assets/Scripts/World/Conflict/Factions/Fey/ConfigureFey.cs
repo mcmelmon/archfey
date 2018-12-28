@@ -11,7 +11,7 @@ public static class ConfigureFey {
 
     // Defense attributes
     public static Dictionary<Soldier.Clasification, int> armor_rating = new Dictionary<Soldier.Clasification, int>();
-    public static Dictionary<Soldier.Clasification, int> corporeal_rating = new Dictionary<Soldier.Clasification, int>();
+    public static Dictionary<Soldier.Clasification, int> constitution_rating = new Dictionary<Soldier.Clasification, int>();
     public static Dictionary<Soldier.Clasification, int> counter = new Dictionary<Soldier.Clasification, int>();
     public static Dictionary<Soldier.Clasification, int> force_rating = new Dictionary<Soldier.Clasification, int>();
 
@@ -43,8 +43,7 @@ public static class ConfigureFey {
 
         // defense
         armor_rating[Soldier.Clasification.Ent] = 4;
-        corporeal_rating[Soldier.Clasification.Ent] = 0;
-        counter[Soldier.Clasification.Ent] = 10;
+        constitution_rating[Soldier.Clasification.Ent] = 0;
         force_rating[Soldier.Clasification.Ent] = 0;
 
         // health
