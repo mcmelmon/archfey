@@ -40,6 +40,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 4, z: 0}
   m_LocalScale: {x: 1.5, y: 2, z: 1.5}
   m_Children:
+  - {fileID: 3225732829100436198}
   - {fileID: 4862249077518702}
   - {fileID: 6986010549523837193}
   m_Father: {fileID: 0}
@@ -275,7 +276,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4828829337614132}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &581210515533311185
 GameObject:
@@ -345,7 +346,7 @@ RectTransform:
   m_Children:
   - {fileID: 3152509750908400698}
   m_Father: {fileID: 4828829337614132}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -412,6 +413,57 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!1 &1648050507008567817
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3225732829100436198}
+  - component: {fileID: 5589369088179827744}
+  m_Layer: 26
+  m_Name: Abilities
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3225732829100436198
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1648050507008567817}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4828829337614132}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5589369088179827744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1648050507008567817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2990df66b036643bc9e92eb426d7358a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  energy_haste_factor: 0
+  energy_pool_maximum: 0
+  energy_potency: 0
+  energy_replenishment_rate: 0
+  mana_haste_factor: 0
+  mana_pool_maximum: 0
+  magic_potency: 0
+  mana_replenishment_rate: 0
 --- !u!1 &1800314593921042848
 GameObject:
   m_ObjectHideFlags: 0

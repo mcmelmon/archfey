@@ -12,10 +12,10 @@ public class Attack : MonoBehaviour
 
     public Actor Actor { get; set; }
     public int AgilityRating { get; set; }
-    public List<GameObject> AvailableMeleeTargets { get; set; }
-    public List<GameObject> AvailableRangedTargets { get; set; }
-    public List<GameObject> CurrentMeleeTargets { get; set; }
-    public List<GameObject> CurrentRangedTargets { get; set; }
+    public List<Actor> AvailableMeleeTargets { get; set; }
+    public List<Actor> AvailableRangedTargets { get; set; }
+    public List<Actor> CurrentMeleeTargets { get; set; }
+    public List<Actor> CurrentRangedTargets { get; set; }
     public int StrengthRating { get; set; }
     public Weapon Weapon { get; set; }
 
@@ -67,7 +67,7 @@ public class Attack : MonoBehaviour
         ClearTargets();
 
         for (int i = 0; i < Actor.Enemies.Count; i++) {
-            GameObject _enemy = Actor.Enemies[i];
+            Actor _enemy = Actor.Enemies[i];
             if (_enemy == null || transform == null) continue;
 
             float grounded_center_distance = Vector3.Distance(new Vector3(_enemy.transform.position.x, 0, _enemy.transform.position.z), new Vector3(transform.position.x, 0, transform.position.z));
@@ -136,10 +136,10 @@ public class Attack : MonoBehaviour
     private void SetComponents()
     {
         Actor = GetComponent<Actor>();
-        AvailableMeleeTargets = new List<GameObject>();
-        AvailableRangedTargets = new List<GameObject>();
-        CurrentMeleeTargets = new List<GameObject>();
-        CurrentRangedTargets = new List<GameObject>();
+        AvailableMeleeTargets = new List<Actor>();
+        AvailableRangedTargets = new List<Actor>();
+        CurrentMeleeTargets = new List<Actor>();
+        CurrentRangedTargets = new List<Actor>();
     }
 
 
@@ -147,7 +147,7 @@ public class Attack : MonoBehaviour
     {
         if (CurrentMeleeTargets.Count == 0) return;
 
-        GameObject _target = CurrentMeleeTargets[0];
+        Actor _target = CurrentMeleeTargets[0];
         if (_target == null || transform == null) return;
 
         Vector3 swing_direction = _target.transform.position - transform.position;
@@ -184,7 +184,7 @@ public class Attack : MonoBehaviour
 
             // TODO: potentially disadvantage ranged attacks against melee targets
 
-            GameObject _target = CurrentRangedTargets[0];
+            Actor _target = CurrentRangedTargets[0];
 
             if (weapon.range == Weapon.Range.Ranged) {
                 Weapon _ranged = Instantiate(weapon, transform.Find("RangedAttackOrigin").transform.position, transform.rotation);  // TODO: make enums
@@ -219,11 +219,11 @@ public class Attack : MonoBehaviour
     }
 
 
-    private GameObject TargetMelee()
+    private Actor TargetMelee()
     {
         // TODO: attack the biggest threat
 
-        GameObject _target = null;
+        Actor _target = null;
 
         if (AvailableMeleeTargets.Count > 0) {
             _target = AvailableMeleeTargets[0];
@@ -233,11 +233,11 @@ public class Attack : MonoBehaviour
     }
 
 
-    private GameObject TargetRanged()
+    private Actor TargetRanged()
     {
         // TODO: attack the biggest threat
 
-        GameObject _target = null;
+        Actor _target = null;
 
         if (AvailableRangedTargets.Count > 0) {
             _target = AvailableRangedTargets[0];

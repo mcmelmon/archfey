@@ -54,14 +54,15 @@ public class CommandBarOne : MonoBehaviour {
 
     public void FountainOfHealing()
     {
-        Spells.Instance.FountainOfHealing(player_transform.gameObject, Mouse.SelectedObject, false);
+        Player.Instance.GetComponentInChildren<FountainOfHealing>().Cast(Mouse.SelectedObject, false);
+        mana_bar.value = Player.Instance.Abilities.CurrentManaPercentage();
     }
 
 
     public IEnumerator Metrics()
     {
         while (true) {
-            mana_bar.value = Player.Instance.Spellcasting.CurrentManaPercentage();
+            mana_bar.value = Player.Instance.Abilities.CurrentManaPercentage();
             yield return new WaitForSeconds(Turn.action_threshold);
 
             //ghaddim_deaths.text = "Deaths: " + Conflict.Casualties[Conflict.Faction.Ghaddim].ToString();

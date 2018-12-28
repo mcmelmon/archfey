@@ -33,19 +33,19 @@ public class Ghaddim : MonoBehaviour {
     // public
 
 
-    public void AddFactionThreat(GameObject _foe, float _threat)
+    public void AddFactionThreat(Actor _foe, float _threat)
     {
         Threat.AddThreat(_foe, _threat);
     }
 
 
-    public GameObject BiggestFactionThreat()
+    public Actor BiggestFactionThreat()
     {
         return Threat.BiggestThreat();
     }
 
 
-    public bool IsFactionThreat(GameObject _sighting)
+    public bool IsFactionThreat(Actor _sighting)
     {
         return _sighting != null && Threat.IsAThreat(_sighting);
     }

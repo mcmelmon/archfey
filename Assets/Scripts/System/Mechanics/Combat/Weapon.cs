@@ -24,7 +24,7 @@ public class Weapon : MonoBehaviour {
 
     // properties
 
-    public GameObject Target { get; set; }
+    public Actor Target { get; set; }
     public Health TargetHealth { get; set; }
     public Defend TargetDefend { get; set; }
     public Threat TargetThreat { get; set; }
@@ -58,7 +58,7 @@ public class Weapon : MonoBehaviour {
     }
 
 
-    public void SetTarget(GameObject _target)
+    public void SetTarget(Actor _target)
     {
         Target = _target;
         TargetHealth = Target.GetComponent<Health>();
@@ -75,8 +75,8 @@ public class Weapon : MonoBehaviour {
         if (TargetHealth != null && TargetDefend != null && this.transform.parent.gameObject != null) {
             float damage_inflicted = TargetDefend.HandleAttack(this, this.transform.parent.gameObject.GetComponent<Attack>());
             TargetHealth.LoseHealth(damage_inflicted);
-            TargetThreat.AddThreat(transform.parent.gameObject, damage_inflicted);
-            TargetThreat.SpreadThreat(transform.parent.gameObject, damage_inflicted);
+            TargetThreat.AddThreat(transform.parent.gameObject.GetComponent<Actor>(), damage_inflicted);
+            TargetThreat.SpreadThreat(transform.parent.gameObject.GetComponent<Actor>(), damage_inflicted);
         }
     }
 

@@ -498,7 +498,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 264195861}
-  m_LocalRotation: {x: -0.09501874, y: -0.052499853, z: -0.70064783, w: 0.7052007}
+  m_LocalRotation: {x: -0.060535964, y: -0.0739981, z: -0.69896615, w: 0.7087356}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -842,7 +842,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 465733991}
-  m_LocalRotation: {x: 0.15738113, y: -0.026752118, z: 0.0042650145, w: 0.98716635}
+  m_LocalRotation: {x: 0.15121135, y: -0.0108218985, z: 0.0016555304, w: 0.9884409}
   m_LocalPosition: {x: 174.441, y: 28.240227, z: 154.13208}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2319,7 +2319,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 829675727}
-  m_LocalRotation: {x: -0.00025387105, y: 0.017847607, z: 0.34070972, w: 0.93999904}
+  m_LocalRotation: {x: -0, y: -0.0024482682, z: 0.34894642, w: 0.9371395}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2385,7 +2385,6 @@ GameObject:
   - component: {fileID: 893208851}
   - component: {fileID: 893208856}
   - component: {fileID: 893208855}
-  - component: {fileID: 893208857}
   m_Layer: 31
   m_Name: Player
   m_TagString: Player
@@ -2462,7 +2461,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 200, y: 22, z: 200}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1624025802}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2497,21 +2497,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 84
   m_CollisionDetection: 0
---- !u!114 &893208857
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 893208850}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c969aef969ec6463fa5ae55c04029ff8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maximum_mana_pool: 1000
-  replenishment_percentage: 0.01
-  spell_potency: 1.15
 --- !u!1 &905101799
 GameObject:
   m_ObjectHideFlags: 0
@@ -2802,7 +2787,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963679513}
-  m_LocalRotation: {x: -0.14552796, y: 0.0076512396, z: -0.7143985, w: 0.68439597}
+  m_LocalRotation: {x: -0.122740924, y: -0.007759398, z: -0.71021146, w: 0.69316244}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2864,7 +2849,6 @@ GameObject:
   m_Component:
   - component: {fileID: 968584315}
   - component: {fileID: 968584316}
-  - component: {fileID: 968584317}
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -2901,20 +2885,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlight_color: {r: 0.37329337, g: 1, b: 0.28773582, a: 0}
---- !u!114 &968584317
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 968584314}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e013d06e624044ddba346c81edfb672e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fey_sparkles_prefab: {fileID: 1693805012097464, guid: 10e9bfe16bc7048eab897affc81e4aea,
-    type: 3}
 --- !u!1 &969520623
 GameObject:
   m_ObjectHideFlags: 0
@@ -5151,6 +5121,72 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1538208619}
   m_CullTransparentMesh: 0
+--- !u!1 &1624025801
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1624025802}
+  - component: {fileID: 1624025803}
+  - component: {fileID: 1624025804}
+  m_Layer: 31
+  m_Name: Abilities
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1624025802
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1624025801}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 893208854}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1624025803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1624025801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2990df66b036643bc9e92eb426d7358a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  energy_haste_factor: 1
+  energy_pool_maximum: 1000
+  energy_potency: 1.15
+  energy_replenishment_rate: 0.01
+  mana_haste_factor: 1
+  mana_pool_maximum: 1000
+  magic_potency: 1.15
+  mana_replenishment_rate: 0.01
+--- !u!114 &1624025804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1624025801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e013d06e624044ddba346c81edfb672e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fountain_of_healing_prefab: {fileID: 1693805012097464, guid: 10e9bfe16bc7048eab897affc81e4aea,
+    type: 3}
 --- !u!1 &1685172201
 GameObject:
   m_ObjectHideFlags: 0

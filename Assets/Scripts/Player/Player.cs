@@ -13,7 +13,7 @@ public class Player : MonoBehaviour {
 
     // properties
 
-    public Spellcasting Spellcasting { get; set; }
+    public Abilities Abilities { get; set; }
     public static Player Instance { get; set; }
 
     // Unity
@@ -27,7 +27,7 @@ public class Player : MonoBehaviour {
             return;
         }
         Instance = this;
-        Spellcasting = GetComponent<Spellcasting>();
+        Abilities = GetComponentInChildren<Abilities>();
         StartCoroutine(Movement());
     }
 
