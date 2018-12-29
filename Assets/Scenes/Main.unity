@@ -498,7 +498,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 264195861}
-  m_LocalRotation: {x: -0.06326974, y: -0.046171572, z: -0.69361395, w: 0.7160761}
+  m_LocalRotation: {x: -0.06074906, y: -0.1866328, z: -0.6655445, w: 0.72008914}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -764,7 +764,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 2
-  m_FollowOffset: {x: 0, y: 7, z: -25.9776}
+  m_FollowOffset: {x: 0, y: 7, z: -15}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -831,8 +831,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 460771911}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 25.559, y: 0.75977325, z: 19.89032}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1134764494}
@@ -916,8 +916,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 465733991}
-  m_LocalRotation: {x: 0.1512104, y: -0.010819328, z: 0.0016551266, w: 0.98844105}
-  m_LocalPosition: {x: 174.441, y: 28.240227, z: 154.13208}
+  m_LocalRotation: {x: 0.23908266, y: -0.016298015, z: 0.004013551, w: 0.97085416}
+  m_LocalPosition: {x: 200, y: 29, z: 185}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 625565791}
@@ -1742,11 +1742,11 @@ MonoBehaviour:
   m_SplineCurvature: 0.425
   m_Orbits:
   - m_Height: 15
-    m_Radius: 25.9776
+    m_Radius: 20
   - m_Height: 7
-    m_Radius: 25.9776
+    m_Radius: 15
   - m_Height: -2
-    m_Radius: 25.9776
+    m_Radius: 10
   m_LegacyHeadingBias: 3.4028235e+38
   m_Rigs:
   - {fileID: 963679515}
@@ -2393,7 +2393,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 829675727}
-  m_LocalRotation: {x: 0.000000029802322, y: -0.000000015832484, z: 0.3471002, w: 0.93782806}
+  m_LocalRotation: {x: 0.0000051409, y: -0.009087562, z: 0.37256005, w: 0.92796355}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2523,7 +2523,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 893208850}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -2897,7 +2897,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963679513}
-  m_LocalRotation: {x: -0.021965854, y: -0.09937686, z: -0.69723946, w: 0.7095766}
+  m_LocalRotation: {x: -0.18932147, y: -0.0090104295, z: -0.7096011, w: 0.67863286}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2959,6 +2959,7 @@ GameObject:
   m_Component:
   - component: {fileID: 968584315}
   - component: {fileID: 968584316}
+  - component: {fileID: 968584317}
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -2974,7 +2975,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 968584314}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 25.559, y: 0.75977325, z: 19.89032}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 752408119}
@@ -2995,6 +2996,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlight_color: {r: 0.37329337, g: 1, b: 0.28773582, a: 0}
+--- !u!114 &968584317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 968584314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3691a3d1275ba40ea8d01c1d6a89ab67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fountain_of_healing_prefab: {fileID: 1693805012097464, guid: 10e9bfe16bc7048eab897affc81e4aea,
+    type: 3}
+  smite_prefab: {fileID: 8152340743969959684, guid: 3469609925de449af9f389e48256e36a,
+    type: 3}
 --- !u!1 &969520623
 GameObject:
   m_ObjectHideFlags: 0
@@ -3957,7 +3974,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 2
-  m_FollowOffset: {x: 0, y: 7, z: -25.9776}
+  m_FollowOffset: {x: 0, y: 7, z: -15}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -4575,7 +4592,7 @@ GameObject:
   - component: {fileID: 1432919894}
   - component: {fileID: 1432919893}
   m_Layer: 5
-  m_Name: Unaussprech
+  m_Name: Ashen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4620,7 +4637,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: Unaussprech
+  m_text: Ashen
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4689,7 +4706,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1432919893}
-    characterCount: 11
+    characterCount: 5
     spriteCount: 0
     spaceCount: 0
     wordCount: 1
@@ -4902,7 +4919,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 2
-  m_FollowOffset: {x: 0, y: 7, z: -25.9776}
+  m_FollowOffset: {x: 0, y: 7, z: -15}
   m_XDamping: 4.27
   m_YDamping: 1
   m_ZDamping: 5.85
@@ -5434,6 +5451,10 @@ MonoBehaviour:
   magic_potency: 2
   mana_replenishment_rate: 0.05
   amber_pool_maximum: 1000
+  energy_bar: {fileID: 0}
+  health_bar: {fileID: 0}
+  mana_bar: {fileID: 0}
+  stat_bars: {fileID: 0}
 --- !u!114 &1624025804
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5446,8 +5467,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e013d06e624044ddba346c81edfb672e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fountain_of_healing_prefab: {fileID: 1693805012097464, guid: 10e9bfe16bc7048eab897affc81e4aea,
-    type: 3}
 --- !u!1 &1685172201
 GameObject:
   m_ObjectHideFlags: 0

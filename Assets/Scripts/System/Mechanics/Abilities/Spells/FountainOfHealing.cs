@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class FountainOfHealing : MonoBehaviour
 {
-    // Inspector settings
-    public GameObject fountain_of_healing_prefab;
-
     // properties
 
-    public Abilities Abilities { get; set; }
+    public Actor Actor { get; set; }
     public int ManaCost { get; set; }
     public int PrimaryHealthGainPerTurn { get; set; }
+    public Resources Resources { get; set; }
     public int SecondaryHealthGainPerTurn { get; set; }
     public int Turns { get; set; }
     public Dictionary<Actor, int> TurnsActive { get; set; }
@@ -29,12 +27,12 @@ public class FountainOfHealing : MonoBehaviour
     // public
 
 
-    public void Cast(Actor _target, bool dispel_effect)
+    public void Cast(Actor _target, bool dispel_effect = false)
     {
         if (_target != null) {
-            if (Abilities.CurrentMana >= ManaCost) {
-                Abilities.CurrentMana -= ManaCost;
-                CommandBarOne.Instance.mana_bar.value = Abilities.CurrentManaPercentage();
+            if (Resources.CurrentMana >= ManaCost) {
+                Resources.CurrentMana -= ManaCost;
+                CommandBarOne.Instance.mana_bar.value = Resources.CurrentManaPercentage();
                 StartCoroutine(OverTime(_target));
             }
         }
@@ -46,15 +44,15 @@ public class FountainOfHealing : MonoBehaviour
 
     private IEnumerator OverTime(Actor _target)
     {
-        GameObject fountain = Instantiate(fountain_of_healing_prefab, _target.transform.position, _target.transform.rotation);
+        GameObject fountain = Instantiate(SpellEffects.Instance.fountain_of_healing_prefab, _target.transform.position, _target.transform.rotation);
         fountain.transform.position += new Vector3(0, 3, 0);
         fountain.transform.parent = _target.transform;
         TurnsActive[_target] = 0;
 
         while (TurnsActive[_target] < Turns) {
-            _target.Health.RecoverHealth(Mathf.RoundToInt(PrimaryHealthGainPerTurn * Abilities.magic_potency));
+            _target.Health.RecoverHealth(Mathf.RoundToInt(PrimaryHealthGainPerTurn * Resources.magic_potency));
             foreach (var friend in _target.IdentifyFriends()) {
-                friend.Health.RecoverHealth(Mathf.RoundToInt(SecondaryHealthGainPerTurn * Abilities.magic_potency));
+                friend.Health.RecoverHealth(Mathf.RoundToInt(SecondaryHealthGainPerTurn * Resources.magic_potency));
             }
             TurnsActive[_target]++;
             yield return new WaitForSeconds(Turn.action_threshold);
@@ -68,7 +66,8 @@ public class FountainOfHealing : MonoBehaviour
 
     private void SetComponents()
     {
-        Abilities = GetComponent<Abilities>();
+        Resources = GetComponent<Resources>();
+        Actor = GetComponentInParent<Actor>();
         ManaCost = 100;
         PrimaryHealthGainPerTurn = 10;
         SecondaryHealthGainPerTurn = 5;

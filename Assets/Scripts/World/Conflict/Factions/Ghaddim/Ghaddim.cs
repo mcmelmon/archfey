@@ -74,7 +74,7 @@ public class Ghaddim : MonoBehaviour {
 
     private void SetDefenseStats()
     {
-        Defend defend = GetComponent<Defend>();
+        Defend defend = GetComponentInChildren<Defend>();
         if (defend == null) return;
 
         if (GetComponent<Heavy>() != null) {
@@ -82,18 +82,24 @@ public class Ghaddim : MonoBehaviour {
             defend.ArmorRating = ConfigureGhaddim.armor_rating[Soldier.Clasification.Heavy];
             defend.ConstitutionRating = ConfigureGhaddim.constitution_rating[Soldier.Clasification.Heavy];
             defend.ForceRating = ConfigureGhaddim.force_rating[Soldier.Clasification.Heavy];
+            defend.IntellectRating = ConfigureGhaddim.intellect_rating[Soldier.Clasification.Heavy];
+            defend.WillRating = ConfigureGhaddim.will_rating[Soldier.Clasification.Heavy];
             defend.SetResistances(ConfigureGhaddim.resistances[Soldier.Clasification.Heavy]);
         } else if (GetComponent<Scout>() != null) {
             defend.AgilityRating = ConfigureGhaddim.agility_rating[Soldier.Clasification.Scout];
             defend.ArmorRating = ConfigureGhaddim.armor_rating[Soldier.Clasification.Scout];
             defend.ConstitutionRating = ConfigureGhaddim.constitution_rating[Soldier.Clasification.Scout];
             defend.ForceRating = ConfigureGhaddim.force_rating[Soldier.Clasification.Scout];
+            defend.IntellectRating = ConfigureGhaddim.intellect_rating[Soldier.Clasification.Scout];
+            defend.WillRating = ConfigureGhaddim.will_rating[Soldier.Clasification.Scout];
             defend.SetResistances(ConfigureGhaddim.resistances[Soldier.Clasification.Scout]);
         } else if (GetComponent<Striker>() != null) {
             defend.AgilityRating = ConfigureGhaddim.agility_rating[Soldier.Clasification.Striker];
             defend.ArmorRating = ConfigureGhaddim.armor_rating[Soldier.Clasification.Striker];
             defend.ConstitutionRating = ConfigureGhaddim.constitution_rating[Soldier.Clasification.Striker];
             defend.ForceRating = ConfigureGhaddim.force_rating[Soldier.Clasification.Striker];
+            defend.IntellectRating = ConfigureGhaddim.intellect_rating[Soldier.Clasification.Striker];
+            defend.WillRating = ConfigureGhaddim.will_rating[Soldier.Clasification.Striker];
             defend.SetResistances(ConfigureGhaddim.resistances[Soldier.Clasification.Striker]);
         }
     }
@@ -119,19 +125,26 @@ public class Ghaddim : MonoBehaviour {
 
     private void SetOffenseStats()
     {
-        Attack attack = GetComponent<Attack>();
+        Attack attack = GetComponentInChildren<Attack>();
         if (attack == null) return;
 
         if (GetComponent<Heavy>() != null) {
             attack.AgilityRating = ConfigureGhaddim.agility_rating[Soldier.Clasification.Heavy];
+            attack.IntellectRating = ConfigureGhaddim.intellect_rating[Soldier.Clasification.Heavy];
             attack.StrengthRating = ConfigureGhaddim.strength_rating[Soldier.Clasification.Heavy];
+            attack.WillRating = ConfigureGhaddim.will_rating[Soldier.Clasification.Heavy];
         }
         else if (GetComponent<Scout>() != null) {
             attack.AgilityRating = ConfigureGhaddim.agility_rating[Soldier.Clasification.Scout];
+            attack.IntellectRating = ConfigureGhaddim.intellect_rating[Soldier.Clasification.Scout];
             attack.StrengthRating = ConfigureGhaddim.strength_rating[Soldier.Clasification.Scout];
-        } else if (GetComponent<Striker>() != null) {
+            attack.WillRating = ConfigureGhaddim.will_rating[Soldier.Clasification.Scout];
+        }
+        else if (GetComponent<Striker>() != null) {
             attack.AgilityRating = ConfigureGhaddim.agility_rating[Soldier.Clasification.Striker];
+            attack.IntellectRating = ConfigureGhaddim.intellect_rating[Soldier.Clasification.Striker];
             attack.StrengthRating = ConfigureGhaddim.strength_rating[Soldier.Clasification.Striker];
+            attack.WillRating = ConfigureGhaddim.will_rating[Soldier.Clasification.Striker];
         }
     }
 }

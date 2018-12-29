@@ -13,7 +13,6 @@ public class Actor : MonoBehaviour
 
     // properties
 
-    public Abilities Abilities { get; set; }
     public Attack Attack { get; set; }
     public Defend Defend { get; set; }
     public Conflict.Faction Faction { get; set; }
@@ -24,6 +23,7 @@ public class Actor : MonoBehaviour
     public Health Health { get; set; }
     public Mhoddim Mhoddim { get; set; }
     public Movement Movement { get; set; }
+    public Resources Resources { get; set; }
     public Conflict.Role Role { get; set; }
     public RuinControlPoint RuinControlPoint { get; set; }
     public int RuinControlRating { get; set; }
@@ -71,6 +71,7 @@ public class Actor : MonoBehaviour
                 break;
             case State.InCombat:
                 // Freedom!
+                CastSpell();
                 break;
             case State.OccupyingRuin:
                 // Our Precious
@@ -121,6 +122,17 @@ public class Actor : MonoBehaviour
         }
 
         return false;
+    }
+
+
+    private void CastSpell()
+    {
+        if (!Resources.IsCaster) return;
+
+        Smite _smite = Resources.gameObject.GetComponent<Smite>();
+        if(_smite != null && Resources.CurrentMana >= _smite.ManaCost) {
+            _smite.Cast(Enemies[0]);
+        }
     }
 
 
@@ -285,7 +297,7 @@ public class Actor : MonoBehaviour
 
     private void SetComponents()
     {
-        Abilities = GetComponentInChildren<Abilities>();
+        Resources = GetComponentInChildren<Resources>();
         Attack = GetComponentInChildren<Attack>();
         Defend = GetComponentInChildren<Defend>();
         Enemies = new List<Actor>();

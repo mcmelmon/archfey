@@ -20,8 +20,10 @@ public class Attack : MonoBehaviour
     public List<Actor> CurrentRangedTargets { get; set; }
     public Weapon EquippedMeleeWeapon { get; set; }
     public Weapon EquippedRangedWeapon { get; set; }
+    public int IntellectRating { get; set; }
     public Dictionary<Weapon.DamageType, int> SuperiorWeapons { get; set; }
     public int StrengthRating { get; set; }
+    public int WillRating { get; set; }
 
 
     // Unity
@@ -157,7 +159,7 @@ public class Attack : MonoBehaviour
     private void SetComponents()
     {
         Actor = GetComponentInParent<Actor>();
-        AttackRating = AgilityRating + StrengthRating;
+        AttackRating = AgilityRating + IntellectRating + StrengthRating + WillRating;
         AvailableMeleeTargets = new List<Actor>();
         AvailableRangedTargets = new List<Actor>();
         CurrentMeleeTargets = new List<Actor>();

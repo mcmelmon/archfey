@@ -16,6 +16,8 @@ public class Defend : MonoBehaviour
     public Weapon.DamageType DamageType { get; set; }
     public int DefenseRating { get; set; }
     public int ForceRating { get; set; }
+    public int IntellectRating { get; set; }
+    public int WillRating { get; set; }
 
 
     // Unity
@@ -51,9 +53,11 @@ public class Defend : MonoBehaviour
         DamageType = _type;
 
         ApplyAgility();
+        ApplyArmor();
         ApplyConstitution();
         ApplyForce();
-        ApplyArmor();
+        ApplyIntellect();
+        ApplyWill();
         ApplyResistance();
 
         return ComputedDamage;
@@ -169,6 +173,33 @@ public class Defend : MonoBehaviour
             default:
                 break;
         }
+    }
+
+
+    private void ApplyIntellect()
+    {
+        // Intellect protects agains the arcane
+
+        if (ComputedDamage <= 0) return;
+
+        switch (DamageType)
+        {
+            case Weapon.DamageType.Arcane:
+                ComputedDamage -= IntellectRating;
+                break;
+            default:
+                break;
+        }
+    }
+
+
+    private void ApplyWill()
+    {
+        // Will diminishes suffering
+
+        if (ComputedDamage <= 0) return;
+
+        ComputedDamage -= WillRating * 0.5f;
     }
 
 

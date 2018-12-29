@@ -6,7 +6,9 @@ public static class ConfigureMhoddim
 {
     // Versatile attributes
     public static Dictionary<Soldier.Clasification, int> agility_rating = new Dictionary<Soldier.Clasification, int>();
+    public static Dictionary<Soldier.Clasification, int> intellect_rating = new Dictionary<Soldier.Clasification, int>();
     public static Dictionary<Soldier.Clasification, int> strength_rating = new Dictionary<Soldier.Clasification, int>();
+    public static Dictionary<Soldier.Clasification, int> will_rating = new Dictionary<Soldier.Clasification, int>();
 
     // Defense attributes
     public static Dictionary<Soldier.Clasification, int> armor_rating = new Dictionary<Soldier.Clasification, int>();
@@ -38,26 +40,34 @@ public static class ConfigureMhoddim
     {
 
         // versatile
-        agility_rating[Soldier.Clasification.Heavy] = 1;
-        agility_rating[Soldier.Clasification.Scout] = 3;
-        agility_rating[Soldier.Clasification.Striker] = 2;
+        agility_rating[Soldier.Clasification.Heavy] = 0;
+        agility_rating[Soldier.Clasification.Scout] = 0;
+        agility_rating[Soldier.Clasification.Striker] = 0;
 
-        strength_rating[Soldier.Clasification.Heavy] = 2;
+        intellect_rating[Soldier.Clasification.Heavy] = 0;
+        intellect_rating[Soldier.Clasification.Scout] = 0;
+        intellect_rating[Soldier.Clasification.Striker] = 0;
+
+        strength_rating[Soldier.Clasification.Heavy] = 0;
         strength_rating[Soldier.Clasification.Scout] = 0;
-        strength_rating[Soldier.Clasification.Striker] = 1;
+        strength_rating[Soldier.Clasification.Striker] = 0;
+
+        will_rating[Soldier.Clasification.Heavy] = 0;
+        will_rating[Soldier.Clasification.Scout] = 0;
+        will_rating[Soldier.Clasification.Striker] = 0;
 
         // defense
-        armor_rating[Soldier.Clasification.Heavy] = 5;
-        constituion_rating[Soldier.Clasification.Heavy] = 3;
-        force_rating[Soldier.Clasification.Heavy] = 3;
+        armor_rating[Soldier.Clasification.Heavy] = 0;
+        constituion_rating[Soldier.Clasification.Heavy] = 0;
+        force_rating[Soldier.Clasification.Heavy] = 0;
 
-        armor_rating[Soldier.Clasification.Scout] = 2;
+        armor_rating[Soldier.Clasification.Scout] = 0;
         constituion_rating[Soldier.Clasification.Scout] = 0;
-        force_rating[Soldier.Clasification.Scout] = 1;
+        force_rating[Soldier.Clasification.Scout] = 0;
 
-        armor_rating[Soldier.Clasification.Striker] = 3;
-        constituion_rating[Soldier.Clasification.Striker] = 1;
-        force_rating[Soldier.Clasification.Striker] = 2;
+        armor_rating[Soldier.Clasification.Striker] = 0;
+        constituion_rating[Soldier.Clasification.Striker] = 0;
+        force_rating[Soldier.Clasification.Striker] = 0;
 
         // health
         starting_health[Soldier.Clasification.Heavy] = 60;
@@ -72,28 +82,37 @@ public static class ConfigureMhoddim
 
     private static void PopulateResistances()
     {
-        resistances[Soldier.Clasification.Heavy] = new Dictionary<Weapon.DamageType, int>();
-        resistances[Soldier.Clasification.Heavy][Weapon.DamageType.Arcane] = 20;
-        resistances[Soldier.Clasification.Heavy][Weapon.DamageType.Blunt] = 0;
-        resistances[Soldier.Clasification.Heavy][Weapon.DamageType.Elemental] = 15;
-        resistances[Soldier.Clasification.Heavy][Weapon.DamageType.Piercing] = 0;
-        resistances[Soldier.Clasification.Heavy][Weapon.DamageType.Poison] = 0;
-        resistances[Soldier.Clasification.Heavy][Weapon.DamageType.Slashing] = 0;
+        resistances[Soldier.Clasification.Heavy] = new Dictionary<Weapon.DamageType, int>
+        {
+            [Weapon.DamageType.Arcane] = 20,
+            [Weapon.DamageType.Blunt] = 0,
+            [Weapon.DamageType.Elemental] = 15,
+            [Weapon.DamageType.Holy] = 15,
+            [Weapon.DamageType.Piercing] = 0,
+            [Weapon.DamageType.Poison] = 0,
+            [Weapon.DamageType.Slashing] = 0
+        };
 
-        resistances[Soldier.Clasification.Scout] = new Dictionary<Weapon.DamageType, int>();
-        resistances[Soldier.Clasification.Scout][Weapon.DamageType.Arcane] = 20;
-        resistances[Soldier.Clasification.Scout][Weapon.DamageType.Blunt] = 0;
-        resistances[Soldier.Clasification.Scout][Weapon.DamageType.Elemental] = 15;
-        resistances[Soldier.Clasification.Scout][Weapon.DamageType.Piercing] = 0;
-        resistances[Soldier.Clasification.Scout][Weapon.DamageType.Poison] = 0;
-        resistances[Soldier.Clasification.Scout][Weapon.DamageType.Slashing] = 0;
+        resistances[Soldier.Clasification.Scout] = new Dictionary<Weapon.DamageType, int>
+        {
+            [Weapon.DamageType.Arcane] = 20,
+            [Weapon.DamageType.Blunt] = 0,
+            [Weapon.DamageType.Elemental] = 15,
+            [Weapon.DamageType.Holy] = 15,
+            [Weapon.DamageType.Piercing] = 0,
+            [Weapon.DamageType.Poison] = 0,
+            [Weapon.DamageType.Slashing] = 0
+        };
 
-        resistances[Soldier.Clasification.Striker] = new Dictionary<Weapon.DamageType, int>();
-        resistances[Soldier.Clasification.Striker][Weapon.DamageType.Arcane] = 20;
-        resistances[Soldier.Clasification.Striker][Weapon.DamageType.Blunt] = 0;
-        resistances[Soldier.Clasification.Striker][Weapon.DamageType.Elemental] = 15;
-        resistances[Soldier.Clasification.Striker][Weapon.DamageType.Piercing] = 0;
-        resistances[Soldier.Clasification.Striker][Weapon.DamageType.Poison] = 0;
-        resistances[Soldier.Clasification.Striker][Weapon.DamageType.Slashing] = 0;
+        resistances[Soldier.Clasification.Striker] = new Dictionary<Weapon.DamageType, int>
+        {
+            [Weapon.DamageType.Arcane] = 20,
+            [Weapon.DamageType.Blunt] = 0,
+            [Weapon.DamageType.Elemental] = 15,
+            [Weapon.DamageType.Holy] = 15,
+            [Weapon.DamageType.Piercing] = 0,
+            [Weapon.DamageType.Poison] = 0,
+            [Weapon.DamageType.Slashing] = 0
+        };
     }
 }

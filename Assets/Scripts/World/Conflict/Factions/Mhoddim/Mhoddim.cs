@@ -73,7 +73,7 @@ public class Mhoddim : MonoBehaviour {
 
     private void SetDefenseStats()
     {
-        Defend defend = GetComponent<Defend>();
+        Defend defend = GetComponentInChildren<Defend>();
         if (defend == null) return;
 
         if (GetComponent<Heavy>() != null) {
@@ -81,18 +81,24 @@ public class Mhoddim : MonoBehaviour {
             defend.ArmorRating = ConfigureMhoddim.armor_rating[Soldier.Clasification.Heavy];
             defend.ConstitutionRating = ConfigureMhoddim.constituion_rating[Soldier.Clasification.Heavy];
             defend.ForceRating = ConfigureMhoddim.force_rating[Soldier.Clasification.Heavy];
+            defend.IntellectRating = ConfigureMhoddim.intellect_rating[Soldier.Clasification.Heavy];
+            defend.WillRating = ConfigureMhoddim.will_rating[Soldier.Clasification.Heavy];
             defend.SetResistances(ConfigureMhoddim.resistances[Soldier.Clasification.Heavy]);
         } else if (GetComponent<Scout>() != null) {
             defend.AgilityRating = ConfigureMhoddim.agility_rating[Soldier.Clasification.Scout];
             defend.ArmorRating = ConfigureMhoddim.armor_rating[Soldier.Clasification.Scout];
             defend.ConstitutionRating = ConfigureMhoddim.constituion_rating[Soldier.Clasification.Scout];
             defend.ForceRating = ConfigureMhoddim.force_rating[Soldier.Clasification.Scout];
+            defend.IntellectRating = ConfigureMhoddim.intellect_rating[Soldier.Clasification.Scout];
+            defend.WillRating = ConfigureMhoddim.will_rating[Soldier.Clasification.Scout];
             defend.SetResistances(ConfigureMhoddim.resistances[Soldier.Clasification.Scout]);
         } else if (GetComponent<Striker>() != null) {
             defend.AgilityRating = ConfigureMhoddim.agility_rating[Soldier.Clasification.Striker];
             defend.ArmorRating = ConfigureMhoddim.armor_rating[Soldier.Clasification.Striker];
             defend.ConstitutionRating = ConfigureMhoddim.constituion_rating[Soldier.Clasification.Striker];
             defend.ForceRating = ConfigureMhoddim.force_rating[Soldier.Clasification.Striker];
+            defend.IntellectRating = ConfigureMhoddim.intellect_rating[Soldier.Clasification.Striker];
+            defend.WillRating = ConfigureMhoddim.will_rating[Soldier.Clasification.Striker];
             defend.SetResistances(ConfigureMhoddim.resistances[Soldier.Clasification.Striker]);
         }
     }
@@ -118,18 +124,26 @@ public class Mhoddim : MonoBehaviour {
 
     private void SetOffenseStats()
     {
-        Attack attack = GetComponent<Attack>();
+        Attack attack = GetComponentInChildren<Attack>();
         if (attack == null) return;
 
         if (GetComponent<Heavy>() != null) {
             attack.AgilityRating = ConfigureMhoddim.agility_rating[Soldier.Clasification.Heavy];
+            attack.IntellectRating = ConfigureMhoddim.intellect_rating[Soldier.Clasification.Heavy];
             attack.StrengthRating = ConfigureMhoddim.strength_rating[Soldier.Clasification.Heavy];
-        } else if (GetComponent<Scout>() != null) {
+            attack.WillRating = ConfigureMhoddim.will_rating[Soldier.Clasification.Heavy];
+        }
+        else if (GetComponent<Scout>() != null) {
             attack.AgilityRating = ConfigureMhoddim.agility_rating[Soldier.Clasification.Scout];
+            attack.IntellectRating = ConfigureMhoddim.intellect_rating[Soldier.Clasification.Scout];
             attack.StrengthRating = ConfigureMhoddim.strength_rating[Soldier.Clasification.Scout];
-        } else if (GetComponent<Striker>() != null) {
+            attack.WillRating = ConfigureMhoddim.will_rating[Soldier.Clasification.Scout];
+        }
+        else if (GetComponent<Striker>() != null) {
             attack.AgilityRating = ConfigureMhoddim.agility_rating[Soldier.Clasification.Striker];
+            attack.IntellectRating = ConfigureMhoddim.intellect_rating[Soldier.Clasification.Striker];
             attack.StrengthRating = ConfigureMhoddim.strength_rating[Soldier.Clasification.Striker];
+            attack.WillRating = ConfigureMhoddim.will_rating[Soldier.Clasification.Striker];
         }
     }
 }

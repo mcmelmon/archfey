@@ -146,7 +146,7 @@ public class Conflict : MonoBehaviour
             [Faction.Mhoddim] = 0
         };
         current_tick = 0;
-        ToHitBase = 12;
+        ToHitBase = 10;
         Units = new List<GameObject>();
         Victor = Faction.None;
         Victory = false;

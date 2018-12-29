@@ -13,8 +13,9 @@ public class Player : MonoBehaviour {
 
     // properties
 
-    public Abilities Abilities { get; set; }
     public static Player Instance { get; set; }
+    public Resources Resources { get; set; }
+
 
     // Unity
 
@@ -27,7 +28,7 @@ public class Player : MonoBehaviour {
             return;
         }
         Instance = this;
-        Abilities = GetComponentInChildren<Abilities>();
+        Resources = GetComponentInChildren<Resources>();
         StartCoroutine(Movement());
     }
 

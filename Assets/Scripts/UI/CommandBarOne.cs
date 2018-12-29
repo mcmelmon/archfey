@@ -56,19 +56,18 @@ public class CommandBarOne : MonoBehaviour {
     public void FountainOfHealing()
     {
         foreach (var target in Mouse.SelectedObjects) {
-            Player.Instance.GetComponentInChildren<FountainOfHealing>().Cast(target, false);
+            Player.Instance.GetComponentInChildren<FountainOfHealing>().Cast(target);
         }
     }
 
 
     public IEnumerator Metrics()
     {
-        while (true && Player.Instance.Abilities != null) {
-            amber_bar.value = Player.Instance.Abilities.CurrentAmberPercentage();
-            mana_bar.value = Player.Instance.Abilities.CurrentManaPercentage();
+        while (true && Player.Instance.Resources != null) {
+            amber_bar.value = Player.Instance.Resources.CurrentAmberPercentage();
+            mana_bar.value = Player.Instance.Resources.CurrentManaPercentage();
             yield return new WaitForSeconds(Turn.action_threshold);
         }
-
     }
 
 
