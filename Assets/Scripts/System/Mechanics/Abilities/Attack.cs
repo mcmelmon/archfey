@@ -12,7 +12,6 @@ public class Attack : MonoBehaviour
     // properties
 
     public Actor Actor { get; set; }
-    public int AgilityRating { get; set; }
     public int AttackRating { get; set; }
     public List<Actor> AvailableMeleeTargets { get; set; }
     public List<Actor> AvailableRangedTargets { get; set; }
@@ -20,10 +19,8 @@ public class Attack : MonoBehaviour
     public List<Actor> CurrentRangedTargets { get; set; }
     public Weapon EquippedMeleeWeapon { get; set; }
     public Weapon EquippedRangedWeapon { get; set; }
-    public int IntellectRating { get; set; }
+    public Stats Stats { get; set; }
     public Dictionary<Weapon.DamageType, int> SuperiorWeapons { get; set; }
-    public int StrengthRating { get; set; }
-    public int WillRating { get; set; }
 
 
     // Unity
@@ -159,13 +156,14 @@ public class Attack : MonoBehaviour
     private void SetComponents()
     {
         Actor = GetComponentInParent<Actor>();
-        AttackRating = AgilityRating + IntellectRating + StrengthRating + WillRating;
         AvailableMeleeTargets = new List<Actor>();
         AvailableRangedTargets = new List<Actor>();
         CurrentMeleeTargets = new List<Actor>();
         CurrentRangedTargets = new List<Actor>();
+        Stats = GetComponentInParent<Stats>();
         SuperiorWeapons = (Actor.Faction == Conflict.Faction.Ghaddim) ? Ghaddim.SuperiorWeapons : Mhoddim.SuperiorWeapons;
 
+        AttackRating = Stats.AgilityRating + Stats.IntellectRating + Stats.StrengthRating + Stats.WillRating;
         EquipMeleeWeapon();
     }
 

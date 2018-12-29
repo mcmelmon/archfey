@@ -7,6 +7,7 @@ public class Ghaddim : MonoBehaviour {
     // properties
 
     public static Dictionary<Weapon.DamageType, int> SuperiorWeapons { get; set; }
+    public Stats Stats { get; set; }
     public static Threat Threat { get; set; }
 
 
@@ -27,6 +28,7 @@ public class Ghaddim : MonoBehaviour {
 
     private void Awake()
     {
+        Stats = GetComponent<Stats>();
         Threat = gameObject.AddComponent<Threat>();
         SuperiorWeapons = new Dictionary<Weapon.DamageType, int>
         {
@@ -63,9 +65,9 @@ public class Ghaddim : MonoBehaviour {
 
     public void SetStats()
     {
+        SetPrimaryStats();
         SetDefenseStats();
         SetHealthStats();
-        SetOffenseStats();
     }
 
 
@@ -78,28 +80,16 @@ public class Ghaddim : MonoBehaviour {
         if (defend == null) return;
 
         if (GetComponent<Heavy>() != null) {
-            defend.AgilityRating = ConfigureGhaddim.agility_rating[Soldier.Clasification.Heavy];
-            defend.ArmorRating = ConfigureGhaddim.armor_rating[Soldier.Clasification.Heavy];
-            defend.ConstitutionRating = ConfigureGhaddim.constitution_rating[Soldier.Clasification.Heavy];
+            defend.ArmorRating = ConfigureGhaddim.armor_rating[Soldier.Clasification.Scout];
             defend.ForceRating = ConfigureGhaddim.force_rating[Soldier.Clasification.Heavy];
-            defend.IntellectRating = ConfigureGhaddim.intellect_rating[Soldier.Clasification.Heavy];
-            defend.WillRating = ConfigureGhaddim.will_rating[Soldier.Clasification.Heavy];
             defend.SetResistances(ConfigureGhaddim.resistances[Soldier.Clasification.Heavy]);
         } else if (GetComponent<Scout>() != null) {
-            defend.AgilityRating = ConfigureGhaddim.agility_rating[Soldier.Clasification.Scout];
             defend.ArmorRating = ConfigureGhaddim.armor_rating[Soldier.Clasification.Scout];
-            defend.ConstitutionRating = ConfigureGhaddim.constitution_rating[Soldier.Clasification.Scout];
             defend.ForceRating = ConfigureGhaddim.force_rating[Soldier.Clasification.Scout];
-            defend.IntellectRating = ConfigureGhaddim.intellect_rating[Soldier.Clasification.Scout];
-            defend.WillRating = ConfigureGhaddim.will_rating[Soldier.Clasification.Scout];
             defend.SetResistances(ConfigureGhaddim.resistances[Soldier.Clasification.Scout]);
         } else if (GetComponent<Striker>() != null) {
-            defend.AgilityRating = ConfigureGhaddim.agility_rating[Soldier.Clasification.Striker];
             defend.ArmorRating = ConfigureGhaddim.armor_rating[Soldier.Clasification.Striker];
-            defend.ConstitutionRating = ConfigureGhaddim.constitution_rating[Soldier.Clasification.Striker];
             defend.ForceRating = ConfigureGhaddim.force_rating[Soldier.Clasification.Striker];
-            defend.IntellectRating = ConfigureGhaddim.intellect_rating[Soldier.Clasification.Striker];
-            defend.WillRating = ConfigureGhaddim.will_rating[Soldier.Clasification.Striker];
             defend.SetResistances(ConfigureGhaddim.resistances[Soldier.Clasification.Striker]);
         }
     }
@@ -123,28 +113,31 @@ public class Ghaddim : MonoBehaviour {
     }
 
 
-    private void SetOffenseStats()
+    private void SetPrimaryStats()
     {
-        Attack attack = GetComponentInChildren<Attack>();
-        if (attack == null) return;
-
-        if (GetComponent<Heavy>() != null) {
-            attack.AgilityRating = ConfigureGhaddim.agility_rating[Soldier.Clasification.Heavy];
-            attack.IntellectRating = ConfigureGhaddim.intellect_rating[Soldier.Clasification.Heavy];
-            attack.StrengthRating = ConfigureGhaddim.strength_rating[Soldier.Clasification.Heavy];
-            attack.WillRating = ConfigureGhaddim.will_rating[Soldier.Clasification.Heavy];
+        if (GetComponent<Heavy>() != null)
+        {
+            Stats.AgilityRating = ConfigureGhaddim.agility_rating[Soldier.Clasification.Heavy];
+            Stats.ConstitutionRating = ConfigureGhaddim.constitution_rating[Soldier.Clasification.Heavy];
+            Stats.IntellectRating = ConfigureGhaddim.intellect_rating[Soldier.Clasification.Heavy];
+            Stats.StrengthRating = ConfigureGhaddim.strength_rating[Soldier.Clasification.Heavy];
+            Stats.WillRating = ConfigureGhaddim.will_rating[Soldier.Clasification.Heavy];
         }
-        else if (GetComponent<Scout>() != null) {
-            attack.AgilityRating = ConfigureGhaddim.agility_rating[Soldier.Clasification.Scout];
-            attack.IntellectRating = ConfigureGhaddim.intellect_rating[Soldier.Clasification.Scout];
-            attack.StrengthRating = ConfigureGhaddim.strength_rating[Soldier.Clasification.Scout];
-            attack.WillRating = ConfigureGhaddim.will_rating[Soldier.Clasification.Scout];
+        else if (GetComponent<Scout>() != null)
+        {
+            Stats.AgilityRating = ConfigureGhaddim.agility_rating[Soldier.Clasification.Scout];
+            Stats.ConstitutionRating = ConfigureGhaddim.constitution_rating[Soldier.Clasification.Scout];
+            Stats.IntellectRating = ConfigureGhaddim.intellect_rating[Soldier.Clasification.Scout];
+            Stats.StrengthRating = ConfigureGhaddim.strength_rating[Soldier.Clasification.Scout];
+            Stats.WillRating = ConfigureGhaddim.will_rating[Soldier.Clasification.Scout];
         }
-        else if (GetComponent<Striker>() != null) {
-            attack.AgilityRating = ConfigureGhaddim.agility_rating[Soldier.Clasification.Striker];
-            attack.IntellectRating = ConfigureGhaddim.intellect_rating[Soldier.Clasification.Striker];
-            attack.StrengthRating = ConfigureGhaddim.strength_rating[Soldier.Clasification.Striker];
-            attack.WillRating = ConfigureGhaddim.will_rating[Soldier.Clasification.Striker];
+        else if (GetComponent<Striker>() != null)
+        {
+            Stats.AgilityRating = ConfigureGhaddim.agility_rating[Soldier.Clasification.Striker];
+            Stats.ConstitutionRating = ConfigureGhaddim.constitution_rating[Soldier.Clasification.Striker];
+            Stats.IntellectRating = ConfigureGhaddim.intellect_rating[Soldier.Clasification.Striker];
+            Stats.StrengthRating = ConfigureGhaddim.strength_rating[Soldier.Clasification.Striker];
+            Stats.WillRating = ConfigureGhaddim.will_rating[Soldier.Clasification.Striker];
         }
     }
 }

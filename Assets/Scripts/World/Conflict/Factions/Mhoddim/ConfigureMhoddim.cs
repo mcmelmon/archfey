@@ -4,15 +4,15 @@ using UnityEngine;
 
 public static class ConfigureMhoddim 
 {
-    // Versatile attributes
+    // Primary attributes
     public static Dictionary<Soldier.Clasification, int> agility_rating = new Dictionary<Soldier.Clasification, int>();
+    public static Dictionary<Soldier.Clasification, int> constituion_rating = new Dictionary<Soldier.Clasification, int>();
     public static Dictionary<Soldier.Clasification, int> intellect_rating = new Dictionary<Soldier.Clasification, int>();
     public static Dictionary<Soldier.Clasification, int> strength_rating = new Dictionary<Soldier.Clasification, int>();
     public static Dictionary<Soldier.Clasification, int> will_rating = new Dictionary<Soldier.Clasification, int>();
 
     // Defense attributes
     public static Dictionary<Soldier.Clasification, int> armor_rating = new Dictionary<Soldier.Clasification, int>();
-    public static Dictionary<Soldier.Clasification, int> constituion_rating = new Dictionary<Soldier.Clasification, int>();
     public static Dictionary<Soldier.Clasification, int> force_rating = new Dictionary<Soldier.Clasification, int>();
 
     public static Dictionary<Soldier.Clasification, Dictionary<Weapon.DamageType, int>> resistances = new Dictionary<Soldier.Clasification, Dictionary<Weapon.DamageType, int>>();
@@ -39,34 +39,35 @@ public static class ConfigureMhoddim
     private static void PopulateAttributes()
     {
 
-        // versatile
+        // primary
         agility_rating[Soldier.Clasification.Heavy] = 0;
         agility_rating[Soldier.Clasification.Scout] = 0;
         agility_rating[Soldier.Clasification.Striker] = 0;
+
+        constituion_rating[Soldier.Clasification.Heavy] = 0;
+        constituion_rating[Soldier.Clasification.Scout] = 0;
+        constituion_rating[Soldier.Clasification.Striker] = 0;
 
         intellect_rating[Soldier.Clasification.Heavy] = 0;
         intellect_rating[Soldier.Clasification.Scout] = 0;
         intellect_rating[Soldier.Clasification.Striker] = 0;
 
-        strength_rating[Soldier.Clasification.Heavy] = 0;
+        strength_rating[Soldier.Clasification.Heavy] = 1;
         strength_rating[Soldier.Clasification.Scout] = 0;
-        strength_rating[Soldier.Clasification.Striker] = 0;
+        strength_rating[Soldier.Clasification.Striker] = 2;
 
-        will_rating[Soldier.Clasification.Heavy] = 0;
+        will_rating[Soldier.Clasification.Heavy] = 3;
         will_rating[Soldier.Clasification.Scout] = 0;
         will_rating[Soldier.Clasification.Striker] = 0;
 
         // defense
         armor_rating[Soldier.Clasification.Heavy] = 0;
-        constituion_rating[Soldier.Clasification.Heavy] = 0;
         force_rating[Soldier.Clasification.Heavy] = 0;
 
         armor_rating[Soldier.Clasification.Scout] = 0;
-        constituion_rating[Soldier.Clasification.Scout] = 0;
         force_rating[Soldier.Clasification.Scout] = 0;
 
         armor_rating[Soldier.Clasification.Striker] = 0;
-        constituion_rating[Soldier.Clasification.Striker] = 0;
         force_rating[Soldier.Clasification.Striker] = 0;
 
         // health

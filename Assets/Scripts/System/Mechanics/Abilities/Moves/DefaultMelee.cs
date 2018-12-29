@@ -12,8 +12,8 @@ public class DefaultMelee : MonoBehaviour
     public Attack Attack { get; set; }
     public int AttackModifier { get; set; }
     public int DamageModifier { get; set; }
-    public int EnergyGain { get; set; }
     public Resources Resources { get; set; }
+    public Stats Stats { get; set; }
     public Actor Target { get; set; }
     public Weapon Weapon { get; set; }
 
@@ -37,7 +37,6 @@ public class DefaultMelee : MonoBehaviour
         if (Random.Range(1, 21) + AttackModifier > Conflict.ToHitBase + Target.Defend.DefenseRating) {
             Weapon.Impact();
             ApplyDamage();
-            Resources.CurrentEnergy += EnergyGain;
         }
     }
 
@@ -59,11 +58,11 @@ public class DefaultMelee : MonoBehaviour
     {
         Resources = GetComponent<Resources>();
         Actor = GetComponentInParent<Actor>();
+        Stats = GetComponentInParent<Stats>();
         Attack = GetComponent<Attack>();
-        EnergyGain = 5;
         Weapon = Attack.EquippedMeleeWeapon;
 
-        AttackModifier = Attack.AgilityRating + Attack.StrengthRating + Attack.SuperiorWeapons[Weapon.damage_type];
-        DamageModifier = Attack.AgilityRating + Attack.StrengthRating + Attack.SuperiorWeapons[Weapon.damage_type];
+        AttackModifier = Stats.AgilityRating + Stats.StrengthRating + Attack.SuperiorWeapons[Weapon.damage_type];
+        DamageModifier = Stats.AgilityRating + Stats.StrengthRating + Attack.SuperiorWeapons[Weapon.damage_type];
     }
 }

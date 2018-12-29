@@ -10,6 +10,7 @@ public class Smite : MonoBehaviour
     public float Damage { get; set; }
     public int ManaCost { get; set; }
     public Resources Resources { get; set; }
+    public Stats Stats { get; set; }
 
 
     // public
@@ -24,13 +25,12 @@ public class Smite : MonoBehaviour
             Resources.CurrentMana -= ManaCost;
             Actor.Resources.UpdateStatBars();
 
-            Damage = Actor.Attack.EquippedMeleeWeapon.damage_maximum * Resources.magic_potency;
-
             GameObject flare = Instantiate(SpellEffects.Instance.smite_prefab, _target.transform.position, _target.transform.rotation, _target.transform);
             flare.name = "Smite";
             flare.transform.position += new Vector3(0, 3, 0);
             Destroy(flare, 0.5f);
 
+            Damage = 2 * (Actor.Attack.EquippedMeleeWeapon.damage_maximum + Actor.Attack.AttackRating) * Resources.magic_potency;
             float damage_inflicted = _target.Defend.DamageAfterDefenses(Damage, Weapon.DamageType.Holy);
             _target.Health.LoseHealth(damage_inflicted, Actor);
         }
@@ -44,7 +44,8 @@ public class Smite : MonoBehaviour
     {
         Resources = GetComponent<Resources>();
         Actor = GetComponentInParent<Actor>();
+        Stats = GetComponentInParent<Stats>();
         Damage = 0;
-        ManaCost = 35;
+        ManaCost = 45;
     }
 }

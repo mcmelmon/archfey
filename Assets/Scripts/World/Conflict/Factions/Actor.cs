@@ -7,7 +7,7 @@ using UnityEngine;
 public class Actor : MonoBehaviour
 {
 
-    public enum State { Idle = 0, UnderAttack = 1, AlliesUnderAttack = 2, HostilesSighted = 3, OccupyingRuin = 4, HasObjective = 5, OnWatch = 6, InCombat = 7, FriendliesSighted = 8 };
+    public enum State { Idle = 0, UnderAttack = 1, AlliesUnderAttack = 2, HostilesSighted = 3, OccupyingRuin = 4, HasObjective = 5, OnWatch = 6, InCombat = 7, FriendliesSighted = 8, BadlyInjured = 9 };
 
     State state;
 
@@ -54,6 +54,9 @@ public class Actor : MonoBehaviour
                 // Freedom!
                 CloseWithEnemies();
                 break;
+            case State.BadlyInjured:
+                // defensive spell or flee
+                break;
             case State.FriendliesSighted:
                 // if healer, heal
                 break;
@@ -71,7 +74,7 @@ public class Actor : MonoBehaviour
                 break;
             case State.InCombat:
                 // Freedom!
-                CastSpell();
+                CastOffensiveSpell();
                 break;
             case State.OccupyingRuin:
                 // Our Precious
@@ -82,6 +85,7 @@ public class Actor : MonoBehaviour
                 break;
             case State.UnderAttack:
                 // Freedom!
+                CastOffensiveSpell();
                 CloseWithEnemies();
                 break;
             default:
@@ -125,9 +129,19 @@ public class Actor : MonoBehaviour
     }
 
 
-    private void CastSpell()
+    private void CastDefensiveSpell()
     {
-        if (!Resources.IsCaster) return;
+
+    }
+
+
+    private void CastOffensiveSpell()
+    {
+        // TODO: add more spells than Smite...
+
+        // TODO: check range
+
+        if (!Resources.IsCaster || Enemies.Count == 0) return;
 
         Smite _smite = Resources.gameObject.GetComponent<Smite>();
         if(_smite != null && Resources.CurrentMana >= _smite.ManaCost) {

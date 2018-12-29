@@ -5,14 +5,28 @@ using UnityEngine;
 public class Fey : MonoBehaviour {
 
 
+    // properties
+
+    public Stats Stats { get; set; }
+
+
+    // Unity
+
+
+    private void Awake()
+    {
+        Stats = GetComponent<Stats>();
+    }
+
+
     // public
 
 
     public void SetStats()
     {
+        SetPrimaryStats();
         SetDefenseStats();
         SetHealthStats();
-        SetOffenseStats();
     }
 
 
@@ -26,9 +40,7 @@ public class Fey : MonoBehaviour {
 
         if (GetComponent<Ent>() != null)
         {
-            defend.AgilityRating = ConfigureFey.agility_rating[Soldier.Clasification.Ent];
             defend.ArmorRating = ConfigureFey.armor_rating[Soldier.Clasification.Ent];
-            defend.ConstitutionRating = ConfigureFey.constitution_rating[Soldier.Clasification.Ent];
             defend.ForceRating = ConfigureFey.force_rating[Soldier.Clasification.Ent];
             defend.SetResistances(ConfigureFey.resistances[Soldier.Clasification.Ent]);
         }
@@ -48,14 +60,14 @@ public class Fey : MonoBehaviour {
     }
 
 
-    private void SetOffenseStats()
+    private void SetPrimaryStats()
     {
-        Attack attack = GetComponent<Attack>();
-        if (attack == null) return;
-
         if (GetComponent<Ent>() != null) {
-            attack.AgilityRating = ConfigureFey.agility_rating[Soldier.Clasification.Ent];
-            attack.StrengthRating = ConfigureFey.strength_rating[Soldier.Clasification.Ent];
+            Stats.AgilityRating = ConfigureFey.agility_rating[Soldier.Clasification.Ent];
+            Stats.ConstitutionRating = ConfigureFey.constitution_rating[Soldier.Clasification.Ent];
+            Stats.IntellectRating = ConfigureFey.intellect_rating[Soldier.Clasification.Ent];
+            Stats.StrengthRating = ConfigureFey.strength_rating[Soldier.Clasification.Ent];
+            Stats.WillRating = ConfigureFey.will_rating[Soldier.Clasification.Ent];
         }
     }
 }

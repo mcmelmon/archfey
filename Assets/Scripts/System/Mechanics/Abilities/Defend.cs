@@ -9,15 +9,15 @@ public class Defend : MonoBehaviour
 
     // properties
 
-    public int AgilityRating { get; set; }
+    public Actor Actor { get; set; }
     public int ArmorRating { get; set; }
     public float ComputedDamage { get; set; }
     public int ConstitutionRating { get; set; }
     public Weapon.DamageType DamageType { get; set; }
     public int DefenseRating { get; set; }
     public int ForceRating { get; set; }
-    public int IntellectRating { get; set; }
-    public int WillRating { get; set; }
+    public Stats Stats { get; set; }
+
 
 
     // Unity
@@ -25,15 +25,12 @@ public class Defend : MonoBehaviour
 
     private void Awake()
     {
-        DefenseRating = AgilityRating + ArmorRating + ConstitutionRating + ForceRating;
+        SetComponents();
     }
 
 
     private void OnValidate()
     {
-        if (AgilityRating > 10) AgilityRating = 10;
-        if (AgilityRating < 0) AgilityRating = 0;
-
         if (ArmorRating > 10) ArmorRating = 10;
         if (ArmorRating < 0) ArmorRating = 0;
 
@@ -107,16 +104,16 @@ public class Defend : MonoBehaviour
 
         switch (DamageType) {
             case Weapon.DamageType.Blunt:
-                ComputedDamage -= AgilityRating;
+                ComputedDamage -= Stats.AgilityRating;
                 break;
             case Weapon.DamageType.Piercing:
-                ComputedDamage -= AgilityRating * 1.2f;
+                ComputedDamage -= Stats.AgilityRating * 1.2f;
                 break;
             case Weapon.DamageType.Slashing:
-                ComputedDamage -= AgilityRating * 1.2f;
+                ComputedDamage -= Stats.AgilityRating * 1.2f;
                 break;
             case Weapon.DamageType.Elemental:
-                ComputedDamage -= AgilityRating * 0.5f;
+                ComputedDamage -= Stats.AgilityRating * 0.5f;
                 break;
             default:
                 break;
@@ -185,7 +182,7 @@ public class Defend : MonoBehaviour
         switch (DamageType)
         {
             case Weapon.DamageType.Arcane:
-                ComputedDamage -= IntellectRating;
+                ComputedDamage -= Stats.IntellectRating;
                 break;
             default:
                 break;
@@ -199,7 +196,7 @@ public class Defend : MonoBehaviour
 
         if (ComputedDamage <= 0) return;
 
-        ComputedDamage -= WillRating * 0.5f;
+        ComputedDamage -= Stats.WillRating * 0.5f;
     }
 
 
@@ -208,5 +205,14 @@ public class Defend : MonoBehaviour
         if (ComputedDamage <= 0 || resistances == null) return;
 
         ComputedDamage -= ComputedDamage * (resistances[DamageType] / 100);
+    }
+
+
+    private void SetComponents()
+    {
+        Actor = GetComponentInParent<Actor>();
+        Stats = GetComponentInParent<Stats>();
+
+        DefenseRating = Stats.AgilityRating + ArmorRating + ConstitutionRating + ForceRating;
     }
 }
