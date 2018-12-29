@@ -52,6 +52,18 @@ public class Heavy : MonoBehaviour {
         Actor.Movement.Agent.speed = Speed;
         Actor.Senses.PerceptionRating = PerceptionRating;
         Actor.Senses.SetRange(PerceptionRange);
+
+        // TODO: configure caster/non-caster better
+        if (Actor.Faction == Conflict.Faction.Mhoddim)
+        {
+            Actor.Resources.gameObject.AddComponent<Smite>();
+            Actor.Resources.IsCaster = true;
+        } 
+        else 
+        {
+            Actor.Resources.CurrentMana = 0;
+            Actor.Resources.mana_pool_maximum = 0;
+        }
     }
 
 

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Threat : MonoBehaviour {
 
-    Dictionary<GameObject, float> threats = new Dictionary<GameObject, float>();
+    Dictionary<Actor, float> threats = new Dictionary<Actor, float>();
 
 
     // Unity
@@ -19,7 +19,7 @@ public class Threat : MonoBehaviour {
     // public
 
 
-    public void AddThreat(GameObject _attacker, float _damage)
+    public void AddThreat(Actor _attacker, float _damage)
     {
 
         if (!threats.ContainsKey(_attacker) ) {
@@ -30,12 +30,12 @@ public class Threat : MonoBehaviour {
     }
 
 
-    public GameObject BiggestThreat()
+    public Actor BiggestThreat()
     {
-        GameObject biggest_threat = null;
+        Actor biggest_threat = null;
         float value = 0f;
 
-        foreach (KeyValuePair<GameObject, float> threat in threats) {
+        foreach (KeyValuePair<Actor, float> threat in threats) {
             if (threat.Key == null) continue;  // don't modify the dictionary by removing while iterating
             if (threat.Value > value) {
                 value = threat.Value;
@@ -47,19 +47,19 @@ public class Threat : MonoBehaviour {
     }
 
 
-    public Dictionary<GameObject, float> GetThreats()
+    public Dictionary<Actor, float> GetThreats()
     {
         return threats;
     }
 
 
-    public bool IsAThreat(GameObject _unit)
+    public bool IsAThreat(Actor _unit)
     {
         return threats.ContainsKey(_unit);
     }
 
 
-    public void SpreadThreat(GameObject _attacker, float _damage)
+    public void SpreadThreat(Actor _attacker, float _damage)
     {
         Conflict.Faction _faction = GetComponent<Actor>().Faction;
 

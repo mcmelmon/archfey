@@ -6,6 +6,8 @@ public class Mhoddim : MonoBehaviour {
 
     // properties
 
+    public static Dictionary<Weapon.DamageType, int> SuperiorWeapons { get; set; }
+    public Stats Stats { get; set; }
     public static Threat Threat { get; set; }
 
 
@@ -26,25 +28,35 @@ public class Mhoddim : MonoBehaviour {
     private void Awake()
     {
         Threat = gameObject.AddComponent<Threat>();
+        Stats = GetComponent<Stats>();
+        SuperiorWeapons = new Dictionary<Weapon.DamageType, int>
+        {
+            [Weapon.DamageType.Arcane] = 4,
+            [Weapon.DamageType.Blunt] = 1,
+            [Weapon.DamageType.Elemental] = 3,
+            [Weapon.DamageType.Piercing] = 2,
+            [Weapon.DamageType.Poison] = 0,
+            [Weapon.DamageType.Slashing] = 2
+        };
     }
 
 
     // public
 
 
-    public void AddFactionThreat(GameObject _foe, float _threat)
+    public void AddFactionThreat(Actor _foe, float _threat)
     {
         Threat.AddThreat(_foe, _threat);
     }
 
 
-    public GameObject BiggestFactionThreat()
+    public Actor BiggestFactionThreat()
     {
         return Threat.BiggestThreat();
     }
 
 
-    public bool IsFactionThreat(GameObject _sighting)
+    public bool IsFactionThreat(Actor _sighting)
     {
         return _sighting != null && Threat.IsAThreat(_sighting);
     }
@@ -52,9 +64,9 @@ public class Mhoddim : MonoBehaviour {
 
     public void SetStats()
     {
+        SetPrimaryStats();
         SetDefenseStats();
         SetHealthStats();
-        SetOffenseStats();
     }
 
 
@@ -63,29 +75,20 @@ public class Mhoddim : MonoBehaviour {
 
     private void SetDefenseStats()
     {
-        Defend defend = GetComponent<Defend>();
+        Defend defend = GetComponentInChildren<Defend>();
         if (defend == null) return;
 
         if (GetComponent<Heavy>() != null) {
-            defend.agility_rating = ConfigureMhoddim.agility_rating[Soldier.Clasification.Heavy];
-            defend.armor_rating = ConfigureMhoddim.armor_rating[Soldier.Clasification.Heavy];
-            defend.corporeal_rating = ConfigureMhoddim.corporeal_rating[Soldier.Clasification.Heavy];
-            defend.counter = ConfigureMhoddim.counter[Soldier.Clasification.Heavy];
-            defend.force_rating = ConfigureMhoddim.force_rating[Soldier.Clasification.Heavy];
+            defend.ArmorRating = ConfigureMhoddim.armor_rating[Soldier.Clasification.Heavy];
+            defend.ForceRating = ConfigureMhoddim.force_rating[Soldier.Clasification.Heavy];
             defend.SetResistances(ConfigureMhoddim.resistances[Soldier.Clasification.Heavy]);
         } else if (GetComponent<Scout>() != null) {
-            defend.agility_rating = ConfigureMhoddim.agility_rating[Soldier.Clasification.Scout];
-            defend.armor_rating = ConfigureMhoddim.armor_rating[Soldier.Clasification.Scout];
-            defend.corporeal_rating = ConfigureMhoddim.corporeal_rating[Soldier.Clasification.Scout];
-            defend.counter = ConfigureMhoddim.counter[Soldier.Clasification.Scout];
-            defend.force_rating = ConfigureMhoddim.force_rating[Soldier.Clasification.Scout];
+            defend.ArmorRating = ConfigureMhoddim.armor_rating[Soldier.Clasification.Scout];
+            defend.ForceRating = ConfigureMhoddim.force_rating[Soldier.Clasification.Scout];
             defend.SetResistances(ConfigureMhoddim.resistances[Soldier.Clasification.Scout]);
         } else if (GetComponent<Striker>() != null) {
-            defend.agility_rating = ConfigureMhoddim.agility_rating[Soldier.Clasification.Striker];
-            defend.armor_rating = ConfigureMhoddim.armor_rating[Soldier.Clasification.Striker];
-            defend.corporeal_rating = ConfigureMhoddim.corporeal_rating[Soldier.Clasification.Striker];
-            defend.counter = ConfigureMhoddim.counter[Soldier.Clasification.Striker];
-            defend.force_rating = ConfigureMhoddim.force_rating[Soldier.Clasification.Striker];
+            defend.ArmorRating = ConfigureMhoddim.armor_rating[Soldier.Clasification.Striker];
+            defend.ForceRating = ConfigureMhoddim.force_rating[Soldier.Clasification.Striker];
             defend.SetResistances(ConfigureMhoddim.resistances[Soldier.Clasification.Striker]);
         }
     }
@@ -109,20 +112,31 @@ public class Mhoddim : MonoBehaviour {
     }
 
 
-    private void SetOffenseStats()
+    private void SetPrimaryStats()
     {
-        Attack attack = GetComponent<Attack>();
-        if (attack == null) return;
-
-        if (GetComponent<Heavy>() != null) {
-            attack.AgilityRating = ConfigureMhoddim.agility_rating[Soldier.Clasification.Heavy];
-            attack.StrengthRating = ConfigureMhoddim.strength_rating[Soldier.Clasification.Heavy];
-        } else if (GetComponent<Scout>() != null) {
-            attack.AgilityRating = ConfigureMhoddim.agility_rating[Soldier.Clasification.Scout];
-            attack.StrengthRating = ConfigureMhoddim.strength_rating[Soldier.Clasification.Scout];
-        } else if (GetComponent<Striker>() != null) {
-            attack.AgilityRating = ConfigureMhoddim.agility_rating[Soldier.Clasification.Striker];
-            attack.StrengthRating = ConfigureMhoddim.strength_rating[Soldier.Clasification.Striker];
+        if (GetComponent<Heavy>() != null)
+        {
+            Stats.AgilityRating = ConfigureMhoddim.agility_rating[Soldier.Clasification.Heavy];
+            Stats.ConstitutionRating = ConfigureMhoddim.constituion_rating[Soldier.Clasification.Heavy];
+            Stats.IntellectRating = ConfigureMhoddim.intellect_rating[Soldier.Clasification.Heavy];
+            Stats.StrengthRating = ConfigureMhoddim.strength_rating[Soldier.Clasification.Heavy];
+            Stats.WillRating = ConfigureMhoddim.will_rating[Soldier.Clasification.Heavy];
+        }
+        else if (GetComponent<Scout>() != null)
+        {
+            Stats.AgilityRating = ConfigureMhoddim.agility_rating[Soldier.Clasification.Scout];
+            Stats.ConstitutionRating = ConfigureMhoddim.constituion_rating[Soldier.Clasification.Scout];
+            Stats.IntellectRating = ConfigureMhoddim.intellect_rating[Soldier.Clasification.Scout];
+            Stats.StrengthRating = ConfigureMhoddim.strength_rating[Soldier.Clasification.Scout];
+            Stats.WillRating = ConfigureMhoddim.will_rating[Soldier.Clasification.Scout];
+        }
+        else if (GetComponent<Striker>() != null)
+        {
+            Stats.AgilityRating = ConfigureMhoddim.agility_rating[Soldier.Clasification.Striker];
+            Stats.ConstitutionRating = ConfigureMhoddim.constituion_rating[Soldier.Clasification.Striker];
+            Stats.IntellectRating = ConfigureMhoddim.intellect_rating[Soldier.Clasification.Striker];
+            Stats.StrengthRating = ConfigureMhoddim.strength_rating[Soldier.Clasification.Striker];
+            Stats.WillRating = ConfigureMhoddim.will_rating[Soldier.Clasification.Striker];
         }
     }
 }

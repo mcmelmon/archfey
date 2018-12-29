@@ -11,8 +11,13 @@ public class Mouse : MonoBehaviour
     // properties
 
     public static Actor HoveredObject { get; set; }
-    public static Actor SelectedObject { get; set; }
+    public static List<Actor> SelectedObjects { get; set; }
 
+
+    private void Awake()
+    {
+        SelectedObjects = new List<Actor>();
+    }
     void Start()
     {
         StartCoroutine(FeyTouch());
@@ -29,8 +34,8 @@ public class Mouse : MonoBehaviour
             int faction_layer_mask = LayerMask.GetMask("Faction");
             int ui_layer_mask = LayerMask.GetMask("UI");
 
-            if (SelectedObject != null) {
-                SelectedObject.GetComponent<Renderer>().material.color = highlight_color;
+            foreach (var selection in SelectedObjects) {
+                selection.GetComponent<Renderer>().material.color = highlight_color;
             }
 
             if (Physics.Raycast(ray, out RaycastHit hit, 150f, faction_layer_mask, QueryTriggerInteraction.Ignore)) {
@@ -46,22 +51,31 @@ public class Mouse : MonoBehaviour
                 HoveredObject.GetComponent<Renderer>().material.color = highlight_color;
 
                 if (Input.GetMouseButtonDown(0)) {
-                    if (SelectedObject != null)
-                        SelectedObject.GetComponent<Renderer>().material.color = OriginalColor(SelectedObject);
-
-                    SelectedObject = HoveredObject;
-                    SelectedObject.GetComponent<Renderer>().material.color = highlight_color;
+                    if (Input.GetKeyDown("left shift") || Input.GetKeyDown("right shift")) { // TODO: the shift keys are not being detected
+                        SelectedObjects.Add(HoveredObject);
+                    } else {
+                        foreach (var selection in SelectedObjects) {
+                            selection.GetComponent<Renderer>().material.color = OriginalColor(selection);
+                        }
+                        SelectedObjects.Clear();
+                        SelectedObjects.Add(HoveredObject);
+                    }
                 }
-
             } else {
                 // We have not hit a faction element, so drop previous highlighting
                 // TODO: decide whether to keep or drop selection
 
                 if (HoveredObject != null) {
-
                     HoveredObject.GetComponent<Renderer>().material.color = OriginalColor(HoveredObject);
                     HoveredObject = null;
                 }
+            }
+
+            if (Input.GetKeyDown("escape")) {
+                for (int i = 0; i < SelectedObjects.Count; i++) {
+                    SelectedObjects[i].GetComponent<Renderer>().material.color = OriginalColor(SelectedObjects[i]);
+                }
+                SelectedObjects.Clear();
             }
 
             yield return null;

@@ -5,16 +5,16 @@ using UnityEngine;
 
 public static class ConfigureFey {
 
-    // Versatile attributes
+    // Primary attributes
     public static Dictionary<Soldier.Clasification, int> agility_rating = new Dictionary<Soldier.Clasification, int>();
+    public static Dictionary<Soldier.Clasification, int> constitution_rating = new Dictionary<Soldier.Clasification, int>();
+    public static Dictionary<Soldier.Clasification, int> intellect_rating = new Dictionary<Soldier.Clasification, int>();
     public static Dictionary<Soldier.Clasification, int> strength_rating = new Dictionary<Soldier.Clasification, int>();
+    public static Dictionary<Soldier.Clasification, int> will_rating = new Dictionary<Soldier.Clasification, int>();
 
     // Defense attributes
     public static Dictionary<Soldier.Clasification, int> armor_rating = new Dictionary<Soldier.Clasification, int>();
-    public static Dictionary<Soldier.Clasification, int> corporeal_rating = new Dictionary<Soldier.Clasification, int>();
-    public static Dictionary<Soldier.Clasification, int> counter = new Dictionary<Soldier.Clasification, int>();
     public static Dictionary<Soldier.Clasification, int> force_rating = new Dictionary<Soldier.Clasification, int>();
-
     public static Dictionary<Soldier.Clasification, Dictionary<Weapon.DamageType, int>> resistances = new Dictionary<Soldier.Clasification, Dictionary<Weapon.DamageType, int>>();
 
     // Health attributes
@@ -37,14 +37,15 @@ public static class ConfigureFey {
 
     private static void PopulateAttributes()
     {
-        // versatile
+        // primary
         agility_rating[Soldier.Clasification.Ent] = 0;
+        constitution_rating[Soldier.Clasification.Ent] = 6;
+        intellect_rating[Soldier.Clasification.Ent] = 0;
         strength_rating[Soldier.Clasification.Ent] = 6;
+        will_rating[Soldier.Clasification.Ent] = 4;
 
         // defense
         armor_rating[Soldier.Clasification.Ent] = 4;
-        corporeal_rating[Soldier.Clasification.Ent] = 0;
-        counter[Soldier.Clasification.Ent] = 10;
         force_rating[Soldier.Clasification.Ent] = 0;
 
         // health
@@ -52,14 +53,18 @@ public static class ConfigureFey {
         starting_health[Soldier.Clasification.Ent] = 500;
     }
 
+
     private static void PopulateResistances()
     {
-        resistances[Soldier.Clasification.Ent] = new Dictionary<Weapon.DamageType, int>();
-        resistances[Soldier.Clasification.Ent][Weapon.DamageType.Arcane] = 0;
-        resistances[Soldier.Clasification.Ent][Weapon.DamageType.Blunt] = 50;
-        resistances[Soldier.Clasification.Ent][Weapon.DamageType.Elemental] = 0;
-        resistances[Soldier.Clasification.Ent][Weapon.DamageType.Piercing] = 60;
-        resistances[Soldier.Clasification.Ent][Weapon.DamageType.Poison] = 40;
-        resistances[Soldier.Clasification.Ent][Weapon.DamageType.Slashing] = 40;
+        resistances[Soldier.Clasification.Ent] = new Dictionary<Weapon.DamageType, int>
+        {
+            [Weapon.DamageType.Arcane] = 0,
+            [Weapon.DamageType.Blunt] = 60,
+            [Weapon.DamageType.Elemental] = 0,
+            [Weapon.DamageType.Holy] = 0,
+            [Weapon.DamageType.Piercing] = 60,
+            [Weapon.DamageType.Poison] = 20,
+            [Weapon.DamageType.Slashing] = 40
+        };
     }
 }

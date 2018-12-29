@@ -6,9 +6,10 @@ public class Senses : MonoBehaviour {
 
     // properties
 
+    public Actor Actor { get; set; }
     public int PerceptionRating { get; set; }
     public float PerceptionRange { get; set; }
-    public List<GameObject> Sightings { get; set; }
+    public List<Actor> Sightings { get; set; }
 
 
     // Unity
@@ -46,13 +47,13 @@ public class Senses : MonoBehaviour {
         Collider[] colliders = Physics.OverlapSphere(transform.position, PerceptionRange);
 
         for (int i = 0; i < colliders.Length; i++) {
-            GameObject sighting = colliders[i].gameObject;
+            Actor _sighting = colliders[i].gameObject.GetComponent<Actor>();
 
-            if (sighting.tag == "Actor" && sighting != gameObject && sighting != null) {  // don't sight ourselves
-                Stealth sighting_stealth = sighting.GetComponent<Stealth>();
+            if (_sighting != null && _sighting != GetComponent<Actor>()) {  // don't sight ourselves
+                Stealth sighting_stealth = _sighting.GetComponent<Stealth>();
 
-                if (sighting_stealth == null || sighting_stealth.Spotted(gameObject, PerceptionRating) && !Sightings.Contains(sighting)) {
-                    Sightings.Add(colliders[i].gameObject);
+                if (sighting_stealth == null || sighting_stealth.Spotted(Actor, PerceptionRating) && !Sightings.Contains(_sighting)) {
+                    Sightings.Add(_sighting);
                 }
             }
         }
@@ -63,8 +64,9 @@ public class Senses : MonoBehaviour {
 
     private void SetComponents()
     {
+        Actor = GetComponent<Actor>();
         transform.gameObject.AddComponent<SphereCollider>();
         GetComponent<SphereCollider>().isTrigger = true;
-        Sightings = new List<GameObject>();
+        Sightings = new List<Actor>();
     }
 }

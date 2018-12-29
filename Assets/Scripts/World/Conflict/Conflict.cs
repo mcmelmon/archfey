@@ -9,6 +9,8 @@ public class Conflict : MonoBehaviour
     public enum Faction { None = 0, Ghaddim = 1, Mhoddim = 2, Fey = 3 };
     public enum Role { None = 0, Defense = 1, Offense = 2 };
 
+    // Inspector settings
+
     public Ghaddim ghaddim_prefab;
     public Mhoddim mhoddim_prefab;
 
@@ -17,6 +19,7 @@ public class Conflict : MonoBehaviour
     public static Dictionary<Faction, int> Casualties { get; set; }
     public Conflict.Role NextWave { get; set; }
     public static Conflict Instance { get; set; }
+    public static int ToHitBase { get; set; }
     public static List<GameObject> Units { get; set; }
     public static Faction Victor { get; set; }
     public static bool Victory { get; set; }
@@ -143,6 +146,7 @@ public class Conflict : MonoBehaviour
             [Faction.Mhoddim] = 0
         };
         current_tick = 0;
+        ToHitBase = 10;
         Units = new List<GameObject>();
         Victor = Faction.None;
         Victory = false;

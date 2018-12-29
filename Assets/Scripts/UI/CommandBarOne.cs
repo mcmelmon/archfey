@@ -7,23 +7,17 @@ using UnityEngine.UI;
 public class CommandBarOne : MonoBehaviour {
 
     // Inspector settings
+
     public Ent ent_prefab;
     public Transform fey_transform;
     public Slider mana_bar;
+    public Slider amber_bar;
     public Transform player_transform;
-
-
-    //public TextMeshProUGUI ghaddim_deaths;
-    //public TextMeshProUGUI ghaddim_captures;
-    //public TextMeshProUGUI mhoddim_deaths;
-    //public TextMeshProUGUI mhoddim_captures;
 
     // properties
 
     public static CommandBarOne Instance { get; set; }
-
-    // Unity
-
+    
 
     // Unity
 
@@ -41,6 +35,13 @@ public class CommandBarOne : MonoBehaviour {
     }
 
 
+    private void Start()
+    {
+        amber_bar.value = 0;
+        mana_bar.value = 1;
+    }
+
+
     // public
 
 
@@ -54,22 +55,19 @@ public class CommandBarOne : MonoBehaviour {
 
     public void FountainOfHealing()
     {
-        Spells.Instance.FountainOfHealing(player_transform.gameObject, Mouse.SelectedObject, false);
+        foreach (var target in Mouse.SelectedObjects) {
+            Player.Instance.GetComponentInChildren<FountainOfHealing>().Cast(target);
+        }
     }
 
 
     public IEnumerator Metrics()
     {
-        while (true) {
-            mana_bar.value = Player.Instance.Spellcasting.CurrentManaPercentage();
+        while (true && Player.Instance.Resources != null) {
+            amber_bar.value = Player.Instance.Resources.CurrentAmberPercentage();
+            mana_bar.value = Player.Instance.Resources.CurrentManaPercentage();
             yield return new WaitForSeconds(Turn.action_threshold);
-
-            //ghaddim_deaths.text = "Deaths: " + Conflict.Casualties[Conflict.Faction.Ghaddim].ToString();
-            //ghaddim_captures.text = "Ruins: " + Ruins.ForFaction[Conflict.Faction.Ghaddim].Count;
-            //mhoddim_deaths.text = "Deaths: " + Conflict.Casualties[Conflict.Faction.Mhoddim].ToString();
-            //mhoddim_captures.text = "Ruins: " + Ruins.ForFaction[Conflict.Faction.Mhoddim].Count;
         }
-
     }
 
 

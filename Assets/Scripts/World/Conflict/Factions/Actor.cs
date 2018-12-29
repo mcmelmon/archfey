@@ -7,22 +7,23 @@ using UnityEngine;
 public class Actor : MonoBehaviour
 {
 
-    public enum State { Idle = 0, UnderAttack = 1, AlliesUnderAttack = 2, HostilesSighted = 3, OccupyingRuin = 4, HasObjective = 5, OnWatch = 6, InCombat = 7 };
+    public enum State { Idle = 0, UnderAttack = 1, AlliesUnderAttack = 2, HostilesSighted = 3, OccupyingRuin = 4, HasObjective = 5, OnWatch = 6, InCombat = 7, FriendliesSighted = 8, BadlyInjured = 9 };
 
     State state;
 
     // properties
 
-    public List<GameObject> AppliedUIEffects { get; set; }
     public Attack Attack { get; set; }
+    public Defend Defend { get; set; }
     public Conflict.Faction Faction { get; set; }
-    public List<GameObject> Enemies { get; set; }
+    public List<Actor> Enemies { get; set; }
     public Fey Fey { get; set; }
-    public List<GameObject> Friends { get; set; }
+    public List<Actor> Friends { get; set; }
     public Ghaddim Ghaddim { get; set; }
     public Health Health { get; set; }
     public Mhoddim Mhoddim { get; set; }
     public Movement Movement { get; set; }
+    public Resources Resources { get; set; }
     public Conflict.Role Role { get; set; }
     public RuinControlPoint RuinControlPoint { get; set; }
     public int RuinControlRating { get; set; }
@@ -53,6 +54,12 @@ public class Actor : MonoBehaviour
                 // Freedom!
                 CloseWithEnemies();
                 break;
+            case State.BadlyInjured:
+                // defensive spell or flee
+                break;
+            case State.FriendliesSighted:
+                // if healer, heal
+                break;
             case State.HasObjective:
                 // Stay on target
                 Movement.Advance();
@@ -67,6 +74,7 @@ public class Actor : MonoBehaviour
                 break;
             case State.InCombat:
                 // Freedom!
+                CastOffensiveSpell();
                 break;
             case State.OccupyingRuin:
                 // Our Precious
@@ -77,6 +85,7 @@ public class Actor : MonoBehaviour
                 break;
             case State.UnderAttack:
                 // Freedom!
+                CastOffensiveSpell();
                 CloseWithEnemies();
                 break;
             default:
@@ -86,7 +95,14 @@ public class Actor : MonoBehaviour
     }
 
 
-    public bool IsFriendOrNeutral(GameObject _unit)
+    public List<Actor> IdentifyFriends()
+    {
+        FriendliesSighted();
+        return Friends;
+    }
+
+
+    public bool IsFriendOrNeutral(Actor _unit)
     {
         if (_unit == null || _unit == gameObject) return true;
         if (IsMyRole(_unit)) return true;  // but don't automatically return false if not my role (I might be a scout, it might be fey)
@@ -104,7 +120,7 @@ public class Actor : MonoBehaviour
     private bool AlliesUnderAttack()
     {
         for (int i = 0; i < Senses.Sightings.Count; i++) {
-            GameObject sighting = Senses.Sightings[i];
+            Actor sighting = Senses.Sightings[i];
             if (sighting == null) continue;
             if (IsAttackingMyFaction(sighting)) return true;
         }
@@ -113,17 +129,38 @@ public class Actor : MonoBehaviour
     }
 
 
+    private void CastDefensiveSpell()
+    {
+
+    }
+
+
+    private void CastOffensiveSpell()
+    {
+        // TODO: add more spells than Smite...
+
+        // TODO: check range
+
+        if (!Resources.IsCaster || Enemies.Count == 0) return;
+
+        Smite _smite = Resources.gameObject.GetComponent<Smite>();
+        if(_smite != null && Resources.CurrentMana >= _smite.ManaCost) {
+            _smite.Cast(Enemies[0]);
+        }
+    }
+
+
     private void CloseWithEnemies()
     {
         if (Movement == null) {
             Attack.AttackEnemiesInRange();
         } else {
-            GameObject nearest_enemy = null;
+            Actor nearest_enemy = null;
             float shortest_distance = float.MaxValue;
             float distance;
 
             for (int i = 0; i < Enemies.Count; i++) {
-                GameObject enemy = Enemies[i];
+                Actor enemy = Enemies[i];
                 if (enemy == null) continue;
 
                 if (transform == null) continue;
@@ -169,6 +206,24 @@ public class Actor : MonoBehaviour
     }
 
 
+    private bool FriendliesSighted()
+    {
+        Friends.Clear();
+
+        for (int i = 0; i < Senses.Sightings.Count; i++)
+        {
+            Actor _friend = Senses.Sightings[i];
+            if (_friend == null) continue;
+            if (_friend != null && IsMyFaction(_friend) && !Friends.Contains(_friend))
+            {
+                Friends.Add(_friend);
+            }
+        }
+
+        return Friends.Count > 0;
+    }
+
+
     private bool HasObjective()
     {
         if (RuinControlPoint != null && RuinControlPoint.Occupier != null && RuinControlPoint.Occupier != this) {
@@ -186,10 +241,10 @@ public class Actor : MonoBehaviour
         Enemies.Clear();
 
         for (int i = 0; i < Senses.Sightings.Count; i++) {
-            GameObject sighting = Senses.Sightings[i];
-            if (sighting == null) continue;
-            if (!IsFriendOrNeutral(sighting) && !Enemies.Contains(sighting)) {
-                Enemies.Add(sighting);
+            Actor _hostile = Senses.Sightings[i];
+            if (_hostile == null) continue;
+            if (!IsFriendOrNeutral(_hostile) && !Enemies.Contains(_hostile)) {
+                Enemies.Add(_hostile);
             }
         }
 
@@ -203,28 +258,28 @@ public class Actor : MonoBehaviour
     }
 
 
-    private bool IsAThreat(GameObject _unit)
+    private bool IsAThreat(Actor _unit)
     {
         return Threat.IsAThreat(_unit);
     }
 
 
-    private bool IsAttackingMyFaction(GameObject _unit)
+    private bool IsAttackingMyFaction(Actor _unit)
     {
         return Faction != Conflict.Faction.Fey && Faction != Conflict.Faction.None 
                                   && (Faction == Conflict.Faction.Ghaddim) ? (Ghaddim.IsFactionThreat(_unit)) : (Mhoddim.IsFactionThreat(_unit));
     }
 
 
-    private bool IsMyFaction(GameObject _unit)
+    private bool IsMyFaction(Actor _unit)
     {
-        return _unit != null && Faction == _unit.GetComponent<Actor>().Faction;
+        return _unit != null && Faction == _unit.Faction;
     }
 
 
-    private bool IsMyRole(GameObject _unit)
+    private bool IsMyRole(Actor _unit)
     {
-        return _unit != null && Role == _unit.GetComponent<Actor>().Role;
+        return _unit != null && Role == _unit.Role;
     }
 
 
@@ -256,10 +311,11 @@ public class Actor : MonoBehaviour
 
     private void SetComponents()
     {
-        AppliedUIEffects = new List<GameObject>();
-        Attack = GetComponent<Attack>();
-        Enemies = new List<GameObject>();
-        Friends = new List<GameObject>();
+        Resources = GetComponentInChildren<Resources>();
+        Attack = GetComponentInChildren<Attack>();
+        Defend = GetComponentInChildren<Defend>();
+        Enemies = new List<Actor>();
+        Friends = new List<Actor>();
         Mhoddim = GetComponent<Mhoddim>();
         Ghaddim = GetComponent<Ghaddim>();
         Fey = GetComponent<Fey>();
@@ -276,7 +332,7 @@ public class Actor : MonoBehaviour
     public void SetState()
     {
         if (InCombat()) {
-            GameObject _enemy = Threat.BiggestThreat();
+            Actor _enemy = Threat.BiggestThreat();
             if (_enemy != null) {
                 if (!Enemies.Contains(_enemy)) Enemies.Add(_enemy);
                 state = State.InCombat;
@@ -287,7 +343,7 @@ public class Actor : MonoBehaviour
         }
         else if (UnderAttack())
         {
-            GameObject _enemy = Threat.BiggestThreat();
+            Actor _enemy = Threat.BiggestThreat();
             if (_enemy != null) {
                 if (!Enemies.Contains(_enemy)) Enemies.Add(_enemy);
                 state = State.UnderAttack;
@@ -304,7 +360,7 @@ public class Actor : MonoBehaviour
         }
         else if (AlliesUnderAttack())
         {
-            GameObject _enemy = (Faction == Conflict.Faction.Ghaddim) ? Ghaddim.BiggestFactionThreat() : Mhoddim.BiggestFactionThreat();
+            Actor _enemy = (Faction == Conflict.Faction.Ghaddim) ? Ghaddim.BiggestFactionThreat() : Mhoddim.BiggestFactionThreat();
             
             if (_enemy != null) {
                 if (!Enemies.Contains(_enemy)) Enemies.Add(_enemy);
@@ -343,10 +399,7 @@ public class Actor : MonoBehaviour
 
     private void SheathWeapon()
     {
-        Weapon equipped_weapon = Attack.GetWeapon();
-        if (equipped_weapon != null) {
-            Destroy(equipped_weapon.gameObject);
-        }
+        Attack.EquippedMeleeWeapon.gameObject.SetActive(false);
     }
 
 

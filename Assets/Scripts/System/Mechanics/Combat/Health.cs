@@ -5,11 +5,6 @@ using UnityEngine.UI;
 
 public class Health : MonoBehaviour {
 
-    // inspector settings
-
-    public Slider health_bar;
-
-
     // properties
 
     public Actor Actor { get; set; }
@@ -24,7 +19,6 @@ public class Health : MonoBehaviour {
     private void Awake()
     {
         Actor = GetComponent<Actor>();
-        StartCoroutine(HealthBarFaceCamera());
     }
 
 
@@ -41,14 +35,18 @@ public class Health : MonoBehaviour {
     public void ApplyDamageOverTime()
     {
         // TODO
-        UpdateHealthBar();
+        Actor.Resources.UpdateStatBars();
     }
 
 
-    public void LoseHealth(float amount)
+    public void LoseHealth(float amount, Actor _attacker = null)
     {
         CurrentHealth -= Mathf.RoundToInt(amount);
-        UpdateHealthBar();
+        if (_attacker != null) {
+            Actor.Threat.AddThreat(_attacker, amount);
+            Actor.Threat.SpreadThreat(_attacker, amount);
+        }
+        Actor.Resources.UpdateStatBars();
     }
 
 
@@ -59,7 +57,7 @@ public class Health : MonoBehaviour {
         CurrentHealth += amount;
         if (CurrentHealth > MaximumHealth) CurrentHealth = MaximumHealth;
 
-        UpdateHealthBar();
+        Actor.Resources.UpdateStatBars();
     }
 
 
@@ -85,7 +83,6 @@ public class Health : MonoBehaviour {
     {
         MaximumHealth = amount;
         CurrentHealth = amount;
-        UpdateHealthBar();
     }
 
 
@@ -95,35 +92,5 @@ public class Health : MonoBehaviour {
     public float CurrentHealthPercentage()
     {
         return (float)CurrentHealth / (float)MaximumHealth;
-    }
-
-
-    private IEnumerator HealthBarFaceCamera()
-    {
-        while (true) {
-            yield return null;
-            Vector3 health_position = transform.position;
-            Vector3 player_position = Player.Instance.viewport.transform.position;
-
-            Quaternion rotation = Quaternion.LookRotation(player_position - health_position, Vector3.up);
-            health_bar.transform.rotation = rotation;
-        }
-    }
-
-
-    public void UpdateHealthBar()
-    {
-        if (health_bar != null)
-        {
-            health_bar.value = CurrentHealthPercentage();
-            if (health_bar.value >= 1)
-            {
-                health_bar.gameObject.SetActive(false);
-            }
-            else
-            {
-                health_bar.gameObject.SetActive(true);
-            }
-        }
     }
 }

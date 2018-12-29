@@ -48,7 +48,7 @@ public class RuinControlUI : MonoBehaviour
             {
                 case Conflict.Faction.Ghaddim:
                     int ghaddim_count = Ruins.ForFaction[Conflict.Faction.Ghaddim].Count;
-                    faction_text.text = "Unaussprech";
+                    faction_text.text = "Ashen";
                     ruin_captured.gameObject.SetActive(true);
                     ActiveUIElements.Add(ruin_captured.gameObject);
                     break;
@@ -65,7 +65,7 @@ public class RuinControlUI : MonoBehaviour
             switch (previous_faction) {
                 case Conflict.Faction.Ghaddim:
                     int ghaddim_count = Ruins.ForFaction[Conflict.Faction.Ghaddim].Count;
-                    faction_text.text = "Unaussprech";
+                    faction_text.text = "Ashen";
                     ruin_lost.gameObject.SetActive(true);
                     ActiveUIElements.Add(ruin_lost.gameObject);
                     break;

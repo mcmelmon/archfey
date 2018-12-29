@@ -5,19 +5,22 @@ using UnityEngine;
 public class Attack : MonoBehaviour
 {
 
-    public List<Weapon> available_weapons;
+    // Inspector settings
 
+    public List<Weapon> available_weapons;
 
     // properties
 
     public Actor Actor { get; set; }
-    public int AgilityRating { get; set; }
-    public List<GameObject> AvailableMeleeTargets { get; set; }
-    public List<GameObject> AvailableRangedTargets { get; set; }
-    public List<GameObject> CurrentMeleeTargets { get; set; }
-    public List<GameObject> CurrentRangedTargets { get; set; }
-    public int StrengthRating { get; set; }
-    public Weapon Weapon { get; set; }
+    public int AttackRating { get; set; }
+    public List<Actor> AvailableMeleeTargets { get; set; }
+    public List<Actor> AvailableRangedTargets { get; set; }
+    public List<Actor> CurrentMeleeTargets { get; set; }
+    public List<Actor> CurrentRangedTargets { get; set; }
+    public Weapon EquippedMeleeWeapon { get; set; }
+    public Weapon EquippedRangedWeapon { get; set; }
+    public Stats Stats { get; set; }
+    public Dictionary<Weapon.DamageType, int> SuperiorWeapons { get; set; }
 
 
     // Unity
@@ -53,12 +56,6 @@ public class Attack : MonoBehaviour
     }
 
 
-    public Weapon GetWeapon()
-    {
-        return Weapon;
-    }
-
-
     // private
 
 
@@ -67,11 +64,11 @@ public class Attack : MonoBehaviour
         ClearTargets();
 
         for (int i = 0; i < Actor.Enemies.Count; i++) {
-            GameObject _enemy = Actor.Enemies[i];
+            Actor _enemy = Actor.Enemies[i];
             if (_enemy == null || transform == null) continue;
 
             float grounded_center_distance = Vector3.Distance(new Vector3(_enemy.transform.position.x, 0, _enemy.transform.position.z), new Vector3(transform.position.x, 0, transform.position.z));
-            float combined_radius = (_enemy.GetComponent<CapsuleCollider>().radius * _enemy.transform.localScale.x) + (GetComponent<CapsuleCollider>().radius * transform.localScale.x);
+            float combined_radius = (_enemy.GetComponent<CapsuleCollider>().radius * _enemy.transform.localScale.x) + (Actor.GetComponent<CapsuleCollider>().radius * transform.localScale.x);
             float separation = grounded_center_distance - combined_radius;
 
             if (separation <= LongestMeleeRange()) {
@@ -81,6 +78,29 @@ public class Attack : MonoBehaviour
                 AvailableRangedTargets.Add(_enemy);
             }
         }
+    }
+
+
+    private void EquipMeleeWeapon()
+    {
+        if (EquippedMeleeWeapon == null) {
+            foreach (var weapon in available_weapons) {
+                if (weapon.range == Weapon.Range.Melee) {
+                    EquippedMeleeWeapon = Instantiate(weapon, transform.Find("MeleeAttackOrigin").transform.position, transform.rotation);
+                    EquippedMeleeWeapon.transform.position += 0.2f * Vector3.forward;
+                    EquippedMeleeWeapon.transform.parent = transform;
+                    EquippedMeleeWeapon.name = "Melee Weapon";
+                    EquippedMeleeWeapon.gameObject.SetActive(false);
+                    break;  // TODO: pick best available melee weapon based on resistances, etc.
+                }
+            }
+        }
+    }
+
+
+    private void EquipRangedWeapon()
+    {
+
     }
 
 
@@ -135,64 +155,16 @@ public class Attack : MonoBehaviour
 
     private void SetComponents()
     {
-        Actor = GetComponent<Actor>();
-        AvailableMeleeTargets = new List<GameObject>();
-        AvailableRangedTargets = new List<GameObject>();
-        CurrentMeleeTargets = new List<GameObject>();
-        CurrentRangedTargets = new List<GameObject>();
-    }
+        Actor = GetComponentInParent<Actor>();
+        AvailableMeleeTargets = new List<Actor>();
+        AvailableRangedTargets = new List<Actor>();
+        CurrentMeleeTargets = new List<Actor>();
+        CurrentRangedTargets = new List<Actor>();
+        Stats = GetComponentInParent<Stats>();
+        SuperiorWeapons = (Actor.Faction == Conflict.Faction.Ghaddim) ? Ghaddim.SuperiorWeapons : Mhoddim.SuperiorWeapons;
 
-
-    private void StrikeAtMelee()
-    {
-        if (CurrentMeleeTargets.Count == 0) return;
-
-        GameObject _target = CurrentMeleeTargets[0];
-        if (_target == null || transform == null) return;
-
-        Vector3 swing_direction = _target.transform.position - transform.position;
-        swing_direction.y = transform.position.y;
-
-        foreach (var weapon in AvailableWeapons()) {
-            if (weapon.range == Weapon.Range.Melee) {
-                if (Weapon == null) {
-                    Weapon = Instantiate(weapon, transform.Find("MeleeAttackOrigin").transform.position, transform.rotation);  // TODO: make enums
-                    Weapon.transform.position += 0.2f * swing_direction.normalized;  // TODO: give melee weapons a length
-                    Weapon.transform.parent = transform;
-                    Weapon.name = "Melee Weapon";
-                }
-                Weapon.SetTarget(_target);
-                Weapon.Hit();
-            } else if (weapon.range == Weapon.Range.Ranged) {
-
-                // we have no available melee weapon, so use range on melee target
-
-                Weapon _ranged = Instantiate(weapon, transform.Find("RangedAttackOrigin").transform.position, transform.rotation);  // TODO: make enums
-                _ranged.transform.parent = transform;
-                _ranged.name = "Ranged Weapon";
-                _ranged.SetTarget(_target);
-            }
-        }
-    }
-
-
-    private void StrikeAtRanged()
-    {
-        if (CurrentRangedTargets.Count == 0) return;
-
-        foreach (var weapon in AvailableWeapons()) {
-
-            // TODO: potentially disadvantage ranged attacks against melee targets
-
-            GameObject _target = CurrentRangedTargets[0];
-
-            if (weapon.range == Weapon.Range.Ranged) {
-                Weapon _ranged = Instantiate(weapon, transform.Find("RangedAttackOrigin").transform.position, transform.rotation);  // TODO: make enums
-                _ranged.transform.parent = transform;
-                _ranged.name = "Ranged Weapon";
-                _ranged.SetTarget(_target);
-            }
-        }
+        AttackRating = Stats.AgilityRating + Stats.IntellectRating + Stats.StrengthRating + Stats.WillRating;
+        EquipMeleeWeapon();
     }
 
 
@@ -204,26 +176,27 @@ public class Attack : MonoBehaviour
 
         if (CurrentMeleeTargets.Count == 0 && CurrentRangedTargets.Count == 0) return;
 
-        // TODO: allow stealth to be recovered, e.g. "Vanish" and even attacking from stealth for a short while, etc.
-        Stealth stealth = GetComponent<Stealth>();
+        // TODO: handle in Stealth; allow stealth to be recovered, e.g. "Vanish" and even attacking from stealth for a short while, etc.
+        Stealth stealth = Actor.Stealth;
         if (stealth != null) {
             stealth.attacking = true;
             stealth.spotted = true;
         }
 
+        // TODO: add more powerful, energy based attacks
         if (CurrentMeleeTargets.Count > 0) {
-            StrikeAtMelee();
-        } else { 
-            StrikeAtRanged();
+            GetComponent<DefaultMelee>().Strike(CurrentMeleeTargets[0]);
+        } else {
+            GetComponent<DefaultRange>().Strike(CurrentRangedTargets[0]);
         }
     }
 
 
-    private GameObject TargetMelee()
+    private Actor TargetMelee()
     {
         // TODO: attack the biggest threat
 
-        GameObject _target = null;
+        Actor _target = null;
 
         if (AvailableMeleeTargets.Count > 0) {
             _target = AvailableMeleeTargets[0];
@@ -233,11 +206,11 @@ public class Attack : MonoBehaviour
     }
 
 
-    private GameObject TargetRanged()
+    private Actor TargetRanged()
     {
         // TODO: attack the biggest threat
 
-        GameObject _target = null;
+        Actor _target = null;
 
         if (AvailableRangedTargets.Count > 0) {
             _target = AvailableRangedTargets[0];

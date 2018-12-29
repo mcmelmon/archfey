@@ -109,7 +109,7 @@ public class Geography : MonoBehaviour {
     {
         // Obstacles cause unit placement trouble.  
         // TODO: redo this by modifying the terrain itself
-        //PlaceObstacles();
+        PlaceObstacles();
     }
 
 
@@ -193,23 +193,6 @@ public class Geography : MonoBehaviour {
     // private
 
 
-    private void SetComponents()
-    {
-        Grids = new Dictionary<GridType, Grid>();
-        Terrain = GetComponentInChildren<Terrain>();
-        TerrainData = Terrain.terrainData;
-
-        Grids[GridType.Unit] = Grid.New(new Vector3(1, 0, GetResolution() - 2), GetResolution()/unit_spacing, GetResolution()/unit_spacing, unit_spacing, false);
-        Tiles = new List<MapTile>();
-
-        foreach (var location in Grids[GridType.Unit].Elements) {
-            // tiles will help manage the initial contents of locations on the map
-            MapTile _tile = MapTile.New(location);
-            Tiles.Add(_tile);
-        }
-    }
-
-
     private void PlaceObstacles()
     {
         int number_of_obstacles = Mathf.RoundToInt(TerrainData.heightmapResolution * (obstacle_coverage / 100f));
@@ -218,8 +201,27 @@ public class Geography : MonoBehaviour {
 
         for (int i = 0; i < number_of_obstacles; i++)
         {
-            Obstacle _obstacle = obstacle_prefab.InstantiateScaledObstacle(RandomLocation(), obstacles_parent.transform);
+            Obstacle _obstacle = obstacle_prefab.InstantiateScaledObstacle(RandomUnoccupiedTile().Location, obstacles_parent.transform);
             if (_obstacle != null) Obstacles.Add(_obstacle);
+        }
+    }
+
+
+    private void SetComponents()
+    {
+        Grids = new Dictionary<GridType, Grid>();
+        Obstacles = new List<Obstacle>();
+        Terrain = GetComponentInChildren<Terrain>();
+        TerrainData = Terrain.terrainData;
+
+        Grids[GridType.Unit] = Grid.New(new Vector3(1, 0, GetResolution() - 2), GetResolution() / unit_spacing, GetResolution() / unit_spacing, unit_spacing, false);
+        Tiles = new List<MapTile>();
+
+        foreach (var location in Grids[GridType.Unit].Elements)
+        {
+            // tiles will help manage the initial contents of locations on the map
+            MapTile _tile = MapTile.New(location);
+            Tiles.Add(_tile);
         }
     }
 }

@@ -53,7 +53,7 @@ public class Stealth : MonoBehaviour {
     }
 
 
-    public bool Spotted(GameObject _spotter, int opposing_perception)
+    public bool Spotted(Actor _spotter, int opposing_perception)
     {
         if (attacking) {
             spotted = true;
