@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class DefaultMelee : MonoBehaviour
 {
-    // Inspector settings
-
     // properties
 
     public Actor Actor { get; set; }
     public Attack Attack { get; set; }
     public int AttackModifier { get; set; }
+    public float Damage { get; set; }
     public int DamageModifier { get; set; }
     public Resources Resources { get; set; }
     public Stats Stats { get; set; }
@@ -30,13 +29,14 @@ public class DefaultMelee : MonoBehaviour
     public void Strike(Actor _target)
     {
         if (_target == null) return;
-
         Target = _target;
+
         Weapon.gameObject.SetActive(true);
 
         if (Random.Range(1, 21) + AttackModifier > Conflict.ToHitBase + Target.Defend.DefenseRating) {
-            Weapon.Impact();
             ApplyDamage();
+            DisplayEffects();
+            AdjustEnergy();
         }
     }
 
@@ -44,13 +44,29 @@ public class DefaultMelee : MonoBehaviour
     // private
 
 
+    private void AdjustEnergy()
+    {
+        Resources.IncreaseEnergy(Damage * Resources.energy_potency);
+        Target.Resources.IncreaseEnergy(Damage * Target.Resources.energy_potency);
+    }
+
+
     private void ApplyDamage()
     {
         if (Target.Health != null && Target.Defend != null && Actor != null)
         {
-            float damage_inflicted = Target.Defend.DamageAfterDefenses(Random.Range(1, Weapon.damage_maximum) + DamageModifier, Weapon.damage_type);
-            Target.Health.LoseHealth(damage_inflicted, Actor);
+            Damage = Target.Defend.DamageAfterDefenses(Random.Range(1, Weapon.damage_maximum) + DamageModifier, Weapon.damage_type);
+            Target.Health.LoseHealth(Damage, Actor);
         }
+    }
+
+
+    public void DisplayEffects()
+    {
+        GameObject _impact = Instantiate(SpellEffects.Instance.physical_strike_prefab, Target.transform.position + new Vector3(1, 4f, 0), SpellEffects.Instance.physical_strike_prefab.transform.rotation);
+        _impact.transform.parent = Target.transform;
+        _impact.name = "Impact";
+        Destroy(_impact, 1f);
     }
 
 

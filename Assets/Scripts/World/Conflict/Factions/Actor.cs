@@ -74,6 +74,7 @@ public class Actor : MonoBehaviour
                 break;
             case State.InCombat:
                 // Freedom!
+                Maneuver();
                 CastOffensiveSpell();
                 break;
             case State.OccupyingRuin:
@@ -86,6 +87,7 @@ public class Actor : MonoBehaviour
             case State.UnderAttack:
                 // Freedom!
                 CastOffensiveSpell();
+                Maneuver();
                 CloseWithEnemies();
                 break;
             default:
@@ -137,15 +139,28 @@ public class Actor : MonoBehaviour
 
     private void CastOffensiveSpell()
     {
-        // TODO: add more spells than Smite...
-
-        // TODO: check range
+        // TODO: allow units to pick from their own particular spells
 
         if (!Resources.IsCaster || Enemies.Count == 0) return;
 
         Smite _smite = Resources.gameObject.GetComponent<Smite>();
-        if(_smite != null && Resources.CurrentMana >= _smite.ManaCost) {
-            _smite.Cast(Enemies[0]);
+
+        if (_smite != null && Resources.CurrentMana >= _smite.ManaCost) {
+            float lowest_health = float.MaxValue;
+            float health;
+            Actor chosen_target = null;
+
+            foreach (var enemy in Enemies) {
+                if (Vector3.Distance(enemy.transform.position, transform.position) < _smite.Range) {
+                    health = enemy.Health.CurrentHealth;
+                    if (health < lowest_health) {
+                        lowest_health = health;
+                        chosen_target = enemy;
+                    }
+                }
+            }
+
+            if (chosen_target != null) _smite.Cast(chosen_target);
         }
     }
 
@@ -280,6 +295,34 @@ public class Actor : MonoBehaviour
     private bool IsMyRole(Actor _unit)
     {
         return _unit != null && Role == _unit.Role;
+    }
+
+
+    private void Maneuver()
+    {
+        // TODO: allow units to pick from their own particular spells
+
+        if (Enemies.Count == 0) return;
+
+        FerociousClaw _claw = Resources.gameObject.GetComponent<FerociousClaw>();
+
+        if (_claw != null && Resources.CurrentEnergy >= _claw.EnergyCost) {
+            float lowest_health = float.MaxValue;
+            float health;
+            Actor chosen_target = null;
+
+            foreach (var enemy in Enemies) {
+                if (Vector3.Distance(enemy.transform.position, transform.position) < _claw.Range) {
+                    health = enemy.Health.CurrentHealth;
+                    if (health < lowest_health) {
+                        lowest_health = health;
+                        chosen_target = enemy;
+                    }
+                }
+            }
+
+            if (chosen_target != null) _claw.Cast(chosen_target);
+        }
     }
 
 

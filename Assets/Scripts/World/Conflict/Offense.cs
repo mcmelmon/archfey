@@ -34,9 +34,9 @@ public class Offense : MonoBehaviour
     {
         // must be called by Conflict instead of Start to ensure Map setup complete
 
-        int adjustment = (Faction == Conflict.Faction.Ghaddim) ? 1 : 0;
+        int adjustment = (Faction == Conflict.Faction.Ghaddim) ? 3 : 0;
 
-        for (int i = 0; i < 10 + adjustment; i++) {
+        for (int i = 0; i < 6 + adjustment; i++) {
             MapTile tile = Geography.Instance.RandomUnoccupiedTile();
             GameObject _heavy = Spawn(tile.Location);
             _heavy.AddComponent<Heavy>();

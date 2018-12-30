@@ -96,7 +96,7 @@ public class RuinControlUI : MonoBehaviour
     private IEnumerator HideUIPanels()
     {
         while (true) {
-            yield return new WaitForSeconds(Turn.action_threshold);
+            yield return new WaitForSeconds(Turn.action_threshold / 1.5f);
 
             for (int i = 0; i < ActiveUIElements.Count; i++)
             {
