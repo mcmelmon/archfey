@@ -10,14 +10,13 @@ public class Resources : MonoBehaviour
     public float energy_haste_factor;
     public float energy_pool_maximum;
     public float energy_potency;
-    public float energy_replenishment_rate;
+    public float energy_reduction_rate;
     public float mana_haste_factor;
     public float mana_pool_maximum;
     public float magic_potency;
     public float mana_replenishment_rate;
     public float amber_pool_maximum;
 
-    public Slider energy_bar;
     public Slider health_bar;
     public Slider mana_bar;
     public Transform stat_bars;
@@ -72,6 +71,27 @@ public class Resources : MonoBehaviour
     }
 
 
+    public void DecreaseEnergy(float _amount)
+    {
+        CurrentEnergy -= _amount;
+        if (CurrentEnergy < 0) CurrentEnergy = 0;
+    }
+
+
+    public void DecreaseMana(float _amount)
+    {
+        CurrentMana -= _amount;
+        if (CurrentMana < 0) CurrentMana = 0;
+    }
+
+
+    public void IncreaseEnergy(float _amount)
+    {
+        CurrentEnergy += _amount;
+        if (CurrentEnergy > energy_pool_maximum) CurrentEnergy = energy_pool_maximum;
+    }
+
+
     public void UpdateStatBars()
     {
         if (mana_bar != null)
@@ -99,36 +119,27 @@ public class Resources : MonoBehaviour
                 health_bar.gameObject.SetActive(true);
             }
         }
-
-        if (energy_bar != null)
-        {
-            energy_bar.value = CurrentEnergyPercentage();
-            if (energy_bar.value >= 1)
-            {
-                energy_bar.gameObject.SetActive(false);
-            }
-            else
-            {
-                energy_bar.gameObject.SetActive(true);
-            }
-        }
     }
 
 
     // private
 
 
-    private IEnumerator StatBarsFaceCamera()
+    private IEnumerator DegenerateEnergy()
     {
         while (true)
         {
-            Vector3 stats_position = transform.position;
-            Vector3 player_position = Player.Instance.viewport.transform.position;
+            if (CurrentEnergy > 0)  // don't check in the while condition; it will be true at first and prevent the coroutine from starting
+            {
+                CurrentEnergy -= energy_pool_maximum * energy_reduction_rate;
+                UpdateStatBars();
+            }
+            else
+            {
+                CurrentEnergy = 0;
+            }
 
-            Quaternion rotation = Quaternion.LookRotation(player_position - stats_position, Vector3.up);
-            stat_bars.rotation = rotation;
-
-            yield return null;
+            yield return new WaitForSeconds(Turn.action_threshold);
         }
     }
 
@@ -139,10 +150,20 @@ public class Resources : MonoBehaviour
             StartCoroutine(RegenerateAmber());
             StartCoroutine(RegenerateMana());
         } else {
-            StartCoroutine(RegenerateEnergy());
+            StartCoroutine(DegenerateEnergy());
             StartCoroutine(RegenerateMana());
         }
 
+    }
+
+
+    private IEnumerator ManageStatBars()
+    {
+        while (!Conflict.Victory && Actor.Health.MaximumHealth > 0)
+        {
+            UpdateStatBars();
+            yield return new WaitForSeconds(Turn.action_threshold);
+        }
     }
 
 
@@ -158,25 +179,6 @@ public class Resources : MonoBehaviour
             else 
             {
                 CurrentAmber = amber_pool_maximum;
-            }
-
-            yield return new WaitForSeconds(Turn.action_threshold);
-        }
-    }
-
-
-    private IEnumerator RegenerateEnergy()
-    {
-        while (true)
-        {
-            if (CurrentEnergy < energy_pool_maximum)  // don't check in the while condition; it will be true at first and prevent the coroutine from starting
-            {
-                CurrentEnergy += energy_pool_maximum * energy_replenishment_rate;
-                UpdateStatBars();
-            }
-            else
-            {
-                CurrentEnergy = energy_pool_maximum;
             }
 
             yield return new WaitForSeconds(Turn.action_threshold);
@@ -205,7 +207,7 @@ public class Resources : MonoBehaviour
     private void SetComponents()
     {
         Actor = GetComponentInParent<Actor>();
-        CurrentEnergy = energy_pool_maximum;
+        CurrentEnergy = 0;
         CurrentMana = mana_pool_maximum;
         CurrentAmber = 0;
         IsCaster = false;
@@ -213,12 +215,17 @@ public class Resources : MonoBehaviour
     }
 
 
-    private IEnumerator ManageStatBars()
+    private IEnumerator StatBarsFaceCamera()
     {
-        while (!Conflict.Victory && Actor.Health.MaximumHealth > 0)
+        while (true)
         {
-            UpdateStatBars();
-            yield return new WaitForSeconds(Turn.action_threshold);
+            Vector3 stats_position = transform.position;
+            Vector3 player_position = Player.Instance.viewport.transform.position;
+
+            Quaternion rotation = Quaternion.LookRotation(player_position - stats_position, Vector3.up);
+            stat_bars.rotation = rotation;
+
+            yield return null;
         }
     }
 }

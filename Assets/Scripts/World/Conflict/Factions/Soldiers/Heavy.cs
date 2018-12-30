@@ -61,6 +61,7 @@ public class Heavy : MonoBehaviour {
         } 
         else 
         {
+            Actor.Resources.gameObject.AddComponent<FerociousClaw>();
             Actor.Resources.CurrentMana = 0;
             Actor.Resources.mana_pool_maximum = 0;
         }
