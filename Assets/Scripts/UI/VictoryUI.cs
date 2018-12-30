@@ -16,9 +16,11 @@ public class VictoryUI : MonoBehaviour
 
     // properties
 
+    public float GhaddimControl { get; set; }
     public static VictoryUI Instance { get; set; }
+    public float MhoddimControl { get; set; }
 
-    
+
     // Unity
 
 
@@ -29,7 +31,9 @@ public class VictoryUI : MonoBehaviour
             Destroy(this);
             return;
         }
+        GhaddimControl = 0f;
         Instance = this;
+        MhoddimControl = 0f;
         StartCoroutine(ManageVictory());
     }
 
@@ -37,16 +41,34 @@ public class VictoryUI : MonoBehaviour
     // private
 
 
+    private float GhaddimControlPercentage()
+    {
+        return GhaddimControl / Ruins.RuinBlocks.Count;
+    }
+
+
     private IEnumerator ManageVictory()
     {
         while (!Conflict.Victory) {
+            if (Ruins.ForFaction != null) {
+                GhaddimControl = Ruins.ForFaction[Conflict.Faction.Ghaddim].Count;
+                MhoddimControl = Ruins.ForFaction[Conflict.Faction.Mhoddim].Count;
+
+                ghaddim_victory_count.value = GhaddimControlPercentage();
+                mhoddim_victory_count.value = MhoddimControlPercentage();
+            }
+
             yield return new WaitForSeconds(Turn.action_threshold);
-            ghaddim_victory_count.value = Ruins.Instance.FactionControl(Conflict.Faction.Ghaddim);
-            mhoddim_victory_count.value = Ruins.Instance.FactionControl(Conflict.Faction.Mhoddim);
         }
 
         TextMeshProUGUI faction_text = victorious_faction.GetComponent<TextMeshProUGUI>();
         faction_text.text = (Conflict.Victor == Conflict.Faction.Ghaddim) ? "Ashen" : "Nibelung";
         victor.gameObject.SetActive(true);
+    }
+
+
+    private float MhoddimControlPercentage()
+    {
+        return MhoddimControl / Ruins.RuinBlocks.Count;
     }
 }

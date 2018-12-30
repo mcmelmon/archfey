@@ -60,7 +60,6 @@ public class FountainOfHealing : MonoBehaviour
 
         TurnsActive.Remove(_target);
         Destroy(fountain);
-        StopCoroutine(OverTime(_target));
     }
 
 
