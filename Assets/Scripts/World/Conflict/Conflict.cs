@@ -84,30 +84,42 @@ public class Conflict : MonoBehaviour
 
     private IEnumerator CheckForVictory()
     {
-        while (!Victory && Ruins.Instance != null && VictoryThreshold > 0) {
-            if (Ruins.Instance.FactionControl(Faction.Ghaddim) > VictoryThreshold) {
-                if (VictoryContender == Faction.Ghaddim) {
-                    current_tick++;
-                    if (current_tick >= victory_ticks) {
-                        Victory = true;
-                        Victor = Faction.Ghaddim;
-                    }
-                } else {
-                    current_tick = 0;
-                }
-            } else if (Ruins.Instance.FactionControl(Faction.Mhoddim) > VictoryThreshold) {
-                if (VictoryContender == Faction.Mhoddim)
+        while (true) {
+            if (!Victory && Ruins.Instance != null && VictoryThreshold > 0)  // don't put test in while or enumerator never starts up
+            {
+                if (Ruins.ForFaction[Faction.Ghaddim].Count >= VictoryThreshold)
                 {
-                    current_tick++;
-                    if (current_tick >= victory_ticks)
+                    if (VictoryContender == Faction.Ghaddim)
                     {
-                        Victory = true;
-                        Victor = Faction.Mhoddim;
+                        current_tick++;
+                        if (current_tick >= victory_ticks)
+                        {
+                            Victory = true;
+                            Victor = Faction.Ghaddim;
+                        }
+                    }
+                    else
+                    {
+                        current_tick = 0;
+                        VictoryContender = Faction.Ghaddim;
                     }
                 }
-                else
+                else if (Ruins.ForFaction[Faction.Mhoddim].Count >= VictoryThreshold)
                 {
-                    current_tick = 0;
+                    if (VictoryContender == Faction.Mhoddim)
+                    {
+                        current_tick++;
+                        if (current_tick >= victory_ticks)
+                        {
+                            Victory = true;
+                            Victor = Faction.Mhoddim;
+                        }
+                    }
+                    else
+                    {
+                        current_tick = 0;
+                        VictoryContender = Faction.Mhoddim;
+                    }
                 }
             }
             yield return new WaitForSeconds(Turn.action_threshold);
