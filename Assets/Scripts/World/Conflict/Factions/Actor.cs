@@ -25,7 +25,7 @@ public class Actor : MonoBehaviour
     public Movement Movement { get; set; }
     public Resources Resources { get; set; }
     public Conflict.Role Role { get; set; }
-    public RuinControlPoint RuinControlPoint { get; set; }
+    public ObjectiveControlPoint RuinControlPoint { get; set; }
     public int RuinControlRating { get; set; }
     public Senses Senses { get; set; }
     public Stealth Stealth { get; set; }
@@ -213,7 +213,7 @@ public class Actor : MonoBehaviour
 
         // TODO: if we were are the Occupier of our RuinControlPoint, be sure to return to it after combat
 
-        RuinControlPoint ruin_control_point = Ruins.Instance.GetNearestUnoccupiedControlPoint(gameObject);
+        ObjectiveControlPoint ruin_control_point = Objectives.Instance.GetNearestUnoccupiedControlPoint(gameObject);
         if (ruin_control_point != null && ruin_control_point != RuinControlPoint) {
             RuinControlPoint = ruin_control_point;
             Movement.SetRoute(Route.Linear(transform.position, ruin_control_point.transform.position, ReachedControlPoint));

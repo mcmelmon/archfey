@@ -43,16 +43,16 @@ public class VictoryUI : MonoBehaviour
 
     private float GhaddimControlPercentage()
     {
-        return GhaddimControl / Ruins.RuinBlocks.Count;
+        return GhaddimControl / Objectives.AllObjectives.Count;
     }
 
 
     private IEnumerator ManageVictory()
     {
         while (!Conflict.Victory) {
-            if (Ruins.ForFaction != null) {
-                GhaddimControl = Ruins.ForFaction[Conflict.Faction.Ghaddim].Count;
-                MhoddimControl = Ruins.ForFaction[Conflict.Faction.Mhoddim].Count;
+            if (Objectives.HeldByFaction != null) {
+                GhaddimControl = Objectives.HeldByFaction[Conflict.Faction.Ghaddim].Count;
+                MhoddimControl = Objectives.HeldByFaction[Conflict.Faction.Mhoddim].Count;
 
                 ghaddim_victory_count.value = GhaddimControlPercentage();
                 mhoddim_victory_count.value = MhoddimControlPercentage();
@@ -69,6 +69,6 @@ public class VictoryUI : MonoBehaviour
 
     private float MhoddimControlPercentage()
     {
-        return MhoddimControl / Ruins.RuinBlocks.Count;
+        return MhoddimControl / Objectives.AllObjectives.Count;
     }
 }

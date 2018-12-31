@@ -36,6 +36,6 @@ public class Civilization : MonoBehaviour {
 
     private void LayRuins()
     {
-        Ruins.Instance.ErectRuins();
+        Objectives.Instance.ErectRuins();
     }
 }

@@ -11,7 +11,7 @@ public class Scout : MonoBehaviour {
     public float PerceptionRange { get; set; }
     public int PerceptionRating { get; set; }
     public float Speed { get; set; }
-    public List<Ruin> SpottedRuins { get; set; }
+    public List<Objective> SpottedRuins { get; set; }
     public int StealthPersistence { get; set; }
     public int StealthRating { get; set; }
 

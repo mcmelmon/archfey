@@ -17,7 +17,7 @@ public class RuinControlUI : MonoBehaviour
 
     public static List<GameObject> ActiveUIElements { get; set; }
     public static RuinControlUI Instance { get; set; }
-    public Ruin MostRecentFlip { get; set; }
+    public Objective MostRecentFlip { get; set; }
 
 
     // Unity
@@ -47,13 +47,13 @@ public class RuinControlUI : MonoBehaviour
             switch (new_faction)
             {
                 case Conflict.Faction.Ghaddim:
-                    int ghaddim_count = Ruins.ForFaction[Conflict.Faction.Ghaddim].Count;
+                    int ghaddim_count = Objectives.HeldByFaction[Conflict.Faction.Ghaddim].Count;
                     faction_text.text = "Ashen";
                     ruin_captured.gameObject.SetActive(true);
                     ActiveUIElements.Add(ruin_captured.gameObject);
                     break;
                 case Conflict.Faction.Mhoddim:
-                    int mhoddim_count = Ruins.ForFaction[Conflict.Faction.Mhoddim].Count;
+                    int mhoddim_count = Objectives.HeldByFaction[Conflict.Faction.Mhoddim].Count;
                     faction_text.text = "Nibelung";
                     ruin_captured.gameObject.SetActive(true);
                     ActiveUIElements.Add(ruin_captured.gameObject);
@@ -64,13 +64,13 @@ public class RuinControlUI : MonoBehaviour
 
             switch (previous_faction) {
                 case Conflict.Faction.Ghaddim:
-                    int ghaddim_count = Ruins.ForFaction[Conflict.Faction.Ghaddim].Count;
+                    int ghaddim_count = Objectives.HeldByFaction[Conflict.Faction.Ghaddim].Count;
                     faction_text.text = "Ashen";
                     ruin_lost.gameObject.SetActive(true);
                     ActiveUIElements.Add(ruin_lost.gameObject);
                     break;
                 case Conflict.Faction.Mhoddim:
-                    int mhoddim_count = Ruins.ForFaction[Conflict.Faction.Mhoddim].Count;
+                    int mhoddim_count = Objectives.HeldByFaction[Conflict.Faction.Mhoddim].Count;
                     faction_text.text = "Nibelung";
                     ruin_lost.gameObject.SetActive(true);
                     ActiveUIElements.Add(ruin_lost.gameObject);

@@ -85,9 +85,9 @@ public class Conflict : MonoBehaviour
     private IEnumerator CheckForVictory()
     {
         while (true) {
-            if (!Victory && Ruins.Instance != null && VictoryThreshold > 0)  // don't put test in while or enumerator never starts up
+            if (!Victory && Objectives.Instance != null && VictoryThreshold > 0)  // don't put test in while or enumerator never starts up
             {
-                if (Ruins.ForFaction[Faction.Ghaddim].Count >= VictoryThreshold)
+                if (Objectives.HeldByFaction[Faction.Ghaddim].Count >= VictoryThreshold)
                 {
                     if (VictoryContender == Faction.Ghaddim)
                     {
@@ -104,7 +104,7 @@ public class Conflict : MonoBehaviour
                         VictoryContender = Faction.Ghaddim;
                     }
                 }
-                else if (Ruins.ForFaction[Faction.Mhoddim].Count >= VictoryThreshold)
+                else if (Objectives.HeldByFaction[Faction.Mhoddim].Count >= VictoryThreshold)
                 {
                     if (VictoryContender == Faction.Mhoddim)
                     {

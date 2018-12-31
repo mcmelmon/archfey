@@ -3,34 +3,36 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Ruin : MonoBehaviour
+public class Objective : MonoBehaviour
 {
     // Inspector settings
-    public RuinControlPoint control_point_prefab;
+    public List<ObjectiveControlPoint> control_points;
     public Material ghaddim_skin;
     public Material mhoddim_skin;
     public Material unclaimed_skin;
+    public List<Renderer> renderers;
+
 
     // properties
 
     public Conflict.Faction Control { get; set; }
     public bool Controlled { get; set; }
-    public List<RuinControlPoint> ControlPoints { get; set; }
-    public static float MinimumRuinSpacing { get; set; }
+    public static float MinimumSpacing { get; set; }
     public GameObject NearestActor { get; set; }
 
 
     // static
 
 
-    public static Ruin InstantiateRuin(Ruin prefab, Vector3 point, Ruins _ruins)
+    public static Objective Create(Objective prefab, Vector3 point, Objectives _objectives)
     {
-        Ruin _ruin = Instantiate(prefab, point, _ruins.transform.rotation, _ruins.transform);
-        _ruin.transform.localScale += new Vector3(4, 16, 4);
-        _ruin.transform.position += new Vector3(0, _ruin.transform.localScale.y / 2, 0);
-        _ruin.SetComponents();
+        Vector3 random_facing = new Vector3(0, Random.Range(0, 7) * 30, 0);
+        Objective _objective = Instantiate(prefab, point, _objectives.transform.rotation, _objectives.transform);
+        _objective.transform.position += new Vector3(0, Geography.Terrain.SampleHeight(point), 0);
+        _objective.transform.rotation = Quaternion.Euler(random_facing);
+        _objective.SetComponents();
 
-        return _ruin;
+        return _objective;
     }
 
     // public
@@ -63,9 +65,8 @@ public class Ruin : MonoBehaviour
             Conflict.Faction new_faction = Conflict.Faction.None;
             Conflict.Faction previous_faction = Control;
 
-            foreach (var control_point in ControlPoints) {
-                RuinControlPoint _point = control_point.GetComponent<RuinControlPoint>();
-                Conflict.Faction point_faction = _point.Faction;
+            foreach (var control_point in control_points) {
+                Conflict.Faction point_faction = control_point.Faction;
 
                 if (new_faction == Conflict.Faction.None)
                     // We have just entered the loop
@@ -91,24 +92,8 @@ public class Ruin : MonoBehaviour
     {
         Control = Conflict.Faction.None;
         Controlled = false;
-        ControlPoints = new List<RuinControlPoint>();
-        MinimumRuinSpacing = 20f;
-        SetControlPoints();
+        MinimumSpacing = 20f;
         StartCoroutine(CheckControl());
-    }
-
-
-    private void SetControlPoints()
-    {
-        Circle _center = Circle.CreateCircle(new Vector3 (transform.position.x, 0, transform.position.z), 10f, 3);
-
-        foreach (var vertex in _center.vertices) {
-            RuinControlPoint control_point = Instantiate(control_point_prefab, vertex + new Vector3(0,1,0), transform.rotation);
-            control_point.Ruin = this;
-            control_point.transform.parent = transform; // using the Ruin transform scales the point out
-            ControlPoints.Add(control_point);
-            Ruins.RuinControlPoints.Add(control_point);
-        }
     }
 
 
@@ -119,17 +104,17 @@ public class Ruin : MonoBehaviour
 
         switch (Control) {
             case Conflict.Faction.Ghaddim:
-                GetComponent<Renderer>().material = ghaddim_skin;
+                GetComponentInChildren<Renderer>().material = ghaddim_skin;
                 break;
             case Conflict.Faction.Mhoddim:
-                GetComponent<Renderer>().material = mhoddim_skin;
+                GetComponentInChildren<Renderer>().material = mhoddim_skin;
                 break;
             case Conflict.Faction.None:
-                GetComponent<Renderer>().material = unclaimed_skin;
+                GetComponentInChildren<Renderer>().material = unclaimed_skin;
                 break;
         }
 
-        Ruins.Instance.AccountForControl(new_faction, previous_faction, this);
+        Objectives.Instance.AccountForControl(new_faction, previous_faction, this);
         RuinControlUI.Instance.ChangeInControl(Control, previous_faction);
         RuinControlUI.Instance.MostRecentFlip = this;
     }

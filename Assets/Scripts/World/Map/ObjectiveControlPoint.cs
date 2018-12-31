@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RuinControlPoint : MonoBehaviour
+public class ObjectiveControlPoint : MonoBehaviour
 {
     // Inspector settings
 
@@ -18,9 +18,9 @@ public class RuinControlPoint : MonoBehaviour
     public GameObject Marker { get; set; }
     public float MaximumResistancePoints { get; set; }
     public Actor NearestActor { get; set; }
+    public Objective Objective { get; set; }
     public bool Occupied { get; set; }
     public Actor Occupier { get; set; }
-    public Ruin Ruin { get; set; }
 
 
     // Unity
@@ -91,7 +91,9 @@ public class RuinControlPoint : MonoBehaviour
             Occupier = NearestActor;
             Contender = null;
             Faction = NearestActor.GetComponent<Actor>().Faction;
-            GetComponent<Renderer>().material = (Faction == Conflict.Faction.Ghaddim) ? Ruin.ghaddim_skin : Ruin.mhoddim_skin;
+            foreach (var rend in Objective.renderers) {
+                rend.material = (Faction == Conflict.Faction.Ghaddim) ? Objective.ghaddim_skin : Objective.mhoddim_skin;
+            }
         }
     }
 
@@ -179,7 +181,9 @@ public class RuinControlPoint : MonoBehaviour
             if (Occupier != null) Occupier.GetComponent<Actor>().RuinControlPoint = null;
             Occupier = null;
             Faction = Conflict.Faction.None;
-            GetComponent<Renderer>().material = Ruin.unclaimed_skin;
+            foreach (var rend in Objective.renderers) {
+                rend.material = Objective.unclaimed_skin;
+            }
         }
     }
 
@@ -198,6 +202,7 @@ public class RuinControlPoint : MonoBehaviour
         ControlResistanceRating = Random.Range(1, 6);
         CurrentResistancePoints = MaximumResistancePoints = 100 + Random.Range(0, 8);
         Faction = Conflict.Faction.None;
+        Objective = GetComponentInParent<Objective>();
         Occupied = false;
     }
 

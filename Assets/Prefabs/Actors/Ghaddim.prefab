@@ -67,7 +67,7 @@ Transform:
   m_GameObject: {fileID: 1837594824673670}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 4, z: 0}
-  m_LocalScale: {x: 1.5, y: 2, z: 1.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 623115363425781869}
   - {fileID: 9051610363502694933}
@@ -889,7 +889,6 @@ MonoBehaviour:
   magic_potency: 1
   mana_replenishment_rate: 0.01
   amber_pool_maximum: 0
-  energy_bar: {fileID: 0}
   health_bar: {fileID: 4111718238303526329}
   mana_bar: {fileID: 4257612374217616270}
   stat_bars: {fileID: 9051610363502694933}

@@ -109,7 +109,7 @@ public class Geography : MonoBehaviour {
     {
         // Obstacles cause unit placement trouble.  
         // TODO: redo this by modifying the terrain itself
-        PlaceObstacles();
+        //PlaceObstacles();
     }
 
 

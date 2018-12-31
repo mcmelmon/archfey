@@ -498,7 +498,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 264195861}
-  m_LocalRotation: {x: -0.06404094, y: -0.13513651, z: -0.67605776, w: 0.7215142}
+  m_LocalRotation: {x: -0.06239482, y: -0.13934945, z: -0.683168, w: 0.714122}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -916,7 +916,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 465733991}
-  m_LocalRotation: {x: 0.23623894, y: -0.011305624, z: 0.0027488258, w: 0.9716253}
+  m_LocalRotation: {x: 0.23624323, y: -0.009653702, z: 0.0023471804, w: 0.9716432}
   m_LocalPosition: {x: 200, y: 29, z: 185}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2393,7 +2393,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 829675727}
-  m_LocalRotation: {x: -0.00000004470349, y: 0.00000042747712, z: 0.36742228, w: 0.93005425}
+  m_LocalRotation: {x: -0, y: 0.0000000027939677, z: 0.36595595, w: 0.93063223}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2897,7 +2897,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963679513}
-  m_LocalRotation: {x: -0.12748778, y: -0.0067194737, z: -0.7185716, w: 0.6836349}
+  m_LocalRotation: {x: -0.1277803, y: -0.007807897, z: -0.7168805, w: 0.685342}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -4122,7 +4122,7 @@ GameObject:
   - component: {fileID: 1345618518}
   - component: {fileID: 1345618517}
   m_Layer: 0
-  m_Name: Ruins
+  m_Name: Obectives
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4141,7 +4141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ac84ef2e5a054d9c95515d47377594e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ruin_prefab: {fileID: 114188019553596920, guid: 1e23d15d78b024e7a944e59d822aab57,
+  objective_prefab: {fileID: 6256880030591770806, guid: 1caaaea5bd3ae4501affa8379391bf10,
     type: 3}
 --- !u!4 &1345618518
 Transform:
