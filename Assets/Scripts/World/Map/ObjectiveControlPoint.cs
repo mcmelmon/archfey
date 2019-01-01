@@ -45,7 +45,7 @@ public class ObjectiveControlPoint : MonoBehaviour
         {
             if (Occupier.Ghaddim == NearestActor.Ghaddim && Occupier.Mhoddim == NearestActor.Mhoddim)
             {
-                Occupier.RuinControlPoint = null;
+                Occupier.ObjectiveControlPoint = null;
                 Occupier = NearestActor;
             }
         }
@@ -60,16 +60,16 @@ public class ObjectiveControlPoint : MonoBehaviour
     {
         while (true) {
             if (NearestActor == null) { // everyone is dead
-                ResetRuinControl();
+                ResetControl();
             } else {
                 float nearest_actor_distance = Vector3.Distance(NearestActor.transform.position, transform.position);
 
                 if (ChallengeForContention(nearest_actor_distance) || ContenderEliminated() || OccupierAbandonedControl(nearest_actor_distance)) {
-                    ReduceRuinControl();
+                    ReduceControl();
                 } else {
                     if (NewContender(nearest_actor_distance)) {
                         Contender = NearestActor;
-                        BoostRuinControl();
+                        BoostControl();
                     }
                 }
             }
@@ -80,11 +80,11 @@ public class ObjectiveControlPoint : MonoBehaviour
     }
 
 
-    private void BoostRuinControl()
+    private void BoostControl()
     {
         if (CurrentResistancePoints <= 0) return;
 
-        CurrentResistancePoints -= Mathf.Clamp((Contender.RuinControlRating - ControlResistanceRating), 0, Contender.RuinControlRating);
+        CurrentResistancePoints -= Mathf.Clamp((Contender.ObjectiveControlRating - ControlResistanceRating), 0, Contender.ObjectiveControlRating);
         if (CurrentResistancePoints <= 0) {
             CurrentResistancePoints = 0;
             Occupied = true;
@@ -170,7 +170,7 @@ public class ObjectiveControlPoint : MonoBehaviour
     }
 
 
-    private void ReduceRuinControl()
+    private void ReduceControl()
     {
         if (CurrentResistancePoints >= MaximumResistancePoints) return;
 
@@ -178,7 +178,7 @@ public class ObjectiveControlPoint : MonoBehaviour
         if (CurrentResistancePoints >= MaximumResistancePoints) {
             CurrentResistancePoints = MaximumResistancePoints;
             Occupied = false;
-            if (Occupier != null) Occupier.GetComponent<Actor>().RuinControlPoint = null;
+            if (Occupier != null) Occupier.GetComponent<Actor>().ObjectiveControlPoint = null;
             Occupier = null;
             Faction = Conflict.Faction.None;
             foreach (var rend in Objective.renderers) {
@@ -188,7 +188,7 @@ public class ObjectiveControlPoint : MonoBehaviour
     }
 
 
-    private void ResetRuinControl()
+    private void ResetControl()
     {
         Occupied = false;
         Occupier = null;

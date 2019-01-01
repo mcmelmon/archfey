@@ -7,6 +7,7 @@ public class Senses : MonoBehaviour {
     // properties
 
     public Actor Actor { get; set; }
+    public float Darkvision { get; set; }
     public int PerceptionRating { get; set; }
     public float PerceptionRange { get; set; }
     public List<Actor> Sightings { get; set; }
@@ -19,16 +20,6 @@ public class Senses : MonoBehaviour {
     {
         SetComponents();
     }
-
-
-    //private void OnDrawGizmos()
-    //{
-    //    Gizmos.color = Color.green;
-    //    foreach (var sighting in Sightings) {
-    //        if (sighting == null) continue;
-    //        Gizmos.DrawRay(transform.position, (sighting.transform.position - transform.position));
-    //    }
-    //}
 
 
     // public

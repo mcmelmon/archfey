@@ -33,14 +33,26 @@ public class Defense : MonoBehaviour
     {
         // must be called by Conflict instead of Start to ensure Map setup complete
 
-        // spawn the defense randomly, give them time to claim some ruins, then spawn offense
-        int adjustment = (Faction == Conflict.Faction.Ghaddim) ? 3 : 0;
+        foreach (var objective in Objectives.AllObjectives) {
+            for (int i = 0; i < 6; i++) {
+                Circle spawn_circle = Circle.New(objective.transform.position, 15);
 
-        for (int i = 0; i < 6 + adjustment; i++) {
-            MapTile tile = Geography.Instance.RandomUnoccupiedTile();
-            GameObject _heavy = Spawn(tile.Location);
-            _heavy.AddComponent<Heavy>();
-            tile.Occupier = _heavy.GetComponent<Actor>();
+                GameObject commoner = Spawn(spawn_circle.RandomContainedPoint());
+                commoner.AddComponent<Commoner>();
+            }
+        }
+    }
+
+
+    public void Reinforce()
+    {
+        foreach (var objective in Objectives.AllObjectives) {
+            for (int i = 0; i < 1; i++) {
+                Circle spawn_circle = Circle.New(objective.transform.position, 15);
+
+                GameObject commoner = Spawn(spawn_circle.RandomContainedPoint());
+                commoner.AddComponent<Commoner>();
+            }
         }
     }
 
@@ -56,7 +68,7 @@ public class Defense : MonoBehaviour
 
     private GameObject Spawn(Vector3 _point)
     {
-        GameObject _soldier = (Faction == Conflict.Faction.Ghaddim) ? Ghaddim.SpawnUnit(_point) : Mhoddim.SpawnUnit(_point);
+        GameObject _soldier = (Faction == Conflict.Faction.Ghaddim) ? Ghaddim.SpawnUnit(_point) : Mhoddim.SpawnUnit(_point);  // Defense will "almost always" be Mhoddim...
         _soldier.transform.parent = transform;
         _soldier.GetComponent<Actor>().Role = Conflict.Role.Defense;
         Units.Add(_soldier);

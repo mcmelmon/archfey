@@ -262,7 +262,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5365660075957692451}
   m_FillRect: {fileID: 4474963916860075105}
   m_HandleRect: {fileID: 937181362094535366}
-  m_Direction: 0
+  m_Direction: 1
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
@@ -410,7 +410,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8076974898579003888}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4, y: 0, z: 2}
+  m_LocalPosition: {x: 4, y: 0.05, z: 2}
   m_LocalScale: {x: 1, y: 0.01, z: 1}
   m_Children:
   - {fileID: 156196144638743986}
@@ -489,7 +489,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   control_indicator: {fileID: 541501656948682100}
-  objective: {fileID: 0}
 --- !u!1 &8846047106382623107
 GameObject:
   m_ObjectHideFlags: 0

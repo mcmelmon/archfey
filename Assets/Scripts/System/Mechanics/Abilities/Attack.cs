@@ -20,7 +20,6 @@ public class Attack : MonoBehaviour
     public Weapon EquippedMeleeWeapon { get; set; }
     public Weapon EquippedRangedWeapon { get; set; }
     public Stats Stats { get; set; }
-    public Dictionary<Weapon.DamageType, int> SuperiorWeapons { get; set; }
 
 
     // Unity
@@ -85,7 +84,7 @@ public class Attack : MonoBehaviour
     {
         if (EquippedMeleeWeapon == null) {
             foreach (var weapon in available_weapons) {
-                if (weapon.range == Weapon.Range.Melee) {
+                if (weapon.range == 0) {
                     EquippedMeleeWeapon = Instantiate(weapon, transform.Find("MeleeAttackOrigin").transform.position, transform.rotation);
                     EquippedMeleeWeapon.transform.position += 0.2f * Vector3.forward;
                     EquippedMeleeWeapon.transform.parent = transform;
@@ -115,15 +114,15 @@ public class Attack : MonoBehaviour
 
     private float LongestMeleeRange()
     {
-        float longest_range = float.MinValue;
-
         foreach (var weapon in AvailableWeapons()) {
-            if (weapon.melee_attack_range > longest_range) {
-                longest_range = weapon.melee_attack_range;
+            if (weapon.range == 0 && weapon.has_reach) {
+                return 2f;
+            } else if (weapon.range == 0) {
+                return 1f;
             }
         }
 
-        return longest_range;
+        return 0f;
     }
 
 
@@ -132,8 +131,8 @@ public class Attack : MonoBehaviour
         float longest_range = float.MinValue;
 
         foreach (var weapon in AvailableWeapons()) {
-            if (weapon.ranged_attack_range > longest_range) {
-                longest_range = weapon.ranged_attack_range;
+            if (weapon.range > longest_range) {
+                longest_range = weapon.range;
             }
         }
 
@@ -161,10 +160,9 @@ public class Attack : MonoBehaviour
         CurrentMeleeTargets = new List<Actor>();
         CurrentRangedTargets = new List<Actor>();
         Stats = GetComponentInParent<Stats>();
-        SuperiorWeapons = (Actor.Faction == Conflict.Faction.Ghaddim) ? Ghaddim.SuperiorWeapons : Mhoddim.SuperiorWeapons;
 
-        AttackRating = Stats.AgilityRating + Stats.IntellectRating + Stats.StrengthRating + Stats.WillRating;
         EquipMeleeWeapon();
+        AttackRating = ((EquippedMeleeWeapon.is_light) ? Stats.DexterityProficiency : Stats.StrengthProficiency) + EquippedMeleeWeapon.attack_bonus + Actor.SuperiorWeapons[EquippedMeleeWeapon.damage_type];
     }
 
 

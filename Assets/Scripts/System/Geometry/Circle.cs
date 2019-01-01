@@ -5,26 +5,29 @@ using UnityEngine;
 
 public class Circle {
 
-    public Vector3 center;
-    public List<Vector3> vertices = new List<Vector3>();
-    public int vertex_count;
-    public float radius;
-    public float theta;
-    public float delta_theta;
+    // properties
+
+    public Vector3 Center { get; set; }
+    public float DeltaTheta { get; set; }
+    public float Radius { get; set; }
+    public float Theta { get; set; }
+    public int VertexCount { get; set; }
+    public List<Vector3> Vertices { get; set; }
 
 
     // static
 
 
-    public static Circle CreateCircle(Vector3 center, float radius, int vertices = 12, bool draw_vertices = false)
+    public static Circle New(Vector3 center, float radius, int vertices = 12, bool draw_vertices = false)
     {
         Circle _circle = new Circle
         {
-            center = center,
-            radius = radius,
-            vertex_count = vertices
-        };
-        _circle.delta_theta = (2f * Mathf.PI) / _circle.vertex_count;
+            Center = center,
+            Radius = radius,
+            VertexCount = vertices,
+            Vertices = new List<Vector3>()
+    };
+        _circle.DeltaTheta = (2f * Mathf.PI) / _circle.VertexCount;
         _circle.Draw(draw_vertices);
 
         return _circle;
@@ -36,21 +39,21 @@ public class Circle {
 
     public bool Equals(Circle other_circle)
     {
-        return center == other_circle.center && Mathf.Approximately(radius, other_circle.radius);
+        return Center == other_circle.Center && Mathf.Approximately(Radius, other_circle.Radius);
     }
 
 
     public Vector3 RandomContainedPoint()
     {
-        if (center == Vector3.zero) return Vector3.zero;
+        if (Center == Vector3.zero) return Vector3.zero;
 
         UnityEngine.Random.InitState(DateTime.Now.Millisecond);
 
         Vector3 point_3;
-        Vector2 point_2 = new Vector2(center.x, center.z);
-        Vector2 _center = new Vector2(center.x, center.z);
+        Vector2 point_2 = new Vector2(Center.x, Center.z);
+        Vector2 _center = new Vector2(Center.x, Center.z);
 
-        point_2 = _center + UnityEngine.Random.insideUnitCircle * radius;
+        point_2 = _center + UnityEngine.Random.insideUnitCircle * Radius;
         point_3 = new Vector3(point_2.x, 0, point_2.y);
         return point_3;
     }
@@ -60,7 +63,7 @@ public class Circle {
     {
         UnityEngine.Random.InitState(DateTime.Now.Millisecond);
 
-        return vertices[UnityEngine.Random.Range(0, vertices.Count)];
+        return Vertices[UnityEngine.Random.Range(0, Vertices.Count)];
     }
 
 
@@ -69,7 +72,7 @@ public class Circle {
         float shortest_distance = Mathf.Infinity;
         Vector3 nearest = Vector3.zero;
 
-        foreach (var vertex in vertices) {
+        foreach (var vertex in Vertices) {
             float distance = Vector3.Distance(vertex, point);
             if (distance < shortest_distance) {
                 shortest_distance = distance;
@@ -83,10 +86,10 @@ public class Circle {
 
     public void Redraw(Vector3 _center, float _radius, int _vertex_count = 12, bool draw_vertices = false)
     {
-        center = _center;
-        radius = _radius;
-        vertex_count = _vertex_count;
-        vertices.Clear();
+        Center = _center;
+        Radius = _radius;
+        VertexCount = _vertex_count;
+        Vertices.Clear();
         Draw(draw_vertices);
     }
 
@@ -96,16 +99,16 @@ public class Circle {
 
     private void Draw(bool draw_vertices)
     {
-        for (int i = 0; i < vertex_count; i++) {
-            Vector3 vertex = new Vector3(radius * Mathf.Cos(theta), 0f, radius * Mathf.Sin(theta));
+        for (int i = 0; i < VertexCount; i++) {
+            Vector3 vertex = new Vector3(Radius * Mathf.Cos(Theta), 0f, Radius * Mathf.Sin(Theta));
             if (draw_vertices) {
                 GameObject marker = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 marker.name = "Vertex";
-                marker.transform.position = (center + vertex);
+                marker.transform.position = (Center + vertex);
                 marker.transform.localScale = new Vector3(1, 10, 1);
             }
-            vertices.Add(center + vertex);
-            theta += delta_theta;
+            Vertices.Add(Center + vertex);
+            Theta += DeltaTheta;
         }
     }
 }

@@ -55,7 +55,7 @@ public class DefaultMelee : MonoBehaviour
     {
         if (Target.Health != null && Target.Defend != null && Actor != null)
         {
-            Damage = Target.Defend.DamageAfterDefenses(Random.Range(1, Weapon.damage_maximum) + DamageModifier, Weapon.damage_type);
+            Damage = Target.Defend.DamageAfterDefenses(Random.Range(1, Weapon.damage_die) + DamageModifier, Weapon.damage_type);
             Target.Health.LoseHealth(Damage, Actor);
         }
     }
@@ -78,7 +78,7 @@ public class DefaultMelee : MonoBehaviour
         Attack = GetComponent<Attack>();
         Weapon = Attack.EquippedMeleeWeapon;
 
-        AttackModifier = Stats.AgilityRating + Stats.StrengthRating + Attack.SuperiorWeapons[Weapon.damage_type];
-        DamageModifier = Stats.AgilityRating + Stats.StrengthRating + Attack.SuperiorWeapons[Weapon.damage_type];
+        AttackModifier = Stats.DexterityProficiency + Stats.StrengthProficiency + Actor.SuperiorWeapons[Weapon.damage_type];
+        DamageModifier = Stats.DexterityProficiency + Stats.StrengthProficiency + Actor.SuperiorWeapons[Weapon.damage_type];
     }
 }

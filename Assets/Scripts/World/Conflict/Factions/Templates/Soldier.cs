@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Soldier : MonoBehaviour {
 
-    public enum Clasification { Heavy = 0, Striker = 1, Scout = 2, Ent = 3 };
+    public enum Template { Commoner = 0, Gnoll = 1 };
 
 
     // properties

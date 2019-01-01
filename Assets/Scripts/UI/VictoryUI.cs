@@ -62,7 +62,7 @@ public class VictoryUI : MonoBehaviour
         }
 
         TextMeshProUGUI faction_text = victorious_faction.GetComponent<TextMeshProUGUI>();
-        faction_text.text = (Conflict.Victor == Conflict.Faction.Ghaddim) ? "Ashen" : "Nibelung";
+        faction_text.text = (Conflict.Victor == Conflict.Faction.Ghaddim) ? "Gnolls" : "Peasants";
         victor.gameObject.SetActive(true);
     }
 

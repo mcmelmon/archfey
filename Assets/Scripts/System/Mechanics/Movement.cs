@@ -45,8 +45,6 @@ public class Movement : MonoBehaviour {
                 GetNextObjective();
             if (ObjectiveComplete())
                 GetNewObjective();
-        } else {
-            Debug.Log("No path");
         }
     }
 
@@ -69,12 +67,34 @@ public class Movement : MonoBehaviour {
     {
         if (Route != null && accumulate) _route.AccumulateRoutes(Route);
         Route = _route;
-        Agent.SetDestination(new Vector3(Route.Current.x, 0, Route.Current.z));  // TODO: sample the height at the destination from terrain
+        StartCoroutine(FindThePath());
     }
 
 
     // private
 
+
+    private IEnumerator FindThePath()
+    {
+        int attempt = 0;
+        int max_attempts = 5;
+
+        while (attempt < max_attempts) {
+            if (Agent.isOnNavMesh) {
+                if (!Agent.hasPath) {
+                    Agent.SetDestination(new Vector3(Route.Current.x, Geography.Terrain.SampleHeight(Route.Current), Route.Current.z));
+                } else {
+                    attempt = max_attempts;
+                }
+            } else {
+                NavMesh.SamplePosition(Agent.transform.position, out NavMeshHit hit, 10.0f, NavMesh.AllAreas);
+                Agent.Warp(hit.position);
+                Debug.Log("Warp " + attempt);
+            }
+            attempt++;
+            yield return new WaitForSeconds(Turn.action_threshold);
+        }
+    }
 
     private void GetNewObjective()
     {

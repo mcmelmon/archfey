@@ -37,7 +37,7 @@ public class Route
         route.Points = new List<Vector3>();
         route.RoutesFollowed = new List<Route>();
 
-        foreach (var vertex in _circle.vertices)
+        foreach (var vertex in _circle.Vertices)
         {
             route.Points.Add(vertex);
         }

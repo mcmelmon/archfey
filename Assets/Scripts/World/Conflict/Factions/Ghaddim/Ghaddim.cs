@@ -6,7 +6,6 @@ public class Ghaddim : MonoBehaviour {
 
     // properties
 
-    public static Dictionary<Weapon.DamageType, int> SuperiorWeapons { get; set; }
     public Stats Stats { get; set; }
     public static Threat Threat { get; set; }
 
@@ -16,7 +15,7 @@ public class Ghaddim : MonoBehaviour {
 
     public static GameObject SpawnUnit(Vector3 _point)
     {
-        Ghaddim _ghaddim = Instantiate(Conflict.Instance.ghaddim_prefab, _point + new Vector3(0, 4, 0), Conflict.Instance.ghaddim_prefab.transform.rotation);
+        Ghaddim _ghaddim = Instantiate(Conflict.Instance.ghaddim_prefab, _point + new Vector3(0, 10, 0), Conflict.Instance.ghaddim_prefab.transform.rotation);  // drop from on high to avoid being inside buildings
         _ghaddim.gameObject.AddComponent<Soldier>();
 
         return _ghaddim.gameObject;
@@ -30,15 +29,6 @@ public class Ghaddim : MonoBehaviour {
     {
         Stats = GetComponent<Stats>();
         Threat = gameObject.AddComponent<Threat>();
-        SuperiorWeapons = new Dictionary<Weapon.DamageType, int>
-        {
-            [Weapon.DamageType.Arcane] = 0,
-            [Weapon.DamageType.Blunt] = 0,
-            [Weapon.DamageType.Elemental] = 0,
-            [Weapon.DamageType.Piercing] = 0,
-            [Weapon.DamageType.Poison] = 2,
-            [Weapon.DamageType.Slashing] = 0
-        };
     }
 
 
@@ -68,6 +58,7 @@ public class Ghaddim : MonoBehaviour {
         SetPrimaryStats();
         SetDefenseStats();
         SetHealthStats();
+        SetOffensiveStats();
     }
 
 
@@ -79,18 +70,10 @@ public class Ghaddim : MonoBehaviour {
         Defend defend = GetComponentInChildren<Defend>();
         if (defend == null) return;
 
-        if (GetComponent<Heavy>() != null) {
-            defend.ArmorRating = ConfigureGhaddim.armor_rating[Soldier.Clasification.Scout];
-            defend.ForceRating = ConfigureGhaddim.force_rating[Soldier.Clasification.Heavy];
-            defend.SetResistances(ConfigureGhaddim.resistances[Soldier.Clasification.Heavy]);
-        } else if (GetComponent<Scout>() != null) {
-            defend.ArmorRating = ConfigureGhaddim.armor_rating[Soldier.Clasification.Scout];
-            defend.ForceRating = ConfigureGhaddim.force_rating[Soldier.Clasification.Scout];
-            defend.SetResistances(ConfigureGhaddim.resistances[Soldier.Clasification.Scout]);
-        } else if (GetComponent<Striker>() != null) {
-            defend.ArmorRating = ConfigureGhaddim.armor_rating[Soldier.Clasification.Striker];
-            defend.ForceRating = ConfigureGhaddim.force_rating[Soldier.Clasification.Striker];
-            defend.SetResistances(ConfigureGhaddim.resistances[Soldier.Clasification.Striker]);
+        if (GetComponent<Gnoll>() != null)
+        {
+            defend.ArmorClass = ConfigureGhaddim.armor_class[Soldier.Template.Gnoll];
+            defend.SetResistances(ConfigureGhaddim.resistances[Soldier.Template.Gnoll]);
         }
     }
 
@@ -100,44 +83,32 @@ public class Ghaddim : MonoBehaviour {
         Health health = GetComponent<Health>();
         if (health == null) return;
 
-        if (GetComponent<Heavy>() != null) {
-            health.SetStartingHealth(ConfigureGhaddim.starting_health[Soldier.Clasification.Heavy]);
-            health.SetRecoveryAmount(ConfigureGhaddim.recovery_amount[Soldier.Clasification.Heavy]);
-        } else if (GetComponent<Scout>() != null) {
-            health.SetStartingHealth(ConfigureGhaddim.starting_health[Soldier.Clasification.Scout]);
-            health.SetRecoveryAmount(ConfigureGhaddim.recovery_amount[Soldier.Clasification.Scout]);
-        } else if (GetComponent<Striker>() != null) {
-            health.SetStartingHealth(ConfigureGhaddim.starting_health[Soldier.Clasification.Striker]);
-            health.SetRecoveryAmount(ConfigureGhaddim.recovery_amount[Soldier.Clasification.Striker]);
-        } 
+        if (GetComponent<Gnoll>() != null)
+        {
+            health.CurrentHitPoints = (ConfigureGhaddim.starting_health[Soldier.Template.Gnoll]);
+            health.HitDice = (ConfigureGhaddim.hit_dice[Soldier.Template.Gnoll]);
+            health.HitDiceType = (ConfigureGhaddim.hit_dice_type[Soldier.Template.Gnoll]);
+            health.MaximumHitPoints = (ConfigureGhaddim.starting_health[Soldier.Template.Gnoll]);
+        }
+    }
+
+
+    private void SetOffensiveStats()
+    {
+        if (GetComponent<Gnoll>() != null) GetComponent<Actor>().Actions = ConfigureGhaddim.actions[Soldier.Template.Gnoll];
     }
 
 
     private void SetPrimaryStats()
     {
-        if (GetComponent<Heavy>() != null)
+        if (GetComponent<Gnoll>() != null)
         {
-            Stats.AgilityRating = ConfigureGhaddim.agility_rating[Soldier.Clasification.Heavy];
-            Stats.ConstitutionRating = ConfigureGhaddim.constitution_rating[Soldier.Clasification.Heavy];
-            Stats.IntellectRating = ConfigureGhaddim.intellect_rating[Soldier.Clasification.Heavy];
-            Stats.StrengthRating = ConfigureGhaddim.strength_rating[Soldier.Clasification.Heavy];
-            Stats.WillRating = ConfigureGhaddim.will_rating[Soldier.Clasification.Heavy];
-        }
-        else if (GetComponent<Scout>() != null)
-        {
-            Stats.AgilityRating = ConfigureGhaddim.agility_rating[Soldier.Clasification.Scout];
-            Stats.ConstitutionRating = ConfigureGhaddim.constitution_rating[Soldier.Clasification.Scout];
-            Stats.IntellectRating = ConfigureGhaddim.intellect_rating[Soldier.Clasification.Scout];
-            Stats.StrengthRating = ConfigureGhaddim.strength_rating[Soldier.Clasification.Scout];
-            Stats.WillRating = ConfigureGhaddim.will_rating[Soldier.Clasification.Scout];
-        }
-        else if (GetComponent<Striker>() != null)
-        {
-            Stats.AgilityRating = ConfigureGhaddim.agility_rating[Soldier.Clasification.Striker];
-            Stats.ConstitutionRating = ConfigureGhaddim.constitution_rating[Soldier.Clasification.Striker];
-            Stats.IntellectRating = ConfigureGhaddim.intellect_rating[Soldier.Clasification.Striker];
-            Stats.StrengthRating = ConfigureGhaddim.strength_rating[Soldier.Clasification.Striker];
-            Stats.WillRating = ConfigureGhaddim.will_rating[Soldier.Clasification.Striker];
+            Stats.CharismaProficiency = ConfigureGhaddim.charisma_proficiency[Soldier.Template.Gnoll];
+            Stats.ConstitutionProficiency = ConfigureGhaddim.constituion_proficiency[Soldier.Template.Gnoll];
+            Stats.DexterityProficiency = ConfigureGhaddim.dexterity_proficiency[Soldier.Template.Gnoll];
+            Stats.IntelligenceProficiency = ConfigureGhaddim.intelligence_proficiency[Soldier.Template.Gnoll];
+            Stats.StrengthProficiency = ConfigureGhaddim.strength_proficiency[Soldier.Template.Gnoll];
+            Stats.WisdomProficiency = ConfigureGhaddim.wisdom_proficiency[Soldier.Template.Gnoll];
         }
     }
 }

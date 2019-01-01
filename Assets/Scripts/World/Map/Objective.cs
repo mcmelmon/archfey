@@ -92,7 +92,7 @@ public class Objective : MonoBehaviour
     {
         Control = Conflict.Faction.None;
         Controlled = false;
-        MinimumSpacing = 20f;
+        MinimumSpacing = 80f;
         StartCoroutine(CheckControl());
     }
 
@@ -115,7 +115,7 @@ public class Objective : MonoBehaviour
         }
 
         Objectives.Instance.AccountForControl(new_faction, previous_faction, this);
-        RuinControlUI.Instance.ChangeInControl(Control, previous_faction);
-        RuinControlUI.Instance.MostRecentFlip = this;
+        ObjectiveControlUI.Instance.ChangeInControl(Control, previous_faction);
+        ObjectiveControlUI.Instance.MostRecentFlip = this;
     }
 }

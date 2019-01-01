@@ -4,19 +4,19 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class RuinControlUI : MonoBehaviour
+public class ObjectiveControlUI : MonoBehaviour
 {
     // Inspector settings
-    public Transform ruin_captured;
-    public Transform ruin_lost;
-    public Transform ruin_captured_faction;
-    public Transform ruin_lost_faction;
+    public Transform objective_captured;
+    public Transform objective_lost;
+    public Transform objective_captured_faction;
+    public Transform objective_lost_faction;
 
 
     // properties
 
     public static List<GameObject> ActiveUIElements { get; set; }
-    public static RuinControlUI Instance { get; set; }
+    public static ObjectiveControlUI Instance { get; set; }
     public Objective MostRecentFlip { get; set; }
 
 
@@ -42,38 +42,38 @@ public class RuinControlUI : MonoBehaviour
     public void ChangeInControl(Conflict.Faction new_faction, Conflict.Faction previous_faction)
     {
         if (new_faction != Conflict.Faction.None) {
-            TextMeshProUGUI faction_text = ruin_captured_faction.GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI faction_text = objective_captured_faction.GetComponent<TextMeshProUGUI>();
 
             switch (new_faction)
             {
                 case Conflict.Faction.Ghaddim:
                     int ghaddim_count = Objectives.HeldByFaction[Conflict.Faction.Ghaddim].Count;
-                    faction_text.text = "Ashen";
-                    ruin_captured.gameObject.SetActive(true);
-                    ActiveUIElements.Add(ruin_captured.gameObject);
+                    faction_text.text = "Gnolls";
+                    objective_captured.gameObject.SetActive(true);
+                    ActiveUIElements.Add(objective_captured.gameObject);
                     break;
                 case Conflict.Faction.Mhoddim:
                     int mhoddim_count = Objectives.HeldByFaction[Conflict.Faction.Mhoddim].Count;
-                    faction_text.text = "Nibelung";
-                    ruin_captured.gameObject.SetActive(true);
-                    ActiveUIElements.Add(ruin_captured.gameObject);
+                    faction_text.text = "Peasants";
+                    objective_captured.gameObject.SetActive(true);
+                    ActiveUIElements.Add(objective_captured.gameObject);
                     break;
             }
         } else {
-            TextMeshProUGUI faction_text = ruin_lost_faction.GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI faction_text = objective_lost_faction.GetComponent<TextMeshProUGUI>();
 
             switch (previous_faction) {
                 case Conflict.Faction.Ghaddim:
                     int ghaddim_count = Objectives.HeldByFaction[Conflict.Faction.Ghaddim].Count;
-                    faction_text.text = "Ashen";
-                    ruin_lost.gameObject.SetActive(true);
-                    ActiveUIElements.Add(ruin_lost.gameObject);
+                    faction_text.text = "Gnolls";
+                    objective_lost.gameObject.SetActive(true);
+                    ActiveUIElements.Add(objective_lost.gameObject);
                     break;
                 case Conflict.Faction.Mhoddim:
                     int mhoddim_count = Objectives.HeldByFaction[Conflict.Faction.Mhoddim].Count;
-                    faction_text.text = "Nibelung";
-                    ruin_lost.gameObject.SetActive(true);
-                    ActiveUIElements.Add(ruin_lost.gameObject);
+                    faction_text.text = "Peasants";
+                    objective_lost.gameObject.SetActive(true);
+                    ActiveUIElements.Add(objective_lost.gameObject);
                     break;
                 case Conflict.Faction.None:
                     break;

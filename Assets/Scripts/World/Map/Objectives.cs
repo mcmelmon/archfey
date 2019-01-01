@@ -50,15 +50,15 @@ public class Objectives : MonoBehaviour {
     }
 
 
-    public ObjectiveControlPoint GetNearestUnoccupiedControlPoint(GameObject _unit)
+    public ObjectiveControlPoint GetNearestUnoccupiedControlPoint(Actor _actor)
     {
         float distance;
         float shortest_distance = float.MaxValue;
         ObjectiveControlPoint nearest_control_point = null;
 
         foreach (var control_point in ObjectiveControlPoints) {
-            if (!control_point.Occupied) {
-                distance = Vector3.Distance(control_point.transform.position, _unit.transform.position);
+            if (control_point.Faction != _actor.Faction) {  // if unoccupied, will have Faction of None
+                distance = Vector3.Distance(control_point.transform.position, _actor.transform.position);
                 if (distance < shortest_distance) {
                     nearest_control_point = control_point;
                     shortest_distance = distance;
@@ -97,7 +97,7 @@ public class Objectives : MonoBehaviour {
 
         UnityEngine.Random.InitState(DateTime.Now.Millisecond);
         int objective_count = 5;
-        int buffer = 40;
+        int buffer = 60;
 
         foreach (var tile in Geography.Instance.RandomTiles(objective_count)) {
             if (tile.Location.x < buffer || tile.Location.x > Geography.Instance.GetResolution() - buffer || tile.Location.z < buffer || tile.Location.z > Geography.Instance.GetResolution() - buffer) continue;
