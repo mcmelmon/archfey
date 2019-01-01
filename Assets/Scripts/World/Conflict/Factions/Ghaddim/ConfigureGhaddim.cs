@@ -4,6 +4,8 @@ using UnityEngine;
 
 public static class ConfigureGhaddim 
 {
+    // TODO: refactor into single class
+
     // Primary attributes
     public static Dictionary<Soldier.Template, int> charisma_proficiency = new Dictionary<Soldier.Template, int>();
     public static Dictionary<Soldier.Template, int> constituion_proficiency = new Dictionary<Soldier.Template, int>();
@@ -11,6 +13,15 @@ public static class ConfigureGhaddim
     public static Dictionary<Soldier.Template, int> intelligence_proficiency = new Dictionary<Soldier.Template, int>();
     public static Dictionary<Soldier.Template, int> strength_proficiency = new Dictionary<Soldier.Template, int>();
     public static Dictionary<Soldier.Template, int> wisdom_proficiency = new Dictionary<Soldier.Template, int>();
+
+    // Innate attributes
+    public static Dictionary<Soldier.Template, int> current_mana = new Dictionary<Soldier.Template, int>();
+    public static Dictionary<Soldier.Template, float> darkvision_range = new Dictionary<Soldier.Template, float>();
+    public static Dictionary<Soldier.Template, bool> is_caster = new Dictionary<Soldier.Template, bool>();
+    public static Dictionary<Soldier.Template, int> mana_pool_maximum = new Dictionary<Soldier.Template, int>();
+    public static Dictionary<Soldier.Template, float> perception_range = new Dictionary<Soldier.Template, float>();
+    public static Dictionary<Soldier.Template, float> speed = new Dictionary<Soldier.Template, float>();
+
 
     // Defense attributes
     public static Dictionary<Soldier.Template, int> armor_class = new Dictionary<Soldier.Template, int>();
@@ -23,6 +34,8 @@ public static class ConfigureGhaddim
 
     // Offense attributes
     public static Dictionary<Soldier.Template, int> actions = new Dictionary<Soldier.Template, int>();
+    public static Dictionary<Soldier.Template, int> objective_control_rating = new Dictionary<Soldier.Template, int>();
+    public static Dictionary<Soldier.Template, List<Weapon>> available_weapons = new Dictionary<Soldier.Template, List<Weapon>>();
 
 
     public static void GenerateStats()
@@ -45,6 +58,14 @@ public static class ConfigureGhaddim
         strength_proficiency[Soldier.Template.Gnoll] = 2;
         wisdom_proficiency[Soldier.Template.Gnoll] = 0;
 
+        // innate
+        current_mana[Soldier.Template.Gnoll] = 0;
+        darkvision_range[Soldier.Template.Gnoll] = 10f;
+        is_caster[Soldier.Template.Gnoll] = false;
+        mana_pool_maximum[Soldier.Template.Gnoll] = 0;
+        perception_range[Soldier.Template.Gnoll] = 10f;
+        speed[Soldier.Template.Gnoll] = 1.5f;
+
         // defense
         armor_class[Soldier.Template.Gnoll] = 15;
 
@@ -55,6 +76,14 @@ public static class ConfigureGhaddim
 
         // offense
         actions[Soldier.Template.Gnoll] = 1;
+        objective_control_rating[Soldier.Template.Gnoll] = 5;
+
+        List<Weapon> weapon_list = new List<Weapon>()
+        {
+            Weapons.Instance.longbow_prefab,
+            Weapons.Instance.spear_prefab
+        };
+        available_weapons[Soldier.Template.Gnoll] = weapon_list;
     }
 
 

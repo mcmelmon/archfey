@@ -8,7 +8,6 @@ public class Senses : MonoBehaviour {
 
     public Actor Actor { get; set; }
     public float Darkvision { get; set; }
-    public int PerceptionRating { get; set; }
     public float PerceptionRange { get; set; }
     public List<Actor> Sightings { get; set; }
 
@@ -43,7 +42,7 @@ public class Senses : MonoBehaviour {
             if (_sighting != null && _sighting != GetComponent<Actor>()) {  // don't sight ourselves
                 Stealth sighting_stealth = _sighting.GetComponent<Stealth>();
 
-                if (sighting_stealth == null || sighting_stealth.Spotted(Actor, PerceptionRating) && !Sightings.Contains(_sighting)) {
+                if (sighting_stealth == null || sighting_stealth.Spotted(Actor) && !Sightings.Contains(_sighting)) {
                     Sightings.Add(_sighting);
                 }
             }

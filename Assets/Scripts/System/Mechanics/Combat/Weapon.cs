@@ -26,6 +26,7 @@ public class Weapon : MonoBehaviour {
     public int damage_bonus;
     public int damage_die;
     public DamageType damage_type;
+    public int expected_damage;
     public bool has_reach;
     public bool is_finese;
     public bool is_heavy;
@@ -36,6 +37,7 @@ public class Weapon : MonoBehaviour {
     public bool is_thrown;
     public bool is_two_handed;
     public bool is_versatile;
+    public GameObject projectile_prefab;
     public int range;
 
 }

@@ -12,7 +12,6 @@ public class DefaultMelee : MonoBehaviour
     public float Damage { get; set; }
     public int DamageModifier { get; set; }
     public Resources Resources { get; set; }
-    public Stats Stats { get; set; }
     public Actor Target { get; set; }
     public Weapon Weapon { get; set; }
 
@@ -30,10 +29,11 @@ public class DefaultMelee : MonoBehaviour
     {
         if (_target == null) return;
         Target = _target;
-
+        Weapon = Attack.EquippedMeleeWeapon;
         Weapon.gameObject.SetActive(true);
+        SetModifiers();
 
-        if (Random.Range(1, 21) + AttackModifier > Conflict.ToHitBase + Target.Defend.DefenseRating) {
+        if (Random.Range(1, 21) + AttackModifier > _target.Defend.ArmorClass) { // Dexterity is already built in to AC
             ApplyDamage();
             DisplayEffects();
             AdjustEnergy();
@@ -55,7 +55,7 @@ public class DefaultMelee : MonoBehaviour
     {
         if (Target.Health != null && Target.Defend != null && Actor != null)
         {
-            Damage = Target.Defend.DamageAfterDefenses(Random.Range(1, Weapon.damage_die) + DamageModifier, Weapon.damage_type);
+            Damage = Target.Defend.DamageAfterDefenses(Weapon.expected_damage + DamageModifier, Weapon.damage_type);
             Target.Health.LoseHealth(Damage, Actor);
         }
     }
@@ -72,13 +72,23 @@ public class DefaultMelee : MonoBehaviour
 
     private void SetComponents()
     {
-        Resources = GetComponent<Resources>();
         Actor = GetComponentInParent<Actor>();
-        Stats = GetComponentInParent<Stats>();
         Attack = GetComponent<Attack>();
-        Weapon = Attack.EquippedMeleeWeapon;
+        Resources = GetComponent<Resources>();
+    }
 
-        AttackModifier = Stats.DexterityProficiency + Stats.StrengthProficiency + Actor.SuperiorWeapons[Weapon.damage_type];
-        DamageModifier = Stats.DexterityProficiency + Stats.StrengthProficiency + Actor.SuperiorWeapons[Weapon.damage_type];
+
+    private void SetModifiers()
+    {
+        if (Weapon.is_light)
+        {
+            AttackModifier = Actor.Stats.DexterityProficiency + Weapon.attack_bonus + Actor.SuperiorWeapons[Weapon.damage_type];
+            DamageModifier = Actor.Stats.DexterityProficiency + Weapon.damage_bonus + Actor.SuperiorWeapons[Weapon.damage_type];
+        }
+        else
+        {
+            AttackModifier = Actor.Stats.StrengthProficiency + Weapon.attack_bonus + Actor.SuperiorWeapons[Weapon.damage_type];
+            DamageModifier = Actor.Stats.StrengthProficiency + Weapon.damage_bonus + Actor.SuperiorWeapons[Weapon.damage_type];
+        }
     }
 }

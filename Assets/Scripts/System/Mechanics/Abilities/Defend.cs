@@ -14,8 +14,6 @@ public class Defend : MonoBehaviour
     public float ComputedDamage { get; set; }
     public Weapon.DamageType DamageType { get; set; }
     public int DefenseRating { get; set; }
-    public Stats Stats { get; set; }
-
 
 
     // Unity
@@ -70,8 +68,7 @@ public class Defend : MonoBehaviour
     private void SetComponents()
     {
         Actor = GetComponentInParent<Actor>();
-        Stats = GetComponentInParent<Stats>();
 
-        DefenseRating = ArmorClass + Stats.DexterityProficiency;
+        DefenseRating = ArmorClass + Actor.Stats.DexterityProficiency;
     }
 }

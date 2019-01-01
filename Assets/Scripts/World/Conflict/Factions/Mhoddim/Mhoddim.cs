@@ -7,7 +7,7 @@ public class Mhoddim : MonoBehaviour {
 
     // properties
 
-    public Stats Stats { get; set; }
+    public Actor Actor { get; set; }
     public static Threat Threat { get; set; }
 
 
@@ -31,8 +31,8 @@ public class Mhoddim : MonoBehaviour {
 
     private void Awake()
     {
+        Actor = GetComponent<Actor>();
         Threat = gameObject.AddComponent<Threat>();
-        Stats = GetComponent<Stats>();
     }
 
 
@@ -59,7 +59,7 @@ public class Mhoddim : MonoBehaviour {
 
     public void SetStats()
     {
-        SetPrimaryStats();
+        SetPrimaryAndInnateStats();
         SetDefenseStats();
         SetHealthStats();
         SetOffensiveStats();
@@ -97,20 +97,31 @@ public class Mhoddim : MonoBehaviour {
 
     private void SetOffensiveStats()
     {
-        if (GetComponent<Commoner>() != null) GetComponent<Actor>().Actions = ConfigureMhoddim.actions[Soldier.Template.Commoner];
+        if (GetComponent<Commoner>() != null) {
+            Actor.Actions = ConfigureMhoddim.actions[Soldier.Template.Commoner];
+            Actor.ObjectiveControlRating = ConfigureMhoddim.objective_control_rating[Soldier.Template.Commoner];
+            Actor.Attack.AvailableWeapons = ConfigureMhoddim.available_weapons[Soldier.Template.Commoner];
+        }
     }
 
 
-    private void SetPrimaryStats()
+    private void SetPrimaryAndInnateStats()
     {
         if (GetComponent<Commoner>() != null)
         {
-            Stats.CharismaProficiency = ConfigureMhoddim.charisma_proficiency[Soldier.Template.Commoner];
-            Stats.ConstitutionProficiency = ConfigureMhoddim.constituion_proficiency[Soldier.Template.Commoner];
-            Stats.DexterityProficiency = ConfigureMhoddim.dexterity_proficiency[Soldier.Template.Commoner];
-            Stats.IntelligenceProficiency = ConfigureMhoddim.intelligence_proficiency[Soldier.Template.Commoner];
-            Stats.StrengthProficiency = ConfigureMhoddim.strength_proficiency[Soldier.Template.Commoner];
-            Stats.WisdomProficiency = ConfigureMhoddim.wisdom_proficiency[Soldier.Template.Commoner];
+            Actor.Movement.Agent.speed = ConfigureMhoddim.speed[Soldier.Template.Commoner];
+            Actor.ObjectiveControlRating = ConfigureMhoddim.objective_control_rating[Soldier.Template.Commoner];
+            Actor.Resources.CurrentMana = ConfigureMhoddim.current_mana[Soldier.Template.Commoner];
+            Actor.Resources.IsCaster = ConfigureMhoddim.is_caster[Soldier.Template.Commoner];
+            Actor.Resources.mana_pool_maximum = ConfigureMhoddim.mana_pool_maximum[Soldier.Template.Commoner];
+            Actor.Senses.Darkvision = ConfigureMhoddim.darkvision_range[Soldier.Template.Commoner];
+            Actor.Senses.PerceptionRange = ConfigureMhoddim.perception_range[Soldier.Template.Commoner];
+            Actor.Stats.CharismaProficiency = ConfigureMhoddim.charisma_proficiency[Soldier.Template.Commoner];
+            Actor.Stats.ConstitutionProficiency = ConfigureMhoddim.constituion_proficiency[Soldier.Template.Commoner];
+            Actor.Stats.DexterityProficiency = ConfigureMhoddim.dexterity_proficiency[Soldier.Template.Commoner];
+            Actor.Stats.IntelligenceProficiency = ConfigureMhoddim.intelligence_proficiency[Soldier.Template.Commoner];
+            Actor.Stats.StrengthProficiency = ConfigureMhoddim.strength_proficiency[Soldier.Template.Commoner];
+            Actor.Stats.WisdomProficiency = ConfigureMhoddim.wisdom_proficiency[Soldier.Template.Commoner];
         }
     }
 }

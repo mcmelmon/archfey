@@ -4,22 +4,17 @@ using UnityEngine;
 
 public class Attack : MonoBehaviour
 {
-
-    // Inspector settings
-
-    public List<Weapon> available_weapons;
-
     // properties
 
     public Actor Actor { get; set; }
     public int AttackRating { get; set; }
+    public List<Weapon> AvailableWeapons { get; set; }
     public List<Actor> AvailableMeleeTargets { get; set; }
     public List<Actor> AvailableRangedTargets { get; set; }
     public List<Actor> CurrentMeleeTargets { get; set; }
     public List<Actor> CurrentRangedTargets { get; set; }
     public Weapon EquippedMeleeWeapon { get; set; }
     public Weapon EquippedRangedWeapon { get; set; }
-    public Stats Stats { get; set; }
 
 
     // Unity
@@ -42,12 +37,6 @@ public class Attack : MonoBehaviour
     }
 
 
-    public List<Weapon> AvailableWeapons()
-    {
-        return available_weapons;
-    }
-
-
     public bool Engaged()
     {
         AttackEnemiesInRange();
@@ -55,7 +44,56 @@ public class Attack : MonoBehaviour
     }
 
 
+    public void EquipMeleeWeapon()
+    {
+        if (EquippedMeleeWeapon == null)
+        {
+            foreach (var weapon in AvailableWeapons)
+            {
+                if (weapon.range == 0)
+                {
+                    EquippedMeleeWeapon = Instantiate(weapon, transform.Find("AttackOrigin").transform.position, transform.rotation);
+                    EquippedMeleeWeapon.transform.position += 0.2f * Vector3.forward;
+                    EquippedMeleeWeapon.transform.parent = transform;
+                    EquippedMeleeWeapon.name = "Melee Weapon";
+                    EquippedMeleeWeapon.gameObject.SetActive(false);
+                    break;  // TODO: pick best available melee weapon based on resistances, etc.
+                }
+            }
+        }
+    }
+
+
+    public void EquipRangedWeapon()
+    {
+        if (EquippedRangedWeapon == null)
+        {
+            foreach (var weapon in AvailableWeapons)
+            {
+                if (weapon.range > 0)
+                {
+                    EquippedRangedWeapon = Instantiate(weapon, transform.Find("AttackOrigin").transform.position, transform.rotation);
+                    EquippedRangedWeapon.transform.position += 0.2f * Vector3.forward;
+                    EquippedRangedWeapon.transform.parent = transform;
+                    EquippedRangedWeapon.name = "Ranged Weapon";
+                    EquippedRangedWeapon.gameObject.SetActive(false);
+                    break;
+                }
+            }
+        }
+    }
+
+
     // private
+
+
+    private void ClearTargets()
+    {
+        AvailableMeleeTargets.Clear();
+        AvailableRangedTargets.Clear();
+        CurrentMeleeTargets.Clear();
+        CurrentRangedTargets.Clear();
+    }
 
 
     private void EnemyAtMeleeOrRange()
@@ -80,41 +118,9 @@ public class Attack : MonoBehaviour
     }
 
 
-    private void EquipMeleeWeapon()
-    {
-        if (EquippedMeleeWeapon == null) {
-            foreach (var weapon in available_weapons) {
-                if (weapon.range == 0) {
-                    EquippedMeleeWeapon = Instantiate(weapon, transform.Find("MeleeAttackOrigin").transform.position, transform.rotation);
-                    EquippedMeleeWeapon.transform.position += 0.2f * Vector3.forward;
-                    EquippedMeleeWeapon.transform.parent = transform;
-                    EquippedMeleeWeapon.name = "Melee Weapon";
-                    EquippedMeleeWeapon.gameObject.SetActive(false);
-                    break;  // TODO: pick best available melee weapon based on resistances, etc.
-                }
-            }
-        }
-    }
-
-
-    private void EquipRangedWeapon()
-    {
-
-    }
-
-
-    private void ClearTargets()
-    {
-        AvailableMeleeTargets.Clear();
-        AvailableRangedTargets.Clear();
-        CurrentMeleeTargets.Clear();
-        CurrentRangedTargets.Clear();
-    }
-
-
     private float LongestMeleeRange()
     {
-        foreach (var weapon in AvailableWeapons()) {
+        foreach (var weapon in AvailableWeapons) {
             if (weapon.range == 0 && weapon.has_reach) {
                 return 2f;
             } else if (weapon.range == 0) {
@@ -128,9 +134,11 @@ public class Attack : MonoBehaviour
 
     private float LongestRangedRange()
     {
+        // TODO: select the weapon appropriate for the range
+
         float longest_range = float.MinValue;
 
-        foreach (var weapon in AvailableWeapons()) {
+        foreach (var weapon in AvailableWeapons) {
             if (weapon.range > longest_range) {
                 longest_range = weapon.range;
             }
@@ -159,10 +167,6 @@ public class Attack : MonoBehaviour
         AvailableRangedTargets = new List<Actor>();
         CurrentMeleeTargets = new List<Actor>();
         CurrentRangedTargets = new List<Actor>();
-        Stats = GetComponentInParent<Stats>();
-
-        EquipMeleeWeapon();
-        AttackRating = ((EquippedMeleeWeapon.is_light) ? Stats.DexterityProficiency : Stats.StrengthProficiency) + EquippedMeleeWeapon.attack_bonus + Actor.SuperiorWeapons[EquippedMeleeWeapon.damage_type];
     }
 
 
@@ -177,14 +181,16 @@ public class Attack : MonoBehaviour
         // TODO: handle in Stealth; allow stealth to be recovered, e.g. "Vanish" and even attacking from stealth for a short while, etc.
         Stealth stealth = Actor.Stealth;
         if (stealth != null) {
-            stealth.attacking = true;
-            stealth.spotted = true;
+            stealth.Attacking = true;
+            stealth.Seen = true;
         }
 
         // TODO: add more powerful, energy based attacks
         if (CurrentMeleeTargets.Count > 0) {
+            if (EquippedRangedWeapon != null) EquippedRangedWeapon.gameObject.SetActive(false);
             GetComponent<DefaultMelee>().Strike(CurrentMeleeTargets[0]);
         } else {
+            if (EquippedMeleeWeapon != null) EquippedMeleeWeapon.gameObject.SetActive(false);
             GetComponent<DefaultRange>().Strike(CurrentRangedTargets[0]);
         }
     }

@@ -29,6 +29,7 @@ public class Actor : MonoBehaviour
     public ObjectiveControlPoint ObjectiveControlPoint { get; set; }
     public int ObjectiveControlRating { get; set; }
     public Senses Senses { get; set; }
+    public Stats Stats { get; set; }
     public Stealth Stealth { get; set; }
     public static Dictionary<Weapon.DamageType, int> SuperiorWeapons { get; set; }
     public Threat Threat { get; set; }
@@ -368,6 +369,7 @@ public class Actor : MonoBehaviour
         Movement = GetComponent<Movement>();
         Health = GetComponent<Health>();
         Senses = GetComponent<Senses>();
+        Stats = GetComponent<Stats>();
         SuperiorWeapons = new Dictionary<Weapon.DamageType, int>
         {
             [Weapon.DamageType.Acid] = 0,
@@ -460,7 +462,8 @@ public class Actor : MonoBehaviour
 
     private void SheathWeapon()
     {
-        Attack.EquippedMeleeWeapon.gameObject.SetActive(false);
+        if (Attack.EquippedMeleeWeapon != null) Attack.EquippedMeleeWeapon.gameObject.SetActive(false);
+        if (Attack.EquippedRangedWeapon != null) Attack.EquippedRangedWeapon.gameObject.SetActive(false);
     }
 
 

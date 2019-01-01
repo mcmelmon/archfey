@@ -6,7 +6,7 @@ public class Ghaddim : MonoBehaviour {
 
     // properties
 
-    public Stats Stats { get; set; }
+    public Actor Actor { get; set; }
     public static Threat Threat { get; set; }
 
 
@@ -27,7 +27,7 @@ public class Ghaddim : MonoBehaviour {
 
     private void Awake()
     {
-        Stats = GetComponent<Stats>();
+        Actor = GetComponent<Actor>();
         Threat = gameObject.AddComponent<Threat>();
     }
 
@@ -55,7 +55,7 @@ public class Ghaddim : MonoBehaviour {
 
     public void SetStats()
     {
-        SetPrimaryStats();
+        SetPrimaryAndInnateStats();
         SetDefenseStats();
         SetHealthStats();
         SetOffensiveStats();
@@ -95,20 +95,32 @@ public class Ghaddim : MonoBehaviour {
 
     private void SetOffensiveStats()
     {
-        if (GetComponent<Gnoll>() != null) GetComponent<Actor>().Actions = ConfigureGhaddim.actions[Soldier.Template.Gnoll];
+        if (GetComponent<Gnoll>() != null)
+        {
+            Actor.Actions = ConfigureGhaddim.actions[Soldier.Template.Gnoll];
+            Actor.ObjectiveControlRating = ConfigureGhaddim.objective_control_rating[Soldier.Template.Gnoll];
+            Actor.Attack.AvailableWeapons = ConfigureGhaddim.available_weapons[Soldier.Template.Gnoll];
+        }
     }
 
 
-    private void SetPrimaryStats()
+    private void SetPrimaryAndInnateStats()
     {
         if (GetComponent<Gnoll>() != null)
         {
-            Stats.CharismaProficiency = ConfigureGhaddim.charisma_proficiency[Soldier.Template.Gnoll];
-            Stats.ConstitutionProficiency = ConfigureGhaddim.constituion_proficiency[Soldier.Template.Gnoll];
-            Stats.DexterityProficiency = ConfigureGhaddim.dexterity_proficiency[Soldier.Template.Gnoll];
-            Stats.IntelligenceProficiency = ConfigureGhaddim.intelligence_proficiency[Soldier.Template.Gnoll];
-            Stats.StrengthProficiency = ConfigureGhaddim.strength_proficiency[Soldier.Template.Gnoll];
-            Stats.WisdomProficiency = ConfigureGhaddim.wisdom_proficiency[Soldier.Template.Gnoll];
+            Actor.Movement.Agent.speed = ConfigureGhaddim.speed[Soldier.Template.Gnoll];
+            Actor.ObjectiveControlRating = ConfigureGhaddim.objective_control_rating[Soldier.Template.Gnoll];
+            Actor.Resources.CurrentMana = ConfigureGhaddim.current_mana[Soldier.Template.Gnoll];
+            Actor.Resources.IsCaster = ConfigureGhaddim.is_caster[Soldier.Template.Gnoll];
+            Actor.Resources.mana_pool_maximum = ConfigureGhaddim.mana_pool_maximum[Soldier.Template.Gnoll];
+            Actor.Senses.Darkvision = ConfigureGhaddim.darkvision_range[Soldier.Template.Gnoll];
+            Actor.Senses.PerceptionRange = ConfigureGhaddim.perception_range[Soldier.Template.Gnoll];
+            Actor.Stats.CharismaProficiency = ConfigureGhaddim.charisma_proficiency[Soldier.Template.Gnoll];
+            Actor.Stats.ConstitutionProficiency = ConfigureGhaddim.constituion_proficiency[Soldier.Template.Gnoll];
+            Actor.Stats.DexterityProficiency = ConfigureGhaddim.dexterity_proficiency[Soldier.Template.Gnoll];
+            Actor.Stats.IntelligenceProficiency = ConfigureGhaddim.intelligence_proficiency[Soldier.Template.Gnoll];
+            Actor.Stats.StrengthProficiency = ConfigureGhaddim.strength_proficiency[Soldier.Template.Gnoll];
+            Actor.Stats.WisdomProficiency = ConfigureGhaddim.wisdom_proficiency[Soldier.Template.Gnoll];
         }
     }
 }
