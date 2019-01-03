@@ -59,7 +59,7 @@ public class Conflict : MonoBehaviour
     public void Hajime()
     {
         GenerateStats();
-        CreateNavigationMesh();
+        //CreateNavigationMesh();
         ChooseSides();
         if (World.Instance.battleground) {
             Offense.Instance.Deploy();  // defense has already deployed

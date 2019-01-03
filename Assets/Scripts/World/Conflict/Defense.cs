@@ -32,13 +32,15 @@ public class Defense : MonoBehaviour
     public void Deploy()
     {
         // must be called by Conflict instead of Start to ensure Map setup complete
-
-        foreach (var objective in Objectives.AllObjectives) {
-            for (int i = 0; i < 6; i++) {
-                Circle spawn_circle = Circle.New(objective.transform.position, 15);
-
-                GameObject commoner = Spawn(spawn_circle.RandomContainedPoint());
-                commoner.AddComponent<Commoner>();
+        
+        foreach (var objective in Objectives.Instance.objectives) {
+            if (objective.name == "Homestead") {
+                for (int i = 0; i < 6; i++) {
+                    Circle spawn_circle = Circle.New(objective.control_points[0].transform.position, 5);
+                    Vector3 _point = spawn_circle.RandomContainedPoint();
+                    GameObject commoner = Spawn(new Vector3(_point.x, objective.control_points[0].transform.position.y, _point.z));
+                    commoner.AddComponent<Commoner>();
+                }
             }
         }
     }
@@ -46,12 +48,17 @@ public class Defense : MonoBehaviour
 
     public void Reinforce()
     {
-        foreach (var objective in Objectives.AllObjectives) {
-            for (int i = 0; i < 1; i++) {
-                Circle spawn_circle = Circle.New(objective.transform.position, 15);
-
-                GameObject commoner = Spawn(spawn_circle.RandomContainedPoint());
-                commoner.AddComponent<Commoner>();
+        foreach (var objective in Objectives.Instance.objectives)
+        {
+            if (objective.name == "Homestead")
+            {
+                for (int i = 0; i < 1; i++)
+                {
+                    Circle spawn_circle = Circle.New(objective.control_points[0].transform.position, 5);
+                    Vector3 _point = spawn_circle.RandomContainedPoint();
+                    GameObject commoner = Spawn(new Vector3(_point.x, objective.control_points[0].transform.position.y, _point.z));
+                    commoner.AddComponent<Commoner>();
+                }
             }
         }
     }

@@ -43,7 +43,7 @@ public class VictoryUI : MonoBehaviour
 
     private float GhaddimControlPercentage()
     {
-        return GhaddimControl / Objectives.AllObjectives.Count;
+        return GhaddimControl / Objectives.Instance.objectives.Count;
     }
 
 
@@ -69,6 +69,6 @@ public class VictoryUI : MonoBehaviour
 
     private float MhoddimControlPercentage()
     {
-        return MhoddimControl / Objectives.AllObjectives.Count;
+        return MhoddimControl / Objectives.Instance.objectives.Count;
     }
 }

@@ -16,7 +16,7 @@ public class Mhoddim : MonoBehaviour {
 
     public static GameObject SpawnUnit(Vector3 _point)
     {
-        Mhoddim _mhoddim = Instantiate(Conflict.Instance.mhoddim_prefab, _point + new Vector3(0, 10, 0), Conflict.Instance.mhoddim_prefab.transform.rotation);  // drop from on high to avoid being in buildings etc.
+        Mhoddim _mhoddim = Instantiate(Conflict.Instance.mhoddim_prefab, _point, Conflict.Instance.mhoddim_prefab.transform.rotation);  // drop from on high to avoid being in buildings etc.
         _mhoddim.gameObject.AddComponent<Soldier>();
 
         if (_mhoddim.GetComponent<NavMeshAgent>() == null) {

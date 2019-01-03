@@ -34,13 +34,18 @@ public class Offense : MonoBehaviour
     {
         // must be called by Conflict instead of Start to ensure Map setup complete
 
-        int adjustment = (Faction == Conflict.Faction.Ghaddim) ? 3 : 0;
-
-        for (int i = 0; i < 3 + adjustment; i++) {
-            MapTile tile = Geography.Instance.RandomUnoccupiedTile();
-            GameObject gnoll = Spawn(tile.Location);
-            gnoll.AddComponent<Gnoll>();
-            tile.Occupier = gnoll.GetComponent<Actor>();
+        foreach (var objective in Objectives.Instance.objectives)
+        {
+            if (objective.name == "ElvenRuin")
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    Circle spawn_circle = Circle.New(objective.control_points[0].transform.position, 5);
+                    Vector3 _point = spawn_circle.RandomContainedPoint();
+                    GameObject gnoll = Spawn(new Vector3(_point.x, objective.control_points[0].transform.position.y, _point.z));
+                    gnoll.AddComponent<Gnoll>();
+                }
+            }
         }
     }
 
