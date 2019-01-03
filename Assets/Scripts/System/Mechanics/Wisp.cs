@@ -95,7 +95,7 @@ class Wisp : MonoBehaviour
     {
         foreach (var milestone in milestones)
         {
-            Circle opportunity = Circle.CreateCircle(milestone, 15f);
+            Circle opportunity = Circle.New(milestone, 15f);
             Vector3 spot = opportunity.RandomContainedPoint();
 
             Breadcrumb breadcrumb = new Breadcrumb();
@@ -108,7 +108,7 @@ class Wisp : MonoBehaviour
             //cube.transform.position = breadcrumb.position;
         }
 
-        Circle main_target = Circle.CreateCircle(objective, 15f);
+        Circle main_target = Circle.New(objective, 15f);
         Vector3 final_position = main_target.RandomContainedPoint();
 
         Breadcrumb last_crumb = new Breadcrumb();

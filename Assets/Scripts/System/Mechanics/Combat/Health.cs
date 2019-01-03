@@ -8,9 +8,10 @@ public class Health : MonoBehaviour {
     // properties
 
     public Actor Actor { get; set; }
-    public int CurrentHealth { get; set; }
-    public int RecoveryAmount { get; set; }
-    public int MaximumHealth { get; set; }
+    public int CurrentHitPoints { get; set; }
+    public int HitDice { get; set; }
+    public int HitDiceType { get; set; }
+    public int MaximumHitPoints { get; set; }
 
 
     // Unity
@@ -24,8 +25,8 @@ public class Health : MonoBehaviour {
 
     private void OnValidate()
     {
-        if (MaximumHealth < 1) MaximumHealth = 1;
-        if (CurrentHealth < 0f) CurrentHealth = 0;
+        if (MaximumHitPoints < 1) MaximumHitPoints = 1;
+        if (CurrentHitPoints < 0) CurrentHitPoints = 0;
     }
 
 
@@ -41,7 +42,7 @@ public class Health : MonoBehaviour {
 
     public void LoseHealth(float amount, Actor _attacker = null)
     {
-        CurrentHealth -= Mathf.RoundToInt(amount);
+        CurrentHitPoints -= Mathf.RoundToInt(amount);
         if (_attacker != null) {
             Actor.Threat.AddThreat(_attacker, amount);
             Actor.Threat.SpreadThreat(_attacker, amount);
@@ -52,10 +53,10 @@ public class Health : MonoBehaviour {
 
     public void RecoverHealth(int amount)
     {
-        if (amount == 0 || CurrentHealth == MaximumHealth) return;
+        if (amount == 0 || CurrentHitPoints == MaximumHitPoints) return;
 
-        CurrentHealth += amount;
-        if (CurrentHealth > MaximumHealth) CurrentHealth = MaximumHealth;
+        CurrentHitPoints += amount;
+        if (CurrentHitPoints > MaximumHitPoints) CurrentHitPoints = MaximumHitPoints;
 
         Actor.Resources.UpdateStatBars();
     }
@@ -63,7 +64,7 @@ public class Health : MonoBehaviour {
 
     public bool Persist()
     {
-        if (CurrentHealth <= 0) {
+        if (CurrentHitPoints <= 0) {
             Conflict.Instance.AddCasualty(Actor.Faction);
             Destroy(gameObject);
             return false;
@@ -73,24 +74,11 @@ public class Health : MonoBehaviour {
     }
 
 
-    public void SetRecoveryAmount(int amount)
-    {
-        RecoveryAmount = amount;
-    }
-
-
-    public void SetStartingHealth(int amount)
-    {
-        MaximumHealth = amount;
-        CurrentHealth = amount;
-    }
-
-
     // private
 
 
     public float CurrentHealthPercentage()
     {
-        return (float)CurrentHealth / (float)MaximumHealth;
+        return (float)CurrentHitPoints / (float)MaximumHitPoints;
     }
 }

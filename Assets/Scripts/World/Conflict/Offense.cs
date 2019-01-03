@@ -34,13 +34,18 @@ public class Offense : MonoBehaviour
     {
         // must be called by Conflict instead of Start to ensure Map setup complete
 
-        int adjustment = (Faction == Conflict.Faction.Ghaddim) ? 3 : 0;
-
-        for (int i = 0; i < 6 + adjustment; i++) {
-            MapTile tile = Geography.Instance.RandomUnoccupiedTile();
-            GameObject _heavy = Spawn(tile.Location);
-            _heavy.AddComponent<Heavy>();
-            tile.Occupier = _heavy.GetComponent<Actor>();
+        foreach (var objective in Objectives.Instance.objectives)
+        {
+            if (objective.name == "ElvenRuin")
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    Circle spawn_circle = Circle.New(objective.control_points[0].transform.position, 5);
+                    Vector3 _point = spawn_circle.RandomContainedPoint();
+                    GameObject gnoll = Spawn(new Vector3(_point.x, objective.control_points[0].transform.position.y, _point.z));
+                    gnoll.AddComponent<Gnoll>();
+                }
+            }
         }
     }
 
@@ -56,7 +61,7 @@ public class Offense : MonoBehaviour
 
     private GameObject Spawn(Vector3 _point)
     {
-        GameObject _soldier = (Faction == Conflict.Faction.Ghaddim) ? Ghaddim.SpawnUnit(_point) : Mhoddim.SpawnUnit(_point);
+        GameObject _soldier = (Faction == Conflict.Faction.Ghaddim) ? Ghaddim.SpawnUnit(_point) : Mhoddim.SpawnUnit(_point);  // offense will almost always be Ghaddim
         _soldier.transform.parent = transform;
         _soldier.GetComponent<Actor>().Role = Conflict.Role.Offense;
         Units.Add(_soldier);

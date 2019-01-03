@@ -6,32 +6,42 @@ public class DefaultRange : MonoBehaviour
 {
     // properties
 
+    public Actor Actor { get; set; }
     public Attack Attack { get; set; }
+    public int AttackModifier { get; set; }
+    public float Damage { get; set; }
+    public int DamageModifier { get; set; }
+    public GameObject Projectile { get; set; }
+    public Resources Resources { get; set; }
+    public Actor Target { get; set; }
+    public Weapon Weapon { get; set; }
 
 
     // Unity
 
     private void Awake()
     {
-        Attack = GetComponent<Attack>();
+        SetComponents();
     }
-
-
-    //void Start()
-    //{
-    //    if (range == Range.Melee) StartCoroutine(Seek());
-    //}
 
 
     // public
 
 
-    public void Strike(Actor _target)
-    {
-        foreach (var weapon in Attack.AvailableWeapons())
-        {
+    public void Strike(Actor _target) {
+        // TODO: show projectiles
 
-            // TODO: potentially disadvantage ranged attacks against melee targets
+        if (_target == null) return;
+        Target = _target;
+        Weapon = Attack.EquippedRangedWeapon;
+        Weapon.gameObject.SetActive(true);
+        SetModifiers();
+        Projectile = Instantiate(Weapon.projectile_prefab, transform.Find("AttackOrigin").transform.position, transform.rotation);
+        StartCoroutine(Seek());
+
+        if (Random.Range(1, 21) + AttackModifier > _target.Defend.ArmorClass) { // Dexterity is already built in to AC
+            ApplyDamage();
+            DisplayEffects();
         }
     }
 
@@ -39,28 +49,59 @@ public class DefaultRange : MonoBehaviour
     // private
 
 
-    //private IEnumerator Seek()
-    //{
-    //    while (true)
-    //    {
-    //        if (range == Range.Ranged)
-    //        {
-    //            if (Target == null)
-    //            {
-    //                Destroy(gameObject);  // destroy ranged "ammunition"
-    //                yield return null;
-    //            }
+    private void ApplyDamage()
+    {
+        if (Target.Health != null && Target.Defend != null && Actor != null)
+        {
+            Damage = Target.Defend.DamageAfterDefenses(Weapon.expected_damage + DamageModifier, Weapon.damage_type);
+            Target.Health.LoseHealth(Damage, Actor);
+        }
+    }
 
-    //            float separation = float.MaxValue;
-    //            Vector3 direction = Target.transform.position - transform.position;
-    //            float distance = projectile_speed * Time.deltaTime;
-    //            transform.position += distance * direction;
-    //            separation = Vector3.Distance(Target.transform.position, transform.position);
 
-    //            if (separation <= .5f) Hit();
-    //        }
+    public void DisplayEffects()
+    {
+        GameObject _impact = Instantiate(SpellEffects.Instance.physical_strike_prefab, Target.transform.position + new Vector3(1, 4f, 0), SpellEffects.Instance.physical_strike_prefab.transform.rotation);
+        _impact.transform.parent = Target.transform;
+        _impact.name = "Impact";
+        Destroy(_impact, 1f);
+    }
 
-    //        yield return null;
-    //    }
-    //}
+
+    private void SetComponents()
+    {
+        Actor = GetComponentInParent<Actor>();
+        Attack = GetComponent<Attack>();
+        Resources = GetComponent<Resources>();
+    }
+
+
+    private void SetModifiers()
+    {
+        AttackModifier = Actor.Stats.DexterityProficiency + Weapon.attack_bonus + Actor.SuperiorWeapons[Weapon.damage_type];
+        DamageModifier = Actor.Stats.DexterityProficiency + Weapon.damage_bonus + Actor.SuperiorWeapons[Weapon.damage_type];
+
+    }
+
+
+    private IEnumerator Seek()
+    {
+        while (true) {
+            if (Target == null && Projectile != null) {
+                Destroy(Projectile);
+                yield return null;
+            } else if (Projectile != null) {
+                float separation = float.MaxValue;
+                Vector3 direction = Target.transform.position - transform.position;
+                float distance = 20f * Time.deltaTime;
+
+                Projectile.transform.position += distance * direction;
+                separation = Vector3.Distance(Target.transform.position, Projectile.transform.position);
+
+                if (separation <= .5f) Destroy(Projectile);
+            }
+
+            yield return null;
+        }
+    }
 }

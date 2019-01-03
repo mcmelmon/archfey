@@ -10,9 +10,6 @@ public class Geography : MonoBehaviour {
 
     public static int unit_spacing = 8;
 
-    public Obstacle obstacle_prefab;
-    public float obstacle_coverage;
-
 
     // properties
 
@@ -34,13 +31,6 @@ public class Geography : MonoBehaviour {
         }
         Instance = this;
         SetComponents();
-    }
-
-
-    private void OnValidate()
-    {
-        if (obstacle_coverage < 0f) obstacle_coverage = 0f;
-        if (obstacle_coverage > 100f) obstacle_coverage = 100f;
     }
 
 
@@ -109,7 +99,7 @@ public class Geography : MonoBehaviour {
     {
         // Obstacles cause unit placement trouble.  
         // TODO: redo this by modifying the terrain itself
-        PlaceObstacles();
+        //PlaceObstacles();
     }
 
 
@@ -191,20 +181,6 @@ public class Geography : MonoBehaviour {
 
 
     // private
-
-
-    private void PlaceObstacles()
-    {
-        int number_of_obstacles = Mathf.RoundToInt(TerrainData.heightmapResolution * (obstacle_coverage / 100f));
-        GameObject obstacles_parent = new GameObject { name = "Obstacles" };
-        obstacles_parent.transform.parent = transform;
-
-        for (int i = 0; i < number_of_obstacles; i++)
-        {
-            Obstacle _obstacle = obstacle_prefab.InstantiateScaledObstacle(RandomUnoccupiedTile().Location, obstacles_parent.transform);
-            if (_obstacle != null) Obstacles.Add(_obstacle);
-        }
-    }
 
 
     private void SetComponents()

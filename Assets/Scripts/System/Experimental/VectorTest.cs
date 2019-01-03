@@ -86,7 +86,7 @@ public class VectorTest : MonoBehaviour {
     {
         foreach (var milestone in milestones)
         {
-            Circle opportunity = Circle.CreateCircle(milestone, 15f);
+            Circle opportunity = Circle.New(milestone, 15f);
             Vector3 position = opportunity.RandomContainedPoint();
 
             Breadcrumb breadcrumb = new Breadcrumb();
@@ -99,7 +99,7 @@ public class VectorTest : MonoBehaviour {
             cube.transform.position = breadcrumb.position;
         }
 
-        Circle main_target = Circle.CreateCircle(target.transform.position, 15f);
+        Circle main_target = Circle.New(target.transform.position, 15f);
         Vector3 final_position = main_target.RandomContainedPoint();
 
         Breadcrumb last_crumb = new Breadcrumb();

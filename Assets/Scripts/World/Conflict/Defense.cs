@@ -32,15 +32,34 @@ public class Defense : MonoBehaviour
     public void Deploy()
     {
         // must be called by Conflict instead of Start to ensure Map setup complete
+        
+        foreach (var objective in Objectives.Instance.objectives) {
+            if (objective.name == "Homestead") {
+                for (int i = 0; i < 6; i++) {
+                    Circle spawn_circle = Circle.New(objective.control_points[0].transform.position, 5);
+                    Vector3 _point = spawn_circle.RandomContainedPoint();
+                    GameObject commoner = Spawn(new Vector3(_point.x, objective.control_points[0].transform.position.y, _point.z));
+                    commoner.AddComponent<Commoner>();
+                }
+            }
+        }
+    }
 
-        // spawn the defense randomly, give them time to claim some ruins, then spawn offense
-        int adjustment = (Faction == Conflict.Faction.Ghaddim) ? 3 : 0;
 
-        for (int i = 0; i < 6 + adjustment; i++) {
-            MapTile tile = Geography.Instance.RandomUnoccupiedTile();
-            GameObject _heavy = Spawn(tile.Location);
-            _heavy.AddComponent<Heavy>();
-            tile.Occupier = _heavy.GetComponent<Actor>();
+    public void Reinforce()
+    {
+        foreach (var objective in Objectives.Instance.objectives)
+        {
+            if (objective.name == "Homestead")
+            {
+                for (int i = 0; i < 1; i++)
+                {
+                    Circle spawn_circle = Circle.New(objective.control_points[0].transform.position, 5);
+                    Vector3 _point = spawn_circle.RandomContainedPoint();
+                    GameObject commoner = Spawn(new Vector3(_point.x, objective.control_points[0].transform.position.y, _point.z));
+                    commoner.AddComponent<Commoner>();
+                }
+            }
         }
     }
 
@@ -56,7 +75,7 @@ public class Defense : MonoBehaviour
 
     private GameObject Spawn(Vector3 _point)
     {
-        GameObject _soldier = (Faction == Conflict.Faction.Ghaddim) ? Ghaddim.SpawnUnit(_point) : Mhoddim.SpawnUnit(_point);
+        GameObject _soldier = (Faction == Conflict.Faction.Ghaddim) ? Ghaddim.SpawnUnit(_point) : Mhoddim.SpawnUnit(_point);  // Defense will "almost always" be Mhoddim...
         _soldier.transform.parent = transform;
         _soldier.GetComponent<Actor>().Role = Conflict.Role.Defense;
         Units.Add(_soldier);

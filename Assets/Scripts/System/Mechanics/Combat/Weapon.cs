@@ -4,43 +4,40 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour {
 
-    public enum Range { Melee = 0, Ranged = 1 };
-    public enum DamageType { Blunt = 0, Piercing = 1, Slashing = 2, Poison = 3, Elemental = 4, Arcane = 5, Holy = 6 };
+    public enum DamageType { 
+        Acid = 0,
+        Bludgeoning = 1,
+        Cold = 2,
+        Fire = 3,
+        Force = 4,
+        Lightning = 5,
+        Necrotic = 6,
+        Piercing = 7,
+        Poison = 8,
+        Psychic = 9,
+        Radiant = 10,
+        Slashing = 11,
+        Thunder = 12
+    };
 
     // Inspector settings
 
-    public Range range;             // melee or ranged
-    public int damage_maximum;      // maximum damage on hit
-    public DamageType damage_type;  // what is the nature of the damage caused by the weapon?
-    public int damage_over_time;    // how much ongoing damage does the weapon cause?
-    public int penetration;         // how effectively does the weapon circumvent armor?
-    public int potency;             // how effectively does the weapon overcome resistance to its type?
-    public float projectile_speed;
+    public int attack_bonus;
+    public int damage_bonus;
+    public int damage_die;
+    public DamageType damage_type;
+    public int expected_damage;
+    public bool has_reach;
+    public bool is_finese;
+    public bool is_heavy;
+    public bool is_light;
+    public bool is_loaded;
+    public bool is_magic;
+    public bool is_silvered;
+    public bool is_thrown;
+    public bool is_two_handed;
+    public bool is_versatile;
+    public GameObject projectile_prefab;
+    public int range;
 
-    public GameObject impact_prefab;
-
-    public Transform melee_attack_origin;
-    public float melee_attack_range;
-    public float ranged_attack_range;
-    public Transform ranged_attack_origin;
-
-
-    // Unity
-
-
-    private void OnValidate()
-    {
-        if (projectile_speed <= 1) projectile_speed = 10f;
-    }
-
-
-    // public
-
-
-    public void CleanUpAmmunition()
-    {
-        if (range == Range.Ranged) {
-            Destroy(gameObject);
-        }
-    }
 }

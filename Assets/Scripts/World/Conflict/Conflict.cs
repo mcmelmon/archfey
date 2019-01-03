@@ -43,7 +43,7 @@ public class Conflict : MonoBehaviour
         }
         Instance = this;
         SetComponents();
-        StartCoroutine(CheckForVictory());
+        //StartCoroutine(CheckForVictory());
     }
 
 
@@ -52,18 +52,14 @@ public class Conflict : MonoBehaviour
 
     public void AddCasualty(Faction _faction)
     {
-        if (Casualties.ContainsKey(_faction)) {
-            Casualties[_faction]++;
-        } else {
-            Casualties[_faction] = 1;
-        }
+        Casualties[_faction]++;
     }
 
 
     public void Hajime()
     {
         GenerateStats();
-        CreateNavigationMesh();
+        //CreateNavigationMesh();
         ChooseSides();
         if (World.Instance.battleground) {
             Offense.Instance.Deploy();  // defense has already deployed
@@ -85,9 +81,9 @@ public class Conflict : MonoBehaviour
     private IEnumerator CheckForVictory()
     {
         while (true) {
-            if (!Victory && Ruins.Instance != null && VictoryThreshold > 0)  // don't put test in while or enumerator never starts up
+            if (!Victory && Objectives.Instance != null && VictoryThreshold > 0)  // don't put test in while or enumerator never starts up
             {
-                if (Ruins.ForFaction[Faction.Ghaddim].Count >= VictoryThreshold)
+                if (Objectives.HeldByFaction[Faction.Ghaddim].Count >= VictoryThreshold)
                 {
                     if (VictoryContender == Faction.Ghaddim)
                     {
@@ -104,7 +100,7 @@ public class Conflict : MonoBehaviour
                         VictoryContender = Faction.Ghaddim;
                     }
                 }
-                else if (Ruins.ForFaction[Faction.Mhoddim].Count >= VictoryThreshold)
+                else if (Objectives.HeldByFaction[Faction.Mhoddim].Count >= VictoryThreshold)
                 {
                     if (VictoryContender == Faction.Mhoddim)
                     {
@@ -129,14 +125,9 @@ public class Conflict : MonoBehaviour
 
     private void ChooseSides()
     {
-        if (Random.Range(0,2) < 1) {
-            Defense.Instance.Faction = Faction.Ghaddim;
-            Offense.Instance.Faction = Faction.Mhoddim;
-        } else {
-            Defense.Instance.Faction = Faction.Mhoddim;
-            Offense.Instance.Faction = Faction.Ghaddim;
-        }
 
+        Defense.Instance.Faction = Faction.Mhoddim;
+        Offense.Instance.Faction = Faction.Ghaddim;
         Defense.Instance.Deploy();
         NextWave = Role.Offense;
     }
@@ -177,7 +168,7 @@ public class Conflict : MonoBehaviour
 
             switch (NextWave) {
                 case Role.Defense:
-                    Defense.Instance.Deploy();
+                    Defense.Instance.Reinforce();
                     NextWave = Role.Offense;
                     break;
                 case Role.Offense:

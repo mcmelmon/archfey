@@ -13,6 +13,7 @@ public class Actor : MonoBehaviour
 
     // properties
 
+    public int Actions { get; set; }
     public Attack Attack { get; set; }
     public Defend Defend { get; set; }
     public Conflict.Faction Faction { get; set; }
@@ -25,10 +26,12 @@ public class Actor : MonoBehaviour
     public Movement Movement { get; set; }
     public Resources Resources { get; set; }
     public Conflict.Role Role { get; set; }
-    public RuinControlPoint RuinControlPoint { get; set; }
-    public int RuinControlRating { get; set; }
+    public ObjectiveControlPoint ObjectiveControlPoint { get; set; }
+    public int ObjectiveControlRating { get; set; }
     public Senses Senses { get; set; }
+    public Stats Stats { get; set; }
     public Stealth Stealth { get; set; }
+    public static Dictionary<Weapon.DamageType, int> SuperiorWeapons { get; set; }
     public Threat Threat { get; set; }
 
 
@@ -70,7 +73,7 @@ public class Actor : MonoBehaviour
                 break;
             case State.Idle:
                 // Try to control a ruin
-                ControlRuin();
+                ControlObjective();
                 break;
             case State.InCombat:
                 // Freedom!
@@ -91,7 +94,7 @@ public class Actor : MonoBehaviour
                 CloseWithEnemies();
                 break;
             default:
-                ControlRuin();
+                ControlObjective();
                 break;
         }
     }
@@ -108,8 +111,6 @@ public class Actor : MonoBehaviour
     {
         if (_unit == null || _unit == gameObject) return true;
         if (IsMyRole(_unit)) return true;  // but don't automatically return false if not my role (I might be a scout, it might be fey)
-        if (GetComponent<Scout>() != null) return true; // we are a scout, and scouts do not engage unless damaged
-        if (GetComponent<Ent>() != null) return false; // we are an Ent, and ents engage mortals; Fey have same role and will already have returned true
         if (_unit.GetComponent<Fey>() != null) return true; // fey are neutral until individual units (e.g. Ents) attack (and get added to damagers)
 
         return false;  // if none of the above, it's probably the other faction and no exceptions apply
@@ -152,7 +153,7 @@ public class Actor : MonoBehaviour
 
             foreach (var enemy in Enemies) {
                 if (Vector3.Distance(enemy.transform.position, transform.position) < _smite.Range) {
-                    health = enemy.Health.CurrentHealth;
+                    health = enemy.Health.CurrentHitPoints;
                     if (health < lowest_health) {
                         lowest_health = health;
                         chosen_target = enemy;
@@ -194,29 +195,29 @@ public class Actor : MonoBehaviour
     {
         // if we've tricked ourselves into believing we are the occupier, pick a new control point
 
-        if (RuinControlPoint.ConfirmOccupation() != this) {
+        if (ObjectiveControlPoint.ConfirmOccupation() != this) {
             // find another ruin
-            RuinControlPoint = null;
-            ControlRuin();
-        } else if (Vector3.Distance(transform.position, RuinControlPoint.transform.position) > Route.reached_threshold) {
+            ObjectiveControlPoint = null;
+            ControlObjective();
+        } else if (Vector3.Distance(transform.position, ObjectiveControlPoint.transform.position) > Route.reached_threshold) {
             // combat has pulled us away from our control point.  Choose the nearest unoccupied point.
             // the ruin handles abandonment by a previous occupier.
-            RuinControlPoint = null;
+            ObjectiveControlPoint = null;
             state = State.Idle;
         }
     }
 
 
-    private void ControlRuin()
+    private void ControlObjective()
     {
         if (Fey != null || transform == null) return;
 
         // TODO: if we were are the Occupier of our RuinControlPoint, be sure to return to it after combat
 
-        RuinControlPoint ruin_control_point = Ruins.Instance.GetNearestUnoccupiedControlPoint(gameObject);
-        if (ruin_control_point != null && ruin_control_point != RuinControlPoint) {
-            RuinControlPoint = ruin_control_point;
-            Movement.SetRoute(Route.Linear(transform.position, ruin_control_point.transform.position, ReachedControlPoint));
+        ObjectiveControlPoint objective_control_point = Objectives.Instance.GetNearestUnoccupiedControlPoint(this);
+        if (objective_control_point != null && objective_control_point != ObjectiveControlPoint) {
+            ObjectiveControlPoint = objective_control_point;
+            Movement.SetRoute(Route.Linear(transform.position, objective_control_point.transform.position, ReachedControlPoint));
         }
     }
 
@@ -241,9 +242,9 @@ public class Actor : MonoBehaviour
 
     private bool HasObjective()
     {
-        if (RuinControlPoint != null && RuinControlPoint.Occupier != null && RuinControlPoint.Occupier != this) {
-            RuinControlPoint = null;
-            ControlRuin();
+        if (ObjectiveControlPoint != null && ObjectiveControlPoint.Occupier != null && ObjectiveControlPoint.Occupier != this) {
+            ObjectiveControlPoint = null;
+            ControlObjective();
             return true;
         }
 
@@ -313,7 +314,7 @@ public class Actor : MonoBehaviour
 
             foreach (var enemy in Enemies) {
                 if (Vector3.Distance(enemy.transform.position, transform.position) < _claw.Range) {
-                    health = enemy.Health.CurrentHealth;
+                    health = enemy.Health.CurrentHitPoints;
                     if (health < lowest_health) {
                         lowest_health = health;
                         chosen_target = enemy;
@@ -328,7 +329,7 @@ public class Actor : MonoBehaviour
 
     private bool OccupyingRuin()
     {
-        return RuinControlPoint != null && RuinControlPoint.Occupier == this;
+        return ObjectiveControlPoint != null && ObjectiveControlPoint.Occupier == this;
     }
 
 
@@ -345,9 +346,12 @@ public class Actor : MonoBehaviour
         // We want to wait until the control point is controlled, and then find another near unoccupied one
         // That will reset Movement
 
-        if (RuinControlPoint != null && RuinControlPoint.Occupier != this) {
-            RuinControlPoint = null;
-            ControlRuin();
+        if (ObjectiveControlPoint != null && ObjectiveControlPoint.Occupied && ObjectiveControlPoint.Occupier != this) {
+            ObjectiveControlPoint = null;
+            ControlObjective();
+        } else {
+            Movement.ResetPath();
+            state = State.OccupyingRuin;
         }
     }
 
@@ -365,6 +369,22 @@ public class Actor : MonoBehaviour
         Movement = GetComponent<Movement>();
         Health = GetComponent<Health>();
         Senses = GetComponent<Senses>();
+        Stats = GetComponent<Stats>();
+        SuperiorWeapons = new Dictionary<Weapon.DamageType, int>
+        {
+            [Weapon.DamageType.Acid] = 0,
+            [Weapon.DamageType.Bludgeoning] = 0,
+            [Weapon.DamageType.Cold] = 0,
+            [Weapon.DamageType.Fire] = 0,
+            [Weapon.DamageType.Force] = 0,
+            [Weapon.DamageType.Lightning] = 0,
+            [Weapon.DamageType.Necrotic] = 0,
+            [Weapon.DamageType.Piercing] = 0,
+            [Weapon.DamageType.Poison] = 0,
+            [Weapon.DamageType.Psychic] = 0,
+            [Weapon.DamageType.Slashing] = 0,
+            [Weapon.DamageType.Thunder] = 0
+        };
         Threat = gameObject.AddComponent<Threat>();
         Faction = (Fey != null) ? Conflict.Faction.Fey : (Ghaddim != null) ? Conflict.Faction.Ghaddim : Conflict.Faction.Mhoddim;
         Role = Conflict.Role.None;  // offense and defense set this role for mortals
@@ -433,7 +453,7 @@ public class Actor : MonoBehaviour
         }
         else {
             SheathWeapon();
-            RuinControlPoint = null;
+            ObjectiveControlPoint = null;
             state = State.Idle;
             return;
         }
@@ -442,7 +462,8 @@ public class Actor : MonoBehaviour
 
     private void SheathWeapon()
     {
-        Attack.EquippedMeleeWeapon.gameObject.SetActive(false);
+        if (Attack.EquippedMeleeWeapon != null) Attack.EquippedMeleeWeapon.gameObject.SetActive(false);
+        if (Attack.EquippedRangedWeapon != null) Attack.EquippedRangedWeapon.gameObject.SetActive(false);
     }
 
 

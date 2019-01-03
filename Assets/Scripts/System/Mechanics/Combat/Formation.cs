@@ -71,7 +71,7 @@ public class Formation
         switch (alignment)
         {
             case Alignment.Circle:
-                circular_formation = Circle.CreateCircle(Anchor, Units.Count, Units.Count);
+                circular_formation = Circle.New(Anchor, Units.Count, Units.Count);
                 PositionCircle(circular_formation);
                 break;
             case Alignment.Grid:
@@ -112,7 +112,7 @@ public class Formation
     {
         for (int i = 0; i < Units.Count; i++)
         {
-            Units[i].transform.position = formation.vertices[i];
+            Units[i].transform.position = formation.Vertices[i];
         }
         Face(Vector3.zero);
     }

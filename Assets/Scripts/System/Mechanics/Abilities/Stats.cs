@@ -4,28 +4,33 @@ using UnityEngine;
 
 public class Stats : MonoBehaviour
 {
+    public int Actions { get; set; }
     public Actor Actor { get; set; }
-    public int AgilityRating { get; set; }
-    public int ConstitutionRating { get; set; }
-    public int IntellectRating { get; set; }
-    public int StrengthRating { get; set; }
-    public int WillRating { get; set; }
+    public int CharismaProficiency { get; set; }
+    public int DexterityProficiency { get; set; }
+    public int ConstitutionProficiency { get; set; }
+    public int IntelligenceProficiency { get; set; }
+    public int StrengthProficiency { get; set; }
+    public int WisdomProficiency { get; set; }
 
     private void OnValidate()
     {
-        if (AgilityRating > 10) AgilityRating = 10;
-        if (AgilityRating < 0) AgilityRating = 0;
+        if (CharismaProficiency > 10) CharismaProficiency = 10;
+        if (CharismaProficiency < 0) CharismaProficiency = 0;
 
-        if (ConstitutionRating > 10) ConstitutionRating = 10;
-        if (ConstitutionRating < 0) ConstitutionRating = 0;
+        if (DexterityProficiency > 10) DexterityProficiency = 10;
+        if (DexterityProficiency < 0) DexterityProficiency = 0;
 
-        if (IntellectRating > 10) IntellectRating = 10;
-        if (IntellectRating < 0) IntellectRating = 0;
+        if (ConstitutionProficiency > 10) ConstitutionProficiency = 10;
+        if (ConstitutionProficiency < 0) ConstitutionProficiency = 0;
 
-        if (StrengthRating > 10) StrengthRating = 10;
-        if (StrengthRating < 0) StrengthRating = 0;
+        if (IntelligenceProficiency > 10) IntelligenceProficiency = 10;
+        if (IntelligenceProficiency < 0) IntelligenceProficiency = 0;
 
-        if (WillRating > 10) WillRating = 10;
-        if (WillRating < 0) WillRating = 0;
+        if (StrengthProficiency > 10) StrengthProficiency = 10;
+        if (StrengthProficiency < 0) StrengthProficiency = 0;
+
+        if (WisdomProficiency > 10) WisdomProficiency = 10;
+        if (WisdomProficiency < 0) WisdomProficiency = 0;
     }
 }
