@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 136865368129096052}
   - component: {fileID: 54176829473299802}
   - component: {fileID: 195258252824600532}
-  - component: {fileID: 114622511376475628}
+  - component: {fileID: 7394070363342518024}
   m_Layer: 26
   m_Name: Actor
   m_TagString: Actor
@@ -134,7 +134,7 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &114622511376475628
+--- !u!114 &7394070363342518024
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -143,7 +143,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1690649058592984}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35e4f71a8c43f4146a37679b0f8a756d, type: 3}
+  m_Script: {fileID: 11500000, guid: 12f9aac596538443c96c1c216e845106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &7552376652022747841

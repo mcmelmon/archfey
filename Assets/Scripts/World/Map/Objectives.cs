@@ -101,6 +101,7 @@ public class Objectives : MonoBehaviour {
         ObjectiveControlPoints = new List<ObjectiveControlPoint>();
         foreach (var objective in objectives) {
             ObjectiveControlPoints.AddRange(objective.control_points);
+            HeldByFaction[objective.Control].Add(objective);
         }
     }
 }

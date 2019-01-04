@@ -58,7 +58,7 @@ public class Stealth : MonoBehaviour {
             // If we were previously spotted, there is a chance to slip back into stealth if not attacking
             RecoverStealth();
 
-            if (!Actor.IsFriendOrNeutral(_spotter)) {
+            if (!Actor.Decider.IsFriendOrNeutral(_spotter)) {
                 // Units with no perception rating fail to spot us
                 // others contest their perception against our stealth, i.e. it's 50/50 if both match
                 Seen = Random.Range(1,21) < (10 + StealthRating);

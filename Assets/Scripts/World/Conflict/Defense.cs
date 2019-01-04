@@ -32,15 +32,16 @@ public class Defense : MonoBehaviour
     public void Deploy()
     {
         // must be called by Conflict instead of Start to ensure Map setup complete
-        
+
         foreach (var objective in Objectives.Instance.objectives) {
             if (objective.name == "Homestead") {
-                for (int i = 0; i < 6; i++) {
+                for (int i = 0; i < 5; i++) {
                     Circle spawn_circle = Circle.New(objective.control_points[0].transform.position, 5);
                     Vector3 _point = spawn_circle.RandomContainedPoint();
                     GameObject commoner = Spawn(new Vector3(_point.x, objective.control_points[0].transform.position.y, _point.z));
                     commoner.AddComponent<Commoner>();
                 }
+                //break;  // uncomment this to only spawn at one homestead.
             }
         }
     }

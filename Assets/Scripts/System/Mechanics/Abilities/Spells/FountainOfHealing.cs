@@ -51,7 +51,7 @@ public class FountainOfHealing : MonoBehaviour
 
         while (TurnsActive[_target] < Turns) {
             _target.Health.RecoverHealth(Mathf.RoundToInt(PrimaryHealthGainPerTurn * Resources.magic_potency));
-            foreach (var friend in _target.IdentifyFriends()) {
+            foreach (var friend in _target.Decider.IdentifyFriends()) {
                 friend.Health.RecoverHealth(Mathf.RoundToInt(SecondaryHealthGainPerTurn * Resources.magic_potency));
             }
             TurnsActive[_target]++;

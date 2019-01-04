@@ -18,6 +18,26 @@ public class Commoner : MonoBehaviour {
     }
 
 
+    // public
+
+
+    public void OnIdle()
+    {
+        List<Objective> objectives = Objectives.HeldByFaction[Actor.Faction];
+        Objective next_objective = objectives[Random.Range(0, objectives.Count)];
+
+        if (Actor.Movement.Route == null) {
+            Actor.Movement.SetRoute(Route.Linear(transform.position, next_objective.control_points[0].transform.position, Actor.Decider.FinishedRoute));
+        }
+    }
+
+
+    public void OnUnderAttack()
+    {
+        Debug.Log("Help!");
+    }
+
+
     // private
 
 
@@ -28,5 +48,7 @@ public class Commoner : MonoBehaviour {
         Actor.Mhoddim.SetStats();
         Actor.Attack.EquipMeleeWeapon();
         Actor.Attack.EquipRangedWeapon();
+        Actor.OnIdle = OnIdle;
+        Actor.OnUnderAttack = OnUnderAttack;
     }
 }

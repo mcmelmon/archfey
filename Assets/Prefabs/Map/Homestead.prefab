@@ -54,6 +54,7 @@ MonoBehaviour:
   renderers:
   - {fileID: 1369420052741086066}
   - {fileID: 1369420053355859677}
+  initial_control: 2
 --- !u!1 &1369420052741086069
 GameObject:
   m_ObjectHideFlags: 0

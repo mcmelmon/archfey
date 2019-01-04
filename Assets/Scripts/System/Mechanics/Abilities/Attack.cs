@@ -100,8 +100,8 @@ public class Attack : MonoBehaviour
     {
         ClearTargets();
 
-        for (int i = 0; i < Actor.Enemies.Count; i++) {
-            Actor _enemy = Actor.Enemies[i];
+        for (int i = 0; i < Actor.Decider.Enemies.Count; i++) {
+            Actor _enemy = Actor.Decider.Enemies[i];
             if (_enemy == null || transform == null) continue;
 
             float grounded_center_distance = Vector3.Distance(new Vector3(_enemy.transform.position.x, 0, _enemy.transform.position.z), new Vector3(transform.position.x, 0, transform.position.z));

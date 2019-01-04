@@ -79,19 +79,15 @@ public class Movement : MonoBehaviour {
         int attempt = 0;
         int max_attempts = 5;
 
-        while (attempt < max_attempts) {
+        while (Route != null && !Agent.hasPath && attempt < max_attempts) {
             if (Agent.isOnNavMesh) {
-                if (!Agent.hasPath) {
-                    Agent.SetDestination(new Vector3(Route.Current.x, Geography.Terrain.SampleHeight(Route.Current), Route.Current.z));
-                } else {
-                    attempt = max_attempts;
-                }
+                Agent.SetDestination(new Vector3(Route.Current.x, Geography.Terrain.SampleHeight(Route.Current), Route.Current.z));
             } else {
+                attempt++;
                 NavMesh.SamplePosition(Agent.transform.position, out NavMeshHit hit, 10.0f, NavMesh.AllAreas);
                 Agent.Warp(hit.position);
                 Debug.Log("Warp " + attempt);
             }
-            attempt++;
             yield return new WaitForSeconds(Turn.action_threshold);
         }
     }
