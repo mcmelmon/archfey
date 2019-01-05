@@ -33,7 +33,7 @@ public static class ConfigureGhaddim
     public static Dictionary<Soldier.Template, int> starting_health = new Dictionary<Soldier.Template, int>();
 
     // Offense attributes
-    public static Dictionary<Soldier.Template, int> actions = new Dictionary<Soldier.Template, int>();
+    public static Dictionary<Soldier.Template, int> actions_per_round = new Dictionary<Soldier.Template, int>();
     public static Dictionary<Soldier.Template, int> objective_control_rating = new Dictionary<Soldier.Template, int>();
     public static Dictionary<Soldier.Template, List<Weapon>> available_weapons = new Dictionary<Soldier.Template, List<Weapon>>();
 
@@ -75,7 +75,7 @@ public static class ConfigureGhaddim
         starting_health[Soldier.Template.Gnoll] = 22;
 
         // offense
-        actions[Soldier.Template.Gnoll] = 1;
+        actions_per_round[Soldier.Template.Gnoll] = 1;
         objective_control_rating[Soldier.Template.Gnoll] = 5;
 
         List<Weapon> weapon_list = new List<Weapon>()

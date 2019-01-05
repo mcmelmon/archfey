@@ -174,7 +174,7 @@ GameObject:
   - component: {fileID: 3528521705652860624}
   - component: {fileID: 4890917045914637509}
   m_Layer: 26
-  m_Name: Abilities
+  m_Name: Actions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

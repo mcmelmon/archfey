@@ -45,14 +45,14 @@ public class FerociousClaw : MonoBehaviour
     private void AdjustEnergy()
     {
         Resources.DecreaseEnergy(EnergyCost);
-        Target.Resources.IncreaseEnergy(Damage * Target.Resources.energy_potency);
+        Target.Actions.Resources.IncreaseEnergy(Damage * Target.Actions.Resources.energy_potency);
     }
 
 
     public void ApplyDamage()
     {
-        Damage = 2 * (Actor.Attack.EquippedMeleeWeapon.damage_die + Actor.Attack.AttackRating) * Resources.energy_potency;
-        float damage_inflicted = Target.Defend.DamageAfterDefenses(Damage, Weapon.DamageType.Slashing);
+        Damage = 2 * (Actor.Actions.Attack.EquippedMeleeWeapon.damage_die + Actor.Actions.Attack.AttackRating) * Resources.energy_potency;
+        float damage_inflicted = Target.Actions.Defend.DamageAfterDefenses(Damage, Weapon.DamageType.Slashing);
         Target.Health.LoseHealth(damage_inflicted, Actor);
     }
 
@@ -73,8 +73,8 @@ public class FerociousClaw : MonoBehaviour
 
     private void SetComponents()
     {
-        Resources = GetComponent<Resources>();
         Actor = GetComponentInParent<Actor>();
+        Resources = GetComponent<Resources>();
         Stats = GetComponentInParent<Stats>();
         Damage = 0;
         EnergyCost = 33;

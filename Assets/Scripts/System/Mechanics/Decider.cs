@@ -32,18 +32,14 @@ public class Decider : MonoBehaviour
 
     private void Awake()
     {
-        Actor = GetComponent<Actor>();
-        Enemies = new List<Actor>();
-        Friends = new List<Actor>();
-        Threat = gameObject.AddComponent<Threat>();
-        state = State.Idle;
+        SetComponents();
     }
 
 
     public void FinishedRoute()
     {
-        Actor.Movement.Route = null;
-        Actor.Movement.ResetPath();
+        Actor.Actions.Movement.Route = null;
+        Actor.Actions.Movement.ResetPath();
     }
 
 
@@ -163,7 +159,7 @@ public class Decider : MonoBehaviour
 
     private bool HasObjective()
     {
-        return Actor.Movement != null && Actor.Movement.Route != null && !Actor.Movement.Route.Completed();
+        return Actor.Actions.Movement != null && Actor.Actions.Movement.Route != null && !Actor.Actions.Movement.Route.Completed();
     }
 
 
@@ -194,7 +190,7 @@ public class Decider : MonoBehaviour
 
     private bool InCombat()
     {
-        return HostilesSighted() && Actor.Attack.Engaged();
+        return HostilesSighted() && Actor.Actions.Attack.Engaged();
     }
 
 
@@ -233,6 +229,16 @@ public class Decider : MonoBehaviour
     private void ReachedObjective()
     {
         // TODO: move on to the next
+    }
+
+
+    private void SetComponents()
+    {
+        Actor = GetComponentInParent<Actor>();
+        Enemies = new List<Actor>();
+        Friends = new List<Actor>();
+        Threat = GetComponent<Threat>();
+        state = State.Idle;
     }
 
 

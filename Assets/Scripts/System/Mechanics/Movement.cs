@@ -17,7 +17,7 @@ public class Movement : MonoBehaviour {
 
     private void Awake()
     {
-        Agent = GetComponent<NavMeshAgent>();
+        Agent = GetComponentInParent<NavMeshAgent>();
     }
 
 

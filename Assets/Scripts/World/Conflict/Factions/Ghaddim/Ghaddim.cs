@@ -28,7 +28,7 @@ public class Ghaddim : MonoBehaviour {
     private void Awake()
     {
         Actor = GetComponent<Actor>();
-        Threat = gameObject.AddComponent<Threat>();
+        Threat = gameObject.AddComponent<Threat>();  // threat for the faction, not for individuals (don't add to game objects)
     }
 
 
@@ -67,28 +67,22 @@ public class Ghaddim : MonoBehaviour {
 
     private void SetDefenseStats()
     {
-        Defend defend = GetComponentInChildren<Defend>();
-        if (defend == null) return;
-
         if (GetComponent<Gnoll>() != null)
         {
-            defend.ArmorClass = ConfigureGhaddim.armor_class[Soldier.Template.Gnoll];
-            defend.SetResistances(ConfigureGhaddim.resistances[Soldier.Template.Gnoll]);
+            Actor.Actions.Defend.ArmorClass = ConfigureGhaddim.armor_class[Soldier.Template.Gnoll];
+            Actor.Actions.Defend.SetResistances(ConfigureGhaddim.resistances[Soldier.Template.Gnoll]);
         }
     }
 
 
     private void SetHealthStats()
     {
-        Health health = GetComponent<Health>();
-        if (health == null) return;
-
         if (GetComponent<Gnoll>() != null)
         {
-            health.CurrentHitPoints = (ConfigureGhaddim.starting_health[Soldier.Template.Gnoll]);
-            health.HitDice = (ConfigureGhaddim.hit_dice[Soldier.Template.Gnoll]);
-            health.HitDiceType = (ConfigureGhaddim.hit_dice_type[Soldier.Template.Gnoll]);
-            health.MaximumHitPoints = (ConfigureGhaddim.starting_health[Soldier.Template.Gnoll]);
+            Actor.Health.CurrentHitPoints = (ConfigureGhaddim.starting_health[Soldier.Template.Gnoll]);
+            Actor.Health.HitDice = (ConfigureGhaddim.hit_dice[Soldier.Template.Gnoll]);
+            Actor.Health.HitDiceType = (ConfigureGhaddim.hit_dice_type[Soldier.Template.Gnoll]);
+            Actor.Health.MaximumHitPoints = (ConfigureGhaddim.starting_health[Soldier.Template.Gnoll]);
         }
     }
 
@@ -97,9 +91,9 @@ public class Ghaddim : MonoBehaviour {
     {
         if (GetComponent<Gnoll>() != null)
         {
-            Actor.Actions = ConfigureGhaddim.actions[Soldier.Template.Gnoll];
-            Actor.ObjectiveControlRating = ConfigureGhaddim.objective_control_rating[Soldier.Template.Gnoll];
-            Actor.Attack.AvailableWeapons = ConfigureGhaddim.available_weapons[Soldier.Template.Gnoll];
+            Actor.ActionsPerRound = ConfigureGhaddim.actions_per_round[Soldier.Template.Gnoll];
+            Actor.Actions.ObjectiveControlRating = ConfigureGhaddim.objective_control_rating[Soldier.Template.Gnoll];
+            Actor.Actions.Attack.AvailableWeapons = ConfigureGhaddim.available_weapons[Soldier.Template.Gnoll];
         }
     }
 
@@ -108,11 +102,12 @@ public class Ghaddim : MonoBehaviour {
     {
         if (GetComponent<Gnoll>() != null)
         {
-            Actor.Movement.Agent.speed = ConfigureGhaddim.speed[Soldier.Template.Gnoll];
-            Actor.ObjectiveControlRating = ConfigureGhaddim.objective_control_rating[Soldier.Template.Gnoll];
-            Actor.Resources.CurrentMana = ConfigureGhaddim.current_mana[Soldier.Template.Gnoll];
-            Actor.Resources.IsCaster = ConfigureGhaddim.is_caster[Soldier.Template.Gnoll];
-            Actor.Resources.mana_pool_maximum = ConfigureGhaddim.mana_pool_maximum[Soldier.Template.Gnoll];
+            Actor.Actions.ActionsPerRound = ConfigureGhaddim.actions_per_round[Soldier.Template.Gnoll];
+            Actor.Actions.Movement.Agent.speed = ConfigureGhaddim.speed[Soldier.Template.Gnoll];
+            Actor.Actions.ObjectiveControlRating = ConfigureGhaddim.objective_control_rating[Soldier.Template.Gnoll];
+            Actor.Actions.Resources.CurrentMana = ConfigureGhaddim.current_mana[Soldier.Template.Gnoll];
+            Actor.Actions.Resources.IsCaster = ConfigureGhaddim.is_caster[Soldier.Template.Gnoll];
+            Actor.Actions.Resources.mana_pool_maximum = ConfigureGhaddim.mana_pool_maximum[Soldier.Template.Gnoll];
             Actor.Senses.Darkvision = ConfigureGhaddim.darkvision_range[Soldier.Template.Gnoll];
             Actor.Senses.PerceptionRange = ConfigureGhaddim.perception_range[Soldier.Template.Gnoll];
             Actor.Stats.CharismaProficiency = ConfigureGhaddim.charisma_proficiency[Soldier.Template.Gnoll];

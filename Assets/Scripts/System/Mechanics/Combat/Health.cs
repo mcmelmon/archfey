@@ -36,7 +36,7 @@ public class Health : MonoBehaviour {
     public void ApplyDamageOverTime()
     {
         // TODO
-        Actor.Resources.UpdateStatBars();
+        Actor.Actions.Resources.UpdateStatBars();
     }
 
 
@@ -44,10 +44,10 @@ public class Health : MonoBehaviour {
     {
         CurrentHitPoints -= Mathf.RoundToInt(amount);
         if (_attacker != null) {
-            Actor.Decider.Threat.AddThreat(_attacker, amount);
-            Actor.Decider.Threat.SpreadThreat(_attacker, amount);
+            Actor.Actions.Decider.Threat.AddThreat(_attacker, amount);
+            Actor.Actions.Decider.Threat.SpreadThreat(_attacker, amount);
         }
-        Actor.Resources.UpdateStatBars();
+        Actor.Actions.Resources.UpdateStatBars();
     }
 
 
@@ -58,7 +58,7 @@ public class Health : MonoBehaviour {
         CurrentHitPoints += amount;
         if (CurrentHitPoints > MaximumHitPoints) CurrentHitPoints = MaximumHitPoints;
 
-        Actor.Resources.UpdateStatBars();
+        Actor.Actions.Resources.UpdateStatBars();
     }
 
 

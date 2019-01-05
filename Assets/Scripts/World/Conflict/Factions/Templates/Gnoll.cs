@@ -23,7 +23,7 @@ public class Gnoll : MonoBehaviour
     {
         List<Objective> objectives = Objectives.HeldByFaction[Conflict.Instance.EnemyFaction(Actor)];
 
-        Actor.Movement.SetRoute(Route.Linear(transform.position, objectives[Random.Range(0, objectives.Count)].control_points[0].transform.position));
+        Actor.Actions.Movement.SetRoute(Route.Linear(transform.position, objectives[Random.Range(0, objectives.Count)].control_points[0].transform.position));
     }
 
 
@@ -42,9 +42,9 @@ public class Gnoll : MonoBehaviour
 
         Actor = GetComponent<Actor>();
         Actor.Ghaddim.SetStats();
-        Actor.Attack.EquipMeleeWeapon();
-        Actor.Attack.EquipRangedWeapon();
-        Actor.OnIdle = OnIdle;
-        Actor.OnUnderAttack = OnUnderAttack;
+        Actor.Actions.Attack.EquipMeleeWeapon();
+        Actor.Actions.Attack.EquipRangedWeapon();
+        Actor.Actions.OnIdle = OnIdle;
+        Actor.Actions.OnUnderAttack = OnUnderAttack;
     }
 }

@@ -50,8 +50,6 @@ GameObject:
   - component: {fileID: 114490496335929734}
   - component: {fileID: 114399145179561114}
   - component: {fileID: 114313003634657330}
-  - component: {fileID: 114191208075042882}
-  - component: {fileID: 124132218265347199}
   m_Layer: 26
   m_Name: Ghaddim
   m_TagString: Actor
@@ -245,31 +243,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   haste_delta: 1.2
---- !u!114 &114191208075042882
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1837594824673670}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 523d3699de28f40c0a43cd80e27c15a4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &124132218265347199
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1837594824673670}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 466b2b86e2134439d8e339fd83579a11, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  state: 0
 --- !u!1 &227228611916504693
 GameObject:
   m_ObjectHideFlags: 0
@@ -856,12 +829,16 @@ GameObject:
   m_Component:
   - component: {fileID: 623115363425781869}
   - component: {fileID: 2730453224100685181}
+  - component: {fileID: 3326915880445288037}
+  - component: {fileID: 381939467137619229}
+  - component: {fileID: 5304846250970021124}
+  - component: {fileID: 9084372649407442972}
   - component: {fileID: 1322677880611191791}
   - component: {fileID: 3003944476573858104}
   - component: {fileID: 6380165454379000831}
   - component: {fileID: 6634757698939757418}
   m_Layer: 26
-  m_Name: Abilities
+  m_Name: Actions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -906,6 +883,55 @@ MonoBehaviour:
   health_bar: {fileID: 4111718238303526329}
   mana_bar: {fileID: 4257612374217616270}
   stat_bars: {fileID: 9051610363502694933}
+--- !u!114 &3326915880445288037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5920702512231852661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 505daa82b2b8e447fa93098095ab9fed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &381939467137619229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5920702512231852661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 466b2b86e2134439d8e339fd83579a11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 0
+--- !u!114 &5304846250970021124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5920702512231852661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2d9406e477894d779e8ce88b258e99a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &9084372649407442972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5920702512231852661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 523d3699de28f40c0a43cd80e27c15a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1322677880611191791
 MonoBehaviour:
   m_ObjectHideFlags: 0

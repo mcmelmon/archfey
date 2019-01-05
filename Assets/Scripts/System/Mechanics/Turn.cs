@@ -53,6 +53,6 @@ public class Turn : MonoBehaviour {
 
     private void TakeAction()
     {
-        actor.ActOnTurn();
+        actor.Actions.ActOnTurn();
     }
 }

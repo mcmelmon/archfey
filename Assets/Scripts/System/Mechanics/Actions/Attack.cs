@@ -100,8 +100,8 @@ public class Attack : MonoBehaviour
     {
         ClearTargets();
 
-        for (int i = 0; i < Actor.Decider.Enemies.Count; i++) {
-            Actor _enemy = Actor.Decider.Enemies[i];
+        for (int i = 0; i < Actor.Actions.Decider.Enemies.Count; i++) {
+            Actor _enemy = Actor.Actions.Decider.Enemies[i];
             if (_enemy == null || transform == null) continue;
 
             float grounded_center_distance = Vector3.Distance(new Vector3(_enemy.transform.position.x, 0, _enemy.transform.position.z), new Vector3(transform.position.x, 0, transform.position.z));
@@ -179,7 +179,7 @@ public class Attack : MonoBehaviour
         if (CurrentMeleeTargets.Count == 0 && CurrentRangedTargets.Count == 0) return;
 
         // TODO: handle in Stealth; allow stealth to be recovered, e.g. "Vanish" and even attacking from stealth for a short while, etc.
-        Stealth stealth = Actor.Stealth;
+        Stealth stealth = Actor.Actions.Stealth;
         if (stealth != null) {
             stealth.Attacking = true;
             stealth.Seen = true;

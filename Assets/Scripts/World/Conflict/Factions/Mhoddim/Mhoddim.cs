@@ -32,7 +32,7 @@ public class Mhoddim : MonoBehaviour {
     private void Awake()
     {
         Actor = GetComponent<Actor>();
-        Threat = gameObject.AddComponent<Threat>();
+        Threat = gameObject.AddComponent<Threat>();  // threat for the faction, not for individuals (don't add to game objects)
     }
 
 
@@ -71,26 +71,20 @@ public class Mhoddim : MonoBehaviour {
 
     private void SetDefenseStats()
     {
-        Defend defend = GetComponentInChildren<Defend>();
-        if (defend == null) return;
-
         if (GetComponent<Commoner>() != null) {
-            defend.ArmorClass = ConfigureMhoddim.armor_class[Soldier.Template.Commoner];
-            defend.SetResistances(ConfigureMhoddim.resistances[Soldier.Template.Commoner]);
+            Actor.Actions.Defend.ArmorClass = ConfigureMhoddim.armor_class[Soldier.Template.Commoner];
+            Actor.Actions.Defend.SetResistances(ConfigureMhoddim.resistances[Soldier.Template.Commoner]);
         }
     }
 
 
     private void SetHealthStats()
     {
-        Health health = GetComponent<Health>();
-        if (health == null) return;
-
         if (GetComponent<Commoner>() != null) {
-            health.CurrentHitPoints = (ConfigureMhoddim.starting_health[Soldier.Template.Commoner]);
-            health.HitDice = (ConfigureMhoddim.hit_dice[Soldier.Template.Commoner]);
-            health.HitDiceType = (ConfigureMhoddim.hit_dice_type[Soldier.Template.Commoner]);
-            health.MaximumHitPoints = (ConfigureMhoddim.starting_health[Soldier.Template.Commoner]);
+            Actor.Health.CurrentHitPoints = (ConfigureMhoddim.starting_health[Soldier.Template.Commoner]);
+            Actor.Health.HitDice = (ConfigureMhoddim.hit_dice[Soldier.Template.Commoner]);
+            Actor.Health.HitDiceType = (ConfigureMhoddim.hit_dice_type[Soldier.Template.Commoner]);
+            Actor.Health.MaximumHitPoints = (ConfigureMhoddim.starting_health[Soldier.Template.Commoner]);
         }
     }
 
@@ -98,9 +92,9 @@ public class Mhoddim : MonoBehaviour {
     private void SetOffensiveStats()
     {
         if (GetComponent<Commoner>() != null) {
-            Actor.Actions = ConfigureMhoddim.actions[Soldier.Template.Commoner];
-            Actor.ObjectiveControlRating = ConfigureMhoddim.objective_control_rating[Soldier.Template.Commoner];
-            Actor.Attack.AvailableWeapons = ConfigureMhoddim.available_weapons[Soldier.Template.Commoner];
+            Actor.ActionsPerRound = ConfigureMhoddim.actions_per_round[Soldier.Template.Commoner];
+            Actor.Actions.ObjectiveControlRating = ConfigureMhoddim.objective_control_rating[Soldier.Template.Commoner];
+            Actor.Actions.Attack.AvailableWeapons = ConfigureMhoddim.available_weapons[Soldier.Template.Commoner];
         }
     }
 
@@ -109,11 +103,12 @@ public class Mhoddim : MonoBehaviour {
     {
         if (GetComponent<Commoner>() != null)
         {
-            Actor.Movement.Agent.speed = ConfigureMhoddim.speed[Soldier.Template.Commoner];
-            Actor.ObjectiveControlRating = ConfigureMhoddim.objective_control_rating[Soldier.Template.Commoner];
-            Actor.Resources.CurrentMana = ConfigureMhoddim.current_mana[Soldier.Template.Commoner];
-            Actor.Resources.IsCaster = ConfigureMhoddim.is_caster[Soldier.Template.Commoner];
-            Actor.Resources.mana_pool_maximum = ConfigureMhoddim.mana_pool_maximum[Soldier.Template.Commoner];
+            Actor.Actions.ActionsPerRound = ConfigureMhoddim.actions_per_round[Soldier.Template.Commoner];
+            Actor.Actions.Movement.Agent.speed = ConfigureMhoddim.speed[Soldier.Template.Commoner];
+            Actor.Actions.ObjectiveControlRating = ConfigureMhoddim.objective_control_rating[Soldier.Template.Commoner];
+            Actor.Actions.Resources.CurrentMana = ConfigureMhoddim.current_mana[Soldier.Template.Commoner];
+            Actor.Actions.Resources.IsCaster = ConfigureMhoddim.is_caster[Soldier.Template.Commoner];
+            Actor.Actions.Resources.mana_pool_maximum = ConfigureMhoddim.mana_pool_maximum[Soldier.Template.Commoner];
             Actor.Senses.Darkvision = ConfigureMhoddim.darkvision_range[Soldier.Template.Commoner];
             Actor.Senses.PerceptionRange = ConfigureMhoddim.perception_range[Soldier.Template.Commoner];
             Actor.Stats.CharismaProficiency = ConfigureMhoddim.charisma_proficiency[Soldier.Template.Commoner];

@@ -19,9 +19,7 @@ GameObject:
   - component: {fileID: 4753276256006975042}
   - component: {fileID: 114146831395848056}
   - component: {fileID: 114669221061675160}
-  - component: {fileID: 114989557624414676}
   - component: {fileID: 114116596202346880}
-  - component: {fileID: 2748323484557270863}
   m_Layer: 26
   m_Name: Mhoddim
   m_TagString: Actor
@@ -202,18 +200,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59b0a99f6f2754a46984de39bc6bbef6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114989557624414676
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1654527326907342}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 523d3699de28f40c0a43cd80e27c15a4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114116596202346880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -227,19 +213,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   haste_delta: 1.5
---- !u!114 &2748323484557270863
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1654527326907342}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 466b2b86e2134439d8e339fd83579a11, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  state: 0
 --- !u!1 &1789843551435236
 GameObject:
   m_ObjectHideFlags: 0
@@ -503,12 +476,16 @@ GameObject:
   m_Component:
   - component: {fileID: 3225732829100436198}
   - component: {fileID: 5589369088179827744}
+  - component: {fileID: 235073452451008535}
+  - component: {fileID: 305320185260508454}
+  - component: {fileID: 5599676045798116916}
+  - component: {fileID: 1288566148035940194}
   - component: {fileID: 6576107044333670634}
   - component: {fileID: 1292266920061706893}
   - component: {fileID: 5886007812235558201}
   - component: {fileID: 5754922886680468107}
   m_Layer: 26
-  m_Name: Abilities
+  m_Name: Actions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -553,6 +530,55 @@ MonoBehaviour:
   health_bar: {fileID: 4822118683672813148}
   mana_bar: {fileID: 5806549341498564979}
   stat_bars: {fileID: 3843973250920942936}
+--- !u!114 &235073452451008535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1648050507008567817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 505daa82b2b8e447fa93098095ab9fed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &305320185260508454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1648050507008567817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 466b2b86e2134439d8e339fd83579a11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 0
+--- !u!114 &5599676045798116916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1648050507008567817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2d9406e477894d779e8ce88b258e99a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1288566148035940194
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1648050507008567817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 523d3699de28f40c0a43cd80e27c15a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6576107044333670634
 MonoBehaviour:
   m_ObjectHideFlags: 0

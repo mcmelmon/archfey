@@ -39,7 +39,7 @@ public class DefaultRange : MonoBehaviour
         Projectile = Instantiate(Weapon.projectile_prefab, transform.Find("AttackOrigin").transform.position, transform.rotation);
         StartCoroutine(Seek());
 
-        if (Random.Range(1, 21) + AttackModifier > _target.Defend.ArmorClass) { // Dexterity is already built in to AC
+        if (Random.Range(1, 21) + AttackModifier > Target.Actions.Defend.ArmorClass) { // Dexterity is already built in to AC
             ApplyDamage();
             DisplayEffects();
         }
@@ -51,9 +51,9 @@ public class DefaultRange : MonoBehaviour
 
     private void ApplyDamage()
     {
-        if (Target.Health != null && Target.Defend != null && Actor != null)
+        if (Target.Health != null && Target.Actions.Defend != null && Actor.Actions != null)
         {
-            Damage = Target.Defend.DamageAfterDefenses(Weapon.expected_damage + DamageModifier, Weapon.damage_type);
+            Damage = Target.Actions.Defend.DamageAfterDefenses(Weapon.expected_damage + DamageModifier, Weapon.damage_type);
             Target.Health.LoseHealth(Damage, Actor);
         }
     }
@@ -78,8 +78,8 @@ public class DefaultRange : MonoBehaviour
 
     private void SetModifiers()
     {
-        AttackModifier = Actor.Stats.DexterityProficiency + Weapon.attack_bonus + Actor.SuperiorWeapons[Weapon.damage_type];
-        DamageModifier = Actor.Stats.DexterityProficiency + Weapon.damage_bonus + Actor.SuperiorWeapons[Weapon.damage_type];
+        AttackModifier = Actor.Stats.DexterityProficiency + Weapon.attack_bonus + Actions.SuperiorWeapons[Weapon.damage_type];
+        DamageModifier = Actor.Stats.DexterityProficiency + Weapon.damage_bonus + Actions.SuperiorWeapons[Weapon.damage_type];
 
     }
 

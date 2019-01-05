@@ -10,7 +10,6 @@ public class Smite : MonoBehaviour
     public float Damage { get; set; }
     public int ManaCost { get; set; }
     public float Range { get; set; }
-    public Resources Resources { get; set; }
     public Stats Stats { get; set; }
     public Actor Target { get; set; }
 
@@ -30,7 +29,7 @@ public class Smite : MonoBehaviour
         if (_target == null) return;
         Target = _target;
 
-        if (Resources.CurrentMana >= ManaCost) {
+        if (Actor.Actions.Resources.CurrentMana >= ManaCost) {
             ApplyDamage();
             DisplayEffects();
             AdjustMana();
@@ -43,15 +42,15 @@ public class Smite : MonoBehaviour
 
     private void AdjustMana()
     {
-        Resources.DecreaseMana(ManaCost);
-        Actor.Resources.UpdateStatBars();
+        Actor.Actions.Resources.DecreaseMana(ManaCost);
+        Actor.Actions.Resources.UpdateStatBars();
     }
 
 
     private void ApplyDamage()
     {
-        Damage = 3 * (Actor.Attack.EquippedMeleeWeapon.damage_die + Actor.Attack.AttackRating) * Resources.magic_potency;
-        float damage_inflicted = Target.Defend.DamageAfterDefenses(Damage, Weapon.DamageType.Radiant);
+        Damage = 3 * (Actor.Actions.Attack.EquippedMeleeWeapon.damage_die + Actor.Actions.Attack.AttackRating) * Actor.Actions.Resources.magic_potency;
+        float damage_inflicted = Target.Actions.Defend.DamageAfterDefenses(Damage, Weapon.DamageType.Radiant);
         Target.Health.LoseHealth(damage_inflicted, Actor);
     }
 
@@ -67,7 +66,6 @@ public class Smite : MonoBehaviour
 
     private void SetComponents()
     {
-        Resources = GetComponent<Resources>();
         Actor = GetComponentInParent<Actor>();
         Stats = GetComponentInParent<Stats>();
         Damage = 0;

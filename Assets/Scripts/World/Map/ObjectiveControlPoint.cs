@@ -67,7 +67,7 @@ public class ObjectiveControlPoint : MonoBehaviour
     {
         if (CurrentOccupationPoints >= MaximumOccupationPoints) return;
 
-        CurrentOccupationPoints += Mathf.Clamp((NearestActor.ObjectiveControlRating - ControlResistanceRating), 0, NearestActor.ObjectiveControlRating);
+        CurrentOccupationPoints += Mathf.Clamp((NearestActor.Actions.ObjectiveControlRating - ControlResistanceRating), 0, NearestActor.Actions.ObjectiveControlRating);
         if (Faction == Conflict.Faction.None) Faction = NearestActor.Faction;
         if (CurrentOccupationPoints >= MaximumOccupationPoints) {
             CurrentOccupationPoints = MaximumOccupationPoints;
@@ -129,7 +129,7 @@ public class ObjectiveControlPoint : MonoBehaviour
     {
         if (CurrentOccupationPoints <= 0) return;
 
-        CurrentOccupationPoints -= Mathf.Clamp((NearestActor.ObjectiveControlRating - ControlResistanceRating), 0, NearestActor.ObjectiveControlRating);
+        CurrentOccupationPoints -= Mathf.Clamp((NearestActor.Actions.ObjectiveControlRating - ControlResistanceRating), 0, NearestActor.Actions.ObjectiveControlRating);
         if (CurrentOccupationPoints <= 0) {
             CurrentOccupationPoints = 0;
             Occupied = false;
