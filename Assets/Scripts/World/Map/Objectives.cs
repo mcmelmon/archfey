@@ -6,7 +6,6 @@ using UnityEngine;
 public class Objectives : MonoBehaviour {
 
     // Inspector settings
-    public Objective objective_prefab;
     public List<Objective> objectives;
 
     // properties

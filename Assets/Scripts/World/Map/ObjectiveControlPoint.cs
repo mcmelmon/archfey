@@ -171,7 +171,7 @@ public class ObjectiveControlPoint : MonoBehaviour
     public void UpdateControlIndicator()
     {
         control_indicator.value = CurrentControlPercentage();
-        if (control_indicator.value >= 1) {
+        if (Mathf.Approximately(control_indicator.value, 0) || Mathf.Approximately(control_indicator.value, 1)) {
             control_indicator.gameObject.SetActive(false);
         } else {
             control_indicator.gameObject.SetActive(true);
