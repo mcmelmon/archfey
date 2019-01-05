@@ -36,8 +36,8 @@ public class Offense : MonoBehaviour
 
         foreach (var objective in Objectives.Instance.objectives)
         {
-            if (objective.Control == Conflict.Faction.None) {
-                for (int i = 0; i < 3; i++) {
+            if (objective.Control == Conflict.Faction.Ghaddim) {
+                for (int i = 0; i < 1; i++) {
                     Circle spawn_circle = Circle.New(objective.control_points[0].transform.position, 5);
                     Vector3 _point = spawn_circle.RandomContainedPoint();
                     GameObject gnoll = Spawn(new Vector3(_point.x, objective.control_points[0].transform.position.y + 4, _point.z));

@@ -8,23 +8,28 @@ public class Decider : MonoBehaviour
     {
         AlliesUnderAttack = 1,
         BadlyInjured = 2,
-        FriendliesSighted = 3,
-        HasObjective = 4,
-        HostilesSighted = 5,
-        Idle = 6,
-        InCombat = 7,
-        OnWatch = 8,
+        ContestingObjective = 3,
+        FriendliesSighted = 4,
+        HasObjective = 5,
+        HostilesSighted = 6,
+        Idle = 7,
+        InCombat = 8,
         ReachedObective = 9,
         UnderAttack = 10,
+        Watch = 11,
     };
-
+    
+    // Inspector settings
+    
     public State state;
+    public State previous_state;
 
     // properties
 
     public Actor Actor { get; set; }
     public List<Actor> Enemies { get; set; }
     public List<Actor> Friends { get; set; }
+    public ObjectiveControlPoint ObjectiveUnderContention { get; set; }
     public Threat Threat { get; set; }
 
 
@@ -37,6 +42,51 @@ public class Decider : MonoBehaviour
 
 
     // public
+
+
+    public void ChooseState()
+    {
+        Actor.Senses.Sight();
+
+        if (InCombat()) {
+            Actor _enemy = Threat.BiggestThreat();
+            if (_enemy != null) {
+                if (!Enemies.Contains(_enemy)) Enemies.Add(_enemy);
+                SetState(State.InCombat);
+            } else {
+                SetState(State.Idle);
+            }
+        } else if (UnderAttack()) {
+            Actor _enemy = Threat.BiggestThreat();
+            if (_enemy != null) {
+                if (!Enemies.Contains(_enemy)) Enemies.Add(_enemy);
+                previous_state = state;
+                SetState(State.UnderAttack);
+            } else {
+                SetState(State.Idle);
+            }
+        } else if (AlliesUnderAttack()) {
+            Actor _enemy = (Actor.Faction == Conflict.Faction.Ghaddim) ? Actor.Ghaddim.BiggestFactionThreat() : Actor.Mhoddim.BiggestFactionThreat();
+
+            if (_enemy != null) {
+                if (!Enemies.Contains(_enemy)) Enemies.Add(_enemy);
+                SetState(State.AlliesUnderAttack);
+            } else {
+                SetState(State.Idle);
+            }
+        } else if (AttackingObjective())  {
+            SetState(State.ContestingObjective);
+            return;
+        } else if (HostilesSighted()) {
+            SetState(State.HostilesSighted);
+        } else if (HasObjective()) {
+            SetState(State.HasObjective);
+        } else if (OnWatch()) {
+            SetState(State.Watch);
+        } else {
+            SetState(State.Idle);
+        }
+    }
 
 
     public void FinishedRoute()
@@ -56,76 +106,6 @@ public class Decider : MonoBehaviour
     }
 
 
-    public void SetState()
-    {
-        Actor.Senses.Sight();
-
-        if (InCombat())
-        {
-            Actor _enemy = Threat.BiggestThreat();
-            if (_enemy != null)
-            {
-                if (!Enemies.Contains(_enemy)) Enemies.Add(_enemy);
-                state = State.InCombat;
-            }
-            else
-            {
-                state = State.Idle;
-            }
-            return;
-        }
-        else if (UnderAttack())
-        {
-            Actor _enemy = Threat.BiggestThreat();
-            if (_enemy != null)
-            {
-                if (!Enemies.Contains(_enemy)) Enemies.Add(_enemy);
-                state = State.UnderAttack;
-            }
-            else
-            {
-                state = State.Idle;
-            }
-            return;
-        }
-        else if (AlliesUnderAttack())
-        {
-            Actor _enemy = (Actor.Faction == Conflict.Faction.Ghaddim) ? Actor.Ghaddim.BiggestFactionThreat() : Actor.Mhoddim.BiggestFactionThreat();
-
-            if (_enemy != null)
-            {
-                if (!Enemies.Contains(_enemy)) Enemies.Add(_enemy);
-                state = State.AlliesUnderAttack;
-            }
-            else
-            {
-                state = State.Idle;
-            }
-            return;
-        }
-        else if (HostilesSighted())
-        {
-            state = State.HostilesSighted;
-            return;
-        }
-        else if (HasObjective())
-        {
-            state = State.HasObjective;
-            return;
-        }
-        else if (OnWatch())
-        {
-            state = State.OnWatch;
-            return;
-        }
-        else
-        {
-            state = State.Idle;
-            return;
-        }
-    }
-
-
     // private
 
 
@@ -139,6 +119,12 @@ public class Decider : MonoBehaviour
         }
 
         return false;
+    }
+
+
+    private bool AttackingObjective()
+    {
+        return ObjectiveUnderContention != null;
     }
 
 
@@ -242,6 +228,13 @@ public class Decider : MonoBehaviour
         Friends = new List<Actor>();
         Threat = GetComponent<Threat>();
         state = State.Idle;
+    }
+
+
+    private void SetState(State _state)
+    {
+        previous_state = state;
+        state = _state;
     }
 
 

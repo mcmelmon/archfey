@@ -11,13 +11,15 @@ public class ObjectiveControlPoint : MonoBehaviour
 
     // properties
 
+    public List<Actor> Attackers { get; set; }
+    public Conflict.Faction ControllingFaction { get; set; }
     public float ControlResistanceRating { get; set; }
     public float CurrentOccupationPoints { get; set; }
-    public Conflict.Faction Faction { get; set; }
+    public List<Actor> Defenders { get; set; }
     public float MaximumOccupationPoints { get; set; }
-    public Actor NearestActor { get; set; }
+    public Conflict.Faction OccupyingFaction { get; set; }
     public Objective Objective { get; set; }
-    public bool Occupied { get; set; }
+    public bool Controlled { get; set; }
 
 
     // Unity
@@ -38,42 +40,36 @@ public class ObjectiveControlPoint : MonoBehaviour
     private IEnumerator CheckOccupation()
     {
         while (true) {
-            NearestActor = FindNearestActor();
+            IdentifyFriendAndFoe();
 
-            if (NearestActor == null) { // everyone is dead
-                break;
-            } else {
-                float nearest_actor_distance = Vector3.Distance(NearestActor.transform.position, transform.position);
+            // don't use foreach because the units will get destroyed in flight
+            for (int i = 0; i < Defenders.Count; i++) {
+                BoostOccupation(Defenders[i]);
+            }
 
-                if (UnderAttack(nearest_actor_distance)) {
-                    ReduceOccupation();
-                } else {
-                    if (Reinforce(nearest_actor_distance)) {
-                        BoostOccupation();
-                    }
-                }
+            for (int i = 0; i < Attackers.Count; i++) {
+                ReduceOccupation(Attackers[i]);
             }
 
             UpdateControlIndicator();
             yield return new WaitForSeconds(Turn.action_threshold);
         }
-
-        // TODO: everyone is dead, scenario over
-        ResetControl();
     }
 
 
-    private void BoostOccupation()
+    private void BoostOccupation(Actor defender)
     {
+        if (defender == null) return;
+
         if (CurrentOccupationPoints >= MaximumOccupationPoints) return;
 
-        CurrentOccupationPoints += Mathf.Clamp((NearestActor.Actions.ObjectiveControlRating - ControlResistanceRating), 0, NearestActor.Actions.ObjectiveControlRating);
-        if (Faction == Conflict.Faction.None) Faction = NearestActor.Faction;
+        CurrentOccupationPoints += Mathf.Clamp((defender.Actions.ObjectiveControlRating - ControlResistanceRating), 0, defender.Actions.ObjectiveControlRating);
         if (CurrentOccupationPoints >= MaximumOccupationPoints) {
             CurrentOccupationPoints = MaximumOccupationPoints;
-            Occupied = true;
+            ControllingFaction = OccupyingFaction = defender.Faction;
+            Controlled = true;
             foreach (var rend in Objective.renderers) {
-                rend.material = (Faction == Conflict.Faction.Ghaddim) ? Objective.ghaddim_skin : Objective.mhoddim_skin;
+                rend.material = (ControllingFaction == Conflict.Faction.Ghaddim) ? Objective.ghaddim_skin : Objective.mhoddim_skin;
             }
         }
     }
@@ -98,74 +94,82 @@ public class ObjectiveControlPoint : MonoBehaviour
     }
 
 
-    private Actor FindNearestActor()
+    private void IdentifyFriendAndFoe()
     {
-        float shortest_distance = float.MaxValue;
         float distance;
-        Actor nearest_actor = null;
+
+        for (int i = 0; i < Attackers.Count; i++) {
+            Attackers[i].Actions.Decider.ObjectiveUnderContention = null;
+        }
+
+        for (int i = 0; i < Defenders.Count; i++) {
+            Defenders[i].Actions.Decider.ObjectiveUnderContention = null;
+        }
+
+        Attackers.Clear();
+        Defenders.Clear();
 
         for (int i = 0; i < Conflict.Units.Count; i++) {
-            GameObject _unit = Conflict.Units[i];
-            if (_unit == null || transform == null) continue;
+            if (Conflict.Units[i] == null) continue;
+
+            Actor _unit = Conflict.Units[i].GetComponent<Actor>();
+            if (_unit == null) continue;
 
             distance = Vector3.Distance(transform.position, _unit.transform.position);
-            if (distance < shortest_distance) {
-                shortest_distance = distance;
-                nearest_actor = _unit.GetComponent<Actor>();
+            if (distance < Route.reached_threshold) {
+                if (_unit.Faction == ControllingFaction) {
+                    Defenders.Add(_unit);
+                } else if (ControllingFaction == Conflict.Faction.None && _unit.Faction == OccupyingFaction) {
+                    Defenders.Add(_unit);
+                    _unit.Actions.Decider.ObjectiveUnderContention = this;
+                }
+                else {
+                    Attackers.Add(_unit);
+                    _unit.Actions.Decider.ObjectiveUnderContention = this;
+                }
             }
         }
-
-        return nearest_actor;
     }
 
 
-    private bool Reinforce(float nearest_actor_distance)
+    private void ReduceOccupation(Actor attacker)
     {
-        return Faction == NearestActor.Faction && nearest_actor_distance < Route.reached_threshold;
-    }
+        if (attacker == null) return;
 
-
-    private void ReduceOccupation()
-    {
-        if (CurrentOccupationPoints <= 0) return;
-
-        CurrentOccupationPoints -= Mathf.Clamp((NearestActor.Actions.ObjectiveControlRating - ControlResistanceRating), 0, NearestActor.Actions.ObjectiveControlRating);
         if (CurrentOccupationPoints <= 0) {
             CurrentOccupationPoints = 0;
-            Occupied = false;
-            Faction = Conflict.Faction.None;
-            foreach (var rend in Objective.renderers) {
-                rend.material = Objective.unclaimed_skin;
+            OccupyingFaction = attacker.Faction;
+            Controlled = false;
+            BoostOccupation(attacker);
+        } else {
+            CurrentOccupationPoints -= Mathf.Clamp((attacker.Actions.ObjectiveControlRating - ControlResistanceRating), 0, attacker.Actions.ObjectiveControlRating);
+            if (CurrentOccupationPoints <= 0) {
+                CurrentOccupationPoints = 0;
+                OccupyingFaction = Conflict.Faction.None;
+                ControllingFaction = Conflict.Faction.None;
+                Controlled = false;
+
+                foreach (var rend in Objective.renderers) {
+                    rend.material = Objective.unclaimed_skin;
+                }
             }
         }
-    }
-
-
-    private void ResetControl()
-    {
-        Occupied = false;
-        Faction = Objective.initial_control;
-        CurrentOccupationPoints = MaximumOccupationPoints;
     }
 
 
     private void SetComponents()
     {
+        Objective = GetComponentInParent<Objective>();  // define before referencing!
+
+        Attackers = new List<Actor>();
+        ControllingFaction = Objective.initial_control;
         ControlResistanceRating = 2;  // TODO: specify in Inspector
-        Objective = GetComponentInParent<Objective>();
-        Occupied = false;
-
-        Faction = Objective.Control;
-        CurrentOccupationPoints = (Faction == Conflict.Faction.None) ? 0 : 100; // TODO: specify in Inspector
-
+        CurrentOccupationPoints = (ControllingFaction == Conflict.Faction.None) ? 0 : 100; // TODO: specify in Inspector
+        Defenders = new List<Actor>();
+        MaximumOccupationPoints = 100; // TODO: specify in Inspector
+        OccupyingFaction = ControllingFaction;
+        Controlled = false;
     }
-
-
-    private bool UnderAttack(float nearest_actor_distance)
-    {
-        return NearestActor.Faction != Faction && nearest_actor_distance < Route.reached_threshold;
-    }
-
 
 
     public void UpdateControlIndicator()

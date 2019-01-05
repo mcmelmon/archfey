@@ -61,7 +61,7 @@ public class Objective : MonoBehaviour
             Conflict.Faction previous_faction = Control;
 
             foreach (var control_point in control_points) {
-                Conflict.Faction point_faction = control_point.Faction;
+                Conflict.Faction point_faction = control_point.ControllingFaction;
 
                 if (new_faction == Conflict.Faction.None)
                     // We have just entered the loop
@@ -86,11 +86,11 @@ public class Objective : MonoBehaviour
     private void SetComponents()
     {
         Control = initial_control;
-        Controlled = true;
+        Controlled = (Control != Conflict.Faction.None);
         StartCoroutine(CheckControl());
 
         foreach (var rend in renderers) {
-            rend.material = (initial_control == Conflict.Faction.Ghaddim) ? ghaddim_skin : mhoddim_skin;
+            rend.material = (initial_control == Conflict.Faction.None) ? unclaimed_skin : (initial_control == Conflict.Faction.Ghaddim) ? ghaddim_skin : mhoddim_skin;
         }
     }
 

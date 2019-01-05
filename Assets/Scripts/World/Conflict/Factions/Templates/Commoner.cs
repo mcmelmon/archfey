@@ -27,9 +27,27 @@ public class Commoner : MonoBehaviour {
     }
 
 
+    public void OnBadlyInjured()
+    {
+
+    }
+
+
+    public void OnHasObective()
+    {
+        Actor.Actions.Movement.Advance();
+    }
+
+
     public void OnInCombat()
     {
         Actor.Actions.FleeFromEnemies();
+    }
+
+
+    public void OnHasObjective()
+    {
+        Actor.Actions.Movement.Advance();
     }
 
 
@@ -42,6 +60,7 @@ public class Commoner : MonoBehaviour {
     public void OnIdle()
     {
         Actor.Actions.Movement.Agent.speed = Actor.Actions.Movement.Speed;
+        Actor.Actions.SheathWeapon();
 
         List<Objective> objectives = Objectives.HeldByFaction[Actor.Faction];
         Objective next_objective = objectives[Random.Range(0, objectives.Count)];
@@ -58,6 +77,12 @@ public class Commoner : MonoBehaviour {
     }
 
 
+    public void OnWatch()
+    {
+        // call for help after running away
+    }
+
+
     // private
 
 
@@ -69,9 +94,12 @@ public class Commoner : MonoBehaviour {
         Actor.Actions.Attack.EquipMeleeWeapon();
         Actor.Actions.Attack.EquipRangedWeapon();
         Actor.Actions.OnAlliesUnderAttack = OnAlliesUnderAttack;
+        Actor.Actions.OnBadlyInjured = OnBadlyInjured;
+        Actor.Actions.OnHasObjective = OnHasObjective;
         Actor.Actions.OnHostilesSighted = OnHostilesSighted;
         Actor.Actions.OnIdle = OnIdle;
         Actor.Actions.OnInCombat = OnInCombat;
         Actor.Actions.OnUnderAttack = OnUnderAttack;
+        Actor.Actions.OnWatch = OnWatch;
     }
 }

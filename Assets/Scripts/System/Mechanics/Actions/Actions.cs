@@ -14,10 +14,15 @@ public class Actions : MonoBehaviour
     public Movement Movement { get; set; }
     public int ObjectiveControlRating { get; set; }
     public Action OnAlliesUnderAttack { get; set; }
+    public Action OnContestingObjective { get; set; }
+    public Action OnBadlyInjured { get; set; }
+    public Action OnFriendliesSighted { get; set; }
+    public Action OnHasObjective { get; set; }
     public Action OnHostilesSighted { get; set; }
     public Action OnIdle { get; set; }
     public Action OnInCombat { get; set; }
     public Action OnUnderAttack { get; set; }
+    public Action OnWatch { get; set; }
     public Resources Resources { get; set; }
     public Stealth Stealth { get; set; }
 
@@ -38,7 +43,7 @@ public class Actions : MonoBehaviour
 
     public void ActOnTurn()
     {
-        Decider.SetState();
+        Decider.ChooseState();
 
         switch (Decider.state)
         {
@@ -46,30 +51,30 @@ public class Actions : MonoBehaviour
                 OnAlliesUnderAttack.Invoke();
                 break;
             case Decider.State.BadlyInjured:
-                // defensive spell or flee
+                break;
+            case Decider.State.ContestingObjective:
+                OnContestingObjective.Invoke();
                 break;
             case Decider.State.FriendliesSighted:
-                // if healer, heal
+                OnFriendliesSighted.Invoke();
                 break;
             case Decider.State.HasObjective:
-                // Stay on target
-                Movement.Advance();
+                OnHasObjective.Invoke();
                 break;
             case Decider.State.HostilesSighted:
                 OnHostilesSighted.Invoke();
                 break;
             case Decider.State.Idle:
-                // Try to control a ruin
                 OnIdle.Invoke();
                 break;
             case Decider.State.InCombat:
                 OnInCombat.Invoke();
                 break;
-            case Decider.State.OnWatch:
-                // engage enemies that appear, but return to post quickly
-                break;
             case Decider.State.UnderAttack:
                 OnUnderAttack.Invoke();
+                break;
+            case Decider.State.Watch:
+                OnWatch.Invoke();
                 break;
             default:
                 OnIdle.Invoke();
@@ -118,36 +123,38 @@ public class Actions : MonoBehaviour
 
     public void CloseWithEnemies()
     {
-        if (Movement == null)
-        {
+        if (Movement == null) {
             Attack.AttackEnemiesInRange();
-        }
-        else
-        {
+        } else {
             Actor nearest_enemy = null;
             float shortest_distance = float.MaxValue;
             float distance;
 
-            for (int i = 0; i < Decider.Enemies.Count; i++)
-            {
+            for (int i = 0; i < Decider.Enemies.Count; i++) {
                 Actor enemy = Decider.Enemies[i];
                 if (enemy == null) continue;
+                if (transform == null) break;
 
-                if (transform == null) continue;
                 distance = Vector3.Distance(transform.position, enemy.transform.position);
-                if (distance < shortest_distance)
-                {
+                if (distance < shortest_distance) {
                     shortest_distance = distance;
                     nearest_enemy = enemy;
                 }
             }
-            Movement.SetRoute(Route.Linear(transform.position, nearest_enemy.transform.position));
+
+            if (nearest_enemy != null) {
+                Movement.SetRoute(Route.Linear(transform.position, nearest_enemy.transform.position));
+            } else {
+                Decider.state = Decider.previous_state;
+            }
         }
     }
 
 
     public void FleeFromEnemies()
     {
+        SheathWeapon();
+
         Movement.Agent.speed = 2 * Movement.Speed;
         Vector3 run_away_from = Vector3.zero;
 
@@ -195,6 +202,16 @@ public class Actions : MonoBehaviour
     }
 
 
+    public void SheathWeapon()
+    {
+        if (Attack.EquippedMeleeWeapon != null) Attack.EquippedMeleeWeapon.gameObject.SetActive(false);
+        if (Attack.EquippedRangedWeapon != null) Attack.EquippedRangedWeapon.gameObject.SetActive(false);
+    }
+
+
+    // private
+
+
     private void SetComponents()
     {
         Resources = GetComponentInChildren<Resources>();
@@ -217,12 +234,5 @@ public class Actions : MonoBehaviour
             [Weapon.DamageType.Slashing] = 0,
             [Weapon.DamageType.Thunder] = 0
         };
-    }
-
-
-    private void SheathWeapon()
-    {
-        if (Attack.EquippedMeleeWeapon != null) Attack.EquippedMeleeWeapon.gameObject.SetActive(false);
-        if (Attack.EquippedRangedWeapon != null) Attack.EquippedRangedWeapon.gameObject.SetActive(false);
     }
 }

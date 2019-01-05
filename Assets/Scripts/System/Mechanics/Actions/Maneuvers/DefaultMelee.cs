@@ -53,9 +53,9 @@ public class DefaultMelee : MonoBehaviour
 
     private void ApplyDamage()
     {
-        if (Target.Health != null && Target.Actions.Defend != null && Actor.Actions != null)
-        {
-            Damage = Target.Actions.Defend.DamageAfterDefenses(Weapon.expected_damage + DamageModifier, Weapon.damage_type);
+        if (Target.Health != null && Target.Actions.Defend != null && Actor.Actions != null) {
+            int damage_roll = Random.Range(0, Weapon.damage_die) + 1;
+            Damage = Target.Actions.Defend.DamageAfterDefenses(damage_roll + DamageModifier, Weapon.damage_type);
             Target.Health.LoseHealth(Damage, Actor);
         }
     }
