@@ -36,6 +36,9 @@ public class Decider : MonoBehaviour
     }
 
 
+    // public
+
+
     public void FinishedRoute()
     {
         Actor.Actions.Movement.Route = null;

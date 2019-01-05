@@ -103,6 +103,7 @@ public class Ghaddim : MonoBehaviour {
         if (GetComponent<Gnoll>() != null)
         {
             Actor.Actions.ActionsPerRound = ConfigureGhaddim.actions_per_round[Soldier.Template.Gnoll];
+            Actor.Actions.Movement.Speed = ConfigureGhaddim.speed[Soldier.Template.Gnoll];
             Actor.Actions.Movement.Agent.speed = ConfigureGhaddim.speed[Soldier.Template.Gnoll];
             Actor.Actions.ObjectiveControlRating = ConfigureGhaddim.objective_control_rating[Soldier.Template.Gnoll];
             Actor.Actions.Resources.CurrentMana = ConfigureGhaddim.current_mana[Soldier.Template.Gnoll];

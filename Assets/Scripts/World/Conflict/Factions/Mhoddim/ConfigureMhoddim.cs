@@ -63,7 +63,7 @@ public static class ConfigureMhoddim
         darkvision_range[Soldier.Template.Commoner] = 0f;
         is_caster[Soldier.Template.Commoner] = false;
         mana_pool_maximum[Soldier.Template.Commoner] = 0;
-        perception_range[Soldier.Template.Commoner] = 10f;
+        perception_range[Soldier.Template.Commoner] = 20f;
         speed[Soldier.Template.Commoner] = 1.5f;
 
         // defense

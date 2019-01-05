@@ -63,7 +63,7 @@ public static class ConfigureGhaddim
         darkvision_range[Soldier.Template.Gnoll] = 10f;
         is_caster[Soldier.Template.Gnoll] = false;
         mana_pool_maximum[Soldier.Template.Gnoll] = 0;
-        perception_range[Soldier.Template.Gnoll] = 10f;
+        perception_range[Soldier.Template.Gnoll] = 20f;
         speed[Soldier.Template.Gnoll] = 1.5f;
 
         // defense

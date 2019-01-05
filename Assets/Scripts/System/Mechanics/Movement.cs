@@ -10,6 +10,7 @@ public class Movement : MonoBehaviour {
 
     public NavMeshAgent Agent { get; set; }
     public Route Route { get; set; }
+    public float Speed { get; set; }
 
 
     // Unity
@@ -21,21 +22,7 @@ public class Movement : MonoBehaviour {
     }
 
 
-    private void OnDrawGizmos()
-    {
-        if (Route != null)
-        {
-            Gizmos.color = Color.blue;
-            Gizmos.DrawRay(transform.position, (Route.Current - gameObject.transform.position));
-        }
-    }
-
-
     // public
-
-    // TODO: warp the agent to the nearest navmesh point if it is off the mesh
-    // TODO: deal with an agent that is stuck
-    // TODO: if a destination is unreachable, choose the nearest reachable one
 
 
     public void Advance()

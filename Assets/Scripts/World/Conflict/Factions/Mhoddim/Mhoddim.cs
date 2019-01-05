@@ -104,6 +104,7 @@ public class Mhoddim : MonoBehaviour {
         if (GetComponent<Commoner>() != null)
         {
             Actor.Actions.ActionsPerRound = ConfigureMhoddim.actions_per_round[Soldier.Template.Commoner];
+            Actor.Actions.Movement.Speed = ConfigureMhoddim.speed[Soldier.Template.Commoner];
             Actor.Actions.Movement.Agent.speed = ConfigureMhoddim.speed[Soldier.Template.Commoner];
             Actor.Actions.ObjectiveControlRating = ConfigureMhoddim.objective_control_rating[Soldier.Template.Commoner];
             Actor.Actions.Resources.CurrentMana = ConfigureMhoddim.current_mana[Soldier.Template.Commoner];

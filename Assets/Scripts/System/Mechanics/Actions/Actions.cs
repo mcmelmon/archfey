@@ -13,8 +13,10 @@ public class Actions : MonoBehaviour
     public Defend Defend { get; set; }
     public Movement Movement { get; set; }
     public int ObjectiveControlRating { get; set; }
+    public Action OnAlliesUnderAttack { get; set; }
     public Action OnHostilesSighted { get; set; }
     public Action OnIdle { get; set; }
+    public Action OnInCombat { get; set; }
     public Action OnUnderAttack { get; set; }
     public Resources Resources { get; set; }
     public Stealth Stealth { get; set; }
@@ -41,8 +43,7 @@ public class Actions : MonoBehaviour
         switch (Decider.state)
         {
             case Decider.State.AlliesUnderAttack:
-                // Freedom!
-                CloseWithEnemies();
+                OnAlliesUnderAttack.Invoke();
                 break;
             case Decider.State.BadlyInjured:
                 // defensive spell or flee
@@ -55,7 +56,6 @@ public class Actions : MonoBehaviour
                 Movement.Advance();
                 break;
             case Decider.State.HostilesSighted:
-                // Freedom!
                 OnHostilesSighted.Invoke();
                 break;
             case Decider.State.Idle:
@@ -63,18 +63,13 @@ public class Actions : MonoBehaviour
                 OnIdle.Invoke();
                 break;
             case Decider.State.InCombat:
-                // Freedom!
-                Maneuver();
-                CastOffensiveSpell();
+                OnInCombat.Invoke();
                 break;
             case Decider.State.OnWatch:
                 // engage enemies that appear, but return to post quickly
                 break;
             case Decider.State.UnderAttack:
-                // Freedom!
-                CastOffensiveSpell();
-                Maneuver();
-                CloseWithEnemies();
+                OnUnderAttack.Invoke();
                 break;
             default:
                 OnIdle.Invoke();
@@ -83,13 +78,13 @@ public class Actions : MonoBehaviour
     }
 
 
-    private void CastDefensiveSpell()
+    public void CastDefensiveSpell()
     {
 
     }
 
 
-    private void CastOffensiveSpell()
+    public void CastOffensiveSpell()
     {
         // TODO: allow units to pick from their own particular spells
 
@@ -121,7 +116,7 @@ public class Actions : MonoBehaviour
     }
 
 
-    private void CloseWithEnemies()
+    public void CloseWithEnemies()
     {
         if (Movement == null)
         {
@@ -151,7 +146,24 @@ public class Actions : MonoBehaviour
     }
 
 
-    private void Maneuver()
+    public void FleeFromEnemies()
+    {
+        Movement.Agent.speed = 2 * Movement.Speed;
+        Vector3 run_away_from = Vector3.zero;
+
+        foreach (var enemy in Decider.Enemies) {
+            run_away_from += enemy.transform.position;
+        }
+
+        Vector3 run_away_direction = (transform.position - run_away_from).normalized;
+        Vector3 run_away_to = transform.position + (run_away_direction * Movement.Agent.speed * Movement.Agent.speed);
+        Movement.Route = null;
+        Movement.ResetPath();
+        Movement.SetRoute(Route.Linear(transform.position, run_away_to, Decider.FinishedRoute));
+    }
+
+
+    public void Maneuver()
     {
         // TODO: allow units to pick from their own particular spells
 

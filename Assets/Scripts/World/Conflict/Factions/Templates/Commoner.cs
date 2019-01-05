@@ -21,8 +21,28 @@ public class Commoner : MonoBehaviour {
     // public
 
 
+    public void OnAlliesUnderAttack()
+    {
+        Actor.Actions.FleeFromEnemies();
+    }
+
+
+    public void OnInCombat()
+    {
+        Actor.Actions.FleeFromEnemies();
+    }
+
+
+    public void OnHostilesSighted()
+    {
+        Actor.Actions.FleeFromEnemies();
+    }
+
+
     public void OnIdle()
     {
+        Actor.Actions.Movement.Agent.speed = Actor.Actions.Movement.Speed;
+
         List<Objective> objectives = Objectives.HeldByFaction[Actor.Faction];
         Objective next_objective = objectives[Random.Range(0, objectives.Count)];
 
@@ -32,15 +52,9 @@ public class Commoner : MonoBehaviour {
     }
 
 
-    public void OnHostilesSighted()
-    {
-
-    }
-
-
     public void OnUnderAttack()
     {
-        Debug.Log("Help!");
+        Actor.Actions.FleeFromEnemies();
     }
 
 
@@ -54,7 +68,10 @@ public class Commoner : MonoBehaviour {
         Actor.Mhoddim.SetStats();
         Actor.Actions.Attack.EquipMeleeWeapon();
         Actor.Actions.Attack.EquipRangedWeapon();
+        Actor.Actions.OnAlliesUnderAttack = OnAlliesUnderAttack;
+        Actor.Actions.OnHostilesSighted = OnHostilesSighted;
         Actor.Actions.OnIdle = OnIdle;
+        Actor.Actions.OnInCombat = OnInCombat;
         Actor.Actions.OnUnderAttack = OnUnderAttack;
     }
 }

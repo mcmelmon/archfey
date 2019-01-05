@@ -19,6 +19,12 @@ public class Gnoll : MonoBehaviour
 
     // public
 
+    public void OnHostilesSighted()
+    {
+        Actor.Actions.CloseWithEnemies();
+    }
+
+
     public void OnIdle()
     {
         List<Objective> objectives = Objectives.HeldByFaction[Conflict.Instance.EnemyFaction(Actor)];
@@ -44,6 +50,7 @@ public class Gnoll : MonoBehaviour
         Actor.Ghaddim.SetStats();
         Actor.Actions.Attack.EquipMeleeWeapon();
         Actor.Actions.Attack.EquipRangedWeapon();
+        Actor.Actions.OnHostilesSighted = OnHostilesSighted;
         Actor.Actions.OnIdle = OnIdle;
         Actor.Actions.OnUnderAttack = OnUnderAttack;
     }
