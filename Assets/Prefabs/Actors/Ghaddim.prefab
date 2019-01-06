@@ -871,14 +871,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2990df66b036643bc9e92eb426d7358a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  energy_haste_factor: 1.1
+  energy_haste_factor: 1
   energy_pool_maximum: 100
-  energy_potency: 1.15
-  energy_reduction_rate: 0.01
-  mana_haste_factor: 0.9
+  energy_potency: 1
+  energy_reduction_rate: 0.015
+  mana_haste_factor: 1
   mana_pool_maximum: 100
   magic_potency: 1
-  mana_replenishment_rate: 0.01
+  mana_replenishment_rate: 0.015
   amber_pool_maximum: 0
   health_bar: {fileID: 4111718238303526329}
   mana_bar: {fileID: 4257612374217616270}
@@ -908,6 +908,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: 0
+  previous_state: 0
 --- !u!114 &5304846250970021124
 MonoBehaviour:
   m_ObjectHideFlags: 0

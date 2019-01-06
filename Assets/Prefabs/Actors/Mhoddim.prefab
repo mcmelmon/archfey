@@ -522,9 +522,9 @@ MonoBehaviour:
   energy_pool_maximum: 100
   energy_potency: 1
   energy_reduction_rate: 0.015
-  mana_haste_factor: 1.1
+  mana_haste_factor: 1
   mana_pool_maximum: 100
-  magic_potency: 1.15
+  magic_potency: 1
   mana_replenishment_rate: 0.015
   amber_pool_maximum: 0
   health_bar: {fileID: 4822118683672813148}
@@ -555,6 +555,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: 0
+  previous_state: 0
 --- !u!114 &5599676045798116916
 MonoBehaviour:
   m_ObjectHideFlags: 0

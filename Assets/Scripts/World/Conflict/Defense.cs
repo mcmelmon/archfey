@@ -35,11 +35,19 @@ public class Defense : MonoBehaviour
 
         foreach (var objective in Objectives.Instance.objectives) {
             if (objective.Control == Conflict.Faction.Mhoddim) {
-                for (int i = 0; i < 3; i++) {
+                for (int i = 0; i < 2; i++) {
                     Circle spawn_circle = Circle.New(objective.control_points[0].transform.position, 3);
                     Vector3 _point = spawn_circle.RandomContainedPoint();
                     GameObject commoner = Spawn(new Vector3(_point.x, objective.control_points[0].transform.position.y, _point.z));
                     commoner.AddComponent<Commoner>();
+                }
+
+                for (int i = 0; i < 1; i++)
+                {
+                    Circle spawn_circle = Circle.New(objective.control_points[0].transform.position, 3);
+                    Vector3 _point = spawn_circle.RandomContainedPoint();
+                    GameObject guard = Spawn(new Vector3(_point.x, objective.control_points[0].transform.position.y, _point.z));
+                    guard.AddComponent<Guard>();
                 }
                 //break;  // uncomment this to only spawn at one homestead.
             }

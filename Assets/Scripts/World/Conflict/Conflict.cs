@@ -141,9 +141,7 @@ public class Conflict : MonoBehaviour
 
     private void GenerateStats()
     {
-        ConfigureFey.GenerateStats();
-        ConfigureGhaddim.GenerateStats();
-        ConfigureMhoddim.GenerateStats();
+        Characters.GenerateStats();
     }
 
 

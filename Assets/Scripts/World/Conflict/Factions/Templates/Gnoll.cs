@@ -32,12 +32,6 @@ public class Gnoll : MonoBehaviour
     }
 
 
-    public void OnInCombat()
-    {
-        Actor.Actions.CloseWithEnemies();
-    }
-
-
     public void OnBadlyInjured()
     {
         Actor.Actions.CloseWithEnemies();
@@ -64,6 +58,12 @@ public class Gnoll : MonoBehaviour
     }
 
 
+    public void OnInCombat()
+    {
+        Actor.Actions.CloseWithEnemies();
+    }
+
+
     public void OnUnderAttack()
     {
         Actor.Actions.CloseWithEnemies();
@@ -84,7 +84,8 @@ public class Gnoll : MonoBehaviour
         // can't do in Actor until the Gnoll component has been attached
 
         Actor = GetComponent<Actor>();
-        Actor.Ghaddim.SetStats();
+        SetBaseStats();
+
         Actor.Actions.Attack.EquipMeleeWeapon();
         Actor.Actions.Attack.EquipRangedWeapon();
         Actor.Actions.OnAlliesUnderAttack = OnAlliesUnderAttack;
@@ -96,5 +97,34 @@ public class Gnoll : MonoBehaviour
         Actor.Actions.OnInCombat = OnInCombat;
         Actor.Actions.OnUnderAttack = OnUnderAttack;
         Actor.Actions.OnWatch = OnWatch;
+
+        Actor.Health.SetCurrentAndMaxHitPoints();  // calculated from hit dice and constitution, set in base stats
+    }
+
+
+    private void SetBaseStats()
+    {
+        Actor.Actions.ObjectiveControlRating = Characters.objective_control_rating[Characters.Template.Gnoll];
+
+        Actor.Actions.Attack.AvailableWeapons = Characters.available_weapons[Characters.Template.Gnoll];
+
+        Actor.Actions.Defend.ArmorClass = Characters.armor_class[Characters.Template.Gnoll];
+        Actor.Actions.Defend.SetResistances(Characters.resistances[Characters.Template.Base]);
+
+        Actor.Health.HitDice = (Characters.hit_dice[Characters.Template.Gnoll]);
+        Actor.Health.HitDiceType = (Characters.hit_dice_type[Characters.Template.Gnoll]);
+
+        Actor.Actions.Movement.Speed = Characters.speed[Characters.Template.Base];
+        Actor.Actions.Movement.Agent.speed = Characters.speed[Characters.Template.Base];
+
+        Actor.Senses.Darkvision = Characters.darkvision_range[Characters.Template.Gnoll];
+        Actor.Senses.PerceptionRange = Characters.perception_range[Characters.Template.Base];
+
+        Actor.Stats.CharismaProficiency = Characters.charisma_proficiency[Characters.Template.Gnoll];
+        Actor.Stats.ConstitutionProficiency = Characters.constituion_proficiency[Characters.Template.Base];
+        Actor.Stats.DexterityProficiency = Characters.dexterity_proficiency[Characters.Template.Gnoll];
+        Actor.Stats.IntelligenceProficiency = Characters.intelligence_proficiency[Characters.Template.Gnoll];
+        Actor.Stats.StrengthProficiency = Characters.strength_proficiency[Characters.Template.Gnoll];
+        Actor.Stats.WisdomProficiency = Characters.wisdom_proficiency[Characters.Template.Base];
     }
 }

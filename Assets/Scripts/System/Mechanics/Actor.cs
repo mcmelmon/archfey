@@ -6,9 +6,7 @@ public class Actor : MonoBehaviour
 {
     // properties
 
-    public int ActionsPerRound { get; set; }
     public Actions Actions { get; set; }
-
     public Conflict.Faction Faction { get; set; }
     public Fey Fey { get; set; }
     public Ghaddim Ghaddim { get; set; }
