@@ -56,6 +56,12 @@ public class Conflict : MonoBehaviour
     }
 
 
+    public Faction EnemyFaction(Actor _unit)
+    {
+        return (_unit.Faction != Faction.None || _unit.Faction != Faction.Fey) ? (_unit.Faction == Faction.Ghaddim) ? Faction.Mhoddim : Faction.Ghaddim : Faction.None;
+    }
+
+
     public void Hajime()
     {
         GenerateStats();
@@ -135,9 +141,7 @@ public class Conflict : MonoBehaviour
 
     private void GenerateStats()
     {
-        ConfigureFey.GenerateStats();
-        ConfigureGhaddim.GenerateStats();
-        ConfigureMhoddim.GenerateStats();
+        Characters.GenerateStats();
     }
 
 

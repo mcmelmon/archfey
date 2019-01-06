@@ -6,7 +6,6 @@ using UnityEngine;
 public class Objectives : MonoBehaviour {
 
     // Inspector settings
-    public Objective objective_prefab;
     public List<Objective> objectives;
 
     // properties
@@ -56,7 +55,7 @@ public class Objectives : MonoBehaviour {
         ObjectiveControlPoint nearest_control_point = null;
 
         foreach (var control_point in ObjectiveControlPoints) {
-            if (control_point.Faction != _actor.Faction) {  // if unoccupied, will have Faction of None
+            if (control_point.ControllingFaction != _actor.Faction) {  // if unoccupied, will have Faction of None
                 distance = Vector3.Distance(control_point.transform.position, _actor.transform.position);
                 if (distance < shortest_distance) {
                     nearest_control_point = control_point;
@@ -101,6 +100,7 @@ public class Objectives : MonoBehaviour {
         ObjectiveControlPoints = new List<ObjectiveControlPoint>();
         foreach (var objective in objectives) {
             ObjectiveControlPoints.AddRange(objective.control_points);
+            HeldByFaction[objective.Control].Add(objective);
         }
     }
 }

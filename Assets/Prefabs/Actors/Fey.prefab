@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 23386630168084302}
   - component: {fileID: 136747664559137662}
   - component: {fileID: 54547099937082450}
-  - component: {fileID: 114694588726356082}
+  - component: {fileID: 6817851846130015098}
   - component: {fileID: 114551666208405138}
   - component: {fileID: 114294805840872224}
   - component: {fileID: 114270224776526368}
@@ -114,7 +114,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
---- !u!114 &114694588726356082
+--- !u!114 &6817851846130015098
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -123,7 +123,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1467454993613262}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35e4f71a8c43f4146a37679b0f8a756d, type: 3}
+  m_Script: {fileID: 11500000, guid: 12f9aac596538443c96c1c216e845106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114551666208405138
@@ -174,7 +174,7 @@ GameObject:
   - component: {fileID: 3528521705652860624}
   - component: {fileID: 4890917045914637509}
   m_Layer: 26
-  m_Name: Abilities
+  m_Name: Actions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

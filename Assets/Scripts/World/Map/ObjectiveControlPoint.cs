@@ -11,16 +11,15 @@ public class ObjectiveControlPoint : MonoBehaviour
 
     // properties
 
-    public Actor Contender { get; set; }
+    public List<Actor> Attackers { get; set; }
+    public Conflict.Faction ControllingFaction { get; set; }
     public float ControlResistanceRating { get; set; }
-    public float CurrentResistancePoints { get; set; }
-    public Conflict.Faction Faction { get; set; }
-    public GameObject Marker { get; set; }
-    public float MaximumResistancePoints { get; set; }
-    public Actor NearestActor { get; set; }
+    public float CurrentOccupationPoints { get; set; }
+    public List<Actor> Defenders { get; set; }
+    public float MaximumOccupationPoints { get; set; }
+    public Conflict.Faction OccupyingFaction { get; set; }
     public Objective Objective { get; set; }
-    public bool Occupied { get; set; }
-    public Actor Occupier { get; set; }
+    public bool Controlled { get; set; }
 
 
     // Unity
@@ -31,25 +30,7 @@ public class ObjectiveControlPoint : MonoBehaviour
         SetComponents();
         UpdateControlIndicator();
         StartCoroutine(CheckOccupation());
-        StartCoroutine(FindNearestActor());
         StartCoroutine(ControlIndicatorFaceCamera());
-    }
-
-
-    // public
-
-
-    public Actor ConfirmOccupation()
-    {
-        if (Occupier != NearestActor)
-        {
-            if (Occupier.Ghaddim == NearestActor.Ghaddim && Occupier.Mhoddim == NearestActor.Mhoddim)
-            {
-                Occupier.ObjectiveControlPoint = null;
-                Occupier = NearestActor;
-            }
-        }
-        return Occupier;
     }
 
 
@@ -59,19 +40,15 @@ public class ObjectiveControlPoint : MonoBehaviour
     private IEnumerator CheckOccupation()
     {
         while (true) {
-            if (NearestActor == null) { // everyone is dead
-                ResetControl();
-            } else {
-                float nearest_actor_distance = Vector3.Distance(NearestActor.transform.position, transform.position);
+            IdentifyFriendAndFoe();
 
-                if (ChallengeForContention(nearest_actor_distance) || ContenderEliminated() || OccupierAbandonedControl(nearest_actor_distance)) {
-                    ReduceControl();
-                } else {
-                    if (NewContender(nearest_actor_distance)) {
-                        Contender = NearestActor;
-                        BoostControl();
-                    }
-                }
+            // don't use foreach because the units will get destroyed in flight
+            for (int i = 0; i < Defenders.Count; i++) {
+                BoostOccupation(Defenders[i]);
+            }
+
+            for (int i = 0; i < Attackers.Count; i++) {
+                ReduceOccupation(Attackers[i]);
             }
 
             UpdateControlIndicator();
@@ -80,33 +57,21 @@ public class ObjectiveControlPoint : MonoBehaviour
     }
 
 
-    private void BoostControl()
+    private void BoostOccupation(Actor defender)
     {
-        if (CurrentResistancePoints <= 0) return;
+        if (defender == null) return;
 
-        CurrentResistancePoints -= Mathf.Clamp((Contender.ObjectiveControlRating - ControlResistanceRating), 0, Contender.ObjectiveControlRating);
-        if (CurrentResistancePoints <= 0) {
-            CurrentResistancePoints = 0;
-            Occupied = true;
-            Occupier = NearestActor;
-            Contender = null;
-            Faction = NearestActor.GetComponent<Actor>().Faction;
+        if (CurrentOccupationPoints >= MaximumOccupationPoints) return;
+
+        CurrentOccupationPoints += Mathf.Clamp((defender.Actions.ObjectiveControlRating - ControlResistanceRating), 0, defender.Actions.ObjectiveControlRating);
+        if (CurrentOccupationPoints >= MaximumOccupationPoints) {
+            CurrentOccupationPoints = MaximumOccupationPoints;
+            ControllingFaction = OccupyingFaction = defender.Faction;
+            Controlled = true;
             foreach (var rend in Objective.renderers) {
-                rend.material = (Faction == Conflict.Faction.Ghaddim) ? Objective.ghaddim_skin : Objective.mhoddim_skin;
+                rend.material = (ControllingFaction == Conflict.Faction.Ghaddim) ? Objective.ghaddim_skin : Objective.mhoddim_skin;
             }
         }
-    }
-
-
-    private bool ChallengeForContention(float nearest_actor_distance)
-    {
-        return Contender != null && Contender != NearestActor && Contender.Faction != NearestActor.Faction && nearest_actor_distance < Route.reached_threshold;
-    }
-
-
-    private bool ContenderEliminated()
-    {
-        return Occupier == null && Contender == null && CurrentResistancePoints < MaximumResistancePoints - 1;
     }
 
 
@@ -125,92 +90,92 @@ public class ObjectiveControlPoint : MonoBehaviour
 
     public float CurrentControlPercentage()
     {
-        return (float)CurrentResistancePoints / (float)MaximumResistancePoints;
+        return (float)CurrentOccupationPoints / (float)MaximumOccupationPoints;
     }
 
 
-    private IEnumerator FindNearestActor()
+    private void IdentifyFriendAndFoe()
     {
-        while (true)
-        {
-            yield return new WaitForSeconds(Turn.action_threshold);
+        float distance;
 
-            float shortest_distance = float.MaxValue;
-            float distance;
-            GameObject nearest_actor = null;
+        for (int i = 0; i < Attackers.Count; i++) {
+            Attackers[i].Actions.Decider.ObjectiveUnderContention = null;
+        }
 
-            for (int i = 0; i < Conflict.Units.Count; i++)
-            {
-                GameObject _unit = Conflict.Units[i];
-                if (_unit == null || transform == null) continue;
+        for (int i = 0; i < Defenders.Count; i++) {
+            Defenders[i].Actions.Decider.ObjectiveUnderContention = null;
+        }
 
-                distance = Vector3.Distance(transform.position, _unit.transform.position);
-                if (distance < shortest_distance)
-                {
-                    shortest_distance = distance;
-                    nearest_actor = _unit;
+        Attackers.Clear();
+        Defenders.Clear();
+
+        for (int i = 0; i < Conflict.Units.Count; i++) {
+            if (Conflict.Units[i] == null) continue;
+
+            Actor _unit = Conflict.Units[i].GetComponent<Actor>();
+            if (_unit == null) continue;
+
+            distance = Vector3.Distance(transform.position, _unit.transform.position);
+            if (distance < Route.reached_threshold) {
+                if (_unit.Faction == ControllingFaction) {
+                    Defenders.Add(_unit);
+                } else if (ControllingFaction == Conflict.Faction.None && _unit.Faction == OccupyingFaction) {
+                    Defenders.Add(_unit);
+                    _unit.Actions.Decider.ObjectiveUnderContention = this;
+                }
+                else {
+                    Attackers.Add(_unit);
+                    _unit.Actions.Decider.ObjectiveUnderContention = this;
                 }
             }
-
-            if (nearest_actor != null)
-                NearestActor = nearest_actor.GetComponent<Actor>();
         }
     }
 
 
-    private bool NewContender(float nearest_actor_distance)
+    private void ReduceOccupation(Actor attacker)
     {
-        return !Occupied && nearest_actor_distance < Route.reached_threshold;
-    }
+        if (attacker == null) return;
 
+        if (CurrentOccupationPoints <= 0) {
+            CurrentOccupationPoints = 0;
+            OccupyingFaction = attacker.Faction;
+            Controlled = false;
+            BoostOccupation(attacker);
+        } else {
+            CurrentOccupationPoints -= Mathf.Clamp((attacker.Actions.ObjectiveControlRating - ControlResistanceRating), 0, attacker.Actions.ObjectiveControlRating);
+            if (CurrentOccupationPoints <= 0) {
+                CurrentOccupationPoints = 0;
+                OccupyingFaction = Conflict.Faction.None;
+                ControllingFaction = Conflict.Faction.None;
+                Controlled = false;
 
-    private bool OccupierAbandonedControl(float nearest_actor_distance)
-    {
-        return (Occupied && Occupier == null) || (Occupier != null && nearest_actor_distance > Route.reached_threshold);
-    }
-
-
-    private void ReduceControl()
-    {
-        if (CurrentResistancePoints >= MaximumResistancePoints) return;
-
-        CurrentResistancePoints += ControlResistanceRating;
-        if (CurrentResistancePoints >= MaximumResistancePoints) {
-            CurrentResistancePoints = MaximumResistancePoints;
-            Occupied = false;
-            if (Occupier != null) Occupier.GetComponent<Actor>().ObjectiveControlPoint = null;
-            Occupier = null;
-            Faction = Conflict.Faction.None;
-            foreach (var rend in Objective.renderers) {
-                rend.material = Objective.unclaimed_skin;
+                foreach (var rend in Objective.renderers) {
+                    rend.material = Objective.unclaimed_skin;
+                }
             }
         }
-    }
-
-
-    private void ResetControl()
-    {
-        Occupied = false;
-        Occupier = null;
-        Faction = Conflict.Faction.None;
-        CurrentResistancePoints = MaximumResistancePoints;
     }
 
 
     private void SetComponents()
     {
-        ControlResistanceRating = Random.Range(1, 6);
-        CurrentResistancePoints = MaximumResistancePoints = 100 + Random.Range(0, 8);
-        Faction = Conflict.Faction.None;
-        Objective = GetComponentInParent<Objective>();
-        Occupied = false;
+        Objective = GetComponentInParent<Objective>();  // define before referencing!
+
+        Attackers = new List<Actor>();
+        ControllingFaction = Objective.initial_control;
+        ControlResistanceRating = 2;  // TODO: specify in Inspector
+        CurrentOccupationPoints = (ControllingFaction == Conflict.Faction.None) ? 0 : 100; // TODO: specify in Inspector
+        Defenders = new List<Actor>();
+        MaximumOccupationPoints = 100; // TODO: specify in Inspector
+        OccupyingFaction = ControllingFaction;
+        Controlled = false;
     }
 
 
     public void UpdateControlIndicator()
     {
         control_indicator.value = CurrentControlPercentage();
-        if (control_indicator.value >= 1) {
+        if (Mathf.Approximately(control_indicator.value, 0) || Mathf.Approximately(control_indicator.value, 1)) {
             control_indicator.gameObject.SetActive(false);
         } else {
             control_indicator.gameObject.SetActive(true);

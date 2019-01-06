@@ -10,6 +10,7 @@ public class Movement : MonoBehaviour {
 
     public NavMeshAgent Agent { get; set; }
     public Route Route { get; set; }
+    public float Speed { get; set; }
 
 
     // Unity
@@ -17,25 +18,11 @@ public class Movement : MonoBehaviour {
 
     private void Awake()
     {
-        Agent = GetComponent<NavMeshAgent>();
-    }
-
-
-    private void OnDrawGizmos()
-    {
-        if (Route != null)
-        {
-            Gizmos.color = Color.blue;
-            Gizmos.DrawRay(transform.position, (Route.Current - gameObject.transform.position));
-        }
+        Agent = GetComponentInParent<NavMeshAgent>();
     }
 
 
     // public
-
-    // TODO: warp the agent to the nearest navmesh point if it is off the mesh
-    // TODO: deal with an agent that is stuck
-    // TODO: if a destination is unreachable, choose the nearest reachable one
 
 
     public void Advance()
@@ -79,19 +66,15 @@ public class Movement : MonoBehaviour {
         int attempt = 0;
         int max_attempts = 5;
 
-        while (attempt < max_attempts) {
+        while (Route != null && !Agent.hasPath && attempt < max_attempts) {
             if (Agent.isOnNavMesh) {
-                if (!Agent.hasPath) {
-                    Agent.SetDestination(new Vector3(Route.Current.x, Geography.Terrain.SampleHeight(Route.Current), Route.Current.z));
-                } else {
-                    attempt = max_attempts;
-                }
+                Agent.SetDestination(new Vector3(Route.Current.x, Geography.Terrain.SampleHeight(Route.Current), Route.Current.z));
             } else {
+                attempt++;
                 NavMesh.SamplePosition(Agent.transform.position, out NavMeshHit hit, 10.0f, NavMesh.AllAreas);
                 Agent.Warp(hit.position);
                 Debug.Log("Warp " + attempt);
             }
-            attempt++;
             yield return new WaitForSeconds(Turn.action_threshold);
         }
     }

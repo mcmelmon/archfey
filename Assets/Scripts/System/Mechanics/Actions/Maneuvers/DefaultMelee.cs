@@ -33,7 +33,7 @@ public class DefaultMelee : MonoBehaviour
         Weapon.gameObject.SetActive(true);
         SetModifiers();
 
-        if (Random.Range(1, 21) + AttackModifier > _target.Defend.ArmorClass) { // Dexterity is already built in to AC
+        if (Random.Range(1, 21) + AttackModifier > Target.Actions.Defend.ArmorClass) { // Dexterity is already built in to AC
             ApplyDamage();
             DisplayEffects();
             AdjustEnergy();
@@ -47,15 +47,15 @@ public class DefaultMelee : MonoBehaviour
     private void AdjustEnergy()
     {
         Resources.IncreaseEnergy(Damage * Resources.energy_potency);
-        Target.Resources.IncreaseEnergy(Damage * Target.Resources.energy_potency);
+        Target.Actions.Resources.IncreaseEnergy(Damage * Target.Actions.Resources.energy_potency);
     }
 
 
     private void ApplyDamage()
     {
-        if (Target.Health != null && Target.Defend != null && Actor != null)
-        {
-            Damage = Target.Defend.DamageAfterDefenses(Weapon.expected_damage + DamageModifier, Weapon.damage_type);
+        if (Target.Health != null && Target.Actions.Defend != null && Actor.Actions != null) {
+            int damage_roll = Random.Range(0, Weapon.damage_die) + 1;
+            Damage = Target.Actions.Defend.DamageAfterDefenses(damage_roll + DamageModifier, Weapon.damage_type);
             Target.Health.LoseHealth(Damage, Actor);
         }
     }
@@ -82,13 +82,13 @@ public class DefaultMelee : MonoBehaviour
     {
         if (Weapon.is_light)
         {
-            AttackModifier = Actor.Stats.DexterityProficiency + Weapon.attack_bonus + Actor.SuperiorWeapons[Weapon.damage_type];
-            DamageModifier = Actor.Stats.DexterityProficiency + Weapon.damage_bonus + Actor.SuperiorWeapons[Weapon.damage_type];
+            AttackModifier = Actor.Stats.DexterityProficiency + Weapon.attack_bonus + Actions.SuperiorWeapons[Weapon.damage_type];
+            DamageModifier = Actor.Stats.DexterityProficiency + Weapon.damage_bonus + Actions.SuperiorWeapons[Weapon.damage_type];
         }
         else
         {
-            AttackModifier = Actor.Stats.StrengthProficiency + Weapon.attack_bonus + Actor.SuperiorWeapons[Weapon.damage_type];
-            DamageModifier = Actor.Stats.StrengthProficiency + Weapon.damage_bonus + Actor.SuperiorWeapons[Weapon.damage_type];
+            AttackModifier = Actor.Stats.StrengthProficiency + Weapon.attack_bonus + Actions.SuperiorWeapons[Weapon.damage_type];
+            DamageModifier = Actor.Stats.StrengthProficiency + Weapon.damage_bonus + Actions.SuperiorWeapons[Weapon.damage_type];
         }
     }
 }

@@ -11,29 +11,24 @@ public class Objective : MonoBehaviour
     public Material mhoddim_skin;
     public Material unclaimed_skin;
     public List<Renderer> renderers;
+    public Conflict.Faction initial_control;
 
 
     // properties
 
     public Conflict.Faction Control { get; set; }
     public bool Controlled { get; set; }
-    public static float MinimumSpacing { get; set; }
     public GameObject NearestActor { get; set; }
 
 
-    // static
+    // Unity
 
 
-    public static Objective Create(Objective prefab, Vector3 point, Objectives _objectives)
+    private void Awake()
     {
-        Vector3 random_facing = new Vector3(0, Random.Range(0, 7) * 30, 0);
-        Objective _objective = Instantiate(prefab, point, _objectives.transform.rotation, _objectives.transform);
-        _objective.transform.position += new Vector3(0, Geography.Terrain.SampleHeight(point), 0);
-        _objective.transform.rotation = Quaternion.Euler(random_facing);
-        _objective.SetComponents();
-
-        return _objective;
+        SetComponents();
     }
+
 
     // public
 
@@ -66,7 +61,7 @@ public class Objective : MonoBehaviour
             Conflict.Faction previous_faction = Control;
 
             foreach (var control_point in control_points) {
-                Conflict.Faction point_faction = control_point.Faction;
+                Conflict.Faction point_faction = control_point.ControllingFaction;
 
                 if (new_faction == Conflict.Faction.None)
                     // We have just entered the loop
@@ -90,10 +85,13 @@ public class Objective : MonoBehaviour
 
     private void SetComponents()
     {
-        Control = Conflict.Faction.None;
-        Controlled = false;
-        MinimumSpacing = 80f;
+        Control = initial_control;
+        Controlled = (Control != Conflict.Faction.None);
         StartCoroutine(CheckControl());
+
+        foreach (var rend in renderers) {
+            rend.material = (initial_control == Conflict.Faction.None) ? unclaimed_skin : (initial_control == Conflict.Faction.Ghaddim) ? ghaddim_skin : mhoddim_skin;
+        }
     }
 
 

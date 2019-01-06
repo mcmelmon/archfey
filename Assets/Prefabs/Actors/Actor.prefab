@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 136865368129096052}
   - component: {fileID: 54176829473299802}
   - component: {fileID: 195258252824600532}
-  - component: {fileID: 114622511376475628}
+  - component: {fileID: 7394070363342518024}
   m_Layer: 26
   m_Name: Actor
   m_TagString: Actor
@@ -134,7 +134,7 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &114622511376475628
+--- !u!114 &7394070363342518024
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -143,7 +143,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1690649058592984}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35e4f71a8c43f4146a37679b0f8a756d, type: 3}
+  m_Script: {fileID: 11500000, guid: 12f9aac596538443c96c1c216e845106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &7552376652022747841
@@ -156,8 +156,9 @@ GameObject:
   m_Component:
   - component: {fileID: 5937582455088868361}
   - component: {fileID: 2982421350250624720}
+  - component: {fileID: 5379028120807873420}
   m_Layer: 26
-  m_Name: Abilities
+  m_Name: Actions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -201,3 +202,15 @@ MonoBehaviour:
   health_bar: {fileID: 0}
   mana_bar: {fileID: 0}
   stat_bars: {fileID: 0}
+--- !u!114 &5379028120807873420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7552376652022747841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 505daa82b2b8e447fa93098095ab9fed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

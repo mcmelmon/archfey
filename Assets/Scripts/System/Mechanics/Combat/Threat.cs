@@ -61,12 +61,12 @@ public class Threat : MonoBehaviour {
 
     public void SpreadThreat(Actor _attacker, float _damage)
     {
-        Conflict.Faction _faction = GetComponent<Actor>().Faction;
+        Conflict.Faction _faction = GetComponentInParent<Actor>().Faction;
 
         if (_faction == Conflict.Faction.Ghaddim) {
-            GetComponent<Ghaddim>().AddFactionThreat(_attacker, _damage);
+            GetComponentInParent<Ghaddim>().AddFactionThreat(_attacker, _damage);
         } else if (_faction == Conflict.Faction.Mhoddim) {
-            GetComponent<Mhoddim>().AddFactionThreat(_attacker, _damage);
+            GetComponentInParent<Mhoddim>().AddFactionThreat(_attacker, _damage);
         }
     }
 

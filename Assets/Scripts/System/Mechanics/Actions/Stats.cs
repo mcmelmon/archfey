@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Stats : MonoBehaviour
 {
-    public int Actions { get; set; }
     public Actor Actor { get; set; }
     public int CharismaProficiency { get; set; }
     public int DexterityProficiency { get; set; }
