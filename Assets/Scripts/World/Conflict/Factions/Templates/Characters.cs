@@ -13,26 +13,26 @@ public class Characters : MonoBehaviour
     };
 
 
-    public static Dictionary<Characters.Template, int> charisma_proficiency = new Dictionary<Characters.Template, int>();
-    public static Dictionary<Characters.Template, int> constituion_proficiency = new Dictionary<Characters.Template, int>();
-    public static Dictionary<Characters.Template, int> dexterity_proficiency = new Dictionary<Characters.Template, int>();
-    public static Dictionary<Characters.Template, int> intelligence_proficiency = new Dictionary<Characters.Template, int>();
-    public static Dictionary<Characters.Template, int> strength_proficiency = new Dictionary<Characters.Template, int>();
-    public static Dictionary<Characters.Template, int> wisdom_proficiency = new Dictionary<Characters.Template, int>();
+    public static Dictionary<Template, int> charisma_proficiency = new Dictionary<Template, int>();
+    public static Dictionary<Template, int> constituion_proficiency = new Dictionary<Template, int>();
+    public static Dictionary<Template, int> dexterity_proficiency = new Dictionary<Template, int>();
+    public static Dictionary<Template, int> intelligence_proficiency = new Dictionary<Template, int>();
+    public static Dictionary<Template, int> strength_proficiency = new Dictionary<Template, int>();
+    public static Dictionary<Template, int> wisdom_proficiency = new Dictionary<Template, int>();
 
-    public static Dictionary<Characters.Template, int> actions_per_round = new Dictionary<Characters.Template, int>();
-    public static Dictionary<Characters.Template, int> armor_class = new Dictionary<Characters.Template, int>();
-    public static Dictionary<Characters.Template, float> darkvision_range = new Dictionary<Characters.Template, float>();
-    public static Dictionary<Characters.Template, int> hit_dice = new Dictionary<Characters.Template, int>();
-    public static Dictionary<Characters.Template, int> hit_dice_type = new Dictionary<Characters.Template, int>();
-    public static Dictionary<Characters.Template, float> perception_range = new Dictionary<Characters.Template, float>();
-    public static Dictionary<Characters.Template, float> speed = new Dictionary<Characters.Template, float>();
-    public static Dictionary<Characters.Template, int> starting_hit_dice = new Dictionary<Characters.Template, int>();
+    public static Dictionary<Template, int> actions_per_round = new Dictionary<Template, int>();
+    public static Dictionary<Template, int> armor_class = new Dictionary<Template, int>();
+    public static Dictionary<Template, float> darkvision_range = new Dictionary<Template, float>();
+    public static Dictionary<Template, int> hit_dice = new Dictionary<Template, int>();
+    public static Dictionary<Template, int> hit_dice_type = new Dictionary<Template, int>();
+    public static Dictionary<Template, float> perception_range = new Dictionary<Template, float>();
+    public static Dictionary<Template, float> speed = new Dictionary<Template, float>();
+    public static Dictionary<Template, int> starting_hit_dice = new Dictionary<Template, int>();
 
 
-    public static Dictionary<Characters.Template, List<Weapon>> available_weapons = new Dictionary<Characters.Template, List<Weapon>>();
-    public static Dictionary<Characters.Template, int> objective_control_rating = new Dictionary<Characters.Template, int>();
-    public static Dictionary<Characters.Template, Dictionary<Weapon.DamageType, int>> resistances = new Dictionary<Characters.Template, Dictionary<Weapon.DamageType, int>>();
+    public static Dictionary<Template, List<Weapon>> available_weapons = new Dictionary<Template, List<Weapon>>();
+    public static Dictionary<Template, int> claim_rating = new Dictionary<Template, int>();
+    public static Dictionary<Template, Dictionary<Weapon.DamageType, int>> resistances = new Dictionary<Template, Dictionary<Weapon.DamageType, int>>();
 
 
     public static void GenerateStats()
@@ -47,22 +47,22 @@ public class Characters : MonoBehaviour
 
     private static void BaseCharacterTemplate()
     {
-        charisma_proficiency[Characters.Template.Base] = 0;
-        constituion_proficiency[Characters.Template.Base] = 0;
-        dexterity_proficiency[Characters.Template.Base] = 0;
-        intelligence_proficiency[Characters.Template.Base] = 0;
-        strength_proficiency[Characters.Template.Base] = 0;
-        wisdom_proficiency[Characters.Template.Base] = 0;
+        charisma_proficiency[Template.Base] = 0;
+        constituion_proficiency[Template.Base] = 0;
+        dexterity_proficiency[Template.Base] = 0;
+        intelligence_proficiency[Template.Base] = 0;
+        strength_proficiency[Template.Base] = 0;
+        wisdom_proficiency[Template.Base] = 0;
 
-        actions_per_round[Characters.Template.Base] = 1;
-        armor_class[Characters.Template.Base] = 10;
-        darkvision_range[Characters.Template.Base] = 0f;
-        hit_dice[Characters.Template.Base] = 1;
-        hit_dice_type[Characters.Template.Base] = 8;
-        perception_range[Characters.Template.Base] = 20f;
-        speed[Characters.Template.Base] = 1.5f;
+        actions_per_round[Template.Base] = 1;
+        armor_class[Template.Base] = 10;
+        darkvision_range[Template.Base] = 0f;
+        hit_dice[Template.Base] = 1;
+        hit_dice_type[Template.Base] = 8;
+        perception_range[Template.Base] = 20f;
+        speed[Template.Base] = 1.5f;
 
-        resistances[Characters.Template.Base] = new Dictionary<Weapon.DamageType, int>
+        resistances[Template.Base] = new Dictionary<Weapon.DamageType, int>
         {
             [Weapon.DamageType.Acid] = 0,
             [Weapon.DamageType.Bludgeoning] = 0,
@@ -84,7 +84,7 @@ public class Characters : MonoBehaviour
     {
         // Commoner
         available_weapons[Template.Commoner] = new List<Weapon>() { Weapons.Instance.club_prefab };
-        objective_control_rating[Template.Commoner] = 10;
+        claim_rating[Template.Commoner] = 10;
 
         // Gnoll
         charisma_proficiency[Template.Gnoll] = -2;
@@ -96,7 +96,7 @@ public class Characters : MonoBehaviour
         hit_dice[Template.Gnoll] = 5;
         hit_dice_type[Template.Gnoll] = 8;
         available_weapons[Template.Gnoll] = new List<Weapon>() { Weapons.Instance.longbow_prefab, Weapons.Instance.spear_prefab };
-        objective_control_rating[Template.Gnoll] = 5;
+        claim_rating[Template.Gnoll] = 5;
 
         //Guard
         constituion_proficiency[Template.Guard] = 1;
@@ -104,9 +104,9 @@ public class Characters : MonoBehaviour
         strength_proficiency[Template.Guard] = 1;
         armor_class[Template.Guard] = 16;
         available_weapons[Template.Guard] = new List<Weapon>() { Weapons.Instance.longbow_prefab, Weapons.Instance.spear_prefab };
-        hit_dice[Characters.Template.Guard] = 2;
-        objective_control_rating[Template.Guard] = 5;
-        perception_range[Characters.Template.Guard] = 25f;
+        hit_dice[Template.Guard] = 2;
+        claim_rating[Template.Guard] = 5;
+        perception_range[Template.Guard] = 25f;
 
     }
 }

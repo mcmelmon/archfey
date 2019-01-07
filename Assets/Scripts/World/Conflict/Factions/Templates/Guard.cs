@@ -62,7 +62,7 @@ public class Guard : MonoBehaviour
 
         if (Actor.Actions.Movement.Route == null)
         {
-            Actor.Actions.Movement.SetRoute(Route.Linear(transform.position, next_objective.control_points[0].transform.position, Actor.Actions.Decider.FinishedRoute));
+            Actor.Actions.Movement.SetRoute(Route.Linear(transform.position, next_objective.claim_nodes[0].transform.position, Actor.Actions.Decider.FinishedRoute));
         }
     }
 
@@ -107,7 +107,7 @@ public class Guard : MonoBehaviour
     private void SetBaseStats()
     {
         Actor.Actions.ActionsPerRound = Characters.actions_per_round[Characters.Template.Base];
-        Actor.Actions.ObjectiveControlRating = Characters.objective_control_rating[Characters.Template.Guard];
+        Actor.Actions.ClaimRating = Characters.claim_rating[Characters.Template.Guard];
 
         Actor.Actions.Attack.AvailableWeapons = Characters.available_weapons[Characters.Template.Guard];
 

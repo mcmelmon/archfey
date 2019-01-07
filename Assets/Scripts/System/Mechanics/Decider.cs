@@ -29,7 +29,7 @@ public class Decider : MonoBehaviour
     public Actor Actor { get; set; }
     public List<Actor> Enemies { get; set; }
     public List<Actor> Friends { get; set; }
-    public ObjectiveControlPoint ObjectiveUnderContention { get; set; }
+    public ClaimNode ObjectiveUnderContention { get; set; }
     public Threat Threat { get; set; }
 
 
@@ -124,7 +124,7 @@ public class Decider : MonoBehaviour
 
     private bool AttackingObjective()
     {
-        return ObjectiveUnderContention != null;
+        return ObjectiveUnderContention != null && ObjectiveUnderContention.ClaimFaction != Actor.Faction;
     }
 
 

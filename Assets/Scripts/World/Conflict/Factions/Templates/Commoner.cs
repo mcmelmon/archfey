@@ -60,7 +60,7 @@ public class Commoner : MonoBehaviour {
         Objective next_objective = objectives[Random.Range(0, objectives.Count)];
 
         if (Actor.Actions.Movement.Route == null) {
-            Actor.Actions.Movement.SetRoute(Route.Linear(transform.position, next_objective.control_points[0].transform.position, Actor.Actions.Decider.FinishedRoute));
+            Actor.Actions.Movement.SetRoute(Route.Linear(transform.position, next_objective.claim_nodes[0].transform.position, Actor.Actions.Decider.FinishedRoute));
         }
     }
 
@@ -104,7 +104,7 @@ public class Commoner : MonoBehaviour {
     private void SetBaseStats()
     {
         Actor.Actions.ActionsPerRound = Characters.actions_per_round[Characters.Template.Base];
-        Actor.Actions.ObjectiveControlRating = Characters.objective_control_rating[Characters.Template.Commoner];
+        Actor.Actions.ClaimRating = Characters.claim_rating[Characters.Template.Commoner];
 
         Actor.Actions.Attack.AvailableWeapons = Characters.available_weapons[Characters.Template.Commoner];
 

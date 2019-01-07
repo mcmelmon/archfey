@@ -29,6 +29,9 @@ public class Gnoll : MonoBehaviour
     {
         Actor.Actions.Movement.Route = null;
         Actor.Actions.Movement.ResetPath();
+        if (Actor.Actions.Decider.ObjectiveUnderContention.Objective.current_hit_points > 0) {
+            GetComponentInChildren<DefaultMelee>().Strike(Actor.Actions.Decider.ObjectiveUnderContention.gameObject);
+        }
     }
 
 
@@ -54,7 +57,7 @@ public class Gnoll : MonoBehaviour
     {
         List<Objective> objectives = Objectives.HeldByFaction[Conflict.Instance.EnemyFaction(Actor)];
 
-        Actor.Actions.Movement.SetRoute(Route.Linear(transform.position, objectives[Random.Range(0, objectives.Count)].control_points[0].transform.position, Actor.Actions.Decider.FinishedRoute));
+        Actor.Actions.Movement.SetRoute(Route.Linear(transform.position, objectives[Random.Range(0, objectives.Count)].claim_nodes[0].transform.position, Actor.Actions.Decider.FinishedRoute));
     }
 
 
@@ -104,7 +107,7 @@ public class Gnoll : MonoBehaviour
 
     private void SetBaseStats()
     {
-        Actor.Actions.ObjectiveControlRating = Characters.objective_control_rating[Characters.Template.Gnoll];
+        Actor.Actions.ClaimRating = Characters.claim_rating[Characters.Template.Gnoll];
 
         Actor.Actions.Attack.AvailableWeapons = Characters.available_weapons[Characters.Template.Gnoll];
 

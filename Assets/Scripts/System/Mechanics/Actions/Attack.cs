@@ -188,7 +188,7 @@ public class Attack : MonoBehaviour
         // TODO: add more powerful, energy based attacks
         if (CurrentMeleeTargets.Count > 0) {
             if (EquippedRangedWeapon != null) EquippedRangedWeapon.gameObject.SetActive(false);
-            GetComponent<DefaultMelee>().Strike(CurrentMeleeTargets[0]);
+            GetComponent<DefaultMelee>().Strike(CurrentMeleeTargets[0].gameObject);
         } else {
             if (EquippedMeleeWeapon != null) EquippedMeleeWeapon.gameObject.SetActive(false);
             GetComponent<DefaultRange>().Strike(CurrentRangedTargets[0]);

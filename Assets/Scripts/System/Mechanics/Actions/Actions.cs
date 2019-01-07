@@ -12,7 +12,10 @@ public class Actions : MonoBehaviour
     public Decider Decider { get; set; }
     public Defend Defend { get; set; }
     public Movement Movement { get; set; }
-    public int ObjectiveControlRating { get; set; }
+    public int ClaimRating { get; set; }
+    public Resources Resources { get; set; }
+    public Stealth Stealth { get; set; }
+
     public Action OnAlliesUnderAttack { get; set; }
     public Action OnContestingObjective { get; set; }
     public Action OnBadlyInjured { get; set; }
@@ -23,8 +26,6 @@ public class Actions : MonoBehaviour
     public Action OnInCombat { get; set; }
     public Action OnUnderAttack { get; set; }
     public Action OnWatch { get; set; }
-    public Resources Resources { get; set; }
-    public Stealth Stealth { get; set; }
 
     public static Dictionary<Weapon.DamageType, int> SuperiorWeapons { get; set; }
 

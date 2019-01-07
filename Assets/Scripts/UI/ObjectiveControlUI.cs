@@ -39,7 +39,7 @@ public class ObjectiveControlUI : MonoBehaviour
     // public
 
 
-    public void ChangeInControl(Conflict.Faction new_faction, Conflict.Faction previous_faction)
+    public void ChangeClaim(Conflict.Faction new_faction, Conflict.Faction previous_faction)
     {
         if (new_faction != Conflict.Faction.None) {
             TextMeshProUGUI faction_text = objective_captured_faction.GetComponent<TextMeshProUGUI>();

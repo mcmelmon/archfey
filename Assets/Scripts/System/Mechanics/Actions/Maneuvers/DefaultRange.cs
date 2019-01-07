@@ -29,7 +29,7 @@ public class DefaultRange : MonoBehaviour
 
 
     public void Strike(Actor _target) {
-        // TODO: show projectiles
+        // TODO: allow ranged attacks against structure
 
         if (_target == null) return;
         Target = _target;

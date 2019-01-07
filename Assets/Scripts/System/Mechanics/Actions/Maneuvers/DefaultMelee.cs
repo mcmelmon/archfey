@@ -12,7 +12,8 @@ public class DefaultMelee : MonoBehaviour
     public float Damage { get; set; }
     public int DamageModifier { get; set; }
     public Resources Resources { get; set; }
-    public Actor Target { get; set; }
+    public Actor TargetActor { get; set; }
+    public Objective TargetStructure { get; set; }
     public Weapon Weapon { get; set; }
 
 
@@ -25,17 +26,19 @@ public class DefaultMelee : MonoBehaviour
     }
 
 
-    public void Strike(Actor _target)
+    public void Strike(GameObject _target)
     {
         if (_target == null) return;
-        Target = _target;
+
+        TargetActor = _target.GetComponent<Actor>() ?? null;
+        TargetStructure = _target.GetComponentInParent<Objective>() ?? null;
         Weapon = Attack.EquippedMeleeWeapon;
         Weapon.gameObject.SetActive(true);
         SetModifiers();
 
-        if (Random.Range(1, 21) + AttackModifier > Target.Actions.Defend.ArmorClass) { // Dexterity is already built in to AC
+        if (Hit()) {
             ApplyDamage();
-            DisplayEffects();
+            DisplayEffects(_target.transform.position);
             AdjustEnergy();
         }
     }
@@ -47,26 +50,43 @@ public class DefaultMelee : MonoBehaviour
     private void AdjustEnergy()
     {
         Resources.IncreaseEnergy(Damage * Resources.energy_potency);
-        Target.Actions.Resources.IncreaseEnergy(Damage * Target.Actions.Resources.energy_potency);
+        if (TargetActor != null) TargetActor.Actions.Resources.IncreaseEnergy(Damage * TargetActor.Actions.Resources.energy_potency);
     }
 
 
     private void ApplyDamage()
     {
-        if (Target.Health != null && Target.Actions.Defend != null && Actor.Actions != null) {
+        if (TargetActor != null) {
+            if (TargetActor.Health != null && TargetActor.Actions.Defend != null && Actor.Actions != null) {
+                int damage_roll = Random.Range(0, Weapon.damage_die) + 1;
+                Damage = TargetActor.Actions.Defend.DamageAfterDefenses(damage_roll + DamageModifier, Weapon.damage_type);
+                TargetActor.Health.LoseHealth(Damage, Actor);
+            }
+        } else if (TargetStructure != null && TargetStructure.is_structure) {
             int damage_roll = Random.Range(0, Weapon.damage_die) + 1;
-            Damage = Target.Actions.Defend.DamageAfterDefenses(damage_roll + DamageModifier, Weapon.damage_type);
-            Target.Health.LoseHealth(Damage, Actor);
+            TargetStructure.LoseStructure(damage_roll);
         }
     }
 
 
-    public void DisplayEffects()
+    public void DisplayEffects(Vector3 _location)
     {
-        GameObject _impact = Instantiate(SpellEffects.Instance.physical_strike_prefab, Target.transform.position + new Vector3(1, 4f, 0), SpellEffects.Instance.physical_strike_prefab.transform.rotation);
-        _impact.transform.parent = Target.transform;
+        GameObject _impact = Instantiate(SpellEffects.Instance.physical_strike_prefab, _location + new Vector3(1, 4f, 0), SpellEffects.Instance.physical_strike_prefab.transform.rotation);
+        _impact.transform.parent = transform;
         _impact.name = "Impact";
         Destroy(_impact, 1f);
+    }
+
+
+    public bool Hit()
+    {
+        if (TargetActor != null) {
+            return Random.Range(1, 21) + AttackModifier > TargetActor.Actions.Defend.ArmorClass;
+        } else if (TargetStructure != null && TargetStructure.is_structure) {
+            return Random.Range(1, 21) + AttackModifier > TargetStructure.armor_class;
+        }
+
+        return false;
     }
 
 
