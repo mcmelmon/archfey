@@ -6,14 +6,11 @@ public class DefaultMelee : MonoBehaviour
 {
     // properties
 
-    public Actor Actor { get; set; }
-    public Attack Attack { get; set; }
+    public Actor Me { get; set; }
     public int AttackModifier { get; set; }
     public float Damage { get; set; }
     public int DamageModifier { get; set; }
-    public Resources Resources { get; set; }
-    public Actor TargetActor { get; set; }
-    public Objective TargetStructure { get; set; }
+    public GameObject Target { get; set; }
     public Weapon Weapon { get; set; }
 
 
@@ -30,16 +27,14 @@ public class DefaultMelee : MonoBehaviour
     {
         if (_target == null) return;
 
-        TargetActor = _target.GetComponent<Actor>() ?? null;
-        TargetStructure = _target.GetComponentInParent<Objective>() ?? null;
-        Weapon = Attack.EquippedMeleeWeapon;
+        Target = _target;
+        Weapon = Me.Actions.Attack.EquippedMeleeWeapon;
         Weapon.gameObject.SetActive(true);
         SetModifiers();
 
         if (Hit()) {
             ApplyDamage();
             DisplayEffects(_target.transform.position);
-            AdjustEnergy();
         }
     }
 
@@ -47,24 +42,20 @@ public class DefaultMelee : MonoBehaviour
     // private
 
 
-    private void AdjustEnergy()
-    {
-        Resources.IncreaseEnergy(Damage * Resources.energy_potency);
-        if (TargetActor != null) TargetActor.Actions.Resources.IncreaseEnergy(Damage * TargetActor.Actions.Resources.energy_potency);
-    }
-
-
     private void ApplyDamage()
     {
-        if (TargetActor != null) {
-            if (TargetActor.Health != null && TargetActor.Actions.Defend != null && Actor.Actions != null) {
+        Actor target_actor = Target.GetComponent<Actor>();
+        Structure target_structure = Target.GetComponent<Structure>();
+
+        if (target_actor != null) {
+            if (target_actor.Health != null && target_actor.Actions.Defend != null && Me.Actions != null) {
                 int damage_roll = Random.Range(0, Weapon.damage_die) + 1;
-                Damage = TargetActor.Actions.Defend.DamageAfterDefenses(damage_roll + DamageModifier, Weapon.damage_type);
-                TargetActor.Health.LoseHealth(Damage, Actor);
+                Damage = target_actor.Actions.Defend.DamageAfterDefenses(damage_roll + DamageModifier, Weapon.damage_type);
+                target_actor.Health.LoseHealth(Damage, Me);
             }
-        } else if (TargetStructure != null && TargetStructure.is_structure) {
+        } else if (target_structure != null) {
             int damage_roll = Random.Range(0, Weapon.damage_die) + 1;
-            TargetStructure.LoseStructure(damage_roll);
+            target_structure.LoseStructure(damage_roll);
         }
     }
 
@@ -80,10 +71,13 @@ public class DefaultMelee : MonoBehaviour
 
     public bool Hit()
     {
-        if (TargetActor != null) {
-            return Random.Range(1, 21) + AttackModifier > TargetActor.Actions.Defend.ArmorClass;
-        } else if (TargetStructure != null && TargetStructure.is_structure) {
-            return Random.Range(1, 21) + AttackModifier > TargetStructure.armor_class;
+        Actor target_actor = Target.GetComponent<Actor>();
+        Structure target_structure = Target.GetComponent<Structure>();
+
+        if (target_actor != null) {
+            return Random.Range(1, 21) + AttackModifier > target_actor.Actions.Defend.ArmorClass;
+        } else if (target_structure != null) {
+            return Random.Range(1, 21) + AttackModifier > target_structure.armor_class;
         }
 
         return false;
@@ -92,9 +86,7 @@ public class DefaultMelee : MonoBehaviour
 
     private void SetComponents()
     {
-        Actor = GetComponentInParent<Actor>();
-        Attack = GetComponent<Attack>();
-        Resources = GetComponent<Resources>();
+        Me = GetComponentInParent<Actor>();
     }
 
 
@@ -102,13 +94,13 @@ public class DefaultMelee : MonoBehaviour
     {
         if (Weapon.is_light)
         {
-            AttackModifier = Actor.Stats.DexterityProficiency + Weapon.attack_bonus + Actions.SuperiorWeapons[Weapon.damage_type];
-            DamageModifier = Actor.Stats.DexterityProficiency + Weapon.damage_bonus + Actions.SuperiorWeapons[Weapon.damage_type];
+            AttackModifier = Me.Stats.DexterityProficiency + Weapon.attack_bonus + Actions.SuperiorWeapons[Weapon.damage_type];
+            DamageModifier = Me.Stats.DexterityProficiency + Weapon.damage_bonus + Actions.SuperiorWeapons[Weapon.damage_type];
         }
         else
         {
-            AttackModifier = Actor.Stats.StrengthProficiency + Weapon.attack_bonus + Actions.SuperiorWeapons[Weapon.damage_type];
-            DamageModifier = Actor.Stats.StrengthProficiency + Weapon.damage_bonus + Actions.SuperiorWeapons[Weapon.damage_type];
+            AttackModifier = Me.Stats.StrengthProficiency + Weapon.attack_bonus + Actions.SuperiorWeapons[Weapon.damage_type];
+            DamageModifier = Me.Stats.StrengthProficiency + Weapon.damage_bonus + Actions.SuperiorWeapons[Weapon.damage_type];
         }
     }
 }

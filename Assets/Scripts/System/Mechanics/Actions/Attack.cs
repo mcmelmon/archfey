@@ -6,7 +6,7 @@ public class Attack : MonoBehaviour
 {
     // properties
 
-    public Actor Actor { get; set; }
+    public Actor Me { get; set; }
     public int AttackRating { get; set; }
     public List<Weapon> AvailableWeapons { get; set; }
     public List<Actor> AvailableMeleeTargets { get; set; }
@@ -100,12 +100,12 @@ public class Attack : MonoBehaviour
     {
         ClearTargets();
 
-        for (int i = 0; i < Actor.Actions.Decider.Enemies.Count; i++) {
-            Actor _enemy = Actor.Actions.Decider.Enemies[i];
+        for (int i = 0; i < Me.Actions.Decider.Enemies.Count; i++) {
+            Actor _enemy = Me.Actions.Decider.Enemies[i];
             if (_enemy == null || transform == null) continue;
 
             float grounded_center_distance = Vector3.Distance(new Vector3(_enemy.transform.position.x, 0, _enemy.transform.position.z), new Vector3(transform.position.x, 0, transform.position.z));
-            float combined_radius = (_enemy.GetComponent<CapsuleCollider>().radius * _enemy.transform.localScale.x) + (Actor.GetComponent<CapsuleCollider>().radius * transform.localScale.x);
+            float combined_radius = (_enemy.GetComponent<CapsuleCollider>().radius * _enemy.transform.localScale.x) + (Me.GetComponent<CapsuleCollider>().radius * transform.localScale.x);
             float separation = grounded_center_distance - combined_radius;
 
             if (separation <= LongestMeleeRange()) {
@@ -162,7 +162,7 @@ public class Attack : MonoBehaviour
 
     private void SetComponents()
     {
-        Actor = GetComponentInParent<Actor>();
+        Me = GetComponentInParent<Actor>();
         AvailableMeleeTargets = new List<Actor>();
         AvailableRangedTargets = new List<Actor>();
         CurrentMeleeTargets = new List<Actor>();
@@ -179,7 +179,7 @@ public class Attack : MonoBehaviour
         if (CurrentMeleeTargets.Count == 0 && CurrentRangedTargets.Count == 0) return;
 
         // TODO: handle in Stealth; allow stealth to be recovered, e.g. "Vanish" and even attacking from stealth for a short while, etc.
-        Stealth stealth = Actor.Actions.Stealth;
+        Stealth stealth = Me.Actions.Stealth;
         if (stealth != null) {
             stealth.Attacking = true;
             stealth.Seen = true;

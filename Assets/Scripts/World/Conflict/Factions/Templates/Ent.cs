@@ -7,7 +7,7 @@ public class Ent : MonoBehaviour {
 
     // properties
 
-    public Actor Actor { get; set; }
+    public Actor Me { get; set; }
 
 
     // Unity
@@ -38,6 +38,6 @@ public class Ent : MonoBehaviour {
 
     private void SetStats()
     {
-        Actor.Fey.SetStats();
+        Me.Fey.SetStats();
     }
 }

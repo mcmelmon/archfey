@@ -58,7 +58,7 @@ public class FountainOfHealing : MonoBehaviour
                 friend.Health.RecoverHealth(Mathf.RoundToInt(SecondaryHealthGainPerTurn * Actor.Actions.Resources.magic_potency));
             }
             TurnsActive[Target]++;
-            yield return new WaitForSeconds(Turn.action_threshold);
+            yield return new WaitForSeconds(Turn.ActionThreshold);
         }
 
         TurnsActive.Remove(Target);

@@ -8,13 +8,13 @@ public class Decider : MonoBehaviour
     {
         AlliesUnderAttack = 1,
         BadlyInjured = 2,
-        ContestingObjective = 3,
-        FriendliesSighted = 4,
-        HasObjective = 5,
-        HostilesSighted = 6,
-        Idle = 7,
-        InCombat = 8,
-        ReachedObective = 9,
+        FriendliesSighted = 3,
+        HostilesSighted = 4,
+        Idle = 5,
+        InCombat = 6,
+        MovingToGoal = 7,
+        PerformingTask = 8,
+        ReachedGoal = 9,
         UnderAttack = 10,
         Watch = 11,
     };
@@ -26,10 +26,9 @@ public class Decider : MonoBehaviour
 
     // properties
 
-    public Actor Actor { get; set; }
+    public Actor Me { get; set; }
     public List<Actor> Enemies { get; set; }
     public List<Actor> Friends { get; set; }
-    public ClaimNode ObjectiveUnderContention { get; set; }
     public Threat Threat { get; set; }
 
 
@@ -46,7 +45,7 @@ public class Decider : MonoBehaviour
 
     public void ChooseState()
     {
-        Actor.Senses.Sight();
+        Me.Senses.Sight();
 
         if (InCombat()) {
             Actor _enemy = Threat.BiggestThreat();
@@ -54,6 +53,7 @@ public class Decider : MonoBehaviour
                 if (!Enemies.Contains(_enemy)) Enemies.Add(_enemy);
                 SetState(State.InCombat);
             } else {
+                Me.Actions.Movement.Route = null;
                 SetState(State.Idle);
             }
         } else if (UnderAttack()) {
@@ -63,36 +63,30 @@ public class Decider : MonoBehaviour
                 previous_state = state;
                 SetState(State.UnderAttack);
             } else {
+                Me.Actions.Movement.Route = null;
                 SetState(State.Idle);
             }
         } else if (AlliesUnderAttack()) {
-            Actor _enemy = (Actor.Faction == Conflict.Faction.Ghaddim) ? Actor.Ghaddim.BiggestFactionThreat() : Actor.Mhoddim.BiggestFactionThreat();
+            Actor _enemy = (Me.Faction == Conflict.Faction.Ghaddim) ? Me.Ghaddim.BiggestFactionThreat() : Me.Mhoddim.BiggestFactionThreat();
 
             if (_enemy != null) {
                 if (!Enemies.Contains(_enemy)) Enemies.Add(_enemy);
                 SetState(State.AlliesUnderAttack);
             } else {
+                Me.Actions.Movement.Route = null;
                 SetState(State.Idle);
             }
-        } else if (AttackingObjective())  {
-            SetState(State.ContestingObjective);
-            return;
         } else if (HostilesSighted()) {
             SetState(State.HostilesSighted);
-        } else if (HasObjective()) {
-            SetState(State.HasObjective);
-        } else if (OnWatch()) {
+        } else if (ReachedGoal()) {
+            SetState(State.ReachedGoal);
+        } else if (Moving()) {
+            SetState(State.MovingToGoal);
+        } else if (Watching()) {
             SetState(State.Watch);
         } else {
             SetState(State.Idle);
         }
-    }
-
-
-    public void FinishedRoute()
-    {
-        Actor.Actions.Movement.Route = null;
-        Actor.Actions.Movement.ResetPath();
     }
 
 
@@ -111,9 +105,9 @@ public class Decider : MonoBehaviour
 
     private bool AlliesUnderAttack()
     {
-        for (int i = 0; i < Actor.Senses.Sightings.Count; i++)
+        for (int i = 0; i < Me.Senses.Sightings.Count; i++)
         {
-            Actor sighting = Actor.Senses.Sightings[i];
+            Actor sighting = Me.Senses.Sightings[i];
             if (sighting == null) continue;
             if (IsAttackingMyFaction(sighting)) return true;
         }
@@ -122,19 +116,13 @@ public class Decider : MonoBehaviour
     }
 
 
-    private bool AttackingObjective()
-    {
-        return ObjectiveUnderContention != null && ObjectiveUnderContention.ClaimFaction != Actor.Faction;
-    }
-
-
     private bool FriendliesSighted()
     {
         Friends.Clear();
 
-        for (int i = 0; i < Actor.Senses.Sightings.Count; i++)
+        for (int i = 0; i < Me.Senses.Sightings.Count; i++)
         {
-            Actor _friend = Actor.Senses.Sightings[i];
+            Actor _friend = Me.Senses.Sightings[i];
             if (_friend == null) continue;
             if (_friend != null && IsMyFaction(_friend) && !Friends.Contains(_friend))
             {
@@ -146,19 +134,13 @@ public class Decider : MonoBehaviour
     }
 
 
-    private bool HasObjective()
-    {
-        return Actor.Actions.Movement != null && Actor.Actions.Movement.Route != null && !Actor.Actions.Movement.Route.Completed();
-    }
-
-
     private bool HostilesSighted()
     {
         Enemies.Clear();
 
-        for (int i = 0; i < Actor.Senses.Sightings.Count; i++)
+        for (int i = 0; i < Me.Senses.Sightings.Count; i++)
         {
-            Actor _hostile = Actor.Senses.Sightings[i];
+            Actor _hostile = Me.Senses.Sightings[i];
             if (_hostile == null) continue;
             if (!IsFriendOrNeutral(_hostile) && !Enemies.Contains(_hostile))
             {
@@ -179,7 +161,7 @@ public class Decider : MonoBehaviour
 
     private bool InCombat()
     {
-        return HostilesSighted() && Actor.Actions.Attack.Engaged();
+        return HostilesSighted() && Me.Actions.Attack.Engaged();
     }
 
 
@@ -191,39 +173,45 @@ public class Decider : MonoBehaviour
 
     private bool IsAttackingMyFaction(Actor _unit)
     {
-        return Actor.Faction != Conflict.Faction.Fey && Actor.Faction != Conflict.Faction.None
-                                  && (Actor.Faction == Conflict.Faction.Ghaddim) ? (Actor.Ghaddim.IsFactionThreat(_unit)) : (Actor.Mhoddim.IsFactionThreat(_unit));
+        return Me.Faction != Conflict.Faction.Fey && Me.Faction != Conflict.Faction.None
+                                  && (Me.Faction == Conflict.Faction.Ghaddim) ? (Me.Ghaddim.IsFactionThreat(_unit)) : (Me.Mhoddim.IsFactionThreat(_unit));
     }
 
 
     private bool IsMyFaction(Actor _unit)
     {
-        return _unit != null && Actor.Faction == _unit.Faction;
+        return _unit != null && Me.Faction == _unit.Faction;
     }
 
 
     private bool IsMyRole(Actor _unit)
     {
-        return _unit != null && Actor.Role == _unit.Role;
+        return _unit != null && Me.Role == _unit.Role;
     }
 
 
-    private bool OnWatch()
+    private bool Moving()
+    {
+        return Me.Actions.Movement != null && Me.Actions.Movement.InProgress();
+    }
+
+
+    private bool Watching()
     {
         // TODO: once a ruin is captured, switch to sentry and attack incoming enemies
         return false;
     }
 
 
-    private void ReachedObjective()
+    private bool ReachedGoal()
     {
-        // TODO: move on to the next
+        return Me.Actions.Movement != null && !Me.Actions.Movement.InProgress();
     }
 
 
     private void SetComponents()
     {
-        Actor = GetComponentInParent<Actor>();
+        Me = GetComponentInParent<Actor>();
         Enemies = new List<Actor>();
         Friends = new List<Actor>();
         Threat = GetComponent<Threat>();
@@ -240,6 +228,6 @@ public class Decider : MonoBehaviour
 
     private bool UnderAttack()
     {
-        return Threat.GetThreats().Count > 0;
+        return Threat.Threats.Count > 0;
     }
 }

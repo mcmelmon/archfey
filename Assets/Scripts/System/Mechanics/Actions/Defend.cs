@@ -9,7 +9,7 @@ public class Defend : MonoBehaviour
 
     // properties
 
-    public Actor Actor { get; set; }
+    public Actor Me { get; set; }
     public int ArmorClass { get; set; }
     public float ComputedDamage { get; set; }
     public Weapon.DamageType DamageType { get; set; }
@@ -67,8 +67,8 @@ public class Defend : MonoBehaviour
 
     private void SetComponents()
     {
-        Actor = GetComponentInParent<Actor>();
+        Me = GetComponentInParent<Actor>();
 
-        DefenseRating = ArmorClass + Actor.Stats.DexterityProficiency;
+        DefenseRating = ArmorClass + Me.Stats.DexterityProficiency;
     }
 }

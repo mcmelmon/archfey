@@ -6,7 +6,7 @@ public class Senses : MonoBehaviour {
 
     // properties
 
-    public Actor Actor { get; set; }
+    public Actor Me { get; set; }
     public float Darkvision { get; set; }
     public float PerceptionRange { get; set; }
     public List<Actor> Sightings { get; set; }
@@ -42,7 +42,7 @@ public class Senses : MonoBehaviour {
             if (_sighting != null && _sighting != GetComponent<Actor>()) {  // don't sight ourselves
                 Stealth sighting_stealth = _sighting.GetComponent<Stealth>();
 
-                if (sighting_stealth == null || sighting_stealth.Spotted(Actor) && !Sightings.Contains(_sighting)) {
+                if (sighting_stealth == null || sighting_stealth.Spotted(Me) && !Sightings.Contains(_sighting)) {
                     Sightings.Add(_sighting);
                 }
             }
@@ -54,7 +54,7 @@ public class Senses : MonoBehaviour {
 
     private void SetComponents()
     {
-        Actor = GetComponent<Actor>();
+        Me = GetComponent<Actor>();
         transform.gameObject.AddComponent<SphereCollider>();
         GetComponent<SphereCollider>().isTrigger = true;
         Sightings = new List<Actor>();

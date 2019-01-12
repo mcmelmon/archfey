@@ -18,15 +18,6 @@ public class Objective : MonoBehaviour
     public Material unclaimed_skin;
     public List<Renderer> renderers;
 
-    [Header("Structure")]
-    // Structure covers the health of the objective itself; a damaged objective produces less benefit for the faction with claim
-    // Not all objectives are structures
-    public bool is_structure = true;
-    public int armor_class = 13;
-    public int damage_resistance = 0;
-    public int maximum_hit_points = 100;
-    public int current_hit_points = 100;
-
     // properties
 
     public Conflict.Faction Claim { get; set; }
@@ -60,23 +51,6 @@ public class Objective : MonoBehaviour
     }
 
 
-    public void LoseStructure(int _amount)
-    {
-        if (!is_structure || current_hit_points == 0) return;
-
-        int reduced_amount = (_amount - damage_resistance > 0) ? _amount - damage_resistance : 0 ;
-        current_hit_points -= reduced_amount;
-        if (current_hit_points <= 0) {
-            current_hit_points = 0;
-            foreach (var node in claim_nodes) {
-                node.ClearAllClaim();
-                node.ClearAttackers();
-            }
-        }
-        UpdateStructure();
-    }
-
-
     // private
 
 
@@ -96,7 +70,7 @@ public class Objective : MonoBehaviour
     private IEnumerator CheckClaim()
     {
         while (true) {
-            yield return new WaitForSeconds(Turn.action_threshold);
+            yield return new WaitForSeconds(Turn.ActionThreshold);
 
             Conflict.Faction new_faction = Conflict.Faction.None;
             Conflict.Faction previous_faction = Claim;
@@ -121,12 +95,6 @@ public class Objective : MonoBehaviour
                 TransferClaim(new_faction, previous_faction);
             }
         }
-    }
-
-
-    private float CurrentHitPointPercentage()
-    {
-        return ((float)current_hit_points / (float)maximum_hit_points);
     }
 
 
@@ -163,22 +131,4 @@ public class Objective : MonoBehaviour
         ObjectiveControlUI.Instance.ChangeClaim(Claim, previous_faction);
         ObjectiveControlUI.Instance.MostRecentFlip = this;
     }
-
-
-    private void UpdateStructure()
-    {
-        if (!is_structure || current_hit_points == maximum_hit_points) return;
-
-        Vector3 scaling = transform.localScale;
-        if (CurrentHitPointPercentage() < 0.66f) {
-            scaling.y = scaling.y * 0.66f;
-        } else if (CurrentHitPointPercentage() < 0.33f) {
-            scaling.y = scaling.y * 0.33f;
-        } else if (Mathf.Approximately(0f, CurrentHitPointPercentage())) {
-            scaling.y = 0f;
-        }
-
-        transform.localScale = scaling;
-    }
-
 }

@@ -6,8 +6,6 @@ using UnityEngine;
 
 public class Route
 {
-    public static float reached_threshold = 5f;
-
     // properties
 
     public Vector3 Current { get; set; }
@@ -96,7 +94,7 @@ public class Route
 
     public bool ReachedCurrent(Vector3 unit_position)
     {
-        return Vector3.Distance(Current, unit_position) < reached_threshold;
+        return Vector3.Distance(Current, unit_position) < Movement.ReachedThreshold;
     }
 
 

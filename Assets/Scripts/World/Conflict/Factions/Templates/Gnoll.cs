@@ -6,7 +6,7 @@ public class Gnoll : MonoBehaviour
 {
     // properties
 
-    public Actor Actor { get; set; }
+    public Actor Me { get; set; }
 
     // Unity
 
@@ -19,63 +19,67 @@ public class Gnoll : MonoBehaviour
 
     // public
 
+
     public void OnAlliesUnderAttack()
     {
-        Actor.Actions.CloseWithEnemies();
-    }
-
-
-    public void OnContestingObjective()
-    {
-        Actor.Actions.Movement.Route = null;
-        Actor.Actions.Movement.ResetPath();
-        if (Actor.Actions.Decider.ObjectiveUnderContention.Objective.current_hit_points > 0) {
-            GetComponentInChildren<DefaultMelee>().Strike(Actor.Actions.Decider.ObjectiveUnderContention.gameObject);
-        }
+        Me.Actions.CloseWithEnemies();
     }
 
 
     public void OnBadlyInjured()
     {
-        Actor.Actions.CloseWithEnemies();
-    }
-
-
-    public void OnHasObjective()
-    {
-        Actor.Actions.Movement.Advance();
+        Me.Actions.CloseWithEnemies();
     }
 
 
     public void OnHostilesSighted()
     {
-        Actor.Actions.CloseWithEnemies();
+        Me.Actions.CloseWithEnemies();
     }
 
 
     public void OnIdle()
     {
-        List<Objective> objectives = Objectives.HeldByFaction[Conflict.Instance.EnemyFaction(Actor)];
+        var structures = FindObjectsOfType<Structure>();
 
-        Actor.Actions.Movement.SetRoute(Route.Linear(transform.position, objectives[Random.Range(0, objectives.Count)].claim_nodes[0].transform.position, Actor.Actions.Decider.FinishedRoute));
+        Me.Actions.Movement.SetDestination(structures[Random.Range(0, structures.Length)].transform.position);
     }
 
 
     public void OnInCombat()
     {
-        Actor.Actions.CloseWithEnemies();
+        Me.Actions.CloseWithEnemies();
+    }
+
+
+    public void OnMovingToGoal()
+    {
+        Me.Actions.Movement.Advance();
+    }
+
+
+    public void OnPerformingTask()
+    {
+
+    }
+
+
+    public void OnReachedGoal()
+    {
+        Me.Actions.Movement.ResetPath();
+        OnIdle();
     }
 
 
     public void OnUnderAttack()
     {
-        Actor.Actions.CloseWithEnemies();
+        Me.Actions.CloseWithEnemies();
     }
 
 
     public void OnWatch()
     {
-        Actor.Actions.CloseWithEnemies();
+        Me.Actions.CloseWithEnemies();
     }
 
 
@@ -86,48 +90,49 @@ public class Gnoll : MonoBehaviour
     {
         // can't do in Actor until the Gnoll component has been attached
 
-        Actor = GetComponent<Actor>();
+        Me = GetComponent<Actor>();
         SetBaseStats();
 
-        Actor.Actions.Attack.EquipMeleeWeapon();
-        Actor.Actions.Attack.EquipRangedWeapon();
-        Actor.Actions.OnAlliesUnderAttack = OnAlliesUnderAttack;
-        Actor.Actions.OnContestingObjective = OnContestingObjective;
-        Actor.Actions.OnBadlyInjured = OnBadlyInjured;
-        Actor.Actions.OnHasObjective = OnHasObjective;
-        Actor.Actions.OnHostilesSighted = OnHostilesSighted;
-        Actor.Actions.OnIdle = OnIdle;
-        Actor.Actions.OnInCombat = OnInCombat;
-        Actor.Actions.OnUnderAttack = OnUnderAttack;
-        Actor.Actions.OnWatch = OnWatch;
+        Me.Actions.Attack.EquipMeleeWeapon();
+        Me.Actions.Attack.EquipRangedWeapon();
+        Me.Actions.OnAlliesUnderAttack = OnAlliesUnderAttack;
+        Me.Actions.OnBadlyInjured = OnBadlyInjured;
+        Me.Actions.OnHostilesSighted = OnHostilesSighted;
+        Me.Actions.OnIdle = OnIdle;
+        Me.Actions.OnInCombat = OnInCombat;
+        Me.Actions.OnMovingToGoal = OnMovingToGoal;
+        Me.Actions.OnPerformingTask = OnPerformingTask;
+        Me.Actions.OnReachedGoal = OnReachedGoal;
+        Me.Actions.OnUnderAttack = OnUnderAttack;
+        Me.Actions.OnWatch = OnWatch;
 
-        Actor.Health.SetCurrentAndMaxHitPoints();  // calculated from hit dice and constitution, set in base stats
+        Me.Health.SetCurrentAndMaxHitPoints();  // calculated from hit dice and constitution, set in base stats
     }
 
 
     private void SetBaseStats()
     {
-        Actor.Actions.ClaimRating = Characters.claim_rating[Characters.Template.Gnoll];
+        Me.Actions.ClaimRating = Characters.claim_rating[Characters.Template.Gnoll];
 
-        Actor.Actions.Attack.AvailableWeapons = Characters.available_weapons[Characters.Template.Gnoll];
+        Me.Actions.Attack.AvailableWeapons = Characters.available_weapons[Characters.Template.Gnoll];
 
-        Actor.Actions.Defend.ArmorClass = Characters.armor_class[Characters.Template.Gnoll];
-        Actor.Actions.Defend.SetResistances(Characters.resistances[Characters.Template.Base]);
+        Me.Actions.Defend.ArmorClass = Characters.armor_class[Characters.Template.Gnoll];
+        Me.Actions.Defend.SetResistances(Characters.resistances[Characters.Template.Base]);
 
-        Actor.Health.HitDice = (Characters.hit_dice[Characters.Template.Gnoll]);
-        Actor.Health.HitDiceType = (Characters.hit_dice_type[Characters.Template.Gnoll]);
+        Me.Health.HitDice = (Characters.hit_dice[Characters.Template.Gnoll]);
+        Me.Health.HitDiceType = (Characters.hit_dice_type[Characters.Template.Gnoll]);
 
-        Actor.Actions.Movement.Speed = Characters.speed[Characters.Template.Base];
-        Actor.Actions.Movement.Agent.speed = Characters.speed[Characters.Template.Base];
+        Me.Actions.Movement.Speed = Characters.speed[Characters.Template.Base];
+        Me.Actions.Movement.Agent.speed = Characters.speed[Characters.Template.Base];
 
-        Actor.Senses.Darkvision = Characters.darkvision_range[Characters.Template.Gnoll];
-        Actor.Senses.PerceptionRange = Characters.perception_range[Characters.Template.Base];
+        Me.Senses.Darkvision = Characters.darkvision_range[Characters.Template.Gnoll];
+        Me.Senses.PerceptionRange = Characters.perception_range[Characters.Template.Base];
 
-        Actor.Stats.CharismaProficiency = Characters.charisma_proficiency[Characters.Template.Gnoll];
-        Actor.Stats.ConstitutionProficiency = Characters.constituion_proficiency[Characters.Template.Base];
-        Actor.Stats.DexterityProficiency = Characters.dexterity_proficiency[Characters.Template.Gnoll];
-        Actor.Stats.IntelligenceProficiency = Characters.intelligence_proficiency[Characters.Template.Gnoll];
-        Actor.Stats.StrengthProficiency = Characters.strength_proficiency[Characters.Template.Gnoll];
-        Actor.Stats.WisdomProficiency = Characters.wisdom_proficiency[Characters.Template.Base];
+        Me.Stats.CharismaProficiency = Characters.charisma_proficiency[Characters.Template.Gnoll];
+        Me.Stats.ConstitutionProficiency = Characters.constituion_proficiency[Characters.Template.Base];
+        Me.Stats.DexterityProficiency = Characters.dexterity_proficiency[Characters.Template.Gnoll];
+        Me.Stats.IntelligenceProficiency = Characters.intelligence_proficiency[Characters.Template.Gnoll];
+        Me.Stats.StrengthProficiency = Characters.strength_proficiency[Characters.Template.Gnoll];
+        Me.Stats.WisdomProficiency = Characters.wisdom_proficiency[Characters.Template.Base];
     }
 }

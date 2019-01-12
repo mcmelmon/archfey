@@ -51,9 +51,6 @@ public class ClaimNode : MonoBehaviour
 
     public void ClearAttackers()
     {
-        for (int i = 0; i < Attackers.Count; i++) {
-            Attackers[i].Actions.Decider.ObjectiveUnderContention = null;
-        }
         Attackers.Clear();
     }
 
@@ -87,7 +84,7 @@ public class ClaimNode : MonoBehaviour
             }
 
             UpdateClaimBar();
-            yield return new WaitForSeconds(Turn.action_threshold);
+            yield return new WaitForSeconds(Turn.ActionThreshold);
         }
     }
 
@@ -96,7 +93,7 @@ public class ClaimNode : MonoBehaviour
     {
         if (defender == null) return;
 
-        if (CurrentClaimPoints >= maximum_claim_points || (Objective.is_structure && Objective.current_hit_points <= 0)) return;
+        if (CurrentClaimPoints >= maximum_claim_points) return;
 
         CurrentClaimPoints += Mathf.Clamp((defender.Actions.ClaimRating - ClaimResistance), 0, defender.Actions.ClaimRating);
         if (CurrentClaimPoints >= maximum_claim_points) {
@@ -137,16 +134,14 @@ public class ClaimNode : MonoBehaviour
             if (_unit == null) continue;
 
             distance = Vector3.Distance(transform.position, _unit.transform.position);
-            if (distance < Route.reached_threshold) {
+            if (distance < Movement.ReachedThreshold) {
                 if (_unit.Faction == ClaimFaction) {
                     Defenders.Add(_unit);
                 } else if (ClaimFaction == Conflict.Faction.None && _unit.Faction == OccupyingFaction) {
                     Defenders.Add(_unit);
-                    _unit.Actions.Decider.ObjectiveUnderContention = this;
                 }
                 else {
                     Attackers.Add(_unit);
-                    _unit.Actions.Decider.ObjectiveUnderContention = this;
                 }
             }
         }
@@ -156,11 +151,6 @@ public class ClaimNode : MonoBehaviour
     private void ReduceClaim(Actor attacker)
     {
         if (attacker == null) return;
-
-        if (Objective.is_structure && Objective.current_hit_points <= 0) { 
-            ClearAllClaim();
-            return;
-        }
 
         if (CurrentClaimPoints <= 0) {
             ClearAllClaim();
