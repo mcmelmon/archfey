@@ -183,6 +183,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c4e0ee1d15e1417eb296abe88038033, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health_bar: {fileID: 101940809350594286}
+  mana_bar: {fileID: 1721356006106415503}
+  stat_bars: {fileID: 4871533900098564745}
 --- !u!114 &114756480532763090
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -368,7 +371,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2157672522741134409}
-  - component: {fileID: 7861818824337350851}
   - component: {fileID: 7297577205185249225}
   - component: {fileID: 2250975606907970808}
   m_Layer: 26
@@ -393,30 +395,6 @@ Transform:
   m_Father: {fileID: 4999204020134564}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7861818824337350851
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 997373052709257281}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2990df66b036643bc9e92eb426d7358a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  energy_haste_factor: 0
-  energy_pool_maximum: 0
-  energy_potency: 0
-  energy_reduction_rate: 0
-  mana_haste_factor: 0
-  mana_pool_maximum: 0
-  magic_potency: 0
-  mana_replenishment_rate: 0
-  amber_pool_maximum: 0
-  health_bar: {fileID: 0}
-  mana_bar: {fileID: 0}
-  stat_bars: {fileID: 0}
 --- !u!114 &7297577205185249225
 MonoBehaviour:
   m_ObjectHideFlags: 0

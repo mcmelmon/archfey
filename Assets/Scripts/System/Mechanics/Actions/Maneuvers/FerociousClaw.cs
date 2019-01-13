@@ -6,13 +6,11 @@ public class FerociousClaw : MonoBehaviour
 {
     // properties
 
-    public Actor Actor { get; set; }
+    public Actor Me { get; set; }
+    public int AttackModifier { get; set; }
     public float Damage { get; set; }
-    public int EnergyCost { get; set; }
-    public float Range { get; set; }
-    public Resources Resources { get; set; }
-    public Stats Stats { get; set; }
-    public Actor Target { get; set; }
+    public int DamageModifier { get; set; }
+    public GameObject Target { get; set; }
 
 
     // Unity
@@ -25,16 +23,16 @@ public class FerociousClaw : MonoBehaviour
     // public
 
 
-    public void Cast(Actor _target, bool dispel_effect = false)
+    public void Cast(GameObject _target, bool dispel_effect = false)
     {
         if (_target == null) return;
         Target = _target;
+        SetModifiers();
 
-        if (Resources.CurrentEnergy >= EnergyCost)
+        if (Hit())
         {
             ApplyDamage();
-            DisplayEffects();
-            AdjustEnergy();
+            DisplayEffects(_target.transform.position);
         }
     }
 
@@ -42,42 +40,61 @@ public class FerociousClaw : MonoBehaviour
     // private
 
 
-    private void AdjustEnergy()
+    private void ApplyDamage()
     {
-        Resources.DecreaseEnergy(EnergyCost);
-        Target.Actions.Resources.IncreaseEnergy(Damage * Target.Actions.Resources.energy_potency);
+        Actor target_actor = Target.GetComponent<Actor>();
+        Structure target_structure = Target.GetComponent<Structure>();
+
+        if (target_actor != null) {
+            if (target_actor.Health != null && target_actor.Actions.Stats != null && Me.Actions != null) {
+                int damage_roll = Random.Range(0, 10) + 1;
+                Damage = target_actor.Actions.Stats.DamageAfterDefenses(damage_roll + DamageModifier, Weapon.DamageType.Slashing);
+                target_actor.Health.LoseHealth(Damage, Me);
+            }
+        } else if (target_structure != null) {
+            int damage_roll = Random.Range(0, 10) + 1;
+            target_structure.LoseStructure(damage_roll, Weapon.DamageType.Slashing);
+        }
     }
 
 
-    public void ApplyDamage()
+    public void DisplayEffects(Vector3 _location)
     {
-        Damage = 2 * (Actor.Actions.Attack.EquippedMeleeWeapon.damage_die + Actor.Actions.Attack.AttackRating) * Resources.energy_potency;
-        int damage_inflicted = Target.Actions.Stats.DamageAfterDefenses(Mathf.RoundToInt(Damage), Weapon.DamageType.Slashing);
-        Target.Health.LoseHealth(damage_inflicted, Actor);
+        GameObject _impact = Instantiate(SpellEffects.Instance.physical_strike_prefab, _location + new Vector3(1, 4f, 0), SpellEffects.Instance.physical_strike_prefab.transform.rotation);
+        _impact.transform.parent = transform;
+        _impact.name = "Impact";
+        Destroy(_impact, 1f);
     }
 
 
-    public void DisplayEffects()
+    public bool Hit()
     {
-        GameObject _claw1 = Instantiate(SpellEffects.Instance.physical_strike_prefab, Target.transform.position + new Vector3(1, 4f, 0), SpellEffects.Instance.physical_strike_prefab.transform.rotation);
-        _claw1.transform.parent = Target.transform;
-        _claw1.name = "Claw1";
-        Destroy(_claw1, 1f);
+        Actor target_actor = Target.GetComponent<Actor>();
+        Structure target_structure = Target.GetComponent<Structure>();
 
-        GameObject _claw2 = Instantiate(SpellEffects.Instance.physical_strike_prefab, Target.transform.position + new Vector3(0, 4f, 1), SpellEffects.Instance.physical_strike_prefab.transform.rotation);
-        _claw2.name = "Claw2";
-        _claw1.transform.parent = Target.transform;
-        Destroy(_claw2, 1f);
+        if (target_actor != null)
+        {
+            return Random.Range(1, 21) + AttackModifier > target_actor.Actions.Stats.ArmorClass;
+        }
+        else if (target_structure != null)
+        {
+            return Random.Range(1, 21) + AttackModifier > target_structure.armor_class;
+        }
+
+        return false;
     }
 
 
     private void SetComponents()
     {
-        Actor = GetComponentInParent<Actor>();
-        Resources = GetComponent<Resources>();
-        Stats = GetComponentInParent<Stats>();
+        Me = GetComponentInParent<Actor>();
         Damage = 0;
-        EnergyCost = 33;
-        Range = 7f;
+    }
+
+
+    private void SetModifiers()
+    {
+        AttackModifier = Me.Stats.StrengthProficiency;
+        DamageModifier = Me.Stats.StrengthProficiency;
     }
 }

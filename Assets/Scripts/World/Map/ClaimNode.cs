@@ -95,7 +95,7 @@ public class ClaimNode : MonoBehaviour
 
         if (CurrentClaimPoints >= maximum_claim_points) return;
 
-        CurrentClaimPoints += Mathf.Clamp((defender.Actions.ClaimRating - ClaimResistance), 0, defender.Actions.ClaimRating);
+        CurrentClaimPoints += Mathf.Clamp((defender.Stats.ProficiencyBonus - ClaimResistance), 0, defender.Stats.ProficiencyBonus);  // TODO: give commoners expertise
         if (CurrentClaimPoints >= maximum_claim_points) {
             CurrentClaimPoints = maximum_claim_points;
             ClaimFaction = OccupyingFaction = defender.Faction;
@@ -157,7 +157,7 @@ public class ClaimNode : MonoBehaviour
             OccupyingFaction = attacker.Faction;
             BoostClaim(attacker);
         } else {
-            CurrentClaimPoints -= Mathf.Clamp((attacker.Actions.ClaimRating - ClaimResistance), 0, attacker.Actions.ClaimRating);
+            CurrentClaimPoints -= Mathf.Clamp((attacker.Stats.ProficiencyBonus - ClaimResistance), 0, attacker.Stats.ProficiencyBonus);
             if (CurrentClaimPoints <= 0) ClearAllClaim();
         }
     }

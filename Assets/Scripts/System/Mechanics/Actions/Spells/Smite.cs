@@ -29,27 +29,17 @@ public class Smite : MonoBehaviour
         if (_target == null) return;
         Target = _target;
 
-        if (Actor.Actions.Resources.CurrentMana >= ManaCost) {
-            ApplyDamage();
-            DisplayEffects();
-            AdjustMana();
-        }
+        ApplyDamage();
+        DisplayEffects();
     }
 
 
     // private
 
 
-    private void AdjustMana()
-    {
-        Actor.Actions.Resources.DecreaseMana(ManaCost);
-        Actor.Actions.Resources.UpdateStatBars();
-    }
-
-
     private void ApplyDamage()
     {
-        Damage = 3 * (Actor.Actions.Attack.EquippedMeleeWeapon.damage_die + Actor.Actions.Attack.AttackRating) * Actor.Actions.Resources.magic_potency;
+        Damage = 3 * (Actor.Actions.Attack.EquippedMeleeWeapon.damage_die + Actor.Actions.Attack.AttackRating);
         int damage_inflicted = Target.Actions.Stats.DamageAfterDefenses(Mathf.RoundToInt(Damage), Weapon.DamageType.Radiant);
         Target.Health.LoseHealth(damage_inflicted, Actor);
     }

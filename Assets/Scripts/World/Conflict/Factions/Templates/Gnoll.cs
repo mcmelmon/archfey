@@ -137,12 +137,9 @@ public class Gnoll : MonoBehaviour
 
     private void SetBaseStats()
     {
-        Me.Actions.ClaimRating = Characters.claim_rating[Characters.Template.Gnoll];
+        Me.Actions.ActionsPerRound = Characters.actions_per_round[Characters.Template.Base];
 
         Me.Actions.Attack.AvailableWeapons = Characters.available_weapons[Characters.Template.Gnoll];
-
-        Me.Actions.Stats.ArmorClass = Characters.armor_class[Characters.Template.Gnoll];
-        Me.Actions.Stats.SetResistances(Characters.resistances[Characters.Template.Base]);
 
         Me.Health.HitDice = (Characters.hit_dice[Characters.Template.Gnoll]);
         Me.Health.HitDiceType = (Characters.hit_dice_type[Characters.Template.Gnoll]);
@@ -153,11 +150,15 @@ public class Gnoll : MonoBehaviour
         Me.Senses.Darkvision = Characters.darkvision_range[Characters.Template.Gnoll];
         Me.Senses.PerceptionRange = Characters.perception_range[Characters.Template.Base];
 
+        Me.Stats.ArmorClass = Characters.armor_class[Characters.Template.Gnoll];
         Me.Stats.CharismaProficiency = Characters.charisma_proficiency[Characters.Template.Gnoll];
         Me.Stats.ConstitutionProficiency = Characters.constituion_proficiency[Characters.Template.Base];
         Me.Stats.DexterityProficiency = Characters.dexterity_proficiency[Characters.Template.Gnoll];
         Me.Stats.IntelligenceProficiency = Characters.intelligence_proficiency[Characters.Template.Gnoll];
         Me.Stats.StrengthProficiency = Characters.strength_proficiency[Characters.Template.Gnoll];
         Me.Stats.WisdomProficiency = Characters.wisdom_proficiency[Characters.Template.Base];
+
+        Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
+        Me.Stats.ProficiencyBonus = Characters.proficiency_bonus[Characters.Template.Base];
     }
 }

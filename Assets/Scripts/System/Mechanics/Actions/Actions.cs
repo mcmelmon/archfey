@@ -12,8 +12,6 @@ public class Actions : MonoBehaviour
     public Decider Decider { get; set; }
     public Actor Me { get; set; }
     public Movement Movement { get; set; }
-    public int ClaimRating { get; set; }
-    public Resources Resources { get; set; }
     public Stats Stats { get; set; }
     public Stealth Stealth { get; set; }
 
@@ -104,33 +102,33 @@ public class Actions : MonoBehaviour
 
     public void CastOffensiveSpell()
     {
-        // TODO: allow units to pick from their own particular spells
+        //// TODO: allow units to pick from their own particular spells
 
-        if (!Resources.IsCaster || Decider.Enemies.Count == 0) return;
+        //if (Decider.Enemies.Count == 0) return;
 
-        Smite _smite = Resources.gameObject.GetComponent<Smite>();
+        //Smite _smite = Resources.gameObject.GetComponent<Smite>();
 
-        if (_smite != null && Resources.CurrentMana >= _smite.ManaCost)
-        {
-            float lowest_health = float.MaxValue;
-            float health;
-            Actor chosen_target = null;
+        //if (_smite != null)
+        //{
+        //    float lowest_health = float.MaxValue;
+        //    float health;
+        //    Actor chosen_target = null;
 
-            foreach (var enemy in Decider.Enemies)
-            {
-                if (Vector3.Distance(enemy.transform.position, transform.position) < _smite.Range)
-                {
-                    health = enemy.Health.CurrentHitPoints;
-                    if (health < lowest_health)
-                    {
-                        lowest_health = health;
-                        chosen_target = enemy;
-                    }
-                }
-            }
+        //    foreach (var enemy in Decider.Enemies)
+        //    {
+        //        if (Vector3.Distance(enemy.transform.position, transform.position) < _smite.Range)
+        //        {
+        //            health = enemy.Health.CurrentHitPoints;
+        //            if (health < lowest_health)
+        //            {
+        //                lowest_health = health;
+        //                chosen_target = enemy;
+        //            }
+        //        }
+        //    }
 
-            if (chosen_target != null) _smite.Cast(chosen_target);
-        }
+        //    if (chosen_target != null) _smite.Cast(chosen_target);
+        //}
     }
 
 
@@ -169,33 +167,33 @@ public class Actions : MonoBehaviour
 
     public void Maneuver()
     {
-        // TODO: allow units to pick from their own particular spells
+    //    // TODO: allow units to pick from their own particular spells
 
-        if (Decider.Enemies.Count == 0) return;
+    //    if (Decider.Enemies.Count == 0) return;
 
-        FerociousClaw _claw = Resources.gameObject.GetComponent<FerociousClaw>();
+    //    FerociousClaw _claw = Resources.gameObject.GetComponent<FerociousClaw>();
 
-        if (_claw != null && Resources.CurrentEnergy >= _claw.EnergyCost)
-        {
-            float lowest_health = float.MaxValue;
-            float health;
-            Actor chosen_target = null;
+    //    if (_claw != null && Resources.CurrentEnergy >= _claw.EnergyCost)
+    //    {
+    //        float lowest_health = float.MaxValue;
+    //        float health;
+    //        Actor chosen_target = null;
 
-            foreach (var enemy in Decider.Enemies)
-            {
-                if (Vector3.Distance(enemy.transform.position, transform.position) < _claw.Range)
-                {
-                    health = enemy.Health.CurrentHitPoints;
-                    if (health < lowest_health)
-                    {
-                        lowest_health = health;
-                        chosen_target = enemy;
-                    }
-                }
-            }
+    //        foreach (var enemy in Decider.Enemies)
+    //        {
+    //            if (Vector3.Distance(enemy.transform.position, transform.position) < _claw.Range)
+    //            {
+    //                health = enemy.Health.CurrentHitPoints;
+    //                if (health < lowest_health)
+    //                {
+    //                    lowest_health = health;
+    //                    chosen_target = enemy;
+    //                }
+    //            }
+    //        }
 
-            if (chosen_target != null) _claw.Cast(chosen_target);
-        }
+    //        if (chosen_target != null) _claw.Cast(chosen_target);
+    //    }
     }
 
 
@@ -211,7 +209,6 @@ public class Actions : MonoBehaviour
 
     private void SetComponents()
     {
-        Resources = GetComponentInChildren<Resources>();
         Attack = GetComponentInChildren<Attack>();
         Decider = GetComponent<Decider>();
         Stats = GetComponentInParent<Stats>();
