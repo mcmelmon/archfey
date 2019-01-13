@@ -139,7 +139,7 @@ public class Resources : MonoBehaviour
                 CurrentEnergy = 0;
             }
 
-            yield return new WaitForSeconds(Turn.action_threshold);
+            yield return new WaitForSeconds(Turn.ActionThreshold);
         }
     }
 
@@ -162,7 +162,7 @@ public class Resources : MonoBehaviour
         while (!Conflict.Victory && Actor.Health.MaximumHitPoints > 0)
         {
             UpdateStatBars();
-            yield return new WaitForSeconds(Turn.action_threshold);
+            yield return new WaitForSeconds(Turn.ActionThreshold);
         }
     }
 
@@ -181,7 +181,7 @@ public class Resources : MonoBehaviour
                 CurrentAmber = amber_pool_maximum;
             }
 
-            yield return new WaitForSeconds(Turn.action_threshold);
+            yield return new WaitForSeconds(Turn.ActionThreshold);
         }
     }
 
@@ -199,7 +199,7 @@ public class Resources : MonoBehaviour
                 CurrentMana = mana_pool_maximum;
             }
 
-            yield return new WaitForSeconds(Turn.action_threshold);
+            yield return new WaitForSeconds(Turn.ActionThreshold);
         }
     }
 

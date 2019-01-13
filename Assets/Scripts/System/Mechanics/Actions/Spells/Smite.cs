@@ -50,7 +50,7 @@ public class Smite : MonoBehaviour
     private void ApplyDamage()
     {
         Damage = 3 * (Actor.Actions.Attack.EquippedMeleeWeapon.damage_die + Actor.Actions.Attack.AttackRating) * Actor.Actions.Resources.magic_potency;
-        float damage_inflicted = Target.Actions.Defend.DamageAfterDefenses(Damage, Weapon.DamageType.Radiant);
+        int damage_inflicted = Target.Actions.Stats.DamageAfterDefenses(Mathf.RoundToInt(Damage), Weapon.DamageType.Radiant);
         Target.Health.LoseHealth(damage_inflicted, Actor);
     }
 

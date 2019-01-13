@@ -39,7 +39,7 @@ public class ObjectiveControlUI : MonoBehaviour
     // public
 
 
-    public void ChangeInControl(Conflict.Faction new_faction, Conflict.Faction previous_faction)
+    public void ChangeClaim(Conflict.Faction new_faction, Conflict.Faction previous_faction)
     {
         if (new_faction != Conflict.Faction.None) {
             TextMeshProUGUI faction_text = objective_captured_faction.GetComponent<TextMeshProUGUI>();
@@ -96,7 +96,7 @@ public class ObjectiveControlUI : MonoBehaviour
     private IEnumerator HideUIPanels()
     {
         while (true) {
-            yield return new WaitForSeconds(Turn.action_threshold / 1.5f);
+            yield return new WaitForSeconds(Turn.ActionThreshold / 1.5f);
 
             for (int i = 0; i < ActiveUIElements.Count; i++)
             {

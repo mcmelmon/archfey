@@ -66,7 +66,7 @@ public class CommandBarOne : MonoBehaviour {
         while (true && Player.Instance.Resources != null) {
             amber_bar.value = Player.Instance.Resources.CurrentAmberPercentage();
             mana_bar.value = Player.Instance.Resources.CurrentManaPercentage();
-            yield return new WaitForSeconds(Turn.action_threshold);
+            yield return new WaitForSeconds(Turn.ActionThreshold);
         }
     }
 

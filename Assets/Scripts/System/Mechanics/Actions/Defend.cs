@@ -2,19 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Defend : MonoBehaviour
+public class DefendDefunct : MonoBehaviour
 {
-
-    public Dictionary<Weapon.DamageType, int> resistances;
-
     // properties
 
-    public Actor Actor { get; set; }
+    public Actor Me { get; set; }
     public int ArmorClass { get; set; }
     public float ComputedDamage { get; set; }
     public Weapon.DamageType DamageType { get; set; }
     public int DefenseRating { get; set; }
-
+    public Dictionary<Weapon.DamageType, int> Resistances { get; set; }
 
     // Unity
 
@@ -50,7 +47,7 @@ public class Defend : MonoBehaviour
 
     public void SetResistances(Dictionary<Weapon.DamageType, int> _resistances)
     {
-        resistances = _resistances;
+        Resistances = _resistances;
     }
 
 
@@ -59,16 +56,16 @@ public class Defend : MonoBehaviour
 
     private void ApplyResistance()
     {
-        if (ComputedDamage <= 0 || resistances == null) return;
+        if (ComputedDamage <= 0 || Resistances == null) return;
 
-        ComputedDamage -= ComputedDamage * (resistances[DamageType] / 100);
+        ComputedDamage -= ComputedDamage * (Resistances[DamageType] / 100);
     }
 
 
     private void SetComponents()
     {
-        Actor = GetComponentInParent<Actor>();
+        Me = GetComponentInParent<Actor>();
 
-        DefenseRating = ArmorClass + Actor.Stats.DexterityProficiency;
+        DefenseRating = ArmorClass + Me.Stats.DexterityProficiency;
     }
 }

@@ -10,21 +10,26 @@ public class Actions : MonoBehaviour
     public int ActionsPerRound { get; set; }
     public Attack Attack { get; set; }
     public Decider Decider { get; set; }
-    public Defend Defend { get; set; }
+    public Actor Me { get; set; }
     public Movement Movement { get; set; }
-    public int ObjectiveControlRating { get; set; }
+    public int ClaimRating { get; set; }
+    public Resources Resources { get; set; }
+    public Stats Stats { get; set; }
+    public Stealth Stealth { get; set; }
+
     public Action OnAlliesUnderAttack { get; set; }
-    public Action OnContestingObjective { get; set; }
     public Action OnBadlyInjured { get; set; }
-    public Action OnFriendliesSighted { get; set; }
-    public Action OnHasObjective { get; set; }
-    public Action OnHostilesSighted { get; set; }
+    public Action OnFriendlyActorsSighted { get; set; }
+    public Action OnFriendlyStructuresSighted { get; set; }
+    public Action OnHostileActorsSighted { get; set; }
+    public Action OnHostileStructuresSighted { get; set; }
     public Action OnIdle { get; set; }
     public Action OnInCombat { get; set; }
+    public Action OnMovingToGoal { get; set; }
+    public Action OnPerformingTask { get; set; }
+    public Action OnReachedGoal { get; set; }
     public Action OnUnderAttack { get; set; }
     public Action OnWatch { get; set; }
-    public Resources Resources { get; set; }
-    public Stealth Stealth { get; set; }
 
     public static Dictionary<Weapon.DamageType, int> SuperiorWeapons { get; set; }
 
@@ -43,6 +48,8 @@ public class Actions : MonoBehaviour
 
     public void ActOnTurn()
     {
+        Me.Senses.Sight();
+
         Decider.ChooseState();
 
         switch (Decider.state)
@@ -52,23 +59,29 @@ public class Actions : MonoBehaviour
                 break;
             case Decider.State.BadlyInjured:
                 break;
-            case Decider.State.ContestingObjective:
-                OnContestingObjective.Invoke();
+            case Decider.State.FriendlyActorsSighted:
+                OnFriendlyActorsSighted.Invoke();
                 break;
-            case Decider.State.FriendliesSighted:
-                OnFriendliesSighted.Invoke();
+            case Decider.State.HostileActorsSighted:
+                OnHostileActorsSighted.Invoke();
                 break;
-            case Decider.State.HasObjective:
-                OnHasObjective.Invoke();
-                break;
-            case Decider.State.HostilesSighted:
-                OnHostilesSighted.Invoke();
+            case Decider.State.HostileStructuresSighted:
+                OnHostileStructuresSighted.Invoke();
                 break;
             case Decider.State.Idle:
                 OnIdle.Invoke();
                 break;
             case Decider.State.InCombat:
                 OnInCombat.Invoke();
+                break;
+            case Decider.State.MovingToGoal:
+                OnMovingToGoal.Invoke();
+                break;
+            case Decider.State.PerformingTask:
+                OnPerformingTask.Invoke();
+                break;
+            case Decider.State.ReachedGoal:
+                OnReachedGoal.Invoke();
                 break;
             case Decider.State.UnderAttack:
                 OnUnderAttack.Invoke();
@@ -123,27 +136,11 @@ public class Actions : MonoBehaviour
 
     public void CloseWithEnemies()
     {
-        if (Movement == null) {
-            Attack.AttackEnemiesInRange();
-        } else {
-            Actor nearest_enemy = null;
-            float shortest_distance = float.MaxValue;
-            float distance;
-
-            for (int i = 0; i < Decider.Enemies.Count; i++) {
-                Actor enemy = Decider.Enemies[i];
-                if (enemy == null) continue;
-                if (transform == null) break;
-
-                distance = Vector3.Distance(transform.position, enemy.transform.position);
-                if (distance < shortest_distance) {
-                    shortest_distance = distance;
-                    nearest_enemy = enemy;
-                }
-            }
+        if (Movement != null) {
+            Actor nearest_enemy = Decider.Threat.Nearest();
 
             if (nearest_enemy != null) {
-                Movement.SetRoute(Route.Linear(transform.position, nearest_enemy.transform.position));
+                Movement.SetDestination(nearest_enemy.transform.position);
             } else {
                 Decider.state = Decider.previous_state;
             }
@@ -166,7 +163,7 @@ public class Actions : MonoBehaviour
         Vector3 run_away_to = transform.position + (run_away_direction * Movement.Agent.speed * Movement.Agent.speed);
         Movement.Route = null;
         Movement.ResetPath();
-        Movement.SetRoute(Route.Linear(transform.position, run_away_to, Decider.FinishedRoute));
+        Movement.SetDestination(run_away_to);
     }
 
 
@@ -217,7 +214,8 @@ public class Actions : MonoBehaviour
         Resources = GetComponentInChildren<Resources>();
         Attack = GetComponentInChildren<Attack>();
         Decider = GetComponent<Decider>();
-        Defend = GetComponentInChildren<Defend>();
+        Stats = GetComponentInParent<Stats>();
+        Me = GetComponentInParent<Actor>();
         Movement = GetComponent<Movement>();
         SuperiorWeapons = new Dictionary<Weapon.DamageType, int>
         {

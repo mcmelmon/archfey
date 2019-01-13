@@ -99,12 +99,6 @@ public class Formation
 
     private void March(Route _route)
     {
-        for (int i = 0; i < Units.Count; i++) {
-            GameObject _unit = Units[i];
-            if (_unit == null) continue;
-            if (Route != null)
-                _unit.GetComponent<Movement>().SetRoute(_route);
-        }
     }
 
 

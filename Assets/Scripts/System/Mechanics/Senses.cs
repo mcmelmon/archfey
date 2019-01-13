@@ -6,10 +6,11 @@ public class Senses : MonoBehaviour {
 
     // properties
 
-    public Actor Actor { get; set; }
+    public Actor Me { get; set; }
     public float Darkvision { get; set; }
     public float PerceptionRange { get; set; }
-    public List<Actor> Sightings { get; set; }
+    public List<Actor> Actors { get; set; }
+    public List<Structure> Structures { get; set; }
 
 
     // Unity
@@ -32,19 +33,25 @@ public class Senses : MonoBehaviour {
 
     public void Sight()
     {
-        Sightings.Clear();
+        Actors.Clear();
+        Structures.Clear();
 
         Collider[] colliders = Physics.OverlapSphere(transform.position, PerceptionRange);
 
         for (int i = 0; i < colliders.Length; i++) {
-            Actor _sighting = colliders[i].gameObject.GetComponent<Actor>();
+            Actor _actor = colliders[i].gameObject.GetComponent<Actor>();
+            Structure _structure = colliders[i].gameObject.GetComponent<Structure>();
 
-            if (_sighting != null && _sighting != GetComponent<Actor>()) {  // don't sight ourselves
-                Stealth sighting_stealth = _sighting.GetComponent<Stealth>();
+            if (_actor != null && _actor != Me) {
+                Stealth sighting_stealth = _actor.GetComponent<Stealth>();
 
-                if (sighting_stealth == null || sighting_stealth.Spotted(Actor) && !Sightings.Contains(_sighting)) {
-                    Sightings.Add(_sighting);
+                if (sighting_stealth == null || sighting_stealth.SpottedBy(Me) && !Actors.Contains(_actor)) {
+                    Actors.Add(_actor);
                 }
+            }
+
+            if (_structure != null && !Structures.Contains(_structure)) {
+                Structures.Add(_structure);
             }
         }
     }
@@ -54,9 +61,11 @@ public class Senses : MonoBehaviour {
 
     private void SetComponents()
     {
-        Actor = GetComponent<Actor>();
+        Actors = new List<Actor>();
+        Me = GetComponent<Actor>();
+        Structures = new List<Structure>();
+
         transform.gameObject.AddComponent<SphereCollider>();
         GetComponent<SphereCollider>().isTrigger = true;
-        Sightings = new List<Actor>();
     }
 }

@@ -12,7 +12,7 @@ public class Objectives : MonoBehaviour {
 
     public static Dictionary<Conflict.Faction, List<Objective>> HeldByFaction { get; set; }
     public static Objectives Instance { get; set; }
-    public static List<ObjectiveControlPoint> ObjectiveControlPoints { get; set; }
+    public static List<ClaimNode> ClaimNodes { get; set; }
 
 
     // Unity
@@ -32,7 +32,7 @@ public class Objectives : MonoBehaviour {
     // public
 
 
-    public void AccountForControl(Conflict.Faction new_faction, Conflict.Faction previous_faction, Objective _ruin)
+    public void AccountForClaim(Conflict.Faction new_faction, Conflict.Faction previous_faction, Objective _ruin)
     {
         if (!HeldByFaction[new_faction].Contains(_ruin)) {
             HeldByFaction[new_faction].Add(_ruin);
@@ -41,30 +41,30 @@ public class Objectives : MonoBehaviour {
     }
 
 
-    public void ErectRuins()
+    public void PlaceObjectives()
     {
         SetComponents();
         Conflict.VictoryThreshold = Mathf.RoundToInt(objectives.Count * 0.66f);
     }
 
 
-    public ObjectiveControlPoint GetNearestUnoccupiedControlPoint(Actor _actor)
+    public ClaimNode GetNearestUnoccupiedClaimNode(Actor _actor)
     {
         float distance;
         float shortest_distance = float.MaxValue;
-        ObjectiveControlPoint nearest_control_point = null;
+        ClaimNode nearest_node = null;
 
-        foreach (var control_point in ObjectiveControlPoints) {
-            if (control_point.ControllingFaction != _actor.Faction) {  // if unoccupied, will have Faction of None
+        foreach (var control_point in ClaimNodes) {
+            if (control_point.ClaimFaction != _actor.Faction) {  // if unoccupied, will have Faction of None
                 distance = Vector3.Distance(control_point.transform.position, _actor.transform.position);
                 if (distance < shortest_distance) {
-                    nearest_control_point = control_point;
+                    nearest_node = control_point;
                     shortest_distance = distance;
                 }
             }
         }
 
-        return nearest_control_point;
+        return nearest_node;
     }
 
 
@@ -97,10 +97,10 @@ public class Objectives : MonoBehaviour {
             [Conflict.Faction.Mhoddim] = new List<Objective>(),
             [Conflict.Faction.None] = new List<Objective>()
         };
-        ObjectiveControlPoints = new List<ObjectiveControlPoint>();
+        ClaimNodes = new List<ClaimNode>();
         foreach (var objective in objectives) {
-            ObjectiveControlPoints.AddRange(objective.control_points);
-            HeldByFaction[objective.Control].Add(objective);
+            ClaimNodes.AddRange(objective.claim_nodes);
+            HeldByFaction[objective.Claim].Add(objective);
         }
     }
 }

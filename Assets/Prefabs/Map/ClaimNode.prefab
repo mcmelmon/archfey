@@ -395,7 +395,7 @@ GameObject:
   - component: {fileID: 8969680667083072735}
   - component: {fileID: 569735298951101850}
   m_Layer: 0
-  m_Name: ControlPoint
+  m_Name: ClaimNode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -473,7 +473,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5becd0feb9eb84c09b9f7d5f56c1db10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  control_indicator: {fileID: 541501656948682100}
+  claim_resistance: 0
+  maximum_claim_points: 50
+  claim_indicator: {fileID: 0}
 --- !u!1 &8846047106382623107
 GameObject:
   m_ObjectHideFlags: 0
@@ -487,7 +489,7 @@ GameObject:
   - component: {fileID: 3862917781779043205}
   - component: {fileID: 8787766160257930862}
   m_Layer: 5
-  m_Name: Control
+  m_Name: Claim
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

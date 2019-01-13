@@ -4,19 +4,20 @@ using UnityEngine;
 
 public class Turn : MonoBehaviour {
 
-    public static float action_threshold = 6f;
-    public float haste_delta = 1f;
-    float current_haste;
+    // properties
 
-    Actor actor;
-    Health health;
+    public static float ActionThreshold { get; set; }
+    public Actor Me { get; set; }
+    public float CurrentHaste { get; set; }
+    public float HasteDelta { get; set; }
 
     // Unity
 
 
     private void Awake () {
-        actor = GetComponent<Actor>();
-        health = GetComponent<Health>();
+        ActionThreshold = 6f;
+        Me = GetComponent<Actor>();
+        HasteDelta = 1f;
     }
 
 
@@ -30,19 +31,19 @@ public class Turn : MonoBehaviour {
 
     private bool Healthy()
     {
-        return health.Persist();
+        return Me.Health.Persist();
     }
 
 
     private IEnumerator ResolveTurns()
     {
         while (!Conflict.Victory) {
-            if (current_haste < action_threshold) {
-                current_haste += haste_delta * Time.deltaTime;
+            if (CurrentHaste < ActionThreshold) {
+                CurrentHaste += HasteDelta * Time.deltaTime;
             } else {
                 if (Healthy()) {
                     TakeAction();
-                    current_haste = 0;
+                    CurrentHaste = 0;
                 }
             }
 
@@ -53,6 +54,6 @@ public class Turn : MonoBehaviour {
 
     private void TakeAction()
     {
-        actor.Actions.ActOnTurn();
+        Me.Actions.ActOnTurn();
     }
 }

@@ -7,7 +7,7 @@ public class Health : MonoBehaviour {
 
     // properties
 
-    public Actor Actor { get; set; }
+    public Actor Me { get; set; }
     public int CurrentHitPoints { get; set; }
     public int HitDice { get; set; }
     public int HitDiceType { get; set; }
@@ -19,7 +19,7 @@ public class Health : MonoBehaviour {
 
     private void Awake()
     {
-        Actor = GetComponent<Actor>();
+        Me = GetComponent<Actor>();
     }
 
 
@@ -33,21 +33,14 @@ public class Health : MonoBehaviour {
     // public 
 
 
-    public void ApplyDamageOverTime()
-    {
-        // TODO
-        Actor.Actions.Resources.UpdateStatBars();
-    }
-
-
     public void LoseHealth(float amount, Actor _attacker = null)
     {
         CurrentHitPoints -= Mathf.RoundToInt(amount);
         if (_attacker != null) {
-            Actor.Actions.Decider.Threat.AddThreat(_attacker, amount);
-            Actor.Actions.Decider.Threat.SpreadThreat(_attacker, amount);
+            Me.Actions.Decider.Threat.AddThreat(_attacker, amount);
+            Me.Actions.Decider.Threat.SpreadThreat(_attacker, amount);
         }
-        Actor.Actions.Resources.UpdateStatBars();
+        Me.Actions.Resources.UpdateStatBars();
     }
 
 
@@ -58,14 +51,14 @@ public class Health : MonoBehaviour {
         CurrentHitPoints += amount;
         if (CurrentHitPoints > MaximumHitPoints) CurrentHitPoints = MaximumHitPoints;
 
-        Actor.Actions.Resources.UpdateStatBars();
+        Me.Actions.Resources.UpdateStatBars();
     }
 
 
     public bool Persist()
     {
         if (CurrentHitPoints <= 0) {
-            Conflict.Instance.AddCasualty(Actor.Faction);
+            Conflict.Instance.AddCasualty(Me.Faction);
             Destroy(gameObject);
             return false;
         }
@@ -76,7 +69,7 @@ public class Health : MonoBehaviour {
 
     public void SetCurrentAndMaxHitPoints()
     {
-        CurrentHitPoints = MaximumHitPoints = (Actor.Stats.ConstitutionProficiency * HitDice) + (HitDice * HitDiceType / 2) + 1;
+        CurrentHitPoints = MaximumHitPoints = (Me.Stats.ConstitutionProficiency * HitDice) + (HitDice * HitDiceType / 2) + 1;
     }
 
     // private

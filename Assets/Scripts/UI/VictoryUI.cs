@@ -58,7 +58,7 @@ public class VictoryUI : MonoBehaviour
                 mhoddim_victory_count.value = MhoddimControlPercentage();
             }
 
-            yield return new WaitForSeconds(Turn.action_threshold);
+            yield return new WaitForSeconds(Turn.ActionThreshold);
         }
 
         TextMeshProUGUI faction_text = victorious_faction.GetComponent<TextMeshProUGUI>();

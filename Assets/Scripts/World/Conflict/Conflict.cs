@@ -124,7 +124,7 @@ public class Conflict : MonoBehaviour
                     }
                 }
             }
-            yield return new WaitForSeconds(Turn.action_threshold);
+            yield return new WaitForSeconds(Turn.ActionThreshold);
         }
     }
 

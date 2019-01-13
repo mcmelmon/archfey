@@ -6,8 +6,6 @@ using UnityEngine;
 
 public class Route
 {
-    public static float reached_threshold = 5f;
-
     // properties
 
     public Vector3 Current { get; set; }
@@ -15,27 +13,23 @@ public class Route
     public Vector3 Next { get; set; }
     public List<Vector3> Points { get; set; }
     public bool Retracing { get; set; }
-    public List<Route> RoutesFollowed { get; set; }
     public Vector3 Start { get; set; }
-    public Action WhenComplete { get; set; }
 
 
     // static
 
 
-    public static Route Circular(Vector3 _start, Circle _circle, Action _when_complete = null, bool _retracing = false, bool _looping = false)
+    public static Route Circular(Vector3 _start, Circle _circle, bool _retracing = false, bool _looping = false)
     {
         Route route = new Route
         {
             Current = _start,
             Start = _start,
             Looping = _looping,
-            Retracing = _retracing,
-            WhenComplete = _when_complete
+            Retracing = _retracing
         };
 
         route.Points = new List<Vector3>();
-        route.RoutesFollowed = new List<Route>();
 
         foreach (var vertex in _circle.Vertices)
         {
@@ -48,36 +42,27 @@ public class Route
     }
 
 
-    public static Route Linear(Vector3 _start, Vector3 _next, Action _when_complete = null, bool _retracing = false, bool _looping = false)
+    public static Route Linear(Vector3 _start, Vector3 _next, bool _retracing = false, bool _looping = false)
     {
         Route route = new Route
         {
             Current = _next,
             Start = _start,
             Looping = _looping,
-            Retracing = _retracing,
-            WhenComplete = _when_complete
+            Retracing = _retracing
         };
 
         route.Points = new List<Vector3> {
             _start,
             _next
         };
-
-        route.RoutesFollowed = new List<Route>();
-
+        
         return route;
     }
 
 
     // public
 
-
-    public void AccumulateRoutes(Route previous_route)
-    {
-        RoutesFollowed = previous_route.RoutesFollowed;
-        RoutesFollowed.Add(previous_route);
-    }
 
 
     public void Add(Vector3 _point)
@@ -96,7 +81,7 @@ public class Route
 
     public bool ReachedCurrent(Vector3 unit_position)
     {
-        return Vector3.Distance(Current, unit_position) < reached_threshold;
+        return Vector3.Distance(Current, unit_position) < Movement.ReachedThreshold;
     }
 
 
