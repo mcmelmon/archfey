@@ -155,7 +155,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5937582455088868361}
-  - component: {fileID: 2982421350250624720}
   - component: {fileID: 5379028120807873420}
   m_Layer: 26
   m_Name: Actions
@@ -178,30 +177,6 @@ Transform:
   m_Father: {fileID: 4083075569688968}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2982421350250624720
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7552376652022747841}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2990df66b036643bc9e92eb426d7358a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  energy_haste_factor: 0
-  energy_pool_maximum: 0
-  energy_potency: 0
-  energy_reduction_rate: 0
-  mana_haste_factor: 0
-  mana_pool_maximum: 0
-  magic_potency: 0
-  mana_replenishment_rate: 0
-  amber_pool_maximum: 0
-  health_bar: {fileID: 0}
-  mana_bar: {fileID: 0}
-  stat_bars: {fileID: 0}
 --- !u!114 &5379028120807873420
 MonoBehaviour:
   m_ObjectHideFlags: 0

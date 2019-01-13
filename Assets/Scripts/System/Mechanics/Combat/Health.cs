@@ -40,7 +40,7 @@ public class Health : MonoBehaviour {
             Me.Actions.Decider.Threat.AddThreat(_attacker, amount);
             Me.Actions.Decider.Threat.SpreadThreat(_attacker, amount);
         }
-        Me.Actions.Resources.UpdateStatBars();
+        Me.Stats.UpdateStatBars();
     }
 
 
@@ -51,7 +51,7 @@ public class Health : MonoBehaviour {
         CurrentHitPoints += amount;
         if (CurrentHitPoints > MaximumHitPoints) CurrentHitPoints = MaximumHitPoints;
 
-        Me.Actions.Resources.UpdateStatBars();
+        Me.Stats.UpdateStatBars();
     }
 
 

@@ -12,7 +12,7 @@ public class Characters : MonoBehaviour
         Guard = 3
     };
 
-
+    public static Dictionary<Template, int> proficiency_bonus = new Dictionary<Template, int>();
     public static Dictionary<Template, int> charisma_proficiency = new Dictionary<Template, int>();
     public static Dictionary<Template, int> constituion_proficiency = new Dictionary<Template, int>();
     public static Dictionary<Template, int> dexterity_proficiency = new Dictionary<Template, int>();
@@ -29,9 +29,7 @@ public class Characters : MonoBehaviour
     public static Dictionary<Template, float> speed = new Dictionary<Template, float>();
     public static Dictionary<Template, int> starting_hit_dice = new Dictionary<Template, int>();
 
-
     public static Dictionary<Template, List<Weapon>> available_weapons = new Dictionary<Template, List<Weapon>>();
-    public static Dictionary<Template, int> claim_rating = new Dictionary<Template, int>();
     public static Dictionary<Template, Dictionary<Weapon.DamageType, int>> resistances = new Dictionary<Template, Dictionary<Weapon.DamageType, int>>();
 
 
@@ -47,6 +45,7 @@ public class Characters : MonoBehaviour
 
     private static void BaseCharacterTemplate()
     {
+        proficiency_bonus[Template.Base] = 1;
         charisma_proficiency[Template.Base] = 0;
         constituion_proficiency[Template.Base] = 0;
         dexterity_proficiency[Template.Base] = 0;
@@ -84,7 +83,6 @@ public class Characters : MonoBehaviour
     {
         // Commoner
         available_weapons[Template.Commoner] = new List<Weapon>() { Weapons.Instance.club_prefab };
-        claim_rating[Template.Commoner] = 10;
 
         // Gnoll
         charisma_proficiency[Template.Gnoll] = -2;
@@ -96,7 +94,6 @@ public class Characters : MonoBehaviour
         hit_dice[Template.Gnoll] = 5;
         hit_dice_type[Template.Gnoll] = 8;
         available_weapons[Template.Gnoll] = new List<Weapon>() { Weapons.Instance.longbow_prefab, Weapons.Instance.spear_prefab };
-        claim_rating[Template.Gnoll] = 5;
 
         //Guard
         constituion_proficiency[Template.Guard] = 1;
@@ -105,8 +102,6 @@ public class Characters : MonoBehaviour
         armor_class[Template.Guard] = 16;
         available_weapons[Template.Guard] = new List<Weapon>() { Weapons.Instance.longbow_prefab, Weapons.Instance.spear_prefab };
         hit_dice[Template.Guard] = 2;
-        claim_rating[Template.Guard] = 5;
         perception_range[Template.Guard] = 25f;
-
     }
 }

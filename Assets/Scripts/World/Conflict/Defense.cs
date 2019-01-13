@@ -35,14 +35,14 @@ public class Defense : MonoBehaviour
 
         foreach (var objective in Objectives.Instance.objectives) {
             if (objective.Claim == Conflict.Faction.Mhoddim) {
-                for (int i = 0; i < 0; i++) {
+                for (int i = 0; i < 5; i++) {
                     Circle spawn_circle = Circle.New(objective.claim_nodes[0].transform.position, 5);
                     Vector3 _point = spawn_circle.RandomContainedPoint();
                     GameObject commoner = Spawn(new Vector3(_point.x, objective.claim_nodes[0].transform.position.y, _point.z));
                     commoner.AddComponent<Commoner>();
                 }
 
-                for (int i = 0; i < 0; i++)
+                for (int i = 0; i < 2; i++)
                 {
                     Circle spawn_circle = Circle.New(objective.claim_nodes[0].transform.position, 3);
                     Vector3 _point = spawn_circle.RandomContainedPoint();

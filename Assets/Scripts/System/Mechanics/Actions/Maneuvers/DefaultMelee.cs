@@ -92,13 +92,10 @@ public class DefaultMelee : MonoBehaviour
 
     private void SetModifiers()
     {
-        if (Weapon.is_light)
-        {
+        if (Weapon.is_light) {
             AttackModifier = Me.Stats.DexterityProficiency + Weapon.attack_bonus + Actions.SuperiorWeapons[Weapon.damage_type];
             DamageModifier = Me.Stats.DexterityProficiency + Weapon.damage_bonus + Actions.SuperiorWeapons[Weapon.damage_type];
-        }
-        else
-        {
+        } else {
             AttackModifier = Me.Stats.StrengthProficiency + Weapon.attack_bonus + Actions.SuperiorWeapons[Weapon.damage_type];
             DamageModifier = Me.Stats.StrengthProficiency + Weapon.damage_bonus + Actions.SuperiorWeapons[Weapon.damage_type];
         }

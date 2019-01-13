@@ -63,9 +63,9 @@ public class CommandBarOne : MonoBehaviour {
 
     public IEnumerator Metrics()
     {
-        while (true && Player.Instance.Resources != null) {
-            amber_bar.value = Player.Instance.Resources.CurrentAmberPercentage();
-            mana_bar.value = Player.Instance.Resources.CurrentManaPercentage();
+        while (true) {
+            amber_bar.value = Player.Instance.CurrentAmberPercentage();
+            mana_bar.value = Player.Instance.CurrentManaPercentage();
             yield return new WaitForSeconds(Turn.ActionThreshold);
         }
     }

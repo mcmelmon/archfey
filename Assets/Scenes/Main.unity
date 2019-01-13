@@ -622,7 +622,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 264195861}
-  m_LocalRotation: {x: -0.06253964, y: -0.076683015, z: -0.7010978, w: 0.706166}
+  m_LocalRotation: {x: -0.062376514, y: -0.07813823, z: -0.695653, w: 0.7113863}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -906,7 +906,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: 0.000007636384
+    Value: 0.0000034150946
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -1040,7 +1040,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 465733991}
-  m_LocalRotation: {x: 0.21607505, y: -0.3943944, z: 0.09596642, w: 0.88800627}
+  m_LocalRotation: {x: 0.21600695, y: -0.39474145, z: 0.0960363, w: 0.8878611}
   m_LocalPosition: {x: 493.84763, y: 37, z: 27.003204}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2019,7 +2019,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: 0.000007636384
+    Value: 0.0000034150946
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -2695,7 +2695,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 829675727}
-  m_LocalRotation: {x: -0.0000001937151, y: 0.00008672476, z: 0.37323302, w: 0.92773765}
+  m_LocalRotation: {x: 0.0000001490116, y: -0.00069442386, z: 0.37243637, w: 0.92805743}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2892,6 +2892,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agility: 50
   speed: 15
+  mana_haste_factor: 1
+  mana_pool_maximum: 1000
+  magic_potency: 1
+  mana_replenishment_rate: 0.03
+  amber_pool_maximum: 1000
   viewport: {fileID: 625565792}
 --- !u!54 &893208856
 Rigidbody:
@@ -3199,7 +3204,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963679513}
-  m_LocalRotation: {x: -0.11436407, y: -0.0072454214, z: -0.71464485, w: 0.6900371}
+  m_LocalRotation: {x: -0.021312, y: -0.10308922, z: -0.6969828, w: 0.70931906}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -4439,7 +4444,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: 0.000007636384
+    Value: 0.0000034150946
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -5387,7 +5392,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: 0.000007636384
+    Value: 0.0000034150946
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -5857,7 +5862,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1624025802}
-  - component: {fileID: 1624025803}
   - component: {fileID: 1624025804}
   m_Layer: 31
   m_Name: Abilities
@@ -5880,30 +5884,6 @@ Transform:
   m_Father: {fileID: 893208854}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1624025803
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1624025801}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2990df66b036643bc9e92eb426d7358a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  energy_haste_factor: 0
-  energy_pool_maximum: 0
-  energy_potency: 0
-  energy_reduction_rate: 0
-  mana_haste_factor: 1.2
-  mana_pool_maximum: 1000
-  magic_potency: 2
-  mana_replenishment_rate: 0.05
-  amber_pool_maximum: 1000
-  health_bar: {fileID: 0}
-  mana_bar: {fileID: 0}
-  stat_bars: {fileID: 0}
 --- !u!114 &1624025804
 MonoBehaviour:
   m_ObjectHideFlags: 0
