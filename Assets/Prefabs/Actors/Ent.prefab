@@ -219,7 +219,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca979bb6133b24ffcac3ecbf74f3535e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  haste_delta: 1
 --- !u!1 &1892947733124112
 GameObject:
   m_ObjectHideFlags: 0
@@ -372,7 +371,6 @@ GameObject:
   - component: {fileID: 7861818824337350851}
   - component: {fileID: 7297577205185249225}
   - component: {fileID: 2250975606907970808}
-  - component: {fileID: 2856160159829993658}
   m_Layer: 26
   m_Name: Actions
   m_TagString: Untagged
@@ -441,18 +439,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f7d5730f48c5e41528b1cae3f9183dc9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2856160159829993658
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 997373052709257281}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 602483510d2a145fe8df1e5797877311, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1316118035695815839

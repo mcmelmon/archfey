@@ -48,14 +48,14 @@ public class DefaultMelee : MonoBehaviour
         Structure target_structure = Target.GetComponent<Structure>();
 
         if (target_actor != null) {
-            if (target_actor.Health != null && target_actor.Actions.Defend != null && Me.Actions != null) {
+            if (target_actor.Health != null && target_actor.Actions.Stats != null && Me.Actions != null) {
                 int damage_roll = Random.Range(0, Weapon.damage_die) + 1;
-                Damage = target_actor.Actions.Defend.DamageAfterDefenses(damage_roll + DamageModifier, Weapon.damage_type);
+                Damage = target_actor.Actions.Stats.DamageAfterDefenses(damage_roll + DamageModifier, Weapon.damage_type);
                 target_actor.Health.LoseHealth(Damage, Me);
             }
         } else if (target_structure != null) {
             int damage_roll = Random.Range(0, Weapon.damage_die) + 1;
-            target_structure.LoseStructure(damage_roll);
+            target_structure.LoseStructure(damage_roll, Weapon.damage_type);
         }
     }
 
@@ -75,7 +75,7 @@ public class DefaultMelee : MonoBehaviour
         Structure target_structure = Target.GetComponent<Structure>();
 
         if (target_actor != null) {
-            return Random.Range(1, 21) + AttackModifier > target_actor.Actions.Defend.ArmorClass;
+            return Random.Range(1, 21) + AttackModifier > target_actor.Actions.Stats.ArmorClass;
         } else if (target_structure != null) {
             return Random.Range(1, 21) + AttackModifier > target_structure.armor_class;
         }

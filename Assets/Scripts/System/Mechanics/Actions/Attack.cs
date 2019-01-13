@@ -9,10 +9,10 @@ public class Attack : MonoBehaviour
     public Actor Me { get; set; }
     public int AttackRating { get; set; }
     public List<Weapon> AvailableWeapons { get; set; }
-    public List<Actor> AvailableMeleeTargets { get; set; }
-    public List<Actor> AvailableRangedTargets { get; set; }
-    public List<Actor> CurrentMeleeTargets { get; set; }
-    public List<Actor> CurrentRangedTargets { get; set; }
+    public List<GameObject> AvailableMeleeTargets { get; set; }
+    public List<GameObject> AvailableRangedTargets { get; set; }
+    public List<GameObject> CurrentMeleeTargets { get; set; }
+    public List<GameObject> CurrentRangedTargets { get; set; }
     public Weapon EquippedMeleeWeapon { get; set; }
     public Weapon EquippedRangedWeapon { get; set; }
 
@@ -39,7 +39,6 @@ public class Attack : MonoBehaviour
 
     public bool Engaged()
     {
-        AttackEnemiesInRange();
         return CurrentMeleeTargets.Count > 0 || CurrentRangedTargets.Count > 0;
     }
 
@@ -98,21 +97,36 @@ public class Attack : MonoBehaviour
 
     private void EnemyAtMeleeOrRange()
     {
+        if (transform == null) return;
+
         ClearTargets();
 
         for (int i = 0; i < Me.Actions.Decider.Enemies.Count; i++) {
-            Actor _enemy = Me.Actions.Decider.Enemies[i];
-            if (_enemy == null || transform == null) continue;
+            Actor foe = Me.Actions.Decider.Enemies[i];
 
-            float grounded_center_distance = Vector3.Distance(new Vector3(_enemy.transform.position.x, 0, _enemy.transform.position.z), new Vector3(transform.position.x, 0, transform.position.z));
-            float combined_radius = (_enemy.GetComponent<CapsuleCollider>().radius * _enemy.transform.localScale.x) + (Me.GetComponent<CapsuleCollider>().radius * transform.localScale.x);
+            float grounded_center_distance = Vector3.Distance(new Vector3(foe.transform.position.x, 0, foe.transform.position.z), new Vector3(transform.position.x, 0, transform.position.z));
+            float combined_radius = (foe.GetComponent<CapsuleCollider>().radius * foe.transform.localScale.x) + (Me.GetComponent<CapsuleCollider>().radius * transform.localScale.x);
             float separation = grounded_center_distance - combined_radius;
 
             if (separation <= LongestMeleeRange()) {
-                AvailableMeleeTargets.Add(_enemy);
+                AvailableMeleeTargets.Add(foe.gameObject);
             } else if (separation <= LongestRangedRange()) {
                 // targets in melee range are also potential ranged targets
-                AvailableRangedTargets.Add(_enemy);
+                AvailableRangedTargets.Add(foe.gameObject);
+            }
+        }
+
+        for (int i = 0; i < Me.Actions.Decider.Structures.Count; i++) {
+            Structure structure = Me.Actions.Decider.Structures[i];
+
+            Vector3 destination = structure.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
+            float separation = Vector3.Distance(destination, transform.position);
+
+            if (separation <= LongestMeleeRange()) {
+                AvailableMeleeTargets.Add(structure.gameObject);
+            } else if (separation <= LongestRangedRange()) {
+                // targets in melee range are also potential ranged targets
+                AvailableRangedTargets.Add(structure.gameObject);
             }
         }
     }
@@ -163,10 +177,10 @@ public class Attack : MonoBehaviour
     private void SetComponents()
     {
         Me = GetComponentInParent<Actor>();
-        AvailableMeleeTargets = new List<Actor>();
-        AvailableRangedTargets = new List<Actor>();
-        CurrentMeleeTargets = new List<Actor>();
-        CurrentRangedTargets = new List<Actor>();
+        AvailableMeleeTargets = new List<GameObject>();
+        AvailableRangedTargets = new List<GameObject>();
+        CurrentMeleeTargets = new List<GameObject>();
+        CurrentRangedTargets = new List<GameObject>();
     }
 
 
@@ -188,7 +202,7 @@ public class Attack : MonoBehaviour
         // TODO: add more powerful, energy based attacks
         if (CurrentMeleeTargets.Count > 0) {
             if (EquippedRangedWeapon != null) EquippedRangedWeapon.gameObject.SetActive(false);
-            GetComponent<DefaultMelee>().Strike(CurrentMeleeTargets[0].gameObject);
+            GetComponent<DefaultMelee>().Strike(CurrentMeleeTargets[0]);
         } else {
             if (EquippedMeleeWeapon != null) EquippedMeleeWeapon.gameObject.SetActive(false);
             GetComponent<DefaultRange>().Strike(CurrentRangedTargets[0]);
@@ -196,11 +210,11 @@ public class Attack : MonoBehaviour
     }
 
 
-    private Actor TargetMelee()
+    private GameObject TargetMelee()
     {
         // TODO: attack the biggest threat
 
-        Actor _target = null;
+        GameObject _target = null;
 
         if (AvailableMeleeTargets.Count > 0) {
             _target = AvailableMeleeTargets[0];
@@ -210,11 +224,9 @@ public class Attack : MonoBehaviour
     }
 
 
-    private Actor TargetRanged()
+    private GameObject TargetRanged()
     {
-        // TODO: attack the biggest threat
-
-        Actor _target = null;
+        GameObject _target = null;
 
         if (AvailableRangedTargets.Count > 0) {
             _target = AvailableRangedTargets[0];

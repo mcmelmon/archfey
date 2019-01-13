@@ -393,7 +393,6 @@ MonoBehaviour:
   armor_class: 15
   damage_resistance: 5
   maximum_hit_points: 150
-  current_hit_points: 150
 --- !u!65 &236807294
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -623,7 +622,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 264195861}
-  m_LocalRotation: {x: -0.06395791, y: -0.1492873, z: -0.67332697, w: 0.72128606}
+  m_LocalRotation: {x: -0.06253964, y: -0.076683015, z: -0.7010978, w: 0.706166}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -907,7 +906,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: -0.0000034150946
+    Value: 0.000007636384
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -1041,7 +1040,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 465733991}
-  m_LocalRotation: {x: 0.21585746, y: -0.3949635, z: 0.0960305, w: 0.8877993}
+  m_LocalRotation: {x: 0.21607505, y: -0.3943944, z: 0.09596642, w: 0.88800627}
   m_LocalPosition: {x: 493.84763, y: 37, z: 27.003204}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1414,12 +1413,12 @@ PrefabInstance:
     - target: {fileID: 3486110278661024313, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.05
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 3486110278661024313, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3486110278661024313, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
         type: 3}
@@ -1491,6 +1490,21 @@ PrefabInstance:
       propertyPath: claim_indicator
       value: 
       objectReference: {fileID: 563620939}
+    - target: {fileID: 156196144638743986, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 800
+      objectReference: {fileID: 0}
+    - target: {fileID: 156196144638743986, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 156196144638743986, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd8fcdd0b6b6c4ddd865c7becae8319f, type: 3}
 --- !u!4 &563620937 stripped
@@ -2005,7 +2019,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: -0.0000034150946
+    Value: 0.000007636384
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -2681,7 +2695,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 829675727}
-  m_LocalRotation: {x: 0.000000029802326, y: 0.000000029802326, z: 0.36993262, w: 0.9290586}
+  m_LocalRotation: {x: -0.0000001937151, y: 0.00008672476, z: 0.37323302, w: 0.92773765}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -3185,7 +3199,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963679513}
-  m_LocalRotation: {x: -0.15662092, y: -0.0066964617, z: -0.7174149, w: 0.678779}
+  m_LocalRotation: {x: -0.11436407, y: -0.0072454214, z: -0.71464485, w: 0.6900371}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -3426,7 +3440,6 @@ MonoBehaviour:
   armor_class: 13
   damage_resistance: 3
   maximum_hit_points: 100
-  current_hit_points: 100
 --- !u!208 &1045265123
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -4426,7 +4439,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: -0.0000034150946
+    Value: 0.000007636384
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -5374,7 +5387,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: -0.0000034150946
+    Value: 0.000007636384
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -7523,7 +7536,6 @@ MonoBehaviour:
   armor_class: 13
   damage_resistance: 3
   maximum_hit_points: 100
-  current_hit_points: 100
 --- !u!208 &2004432480
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -8008,11 +8020,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.1
       objectReference: {fileID: 0}
-    - target: {fileID: 8969680667083072735, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4474963916860075105, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
         type: 3}
       propertyPath: m_AnchorMin.x
@@ -8042,6 +8049,11 @@ PrefabInstance:
         type: 3}
       propertyPath: claim_resistance
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8969680667083072735, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd8fcdd0b6b6c4ddd865c7becae8319f, type: 3}
@@ -8135,8 +8147,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2100375936}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 483.6, y: 0, z: 32.3}
-  m_LocalScale: {x: 4, y: 0.1, z: 4}
+  m_LocalPosition: {x: 483.6, y: -0.92, z: 32.3}
+  m_LocalScale: {x: 4, y: 1, z: 4}
   m_Children:
   - {fileID: 563620937}
   m_Father: {fileID: 1345618518}

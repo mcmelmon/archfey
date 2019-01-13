@@ -35,13 +35,7 @@ public class Fey : MonoBehaviour {
 
     private void SetDefenseStats()
     {
-        Defend defend = GetComponent<Defend>();
-        if (defend == null) return;
 
-        if (GetComponent<Ent>() != null)
-        {
-
-        }
     }
 
 

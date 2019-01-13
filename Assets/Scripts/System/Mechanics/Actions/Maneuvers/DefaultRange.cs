@@ -11,7 +11,7 @@ public class DefaultRange : MonoBehaviour
     public float Damage { get; set; }
     public int DamageModifier { get; set; }
     public GameObject Projectile { get; set; }
-    public Actor Target { get; set; }
+    public GameObject Target { get; set; }
     public Weapon Weapon { get; set; }
 
 
@@ -26,7 +26,7 @@ public class DefaultRange : MonoBehaviour
     // public
 
 
-    public void Strike(Actor _target) {
+    public void Strike(GameObject _target) {
         // TODO: allow ranged attacks against structure
 
         if (_target == null) return;
@@ -50,10 +50,18 @@ public class DefaultRange : MonoBehaviour
 
     private void ApplyDamage()
     {
-        if (Target.Health != null && Target.Actions.Defend != null && Me.Actions != null) {
+        Actor target_actor = Target.GetComponent<Actor>();
+        Structure target_structure = Target.GetComponent<Structure>();
+
+        if (target_actor != null) {
+            if (target_actor.Health != null && target_actor.Actions.Stats != null && Me.Actions != null) {
+                int damage_roll = Random.Range(0, Weapon.damage_die) + 1;
+                Damage = target_actor.Actions.Stats.DamageAfterDefenses(damage_roll + DamageModifier, Weapon.damage_type);
+                target_actor.Health.LoseHealth(Damage, Me);
+            }
+        } else if (target_structure != null) {
             int damage_roll = Random.Range(0, Weapon.damage_die) + 1;
-            Damage = Target.Actions.Defend.DamageAfterDefenses(damage_roll + DamageModifier, Weapon.damage_type);
-            Target.Health.LoseHealth(Damage, Me);
+            target_structure.LoseStructure(damage_roll, Weapon.damage_type);
         }
     }
 
@@ -73,7 +81,7 @@ public class DefaultRange : MonoBehaviour
         Structure target_structure = Target.GetComponent<Structure>();
 
         if (target_actor != null) {
-            return Random.Range(1, 21) + AttackModifier > target_actor.Actions.Defend.ArmorClass;
+            return Random.Range(1, 21) + AttackModifier > target_actor.Actions.Stats.ArmorClass;
         } else if (target_structure != null) {
             return Random.Range(1, 21) + AttackModifier > target_structure.armor_class;
         }

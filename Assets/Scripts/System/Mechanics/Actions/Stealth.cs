@@ -50,7 +50,7 @@ public class Stealth : MonoBehaviour {
     }
 
 
-    public bool Spotted(Actor _spotter)
+    public bool SpottedBy(Actor _spotter)
     {
         if (Attacking) {
             Seen = true;

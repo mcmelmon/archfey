@@ -25,6 +25,7 @@ public class Guard : MonoBehaviour
     public void OnAlliesUnderAttack()
     {
         Me.Actions.CloseWithEnemies();
+        Me.Actions.Attack.AttackEnemiesInRange();
     }
 
 
@@ -37,12 +38,20 @@ public class Guard : MonoBehaviour
     public void OnInCombat()
     {
         Me.Actions.CloseWithEnemies();
+        Me.Actions.Attack.AttackEnemiesInRange();
     }
 
 
-    public void OnHostilesSighted()
+    public void OnHostileActorsSighted()
     {
         Me.Actions.CloseWithEnemies();
+        Me.Actions.Attack.AttackEnemiesInRange();
+    }
+
+
+    public void OnHostileStructuresSighted()
+    {
+
     }
 
 
@@ -54,16 +63,13 @@ public class Guard : MonoBehaviour
         List<Objective> objectives = Objectives.HeldByFaction[Me.Faction];
         Objective next_objective = objectives[Random.Range(0, objectives.Count)];
 
-        if (Me.Actions.Movement.Route == null)
-        {
-            Me.Actions.Movement.SetDestination(next_objective.claim_nodes[0].transform.position);
-        }
+        Me.Actions.Movement.SetDestination(next_objective.claim_nodes[0].transform.position);
     }
 
 
     public void OnMovingToGoal()
     {
-        Me.Actions.Movement.Advance();
+        Me.Senses.Sight();
     }
 
 
@@ -83,6 +89,7 @@ public class Guard : MonoBehaviour
     public void OnUnderAttack()
     {
         Me.Actions.CloseWithEnemies();
+        Me.Actions.Attack.AttackEnemiesInRange();
     }
 
 
@@ -90,6 +97,7 @@ public class Guard : MonoBehaviour
     {
         Me.Actions.Movement.Route = null;
         Me.Actions.Movement.ResetPath();
+        Me.Actions.Attack.AttackEnemiesInRange();
     }
 
 
@@ -106,7 +114,8 @@ public class Guard : MonoBehaviour
         Me.Actions.Attack.EquipRangedWeapon();
         Me.Actions.OnAlliesUnderAttack = OnAlliesUnderAttack;
         Me.Actions.OnBadlyInjured = OnBadlyInjured;
-        Me.Actions.OnHostilesSighted = OnHostilesSighted;
+        Me.Actions.OnHostileActorsSighted = OnHostileActorsSighted;
+        Me.Actions.OnHostileStructuresSighted = OnHostileStructuresSighted;
         Me.Actions.OnIdle = OnIdle;
         Me.Actions.OnInCombat = OnInCombat;
         Me.Actions.OnMovingToGoal = OnMovingToGoal;
@@ -126,8 +135,8 @@ public class Guard : MonoBehaviour
 
         Me.Actions.Attack.AvailableWeapons = Characters.available_weapons[Characters.Template.Guard];
 
-        Me.Actions.Defend.ArmorClass = Characters.armor_class[Characters.Template.Guard];
-        Me.Actions.Defend.SetResistances(Characters.resistances[Characters.Template.Base]);
+        Me.Actions.Stats.ArmorClass = Characters.armor_class[Characters.Template.Guard];
+        Me.Actions.Stats.SetResistances(Characters.resistances[Characters.Template.Base]);
 
         Me.Health.HitDice = (Characters.hit_dice[Characters.Template.Guard]);
         Me.Health.HitDiceType = (Characters.hit_dice_type[Characters.Template.Base]);

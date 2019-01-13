@@ -23,38 +23,59 @@ public class Gnoll : MonoBehaviour
     public void OnAlliesUnderAttack()
     {
         Me.Actions.CloseWithEnemies();
+        Me.Actions.Attack.AttackEnemiesInRange();
     }
 
 
     public void OnBadlyInjured()
     {
         Me.Actions.CloseWithEnemies();
+        Me.Actions.Attack.AttackEnemiesInRange();
     }
 
 
-    public void OnHostilesSighted()
+    public void OnHostileActorsSighted()
     {
         Me.Actions.CloseWithEnemies();
+        Me.Actions.Attack.AttackEnemiesInRange();
+    }
+
+
+    public void OnHostileStructuresSighted()
+    {
+        if (Me.Actions.Decider.Structures.Count > 0) {
+            Collider _collider = Me.Actions.Decider.Structures[Random.Range(0, Me.Actions.Decider.Structures.Count)].GetComponent<Collider>();
+            Vector3 destination = _collider.ClosestPointOnBounds(transform.position);
+
+            Me.Actions.Movement.SetDestination(destination);
+        }
+        Me.Actions.Attack.AttackEnemiesInRange();
     }
 
 
     public void OnIdle()
     {
-        var structures = FindObjectsOfType<Structure>();
+        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
+        Me.Actions.SheathWeapon();
 
-        Me.Actions.Movement.SetDestination(structures[Random.Range(0, structures.Length)].transform.position);
+        List<Objective> objectives = Objectives.HeldByFaction[Conflict.Instance.EnemyFaction(Me)];
+        if (objectives.Count > 0) {
+            Objective next_objective = objectives[Random.Range(0, objectives.Count)];
+            Me.Actions.Movement.SetDestination(next_objective.claim_nodes[0].transform.position);
+        }
     }
 
 
     public void OnInCombat()
     {
         Me.Actions.CloseWithEnemies();
+        Me.Actions.Attack.AttackEnemiesInRange();
     }
 
 
     public void OnMovingToGoal()
     {
-        Me.Actions.Movement.Advance();
+        Me.Senses.Sight();
     }
 
 
@@ -74,12 +95,15 @@ public class Gnoll : MonoBehaviour
     public void OnUnderAttack()
     {
         Me.Actions.CloseWithEnemies();
+        Me.Actions.Attack.AttackEnemiesInRange();
     }
 
 
     public void OnWatch()
     {
-        Me.Actions.CloseWithEnemies();
+        Me.Actions.Movement.Route = null;
+        Me.Actions.Movement.ResetPath();
+        Me.Actions.Attack.AttackEnemiesInRange();
     }
 
 
@@ -97,7 +121,8 @@ public class Gnoll : MonoBehaviour
         Me.Actions.Attack.EquipRangedWeapon();
         Me.Actions.OnAlliesUnderAttack = OnAlliesUnderAttack;
         Me.Actions.OnBadlyInjured = OnBadlyInjured;
-        Me.Actions.OnHostilesSighted = OnHostilesSighted;
+        Me.Actions.OnHostileActorsSighted = OnHostileActorsSighted;
+        Me.Actions.OnHostileStructuresSighted = OnHostileStructuresSighted;
         Me.Actions.OnIdle = OnIdle;
         Me.Actions.OnInCombat = OnInCombat;
         Me.Actions.OnMovingToGoal = OnMovingToGoal;
@@ -116,8 +141,8 @@ public class Gnoll : MonoBehaviour
 
         Me.Actions.Attack.AvailableWeapons = Characters.available_weapons[Characters.Template.Gnoll];
 
-        Me.Actions.Defend.ArmorClass = Characters.armor_class[Characters.Template.Gnoll];
-        Me.Actions.Defend.SetResistances(Characters.resistances[Characters.Template.Base]);
+        Me.Actions.Stats.ArmorClass = Characters.armor_class[Characters.Template.Gnoll];
+        Me.Actions.Stats.SetResistances(Characters.resistances[Characters.Template.Base]);
 
         Me.Health.HitDice = (Characters.hit_dice[Characters.Template.Gnoll]);
         Me.Health.HitDiceType = (Characters.hit_dice_type[Characters.Template.Gnoll]);

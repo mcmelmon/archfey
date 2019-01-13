@@ -52,7 +52,7 @@ public class FerociousClaw : MonoBehaviour
     public void ApplyDamage()
     {
         Damage = 2 * (Actor.Actions.Attack.EquippedMeleeWeapon.damage_die + Actor.Actions.Attack.AttackRating) * Resources.energy_potency;
-        float damage_inflicted = Target.Actions.Defend.DamageAfterDefenses(Damage, Weapon.DamageType.Slashing);
+        int damage_inflicted = Target.Actions.Stats.DamageAfterDefenses(Mathf.RoundToInt(Damage), Weapon.DamageType.Slashing);
         Target.Health.LoseHealth(damage_inflicted, Actor);
     }
 

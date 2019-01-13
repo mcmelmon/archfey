@@ -8,15 +8,17 @@ public class Decider : MonoBehaviour
     {
         AlliesUnderAttack = 1,
         BadlyInjured = 2,
-        FriendliesSighted = 3,
-        HostilesSighted = 4,
-        Idle = 5,
-        InCombat = 6,
-        MovingToGoal = 7,
-        PerformingTask = 8,
-        ReachedGoal = 9,
-        UnderAttack = 10,
-        Watch = 11,
+        FriendlyActorsSighted = 3,
+        FriendlyStructuresSighted = 4,
+        HostileActorsSighted = 5,
+        HostileStructuresSighted = 6,
+        Idle = 7,
+        InCombat = 8,
+        MovingToGoal = 9,
+        PerformingTask = 10,
+        ReachedGoal = 11,
+        UnderAttack = 12,
+        Watch = 13
     };
     
     // Inspector settings
@@ -29,6 +31,7 @@ public class Decider : MonoBehaviour
     public Actor Me { get; set; }
     public List<Actor> Enemies { get; set; }
     public List<Actor> Friends { get; set; }
+    public List<Structure> Structures { get; set; }
     public Threat Threat { get; set; }
 
 
@@ -45,43 +48,24 @@ public class Decider : MonoBehaviour
 
     public void ChooseState()
     {
-        Me.Senses.Sight();
-
-        if (InCombat()) {
-            Actor _enemy = Threat.BiggestThreat();
-            if (_enemy != null) {
-                if (!Enemies.Contains(_enemy)) Enemies.Add(_enemy);
-                SetState(State.InCombat);
-            } else {
-                Me.Actions.Movement.Route = null;
-                SetState(State.Idle);
-            }
+        if (transform == null) {
+            return;
+        } else if (InCombat()) {
+            SetState(State.InCombat);
         } else if (UnderAttack()) {
-            Actor _enemy = Threat.BiggestThreat();
-            if (_enemy != null) {
-                if (!Enemies.Contains(_enemy)) Enemies.Add(_enemy);
-                previous_state = state;
-                SetState(State.UnderAttack);
-            } else {
-                Me.Actions.Movement.Route = null;
-                SetState(State.Idle);
-            }
+            SetState(State.UnderAttack);
         } else if (AlliesUnderAttack()) {
-            Actor _enemy = (Me.Faction == Conflict.Faction.Ghaddim) ? Me.Ghaddim.BiggestFactionThreat() : Me.Mhoddim.BiggestFactionThreat();
-
-            if (_enemy != null) {
-                if (!Enemies.Contains(_enemy)) Enemies.Add(_enemy);
-                SetState(State.AlliesUnderAttack);
-            } else {
-                Me.Actions.Movement.Route = null;
-                SetState(State.Idle);
-            }
-        } else if (HostilesSighted()) {
-            SetState(State.HostilesSighted);
-        } else if (ReachedGoal()) {
-            SetState(State.ReachedGoal);
+            SetState(State.AlliesUnderAttack);
+        } else if (HostileActorsSighted()) {
+            SetState(State.HostileActorsSighted);
+        } else if (HostileStructuresSighted()) {
+            SetState(State.HostileStructuresSighted);
+        } else if (FriendlyStructuresSighted()) {
+            SetState(State.FriendlyStructuresSighted);
         } else if (Moving()) {
             SetState(State.MovingToGoal);
+        } else if (ReachedGoal()) {
+            SetState(State.ReachedGoal);
         } else if (Watching()) {
             SetState(State.Watch);
         } else {
@@ -105,24 +89,29 @@ public class Decider : MonoBehaviour
 
     private bool AlliesUnderAttack()
     {
-        for (int i = 0; i < Me.Senses.Sightings.Count; i++)
-        {
-            Actor sighting = Me.Senses.Sightings[i];
+        for (int i = 0; i < Me.Senses.Actors.Count; i++) {
+            Actor sighting = Me.Senses.Actors[i];
             if (sighting == null) continue;
-            if (IsAttackingMyFaction(sighting)) return true;
+            if (IsAttackingMyFaction(sighting)) {
+                Actor foe = (Me.Faction == Conflict.Faction.Ghaddim) ? Me.Ghaddim.BiggestFactionThreat() : Me.Mhoddim.BiggestFactionThreat();
+                if (foe != null) {
+                    if (!Enemies.Contains(foe)) Enemies.Add(foe);
+                    return true;
+                }
+            }
         }
 
         return false;
     }
 
 
-    private bool FriendliesSighted()
+    private bool FriendlyActorsSighted()
     {
         Friends.Clear();
 
-        for (int i = 0; i < Me.Senses.Sightings.Count; i++)
+        for (int i = 0; i < Me.Senses.Actors.Count; i++)
         {
-            Actor _friend = Me.Senses.Sightings[i];
+            Actor _friend = Me.Senses.Actors[i];
             if (_friend == null) continue;
             if (_friend != null && IsMyFaction(_friend) && !Friends.Contains(_friend))
             {
@@ -134,13 +123,28 @@ public class Decider : MonoBehaviour
     }
 
 
-    private bool HostilesSighted()
+    private bool FriendlyStructuresSighted()
+    {
+        Structures.Clear();
+
+        for (int i = 0; i < Me.Senses.Structures.Count; i++)
+        {
+            Structure _structure = Me.Senses.Structures[i];
+            if (_structure == null) continue;
+            Structures.Add(_structure);
+        }
+
+        return Structures.Count > 0;
+    }
+
+
+    private bool HostileActorsSighted()
     {
         Enemies.Clear();
 
-        for (int i = 0; i < Me.Senses.Sightings.Count; i++)
+        for (int i = 0; i < Me.Senses.Actors.Count; i++)
         {
-            Actor _hostile = Me.Senses.Sightings[i];
+            Actor _hostile = Me.Senses.Actors[i];
             if (_hostile == null) continue;
             if (!IsFriendOrNeutral(_hostile) && !Enemies.Contains(_hostile))
             {
@@ -152,16 +156,38 @@ public class Decider : MonoBehaviour
     }
 
 
+    private bool HostileStructuresSighted()
+    {
+        Structures.Clear();
+
+        for (int i = 0; i < Me.Senses.Structures.Count; i++) {
+            Structure _structure = Me.Senses.Structures[i];
+            if (_structure == null || _structure.CurrentHitPoints <= 0) continue;
+            Structures.Add(_structure);
+        }
+
+        return Structures.Count > 0;
+    }
+
+
     public List<Actor> IdentifyFriends()
     {
-        FriendliesSighted();
+        FriendlyActorsSighted();
         return Friends;
     }
 
 
     private bool InCombat()
     {
-        return HostilesSighted() && Me.Actions.Attack.Engaged();
+        Actor foe = null;
+
+        if (HostileActorsSighted() && Me.Actions.Attack.Engaged()) {
+            foe = Threat.BiggestThreat();
+            if (foe != null) {
+                if (!Enemies.Contains(foe)) Enemies.Add(foe);
+            }
+        }
+        return foe != null;
     }
 
 
@@ -214,6 +240,7 @@ public class Decider : MonoBehaviour
         Me = GetComponentInParent<Actor>();
         Enemies = new List<Actor>();
         Friends = new List<Actor>();
+        Structures = new List<Structure>();
         Threat = GetComponent<Threat>();
         state = State.Idle;
     }
@@ -228,6 +255,15 @@ public class Decider : MonoBehaviour
 
     private bool UnderAttack()
     {
-        return Threat.Threats.Count > 0;
+        if (Threat.Threats.Count > 0) {
+            Actor foe = Threat.BiggestThreat();
+            if (foe != null) {
+                if (!Enemies.Contains(foe)) Enemies.Add(foe);
+
+            }
+            return true;
+        }
+
+        return false;
     }
 }

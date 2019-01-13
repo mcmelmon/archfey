@@ -28,17 +28,6 @@ public class Movement : MonoBehaviour
     // public
 
 
-    public void Advance()
-    {
-        if (Agent.hasPath) {
-            if (ReachedNearObjective())
-                GetNextObjective();
-            if (ObjectiveComplete())
-                GetNewObjective();
-        }
-    }
-
-
     public bool InProgress()
     {
         return Agent.hasPath && Agent.remainingDistance > ReachedThreshold;
@@ -54,6 +43,7 @@ public class Movement : MonoBehaviour
 
     public void SetDestination(Vector3 destination)
     {
+        ResetPath();
         StopCoroutine(FindThePath(destination));
         StartCoroutine(FindThePath(destination));
     }
@@ -77,27 +67,6 @@ public class Movement : MonoBehaviour
                 Debug.Log("Warp " + attempt);
             }
             yield return new WaitForSeconds(Turn.ActionThreshold);
-        }
-    }
-
-    private void GetNewObjective()
-    {
-        if (Route.WhenComplete != null) {
-            Route.WhenComplete.Invoke();
-        } else if (Route.RoutesFollowed.Count > 0) {
-            Route = Route.RoutesFollowed[Route.RoutesFollowed.Count -1];
-        } else {
-            Route = null;
-        }
-    }
-
-
-    private void GetNextObjective()
-    {
-        if (!Route.Completed()) {
-            SetDestination(Route.SetNext());
-        } else {
-            ResetPath();
         }
     }
 

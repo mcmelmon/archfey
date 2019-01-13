@@ -33,9 +33,20 @@ public class Commoner : MonoBehaviour {
     }
 
 
-    public void OnHostilesSighted()
+    public void OnHostileActorsSighted()
     {
         Me.Actions.FleeFromEnemies();
+    }
+
+
+    public void OnHostileStructuresSighted()
+    {
+        if (Me.Actions.Decider.Structures.Count > 0) {
+            Collider _collider = Me.Actions.Decider.Structures[Random.Range(0, Me.Actions.Decider.Structures.Count)].GetComponent<Collider>();
+            Vector3 destination = _collider.ClosestPointOnBounds(transform.position);
+
+            Me.Actions.Movement.SetDestination(destination);
+        }
     }
 
 
@@ -60,7 +71,7 @@ public class Commoner : MonoBehaviour {
 
     public void OnMovingToGoal()
     {
-        Me.Actions.Movement.Advance();
+        Me.Senses.Sight();
     }
 
 
@@ -102,7 +113,8 @@ public class Commoner : MonoBehaviour {
         Me.Actions.Attack.EquipRangedWeapon();
         Me.Actions.OnAlliesUnderAttack = OnAlliesUnderAttack;
         Me.Actions.OnBadlyInjured = OnBadlyInjured;
-        Me.Actions.OnHostilesSighted = OnHostilesSighted;
+        Me.Actions.OnHostileActorsSighted = OnHostileActorsSighted;
+        Me.Actions.OnHostileStructuresSighted = OnHostileStructuresSighted;
         Me.Actions.OnIdle = OnIdle;
         Me.Actions.OnInCombat = OnInCombat;
         Me.Actions.OnMovingToGoal = OnMovingToGoal;
@@ -122,8 +134,8 @@ public class Commoner : MonoBehaviour {
 
         Me.Actions.Attack.AvailableWeapons = Characters.available_weapons[Characters.Template.Commoner];
 
-        Me.Actions.Defend.ArmorClass = Characters.armor_class[Characters.Template.Base];
-        Me.Actions.Defend.SetResistances(Characters.resistances[Characters.Template.Base]);
+        Me.Actions.Stats.ArmorClass = Characters.armor_class[Characters.Template.Base];
+        Me.Actions.Stats.SetResistances(Characters.resistances[Characters.Template.Base]);
 
         Me.Health.HitDice = Characters.hit_dice[Characters.Template.Base];
         Me.Health.HitDiceType = Characters.hit_dice_type[Characters.Template.Base];
