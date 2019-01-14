@@ -20,14 +20,14 @@ public class Gnoll : MonoBehaviour
     // public
 
 
-    public void OnAlliesUnderAttack()
+    public void OnBadlyInjured()
     {
         Me.Actions.CloseWithEnemies();
         Me.Actions.Attack.AttackEnemiesInRange();
     }
 
 
-    public void OnBadlyInjured()
+    public void OnFriendsInNeed()
     {
         Me.Actions.CloseWithEnemies();
         Me.Actions.Attack.AttackEnemiesInRange();
@@ -43,8 +43,8 @@ public class Gnoll : MonoBehaviour
 
     public void OnHostileStructuresSighted()
     {
-        if (Me.Actions.Decider.Structures.Count > 0) {
-            Collider _collider = Me.Actions.Decider.Structures[Random.Range(0, Me.Actions.Decider.Structures.Count)].GetComponent<Collider>();
+        if (Me.Actions.Decider.HostileStructures.Count > 0) {
+            Collider _collider = Me.Actions.Decider.HostileStructures[Random.Range(0, Me.Actions.Decider.HostileStructures.Count)].GetComponent<Collider>();
             Vector3 destination = _collider.ClosestPointOnBounds(transform.position);
 
             Me.Actions.Movement.SetDestination(destination);
@@ -119,8 +119,9 @@ public class Gnoll : MonoBehaviour
 
         Me.Actions.Attack.EquipMeleeWeapon();
         Me.Actions.Attack.EquipRangedWeapon();
-        Me.Actions.OnAlliesUnderAttack = OnAlliesUnderAttack;
+
         Me.Actions.OnBadlyInjured = OnBadlyInjured;
+        Me.Actions.OnFriendsInNeed = OnFriendsInNeed;
         Me.Actions.OnHostileActorsSighted = OnHostileActorsSighted;
         Me.Actions.OnHostileStructuresSighted = OnHostileStructuresSighted;
         Me.Actions.OnIdle = OnIdle;

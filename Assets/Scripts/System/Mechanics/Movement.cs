@@ -21,6 +21,7 @@ public class Movement : MonoBehaviour
     private void Awake()
     {
         Agent = GetComponentInParent<NavMeshAgent>();
+        Agent.ResetPath();
         ReachedThreshold = 3f;
     }
 

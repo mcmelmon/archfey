@@ -4,14 +4,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class Route
+public class Route : MonoBehaviour
 {
+    // Inspector settings
+    public List<Vector3> points = new List<Vector3>();
+
     // properties
 
     public Vector3 Current { get; set; }
     public bool Looping { get; set; }
     public Vector3 Next { get; set; }
-    public List<Vector3> Points { get; set; }
     public bool Retracing { get; set; }
     public Vector3 Start { get; set; }
 
@@ -29,11 +31,11 @@ public class Route
             Retracing = _retracing
         };
 
-        route.Points = new List<Vector3>();
+        route.points = new List<Vector3>();
 
         foreach (var vertex in _circle.Vertices)
         {
-            route.Points.Add(vertex);
+            route.points.Add(vertex);
         }
 
         route.SetNext();
@@ -52,7 +54,7 @@ public class Route
             Retracing = _retracing
         };
 
-        route.Points = new List<Vector3> {
+        route.points = new List<Vector3> {
             _start,
             _next
         };
@@ -69,7 +71,7 @@ public class Route
     {
         // This will "work" for a circle, but kind of awkward
 
-        Points.Add(_point);
+        points.Add(_point);
     }
 
 
@@ -90,11 +92,16 @@ public class Route
         bool keep_going = (Looping || Retracing);
         if (Completed() && !keep_going) return Current;
 
-        int next_index;
-        int current_index = Points.IndexOf(Current);
-        next_index = (Next == Start && Retracing) ? ((current_index - 1) + (Points.Count)) % Points.Count : (current_index + 1) % Points.Count;
-        Next = Points[next_index];
-        Current = Next;
-        return Current;
+        if (Start == Vector3.zero) {
+            Start = Current = points[0];
+            return Current;
+        } else {
+            int next_index;
+            int current_index = points.IndexOf(Current);
+            next_index = (Next == Start && Retracing) ? ((current_index - 1) + (points.Count)) % points.Count : (current_index + 1) % points.Count;
+            Next = points[next_index];
+            Current = Next;
+            return Current;
+        }
     }
 }
