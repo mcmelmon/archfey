@@ -42,7 +42,7 @@ public class Defense : MonoBehaviour
                     commoner.AddComponent<Commoner>();
                 }
 
-                for (int i = 0; i < 2; i++)
+                for (int i = 0; i < 3; i++)
                 {
                     Circle spawn_circle = Circle.New(objective.claim_nodes[0].transform.position, 3);
                     Vector3 _point = spawn_circle.RandomContainedPoint();

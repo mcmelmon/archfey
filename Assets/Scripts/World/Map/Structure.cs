@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Structure : MonoBehaviour
@@ -8,6 +9,10 @@ public class Structure : MonoBehaviour
     public int armor_class = 13;
     public int damage_resistance = 0;
     public int maximum_hit_points = 100;
+
+    public List<Transform> entrances = new List<Transform>();
+    public Conflict.Faction owner;
+
 
     // properties
 

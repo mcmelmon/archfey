@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Actions : MonoBehaviour
@@ -15,10 +16,10 @@ public class Actions : MonoBehaviour
     public Stats Stats { get; set; }
     public Stealth Stealth { get; set; }
 
-    public Action OnAlliesUnderAttack { get; set; }
     public Action OnBadlyInjured { get; set; }
+    public Action OnFriendsInNeed { get; set; }
     public Action OnFriendlyActorsSighted { get; set; }
-    public Action OnFriendlyStructuresSighted { get; set; }
+    public Action OnDamagedFriendlyStructuresSighted { get; set; }
     public Action OnHostileActorsSighted { get; set; }
     public Action OnHostileStructuresSighted { get; set; }
     public Action OnIdle { get; set; }
@@ -46,19 +47,20 @@ public class Actions : MonoBehaviour
 
     public void ActOnTurn()
     {
-        Me.Senses.Sight();
-
         Decider.ChooseState();
 
         switch (Decider.state)
         {
-            case Decider.State.AlliesUnderAttack:
-                OnAlliesUnderAttack.Invoke();
-                break;
             case Decider.State.BadlyInjured:
+                break;
+            case Decider.State.FriendsInNeed:
+                OnFriendsInNeed.Invoke();
                 break;
             case Decider.State.FriendlyActorsSighted:
                 OnFriendlyActorsSighted.Invoke();
+                break;
+            case Decider.State.DamagedFriendlyStructuresSighted:
+                OnDamagedFriendlyStructuresSighted.Invoke();
                 break;
             case Decider.State.HostileActorsSighted:
                 OnHostileActorsSighted.Invoke();
@@ -90,6 +92,16 @@ public class Actions : MonoBehaviour
             default:
                 OnIdle.Invoke();
                 break;
+        }
+    }
+
+
+    public void CallForHelp()
+    {
+        List<Actor> friends = Decider.IdentifyFriends();
+        for (int i = 0; i < friends.Count; i++) {
+            if (!friends[i].Actions.Decider.FriendsInNeed.Contains(Me))
+                friends[i].Actions.Decider.FriendsInNeed.Add(Me);
         }
     }
 
@@ -134,6 +146,8 @@ public class Actions : MonoBehaviour
 
     public void CloseWithEnemies()
     {
+        // TODO: we may want to stay at range
+
         if (Movement != null) {
             Actor nearest_enemy = Decider.Threat.Nearest();
 
@@ -153,11 +167,11 @@ public class Actions : MonoBehaviour
         Movement.Agent.speed = 2 * Movement.Speed;
         Vector3 run_away_from = Vector3.zero;
 
-        foreach (var enemy in Decider.Enemies) {
-            run_away_from += enemy.transform.position;
-        }
+        var _enemy = Me.Senses.Actors
+                         .Where(actor => !Me.Actions.Decider.IsFriendOrNeutral(actor))
+                         .First(actor => actor.Health.CurrentHitPoints > 0);
 
-        Vector3 run_away_direction = (transform.position - run_away_from).normalized;
+        Vector3 run_away_direction = (transform.position - _enemy.transform.position).normalized;
         Vector3 run_away_to = transform.position + (run_away_direction * Movement.Agent.speed * Movement.Agent.speed);
         Movement.Route = null;
         Movement.ResetPath();

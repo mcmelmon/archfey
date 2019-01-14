@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Guard : MonoBehaviour
@@ -22,14 +23,24 @@ public class Guard : MonoBehaviour
     // public
 
 
-    public void OnAlliesUnderAttack()
+    public void OnBadlyInjured()
     {
-        Me.Actions.CloseWithEnemies();
-        Me.Actions.Attack.AttackEnemiesInRange();
+
     }
 
 
-    public void OnBadlyInjured()
+    public void OnFriendsInNeed()
+    {
+        List<Actor> friends_in_need = Me.Actions.Decider.FriendsInNeed;
+
+        if (friends_in_need.Count > 0) {
+            Me.Actions.Movement.SetDestination(friends_in_need[Random.Range(0, friends_in_need.Count)].transform.position);
+            Me.Actions.Decider.FriendsInNeed.Clear();
+        }
+    }
+
+
+    public void OnDamagedFriendlyStructuresSighted()
     {
 
     }
@@ -57,13 +68,27 @@ public class Guard : MonoBehaviour
 
     public void OnIdle()
     {
+        Route _route = GetComponent<Route>();
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         Me.Actions.SheathWeapon();
 
-        List<Objective> objectives = Objectives.HeldByFaction[Me.Faction];
-        Objective next_objective = objectives[Random.Range(0, objectives.Count)];
+        if (_route == null) {
+            _route = gameObject.AddComponent<Route>();
+            _route.Retracing = true;
 
-        Me.Actions.Movement.SetDestination(next_objective.claim_nodes[0].transform.position);
+            var structures = new List<Structure>(FindObjectsOfType<Structure>())
+                .Where(structure => structure.owner == Me.Faction)
+                .OrderBy(structure => Vector3.Distance(transform.position, transform.transform.position))
+                .ToList();
+
+            foreach (var structure in structures) {
+                foreach (var entrance in structure.entrances) {
+                    _route.Add(entrance.transform.position);
+                }
+            }
+            Me.Actions.Movement.SetDestination(_route.SetNext());
+        }
+
     }
 
 
@@ -82,7 +107,14 @@ public class Guard : MonoBehaviour
     public void OnReachedGoal()
     {
         Me.Actions.Movement.ResetPath();
-        OnIdle();
+
+        Route _route = GetComponent<Route>();
+
+        if (_route != null && !_route.Completed()) {
+            Me.Actions.Movement.SetDestination(_route.SetNext());
+        } else {
+            OnIdle();
+        }
     }
 
 
@@ -112,8 +144,10 @@ public class Guard : MonoBehaviour
 
         Me.Actions.Attack.EquipMeleeWeapon();
         Me.Actions.Attack.EquipRangedWeapon();
-        Me.Actions.OnAlliesUnderAttack = OnAlliesUnderAttack;
+
         Me.Actions.OnBadlyInjured = OnBadlyInjured;
+        Me.Actions.OnFriendsInNeed = OnFriendsInNeed;
+        Me.Actions.OnDamagedFriendlyStructuresSighted = OnDamagedFriendlyStructuresSighted;
         Me.Actions.OnHostileActorsSighted = OnHostileActorsSighted;
         Me.Actions.OnHostileStructuresSighted = OnHostileStructuresSighted;
         Me.Actions.OnIdle = OnIdle;

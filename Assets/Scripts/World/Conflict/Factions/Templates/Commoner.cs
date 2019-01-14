@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Commoner : MonoBehaviour {
@@ -21,32 +22,34 @@ public class Commoner : MonoBehaviour {
     // public
 
 
-    public void OnAlliesUnderAttack()
-    {
-        Me.Actions.FleeFromEnemies();
-    }
-
-
     public void OnBadlyInjured()
     {
 
     }
 
 
+    public void OnFriendsInNeed()
+    {
+        Me.Actions.Decider.FriendsInNeed.Clear();
+    }
+
+
+    public void OnDamagedFriendlyStructuresSighted()
+    {
+        Me.Actions.CallForHelp();
+    }
+
+
     public void OnHostileActorsSighted()
     {
         Me.Actions.FleeFromEnemies();
+        Me.Actions.CallForHelp();
     }
 
 
     public void OnHostileStructuresSighted()
     {
-        if (Me.Actions.Decider.Structures.Count > 0) {
-            Collider _collider = Me.Actions.Decider.Structures[Random.Range(0, Me.Actions.Decider.Structures.Count)].GetComponent<Collider>();
-            Vector3 destination = _collider.ClosestPointOnBounds(transform.position);
-
-            Me.Actions.Movement.SetDestination(destination);
-        }
+        Me.Actions.CallForHelp();
     }
 
 
@@ -61,11 +64,15 @@ public class Commoner : MonoBehaviour {
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         Me.Actions.SheathWeapon();
 
-        Structure[] structures = FindObjectsOfType<Structure>();
+        var structures = new List<Structure>(FindObjectsOfType<Structure>())
+            .Where(structure => structure.owner == Me.Faction)
+            //.OrderBy(structure => Vector3.Distance(transform.position, transform.transform.position))
+            .ToList();
 
-        if (Me.Actions.Movement.Route == null) {
-            Me.Actions.Movement.SetDestination(structures[Random.Range(0,structures.Length)].transform.position);
-        }
+        Structure _structure = structures[Random.Range(0, structures.Count)];
+        Vector3 entrance = _structure.entrances[Random.Range(0, _structure.entrances.Count)].transform.position;
+
+        Me.Actions.Movement.SetDestination(entrance);
     }
 
 
@@ -111,8 +118,10 @@ public class Commoner : MonoBehaviour {
 
         Me.Actions.Attack.EquipMeleeWeapon();
         Me.Actions.Attack.EquipRangedWeapon();
-        Me.Actions.OnAlliesUnderAttack = OnAlliesUnderAttack;
+
         Me.Actions.OnBadlyInjured = OnBadlyInjured;
+        Me.Actions.OnFriendsInNeed = OnFriendsInNeed;
+        Me.Actions.OnDamagedFriendlyStructuresSighted = OnDamagedFriendlyStructuresSighted;
         Me.Actions.OnHostileActorsSighted = OnHostileActorsSighted;
         Me.Actions.OnHostileStructuresSighted = OnHostileStructuresSighted;
         Me.Actions.OnIdle = OnIdle;
