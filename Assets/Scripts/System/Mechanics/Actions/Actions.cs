@@ -148,6 +148,12 @@ public class Actions : MonoBehaviour
     {
         // TODO: we may want to stay at range
 
+        if (Me.Actions.Attack.EquippedRangedWeapon != null) {
+            Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
+        } else {
+            Movement.Agent.speed = 2 * Movement.Speed;
+        }
+
         if (Movement != null) {
             Actor nearest_enemy = Decider.Threat.Nearest();
 
@@ -162,9 +168,9 @@ public class Actions : MonoBehaviour
 
     public void FleeFromEnemies()
     {
+        Movement.Agent.speed = 2 * Movement.Speed;
         SheathWeapon();
 
-        Movement.Agent.speed = 2 * Movement.Speed;
         Vector3 run_away_from = Vector3.zero;
 
         var _enemy = Me.Senses.Actors

@@ -115,6 +115,7 @@ MonoBehaviour:
   - {fileID: 7689789575358307038}
   owner: 2
   purpose: 1
+  revenue_factor: 2
 --- !u!208 &6550712517133750925
 NavMeshObstacle:
   m_ObjectHideFlags: 0

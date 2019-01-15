@@ -16,6 +16,8 @@ public class Structure : MonoBehaviour
     public Conflict.Faction owner;
     public Purpose purpose;
 
+    public float revenue_factor;
+
 
     // properties
 
@@ -23,6 +25,7 @@ public class Structure : MonoBehaviour
     public float OriginalY { get; set; }
     public float OriginalYScale { get; set; }
     public Dictionary<Weapon.DamageType, int> Resistances { get; set; }
+    public float Revenue { get; set; }
 
 
     // Unity
@@ -54,6 +57,13 @@ public class Structure : MonoBehaviour
         CurrentHitPoints -= DamageAfterResistance(reduced_amount, _type);
         if (CurrentHitPoints <= 0) CurrentHitPoints = 0;
         UpdateStructure();
+    }
+
+
+    public void TransactBusiness(float _amount)
+    {
+        float factored_amount = _amount * revenue_factor;
+        Revenue += (owner == Conflict.Faction.Ghaddim) ? Ghaddim.AfterTaxIncome(factored_amount) : Mhoddim.AfterTaxIncome(factored_amount);
     }
 
 
@@ -92,6 +102,7 @@ public class Structure : MonoBehaviour
             [Weapon.DamageType.Slashing] = 25,
             [Weapon.DamageType.Thunder] = 0
         };
+        Revenue = 0f;
     }
 
 

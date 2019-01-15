@@ -90,6 +90,21 @@ public class Commoner : MonoBehaviour {
     public void OnReachedGoal()
     {
         Me.Actions.Movement.ResetPath();
+
+        Structure nearest_commercial_structure = new List<Structure>(FindObjectsOfType<Structure>())
+            .Where(s => s.owner == Me.Faction && s.purpose == Structure.Purpose.Commercial)
+            .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
+            .ToList()
+            .First();
+
+        Collider _collider = nearest_commercial_structure.GetComponent<Collider>();
+        Vector3 closest_spot = _collider.ClosestPointOnBounds(transform.position);
+        float distance = Vector3.Distance(closest_spot, transform.position);
+
+        if (distance <= Movement.ReachedThreshold) {
+            nearest_commercial_structure.TransactBusiness(Random.Range(1,12) * .1f);
+        }
+
         OnIdle();
     }
 

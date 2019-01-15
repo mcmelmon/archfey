@@ -14,6 +14,7 @@ public class Actor : MonoBehaviour
     public Mhoddim Mhoddim { get; set; }
     public Conflict.Role Role { get; set; }
     public Senses Senses { get; set; }
+    public float Size { get; set; }
     public Stats Stats { get; set; }
 
 
@@ -38,6 +39,7 @@ public class Actor : MonoBehaviour
         Mhoddim = GetComponent<Mhoddim>();
         Role = Conflict.Role.None;  // offense and defense set this role for mortals
         Senses = GetComponent<Senses>();
+        Size = GetComponent<Renderer>().bounds.extents.magnitude;
         Stats = GetComponent<Stats>();
 
         Faction = (Fey != null) ? Conflict.Faction.Fey : (Ghaddim != null) ? Conflict.Faction.Ghaddim : Conflict.Faction.Mhoddim;

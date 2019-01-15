@@ -34,6 +34,7 @@ public class Guard : MonoBehaviour
         List<Actor> friends_in_need = Me.Actions.Decider.FriendsInNeed;
 
         if (friends_in_need.Count > 0) {
+            Me.Actions.Movement.Agent.speed = 2 * Me.Actions.Movement.Speed;
             Me.Actions.Movement.SetDestination(friends_in_need[Random.Range(0, friends_in_need.Count)].transform.position);
             Me.Actions.Decider.FriendsInNeed.Clear();
         }
@@ -55,6 +56,7 @@ public class Guard : MonoBehaviour
 
     public void OnHostileActorsSighted()
     {
+        Me.Actions.CallForHelp();
         Me.Actions.CloseWithEnemies();
         Me.Actions.Attack.AttackEnemiesInRange();
     }
@@ -68,6 +70,7 @@ public class Guard : MonoBehaviour
 
     public void OnIdle()
     {
+        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         Route _route = GetComponent<Route>();
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         Me.Actions.SheathWeapon();
@@ -94,6 +97,7 @@ public class Guard : MonoBehaviour
 
     public void OnMovingToGoal()
     {
+        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         Me.Actions.SheathWeapon();
         Me.Senses.Sight();
     }

@@ -9,6 +9,7 @@ public class Movement : MonoBehaviour
 
     // properties
 
+    public Actor Me { get; set; }
     public NavMeshAgent Agent { get; set; }
     public static float ReachedThreshold { get; set; }
     public Route Route { get; set; }
@@ -22,7 +23,8 @@ public class Movement : MonoBehaviour
     {
         Agent = GetComponentInParent<NavMeshAgent>();
         Agent.ResetPath();
-        ReachedThreshold = 3f;
+        Me = GetComponentInParent<Actor>();
+        ReachedThreshold = Me.Size + 3f;
     }
 
 
@@ -31,7 +33,9 @@ public class Movement : MonoBehaviour
 
     public bool InProgress()
     {
-        return Agent.hasPath && Agent.remainingDistance > ReachedThreshold;
+        Vector3 height_adjusted_destination = new Vector3(Agent.destination.x, transform.position.y, Agent.destination.z);
+        float separation = Vector3.Distance(transform.position, height_adjusted_destination);
+        return Agent.hasPath && separation > ReachedThreshold;
     }
 
 
