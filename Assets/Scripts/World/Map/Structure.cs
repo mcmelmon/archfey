@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Structure : MonoBehaviour
 {
+    public enum Purpose { Civic = 0, Commercial = 1, Military = 2, Religious = 3, Residential = 4 };
+
     // Inspector settings
     public int armor_class = 13;
     public int damage_resistance = 0;
@@ -12,6 +14,7 @@ public class Structure : MonoBehaviour
 
     public List<Transform> entrances = new List<Transform>();
     public Conflict.Faction owner;
+    public Purpose purpose;
 
 
     // properties

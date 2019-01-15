@@ -77,8 +77,8 @@ public class Guard : MonoBehaviour
             _route.Retracing = true;
 
             var structures = new List<Structure>(FindObjectsOfType<Structure>())
-                .Where(structure => structure.owner == Me.Faction)
-                .OrderBy(structure => Vector3.Distance(transform.position, transform.transform.position))
+                .Where(s => s.owner == Me.Faction && s.purpose == Structure.Purpose.Military)
+                .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
                 .ToList();
 
             foreach (var structure in structures) {
@@ -94,6 +94,7 @@ public class Guard : MonoBehaviour
 
     public void OnMovingToGoal()
     {
+        Me.Actions.SheathWeapon();
         Me.Senses.Sight();
     }
 

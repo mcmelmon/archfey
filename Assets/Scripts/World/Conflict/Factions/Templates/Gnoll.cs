@@ -75,6 +75,7 @@ public class Gnoll : MonoBehaviour
 
     public void OnMovingToGoal()
     {
+        Me.Actions.SheathWeapon();
         Me.Senses.Sight();
     }
 

@@ -65,12 +65,11 @@ public class Commoner : MonoBehaviour {
         Me.Actions.SheathWeapon();
 
         var structures = new List<Structure>(FindObjectsOfType<Structure>())
-            .Where(structure => structure.owner == Me.Faction)
-            //.OrderBy(structure => Vector3.Distance(transform.position, transform.transform.position))
+            .Where(s => s.owner == Me.Faction && s.purpose != Structure.Purpose.Military)
             .ToList();
 
-        Structure _structure = structures[Random.Range(0, structures.Count)];
-        Vector3 entrance = _structure.entrances[Random.Range(0, _structure.entrances.Count)].transform.position;
+        Structure destination = structures[Random.Range(0, structures.Count)];
+        Vector3 entrance = destination.entrances[Random.Range(0, destination.entrances.Count)].transform.position;
 
         Me.Actions.Movement.SetDestination(entrance);
     }

@@ -131,9 +131,9 @@ public class Attack : MonoBehaviour
     {
         foreach (var weapon in AvailableWeapons) {
             if (weapon.range == 0 && weapon.has_reach) {
-                return 2f;
+                return 3f;
             } else if (weapon.range == 0) {
-                return 1f;
+                return 2f;
             }
         }
 

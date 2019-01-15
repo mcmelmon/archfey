@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Defense : MonoBehaviour
@@ -33,23 +34,22 @@ public class Defense : MonoBehaviour
     {
         // must be called by Conflict instead of Start to ensure Map setup complete
 
-        foreach (var objective in Objectives.Instance.objectives) {
-            if (objective.Claim == Conflict.Faction.Mhoddim) {
-                for (int i = 0; i < 5; i++) {
-                    Circle spawn_circle = Circle.New(objective.claim_nodes[0].transform.position, 5);
-                    Vector3 _point = spawn_circle.RandomContainedPoint();
-                    GameObject commoner = Spawn(new Vector3(_point.x, objective.claim_nodes[0].transform.position.y, _point.z));
-                    commoner.AddComponent<Commoner>();
-                }
+        var residential_and_commercial = FindObjectsOfType<Structure>()
+            .Where(s => (s.purpose == Structure.Purpose.Residential || s.purpose == Structure.Purpose.Commercial) && s.owner == Conflict.Faction.Mhoddim);
 
-                for (int i = 0; i < 3; i++)
-                {
-                    Circle spawn_circle = Circle.New(objective.claim_nodes[0].transform.position, 3);
-                    Vector3 _point = spawn_circle.RandomContainedPoint();
-                    GameObject guard = Spawn(new Vector3(_point.x, objective.claim_nodes[0].transform.position.y, _point.z));
-                    guard.AddComponent<Guard>();
-                }
-            }
+        var military = FindObjectsOfType<Structure>()
+            .Where(s => s.purpose == Structure.Purpose.Military && s.owner == Conflict.Faction.Mhoddim);
+
+        foreach (var structure in residential_and_commercial) {
+            Vector3 location = structure.entrances[0].transform.position;
+            GameObject commoner = Spawn(new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
+            commoner.AddComponent<Commoner>();
+        }
+
+        foreach (var structure in military) {
+            Vector3 location = structure.entrances[0].transform.position;
+            GameObject guard = Spawn(new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
+            guard.AddComponent<Guard>();
         }
     }
 
