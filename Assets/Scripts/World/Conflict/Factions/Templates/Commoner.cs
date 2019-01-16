@@ -37,6 +37,25 @@ public class Commoner : MonoBehaviour {
     public void OnDamagedFriendlyStructuresSighted()
     {
         Me.Actions.CallForHelp();
+        // repair
+    }
+
+
+    public void OnFullLoad()
+    {
+        Structure nearest_commercial_structure = new List<Structure>(FindObjectsOfType<Structure>())
+            .Where(s => s.owner == Me.Faction && s.purpose == Structure.Purpose.Commercial)
+            .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
+            .ToList()
+            .First();
+
+        Me.Actions.Movement.SetDestination(nearest_commercial_structure.transform.position);
+    }
+
+
+    public void OnHarvesting()
+    {
+        Harvest();
     }
 
 
@@ -49,7 +68,7 @@ public class Commoner : MonoBehaviour {
 
     public void OnHostileStructuresSighted()
     {
-        Me.Actions.CallForHelp();
+        Me.Actions.FleeFromEnemies();
     }
 
 
@@ -64,14 +83,13 @@ public class Commoner : MonoBehaviour {
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         Me.Actions.SheathWeapon();
 
-        var structures = new List<Structure>(FindObjectsOfType<Structure>())
-            .Where(s => s.owner == Me.Faction && s.purpose != Structure.Purpose.Military)
+        var harvest_points = new List<Resource>(FindObjectsOfType<Resource>())
+            .Where(r => r.owner == Me.Faction)
             .ToList();
 
-        Structure destination = structures[Random.Range(0, structures.Count)];
-        Vector3 entrance = destination.entrances[Random.Range(0, destination.entrances.Count)].transform.position;
+        Resource destination = harvest_points[Random.Range(0, harvest_points.Count)];
 
-        Me.Actions.Movement.SetDestination(entrance);
+        Me.Actions.Movement.SetDestination(destination.transform.position);
     }
 
 
@@ -81,28 +99,14 @@ public class Commoner : MonoBehaviour {
     }
 
 
-    public void OnPerformingTask()
-    {
-
-    }
-
-
     public void OnReachedGoal()
     {
         Me.Actions.Movement.ResetPath();
 
-        Structure nearest_commercial_structure = new List<Structure>(FindObjectsOfType<Structure>())
-            .Where(s => s.owner == Me.Faction && s.purpose == Structure.Purpose.Commercial)
-            .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
-            .ToList()
-            .First();
-
-        Collider _collider = nearest_commercial_structure.GetComponent<Collider>();
-        Vector3 closest_spot = _collider.ClosestPointOnBounds(transform.position);
-        float distance = Vector3.Distance(closest_spot, transform.position);
-
-        if (distance <= Movement.ReachedThreshold) {
-            nearest_commercial_structure.TransactBusiness(Random.Range(1,12) * .1f);
+        if (Me.Load.Keys.Count > 0) {
+            Transact();
+        } else {
+            Harvest();
         }
 
         OnIdle();
@@ -124,6 +128,24 @@ public class Commoner : MonoBehaviour {
     // private
 
 
+    private void Harvest()
+    {
+        var nearest_harvest_point = new List<Resource>(FindObjectsOfType<Resource>())
+            .Where(r => r.owner == Me.Faction)
+            .OrderBy(r => Vector3.Distance(transform.position, r.transform.position))
+            .ToList()
+            .First();
+
+        Collider _collider = nearest_harvest_point.GetComponent<Collider>();
+        Vector3 closest_spot = _collider.ClosestPointOnBounds(transform.position);
+        float distance = Vector3.Distance(closest_spot, transform.position);
+
+        if (distance <= Movement.ReachedThreshold) {
+            nearest_harvest_point.HarvestResource(Me);
+        }
+    }
+
+
     private void SetComponents()
     {
         // can't do in Actor until the Commoner component has been attached
@@ -135,13 +157,14 @@ public class Commoner : MonoBehaviour {
 
         Me.Actions.OnBadlyInjured = OnBadlyInjured;
         Me.Actions.OnFriendsInNeed = OnFriendsInNeed;
+        Me.Actions.OnFullLoad = OnFullLoad;
         Me.Actions.OnDamagedFriendlyStructuresSighted = OnDamagedFriendlyStructuresSighted;
+        Me.Actions.OnHarvetsing = OnHarvesting;
         Me.Actions.OnHostileActorsSighted = OnHostileActorsSighted;
         Me.Actions.OnHostileStructuresSighted = OnHostileStructuresSighted;
         Me.Actions.OnIdle = OnIdle;
         Me.Actions.OnInCombat = OnInCombat;
         Me.Actions.OnMovingToGoal = OnMovingToGoal;
-        Me.Actions.OnPerformingTask = OnPerformingTask;
         Me.Actions.OnReachedGoal = OnReachedGoal;
         Me.Actions.OnUnderAttack = OnUnderAttack;
         Me.Actions.OnWatch = OnWatch;
@@ -175,5 +198,24 @@ public class Commoner : MonoBehaviour {
 
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
         Me.Stats.ProficiencyBonus = Characters.proficiency_bonus[Characters.Template.Base];
+        Me.Stats.Skills = Characters.skills[Characters.Template.Commoner];
+    }
+
+
+    private void Transact()
+    {
+        Structure nearest_commercial_structure = new List<Structure>(FindObjectsOfType<Structure>())
+            .Where(s => s.owner == Me.Faction && s.purpose == Structure.Purpose.Commercial)
+            .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
+            .ToList()
+            .First();
+
+        Collider _collider = nearest_commercial_structure.GetComponent<Collider>();
+        Vector3 closest_spot = _collider.ClosestPointOnBounds(transform.position);
+        float distance = Vector3.Distance(closest_spot, transform.position);
+
+        if (distance <= Movement.ReachedThreshold) {
+            nearest_commercial_structure.TransactBusiness(Me, Random.Range(1, 12) * .1f); // TODO: base amount on resources!
+        }
     }
 }

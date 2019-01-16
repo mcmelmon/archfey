@@ -19,13 +19,14 @@ public class Actions : MonoBehaviour
     public Action OnBadlyInjured { get; set; }
     public Action OnFriendsInNeed { get; set; }
     public Action OnFriendlyActorsSighted { get; set; }
+    public Action OnFullLoad { get; set; }
     public Action OnDamagedFriendlyStructuresSighted { get; set; }
+    public Action OnHarvetsing { get; set; }
     public Action OnHostileActorsSighted { get; set; }
     public Action OnHostileStructuresSighted { get; set; }
     public Action OnIdle { get; set; }
     public Action OnInCombat { get; set; }
     public Action OnMovingToGoal { get; set; }
-    public Action OnPerformingTask { get; set; }
     public Action OnReachedGoal { get; set; }
     public Action OnUnderAttack { get; set; }
     public Action OnWatch { get; set; }
@@ -62,6 +63,12 @@ public class Actions : MonoBehaviour
             case Decider.State.DamagedFriendlyStructuresSighted:
                 OnDamagedFriendlyStructuresSighted.Invoke();
                 break;
+            case Decider.State.FullLoad:
+                OnFullLoad.Invoke();
+                break;
+            case Decider.State.Harvesting:
+                OnHarvetsing.Invoke();
+                break;
             case Decider.State.HostileActorsSighted:
                 OnHostileActorsSighted.Invoke();
                 break;
@@ -76,9 +83,6 @@ public class Actions : MonoBehaviour
                 break;
             case Decider.State.MovingToGoal:
                 OnMovingToGoal.Invoke();
-                break;
-            case Decider.State.PerformingTask:
-                OnPerformingTask.Invoke();
                 break;
             case Decider.State.ReachedGoal:
                 OnReachedGoal.Invoke();

@@ -39,6 +39,12 @@ public class Structure : MonoBehaviour
     // public
 
 
+    public float CurrentHitPointPercentage()
+    {
+        return ((float)CurrentHitPoints / (float)maximum_hit_points);
+    }
+
+
     public void GainStructure(int _amount)
     {
         if (CurrentHitPoints == maximum_hit_points) return;
@@ -60,10 +66,11 @@ public class Structure : MonoBehaviour
     }
 
 
-    public void TransactBusiness(float _amount)
+    public void TransactBusiness(Actor _unit, float _amount)
     {
         float factored_amount = _amount * revenue_factor;
         Revenue += (owner == Conflict.Faction.Ghaddim) ? Ghaddim.AfterTaxIncome(factored_amount) : Mhoddim.AfterTaxIncome(factored_amount);
+        _unit.Load.Clear(); // TODO: store the resources!
     }
 
 
@@ -73,12 +80,6 @@ public class Structure : MonoBehaviour
     private int DamageAfterResistance(int _damage, Weapon.DamageType _type)
     {
         return (_damage <= 0 || Resistances == null) ? _damage : (_damage -= _damage * (Resistances[_type] / 100));
-    }
-
-
-    private float CurrentHitPointPercentage()
-    {
-        return ((float)CurrentHitPoints / (float)maximum_hit_points);
     }
 
 

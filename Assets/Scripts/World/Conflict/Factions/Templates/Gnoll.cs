@@ -128,7 +128,6 @@ public class Gnoll : MonoBehaviour
         Me.Actions.OnIdle = OnIdle;
         Me.Actions.OnInCombat = OnInCombat;
         Me.Actions.OnMovingToGoal = OnMovingToGoal;
-        Me.Actions.OnPerformingTask = OnPerformingTask;
         Me.Actions.OnReachedGoal = OnReachedGoal;
         Me.Actions.OnUnderAttack = OnUnderAttack;
         Me.Actions.OnWatch = OnWatch;

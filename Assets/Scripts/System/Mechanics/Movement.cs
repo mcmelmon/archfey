@@ -24,7 +24,7 @@ public class Movement : MonoBehaviour
         Agent = GetComponentInParent<NavMeshAgent>();
         Agent.ResetPath();
         Me = GetComponentInParent<Actor>();
-        ReachedThreshold = Me.Size + 3f;
+        ReachedThreshold = Me.Size + 2f;
     }
 
 

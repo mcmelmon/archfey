@@ -11,15 +11,16 @@ public class Decider : MonoBehaviour
         DamagedFriendlyStructuresSighted = 2,
         FriendsInNeed = 3,
         FriendlyActorsSighted = 4,
-        HostileActorsSighted = 5,
-        HostileStructuresSighted = 6,
-        Idle = 7,
-        InCombat = 8,
-        MovingToGoal = 9,
-        PerformingTask = 10,
-        ReachedGoal = 11,
-        UnderAttack = 12,
-        Watch = 13
+        FullLoad = 5,
+        Harvesting = 6,
+        HostileActorsSighted = 7,
+        HostileStructuresSighted = 8,
+        Idle = 9,
+        InCombat = 10,
+        MovingToGoal = 11,
+        ReachedGoal = 12,
+        UnderAttack = 13,
+        Watch = 14
     };
     
     // Inspector settings
@@ -62,9 +63,13 @@ public class Decider : MonoBehaviour
             SetState(State.UnderAttack);
         } else if (HostileActorsSighted()) {
             SetState(State.HostileActorsSighted);
+        } else if (FullLoad()) {
+            SetState(State.FullLoad);
+        } else if (Harvesting()) {
+            SetState(State.Harvesting);
         } else if (CallsForHelp()) {
             SetState(State.FriendsInNeed);
-        }else if (DamagedFriendlyStructures()) {
+        } else if (DamagedFriendlyStructures()) {
             SetState(State.DamagedFriendlyStructuresSighted);
         } else if (HostileStructuresSighted()) {
             SetState(State.HostileStructuresSighted);
@@ -123,6 +128,24 @@ public class Decider : MonoBehaviour
                                .ToList();
 
         return FriendlyStructures.Count > 0;
+    }
+
+
+    private bool FullLoad()
+    {
+        if (!Me.Stats.Skills.Contains(Characters.Skill.Harvesting)) return false;
+
+        foreach (var pair in Me.Load) {  // there "should" only be at most one pair at any given time
+            return pair.Value >= pair.Key.full_harvest;
+        }
+
+        return false;
+    }
+
+
+    private bool Harvesting()
+    {
+        return Me.Stats.Skills.Contains(Characters.Skill.Harvesting) && Me.Load.Keys.Count > 0 && !FullLoad();
     }
 
 
@@ -191,16 +214,9 @@ public class Decider : MonoBehaviour
     }
 
 
-    private bool Watching()
-    {
-        // TODO: once a ruin is captured, switch to sentry and attack incoming enemies
-        return false;
-    }
-
-
     private bool ReachedGoal()
     {
-        return Me.Actions.Movement != null && !Me.Actions.Movement.InProgress();
+        return !Me.Actions.Movement.InProgress();
     }
 
 
@@ -234,6 +250,13 @@ public class Decider : MonoBehaviour
             return true;
         }
 
+        return false;
+    }
+
+
+    private bool Watching()
+    {
+        // TODO: once a ruin is captured, switch to sentry and attack incoming enemies
         return false;
     }
 }

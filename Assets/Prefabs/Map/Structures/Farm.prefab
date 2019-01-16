@@ -152,6 +152,7 @@ GameObject:
   - component: {fileID: 5198522158356225465}
   - component: {fileID: 5198522158356225470}
   - component: {fileID: 9192441795259633766}
+  - component: {fileID: 4086182789186849789}
   m_Layer: 0
   m_Name: Farmhouse
   m_TagString: Untagged
@@ -268,6 +269,22 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0, z: 0}
   m_TimeToStationary: 0.5
+--- !u!114 &4086182789186849789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5198522158356225468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0efa840f60fe4df18f446c21f9a3156, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resource_type: 1
+  perpetual: 1
+  initial_quantity: 0
+  harvest_amount: 10
 --- !u!1 &5198522158998527934
 GameObject:
   m_ObjectHideFlags: 0

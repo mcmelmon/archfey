@@ -9,7 +9,6 @@ public class MapTile {
     public Vector3 Location { get; set; }
     public Objective Objective { get; set; }
     public Actor Occupier { get; set; }
-    public List<Obstacle> Obstacles { get; set; }
     public List<Tree> Trees { get; set; }
 
 
@@ -23,7 +22,6 @@ public class MapTile {
             Location = _location,
             Objective = null,
             Occupier = null,
-            Obstacles = new List<Obstacle>(),
             Trees = new List<Tree>()
         };
 
@@ -36,6 +34,6 @@ public class MapTile {
 
     public bool Unoccupied()
     {
-        return Objective == null && Occupier == null && Obstacles.Count == 0 && Trees.Count == 0;
+        return Objective == null && Occupier == null && Trees.Count == 0;
     }
 }

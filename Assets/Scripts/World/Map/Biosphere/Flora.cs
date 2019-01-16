@@ -142,17 +142,6 @@ public class Flora : MonoBehaviour {
     {
         int number_of_trees = Mathf.RoundToInt((Geography.Instance.GetResolution()) * (tree_coverage / 100f));
 
-        foreach (var tile in Geography.Instance.RandomTiles(number_of_trees)) {
-            Vector3 position = tile.Location;
-            Quaternion rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
-            Tree _tree = Instantiate(tree_prefab, position, rotation, transform);
-            float scale_boost = Random.Range(0.2f, 2f);
-            _tree.transform.localScale = new Vector3(scale_boost, scale_boost, scale_boost);
-            _tree.transform.position += new Vector3(0, -scale_boost, 0);
-
-            tile.Trees.Add(_tree);
-            Trees.Add(_tree);
-        }
     }
 
 

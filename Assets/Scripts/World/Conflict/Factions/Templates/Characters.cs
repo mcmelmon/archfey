@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Characters : MonoBehaviour
 {
+    public enum Skill { Harvesting = 0 };
 
     public enum Template {
         Base = 0,
@@ -13,6 +14,9 @@ public class Characters : MonoBehaviour
     };
 
     public static Dictionary<Template, int> proficiency_bonus = new Dictionary<Template, int>();
+    public static Dictionary<Template, List<Skill>> expertise = new Dictionary<Template, List<Skill>>();
+    public static Dictionary<Template, List<Skill>> skills = new Dictionary<Template, List<Skill>>();
+
     public static Dictionary<Template, int> charisma_proficiency = new Dictionary<Template, int>();
     public static Dictionary<Template, int> constituion_proficiency = new Dictionary<Template, int>();
     public static Dictionary<Template, int> dexterity_proficiency = new Dictionary<Template, int>();
@@ -83,6 +87,7 @@ public class Characters : MonoBehaviour
     {
         // Commoner
         available_weapons[Template.Commoner] = new List<Weapon>() { Weapons.Instance.club_prefab };
+        skills[Template.Commoner] = new List<Skill>() { Skill.Harvesting };
 
         // Gnoll
         charisma_proficiency[Template.Gnoll] = -2;
