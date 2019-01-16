@@ -43,13 +43,17 @@ public class Commoner : MonoBehaviour {
 
     public void OnFullLoad()
     {
+        Transact();
+
+        if (Me.Load.Keys.Count == 0) return;
+
         Structure nearest_commercial_structure = new List<Structure>(FindObjectsOfType<Structure>())
             .Where(s => s.owner == Me.Faction && s.purpose == Structure.Purpose.Commercial)
             .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
             .ToList()
             .First();
 
-        Me.Actions.Movement.SetDestination(nearest_commercial_structure.transform.position);
+        Me.Actions.Movement.SetDestination(nearest_commercial_structure.gameObject);
     }
 
 
@@ -87,9 +91,9 @@ public class Commoner : MonoBehaviour {
             .Where(r => r.owner == Me.Faction)
             .ToList();
 
-        Resource destination = harvest_points[Random.Range(0, harvest_points.Count)];
+        Resource _resource = harvest_points[Random.Range(0, harvest_points.Count)];
 
-        Me.Actions.Movement.SetDestination(destination.transform.position);
+        Me.Actions.Movement.SetDestination(_resource.gameObject);
     }
 
 
@@ -141,6 +145,7 @@ public class Commoner : MonoBehaviour {
         float distance = Vector3.Distance(closest_spot, transform.position);
 
         if (distance <= Movement.ReachedThreshold) {
+            Me.Actions.Movement.ResetPath();
             nearest_harvest_point.HarvestResource(Me);
         }
     }

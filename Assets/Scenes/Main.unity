@@ -624,7 +624,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 264195861}
-  m_LocalRotation: {x: -0.06398375, y: -0.11976944, z: -0.6905306, w: 0.7104427}
+  m_LocalRotation: {x: -0.06405704, y: -0.11979343, z: -0.6893708, w: 0.71155757}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -968,7 +968,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: 0.000008537737
+    Value: 0.0000068301892
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -1294,7 +1294,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 465733991}
-  m_LocalRotation: {x: 0.19612579, y: -0.5417642, z: 0.13172337, w: 0.8066444}
+  m_LocalRotation: {x: 0.19612579, y: -0.5417642, z: 0.13172339, w: 0.80664444}
   m_LocalPosition: {x: 228.63695, y: 37, z: 98.275375}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2191,7 +2191,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: 0.000008537737
+    Value: 0.0000068301892
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -2957,7 +2957,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 829675727}
-  m_LocalRotation: {x: 0.000000044703484, y: 0.00000008940697, z: 0.3750219, w: 0.92701596}
+  m_LocalRotation: {x: 0.000000014901161, y: 0.00000011920929, z: 0.37502143, w: 0.9270162}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -3466,7 +3466,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963679513}
-  m_LocalRotation: {x: -0.19401799, y: -0.005779743, z: -0.7172142, w: 0.6692738}
+  m_LocalRotation: {x: -0.19401993, y: -0.0057754815, z: -0.7170813, w: 0.6694157}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -5023,7 +5023,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: 0.000008537737
+    Value: 0.0000068301892
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -5236,7 +5236,13 @@ PrefabInstance:
       propertyPath: full_harvest
       value: 10
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 5198522158356225470, guid: 890dd496cd214442090edb279c5f9c8e,
+        type: 3}
+      propertyPath: purpose
+      value: 4
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5198522159251890540, guid: 890dd496cd214442090edb279c5f9c8e, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 890dd496cd214442090edb279c5f9c8e, type: 3}
 --- !u!4 &1312357333 stripped
 Transform:
@@ -6074,7 +6080,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: 0.000008537737
+    Value: 0.0000068301892
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1

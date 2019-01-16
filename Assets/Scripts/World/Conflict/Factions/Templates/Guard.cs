@@ -35,7 +35,7 @@ public class Guard : MonoBehaviour
 
         if (friends_in_need.Count > 0) {
             Me.Actions.Movement.Agent.speed = 2 * Me.Actions.Movement.Speed;
-            Me.Actions.Movement.SetDestination(friends_in_need[Random.Range(0, friends_in_need.Count)].transform.position);
+            Me.Actions.Movement.SetDestination(friends_in_need[Random.Range(0, friends_in_need.Count)].gameObject);
             Me.Actions.Decider.FriendsInNeed.Clear();
         }
     }

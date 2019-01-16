@@ -145,7 +145,19 @@ public class Decider : MonoBehaviour
 
     private bool Harvesting()
     {
-        return Me.Stats.Skills.Contains(Characters.Skill.Harvesting) && Me.Load.Keys.Count > 0 && !FullLoad();
+        if (!Me.Stats.Skills.Contains(Characters.Skill.Harvesting) || FullLoad()) return false;
+
+        var nearest_harvest_point = new List<Resource>(FindObjectsOfType<Resource>())
+            .Where(r => r.owner == Me.Faction)
+            .OrderBy(r => Vector3.Distance(transform.position, r.transform.position))
+            .ToList()
+            .First();
+
+        Collider _collider = nearest_harvest_point.GetComponent<Collider>();
+        Vector3 closest_spot = _collider.ClosestPointOnBounds(transform.position);
+        float distance = Vector3.Distance(closest_spot, transform.position);
+
+        return distance < Movement.ReachedThreshold;
     }
 
 

@@ -162,7 +162,7 @@ public class Actions : MonoBehaviour
             Actor nearest_enemy = Decider.Threat.Nearest();
 
             if (nearest_enemy != null) {
-                Movement.SetDestination(nearest_enemy.transform.position);
+                Movement.SetDestination(nearest_enemy.gameObject);
             } else {
                 Decider.state = Decider.previous_state;
             }

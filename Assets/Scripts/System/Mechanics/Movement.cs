@@ -24,7 +24,7 @@ public class Movement : MonoBehaviour
         Agent = GetComponentInParent<NavMeshAgent>();
         Agent.ResetPath();
         Me = GetComponentInParent<Actor>();
-        ReachedThreshold = Me.Size + 2f;
+        ReachedThreshold = Me.Size + 3f;
     }
 
 
@@ -43,6 +43,19 @@ public class Movement : MonoBehaviour
     {
         if (Agent.isOnNavMesh) 
             Agent.ResetPath();
+    }
+
+
+    public void SetDestination(GameObject target_object)
+    {
+        ResetPath();
+
+        Vector3 collider_destination = target_object.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
+
+        Vector3 destination = collider_destination != Vector3.zero ? collider_destination : target_object.transform.position;
+
+        StopCoroutine(FindThePath(destination));
+        StartCoroutine(FindThePath(destination));
     }
 
 
