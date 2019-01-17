@@ -199,7 +199,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resource_type: 1
-  owner: 2
+  owner: 0
   perpetual: 1
   initial_quantity: 0
   harvest_increment: 1
@@ -216,6 +216,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91eaf97416c524f5baa0376c9e33c0ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  owner: 0
+  purpose: 4
   armor_class: 13
   damage_resistance: 2
   maximum_hit_points: 125
@@ -223,6 +225,5 @@ MonoBehaviour:
   - {fileID: 8791221744732061480}
   - {fileID: 4680042083378243251}
   - {fileID: 7309093206866377131}
-  owner: 2
-  purpose: 4
   revenue_factor: 0
+  revenue: 0

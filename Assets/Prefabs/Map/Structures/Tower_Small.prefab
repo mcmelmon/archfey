@@ -111,8 +111,8 @@ MonoBehaviour:
   maximum_hit_points: 75
   entrances:
   - {fileID: 8728330541011134966}
-  owner: 2
-  purpose: 2
+  owner: 0
+  purpose: 3
   revenue_factor: 0
 --- !u!208 &872495044657242867
 NavMeshObstacle:

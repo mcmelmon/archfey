@@ -145,7 +145,7 @@ MonoBehaviour:
   - {fileID: 1240449877066094147}
   - {fileID: 93392602775864311}
   - {fileID: 9078073628154243822}
-  owner: 2
+  owner: 0
   purpose: 4
   revenue_factor: 0
 --- !u!208 &6287298310510022034

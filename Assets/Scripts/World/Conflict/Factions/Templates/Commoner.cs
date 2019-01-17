@@ -47,6 +47,8 @@ public class Commoner : MonoBehaviour
 
         if (Me.Load.Keys.Count == 0) return;
 
+        // TODO: go to the nearest structure that inventories the goods carried
+
         Structure nearest_commercial_structure = new List<Structure>(FindObjectsOfType<Structure>())
             .Where(s => s.owner == Me.Faction && s.purpose == Structure.Purpose.Commercial)
             .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))

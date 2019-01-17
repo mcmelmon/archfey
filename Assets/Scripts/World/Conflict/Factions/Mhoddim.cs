@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,7 +10,6 @@ public class Mhoddim : MonoBehaviour
 
     public Actor Actor { get; set; }
     public static float TaxRate { get; set; }
-    public static float Treasury { get; set; }
     public static Threat Threat { get; set; }
 
 
@@ -19,7 +19,14 @@ public class Mhoddim : MonoBehaviour
     public static float AfterTaxIncome(float transaction)
     {
         float tax = TaxRate * transaction;
-        Treasury += tax;
+
+        var structures = new List<Structure>(FindObjectsOfType<Structure>())
+            .Where(s => s.owner == Conflict.Faction.Mhoddim && s.purpose == Structure.Purpose.Civic)
+            .ToList();
+
+        foreach (var structure in structures) {
+            structure.revenue += tax / structures.Count;
+        }
 
         return transaction - tax;
     }
@@ -45,7 +52,6 @@ public class Mhoddim : MonoBehaviour
         Actor = GetComponent<Actor>();
         TaxRate = 0.25f;
         Threat = gameObject.AddComponent<Threat>();  // threat for the faction, not for individuals (don't add to game objects)
-        Treasury = 0f;
     }
 
 

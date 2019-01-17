@@ -1,23 +1,38 @@
 ﻿using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class Structure : MonoBehaviour
 {
-    public enum Purpose { Civic = 0, Commercial = 1, Military = 2, Religious = 3, Residential = 4 };
+    public enum Purpose { Civic = 0, Commercial = 1, Industrial = 2, Military = 3, Residential = 4, Sacred = 5 };
 
     // Inspector settings
-    public int armor_class = 13;
-    public int damage_resistance = 0;
-    public int maximum_hit_points = 100;
-
-    public List<Transform> entrances = new List<Transform>();
     public Conflict.Faction owner;
     public Purpose purpose;
 
-    public float revenue_factor;
+    public int armor_class = 13;
+    public int damage_resistance;
+    public int maximum_hit_points = 100;
 
+    public List<Transform> entrances = new List<Transform>();
+
+    public float revenue_factor;
+    public float revenue;
+
+    [Serializable]
+    public struct InventoriedGoods {
+        public Resources.Type type;
+        public int amount;
+
+        public InventoriedGoods(Resources.Type _type, int _amount) {
+            this.type = _type;
+            this.amount = _amount;
+        }
+    }
+
+    public List<InventoriedGoods> inventory_rows = new List<InventoriedGoods>();
 
     // properties
 
@@ -25,7 +40,6 @@ public class Structure : MonoBehaviour
     public float OriginalY { get; set; }
     public float OriginalYScale { get; set; }
     public Dictionary<Weapon.DamageType, int> Resistances { get; set; }
-    public float Revenue { get; set; }
 
 
     // Unity
@@ -68,21 +82,25 @@ public class Structure : MonoBehaviour
 
     public void TransactBusiness(Actor _unit, float _amount)
     {
-        float factored_amount = _amount * revenue_factor;
-        Revenue += (owner == Conflict.Faction.Ghaddim) ? Ghaddim.AfterTaxIncome(factored_amount) : Mhoddim.AfterTaxIncome(factored_amount);
-        _unit.Load.Clear(); // TODO: store the resources!
-        _unit.harvesting = Resources.Type.None;
+        BookRevenue(_amount);
+        StoreGoods(_unit);
     }
 
 
     // private
 
 
+    private void BookRevenue(float _amount)
+    {
+        float factored_amount = _amount * revenue_factor;
+        revenue += (owner == Conflict.Faction.Ghaddim) ? Ghaddim.AfterTaxIncome(factored_amount) : Mhoddim.AfterTaxIncome(factored_amount);
+    }
+
+
     private int DamageAfterResistance(int _damage, Weapon.DamageType _type)
     {
         return (_damage <= 0 || Resistances == null) ? _damage : (_damage -= _damage * (Resistances[_type] / 100));
     }
-
 
     private void SetComponents()
     {
@@ -104,7 +122,20 @@ public class Structure : MonoBehaviour
             [Weapon.DamageType.Slashing] = 25,
             [Weapon.DamageType.Thunder] = 0
         };
-        Revenue = 0f;
+    }
+
+
+    private void StoreGoods(Actor _unit)
+    {
+        foreach(KeyValuePair<Resource, int> pair in _unit.Load) {
+            InventoriedGoods inventory_row = inventory_rows.First(r => r.type == pair.Key.resource_type);
+            int amount = inventory_row.amount + pair.Value;
+            inventory_rows.Remove(inventory_row);
+            inventory_rows.Add(new InventoriedGoods(pair.Key.resource_type, amount));
+        }
+
+        _unit.Load.Clear();
+        _unit.harvesting = Resources.Type.None;
     }
 
 
