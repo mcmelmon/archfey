@@ -72,7 +72,6 @@ public class Guard : MonoBehaviour
     {
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         Route _route = GetComponent<Route>();
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         Me.Actions.SheathWeapon();
 
         if (_route == null) {
@@ -80,7 +79,7 @@ public class Guard : MonoBehaviour
             _route.Retracing = true;
 
             var structures = new List<Structure>(FindObjectsOfType<Structure>())
-                .Where(s => s.owner == Me.Faction && s.purpose == Structure.Purpose.Military)
+                .Where(s => s.owner == Me.Faction && (s.purpose == Structure.Purpose.Military || s.purpose == Structure.Purpose.Civic))
                 .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
                 .ToList();
 
@@ -89,9 +88,9 @@ public class Guard : MonoBehaviour
                     _route.Add(entrance.transform.position);
                 }
             }
-            Me.Actions.Movement.SetDestination(_route.SetNext());
         }
 
+        Me.Actions.Movement.SetDestination(_route.SetNext());
     }
 
 

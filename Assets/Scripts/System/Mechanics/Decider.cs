@@ -27,6 +27,7 @@ public class Decider : MonoBehaviour
     
     public State state;
     public State previous_state;
+    public bool has_path = false;
 
     // properties
 
@@ -145,19 +146,20 @@ public class Decider : MonoBehaviour
 
     private bool Harvesting()
     {
-        if (!Me.Stats.Skills.Contains(Characters.Skill.Harvesting) || FullLoad()) return false;
+        return (Me.Stats.Skills.Contains(Characters.Skill.Harvesting) && !FullLoad() && Me.harvesting != Resources.Type.None);
 
-        var nearest_harvest_point = new List<Resource>(FindObjectsOfType<Resource>())
-            .Where(r => r.owner == Me.Faction)
-            .OrderBy(r => Vector3.Distance(transform.position, r.transform.position))
-            .ToList()
-            .First();
+        // I can harvest, but am I close enough?
+        //var nearest_harvest = new List<Resource>(FindObjectsOfType<Resource>())
+        //    .Where(r => r.owner == Me.Faction)
+        //    .OrderBy(r => Vector3.Distance(transform.position, r.transform.position))
+        //    .ToList()
+        //    .First();
 
-        Collider _collider = nearest_harvest_point.GetComponent<Collider>();
-        Vector3 closest_spot = _collider.ClosestPointOnBounds(transform.position);
-        float distance = Vector3.Distance(closest_spot, transform.position);
+        //Collider _collider = nearest_harvest.GetComponent<Collider>();
+        //Vector3 closest_spot = _collider.ClosestPointOnBounds(transform.position);
+        //float distance = Vector3.Distance(closest_spot, transform.position);
 
-        return distance < Movement.ReachedThreshold;
+        //return distance <= Movement.ReachedThreshold;
     }
 
 
@@ -222,13 +224,13 @@ public class Decider : MonoBehaviour
 
     private bool Moving()
     {
-        return Me.Actions.Movement != null && Me.Actions.Movement.InProgress();
+        return Me.Actions.Movement.InProgress();
     }
 
 
     private bool ReachedGoal()
     {
-        return !Me.Actions.Movement.InProgress();
+        return state == State.MovingToGoal && !Me.Actions.Movement.InProgress();
     }
 
 

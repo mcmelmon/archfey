@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 393633226122105004}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.6, y: 0, z: 0.14285713}
+  m_LocalPosition: {x: -0.65000004, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2410140844746738922}
@@ -54,7 +54,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2633633279128031863}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.57142854}
+  m_LocalPosition: {x: 0, y: 0, z: 0.65000004}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2410140844746738922}
@@ -84,7 +84,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5120280233973278457}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.6, y: 0, z: -0.2142857}
+  m_LocalPosition: {x: 0.65000004, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2410140844746738922}
@@ -105,7 +105,7 @@ GameObject:
   - component: {fileID: 1937792687512137004}
   - component: {fileID: 4918298858383937193}
   m_Layer: 0
-  m_Name: Public_Large
+  m_Name: Civic_Large
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -119,8 +119,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5203320803347404356}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 90, y: 2.7851562, z: 52}
-  m_LocalScale: {x: 10, y: 12, z: 14}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 20, y: 20, z: 20}
   m_Children:
   - {fileID: 4480619454654544515}
   - {fileID: 422304222863201838}
@@ -209,6 +209,7 @@ MonoBehaviour:
   - {fileID: 7422083226908310301}
   owner: 2
   purpose: 0
+  revenue_factor: 0
 --- !u!208 &4918298858383937193
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -249,7 +250,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6409513560445278876}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.3, y: 0, z: -0.57142854}
+  m_LocalPosition: {x: 0, y: 0, z: -0.65000004}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2410140844746738922}

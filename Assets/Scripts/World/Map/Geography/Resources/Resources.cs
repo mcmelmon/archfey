@@ -13,7 +13,8 @@ public class Resources : MonoBehaviour
         Gold = 4,
         Iron = 5,
         Lumber = 6,
-        Skins = 7
+        Skins = 7,
+        None = 99
     };
 
     // Inspector settings

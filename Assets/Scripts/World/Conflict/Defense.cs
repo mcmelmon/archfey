@@ -34,25 +34,26 @@ public class Defense : MonoBehaviour
     {
         // must be called by Conflict instead of Start to ensure Map setup complete
 
-        var non_military = FindObjectsOfType<Structure>()
-            .Where(s => (s.purpose == Structure.Purpose.Residential || s.purpose == Structure.Purpose.Commercial || s.purpose == Structure.Purpose.Civic) && s.owner == Conflict.Faction.Mhoddim);
+        var civilian = FindObjectsOfType<Structure>()
+            .Where(s => (s.purpose == Structure.Purpose.Residential) && s.owner == Conflict.Faction.Mhoddim);
 
         var military = FindObjectsOfType<Structure>()
-            .Where(s => s.purpose == Structure.Purpose.Military && s.owner == Conflict.Faction.Mhoddim);
+            .Where(s => (s.purpose == Structure.Purpose.Military || s.purpose == Structure.Purpose.Civic) && s.owner == Conflict.Faction.Mhoddim);
 
-        foreach (var structure in non_military) {
+        foreach (var structure in civilian) {
             foreach (var entrance in structure.entrances) {
                 Vector3 location = entrance.transform.position;
                 GameObject commoner = Spawn(new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
                 commoner.AddComponent<Commoner>();
             }
-
         }
 
         foreach (var structure in military) {
-            Vector3 location = structure.entrances[0].transform.position;
-            GameObject guard = Spawn(new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
-            guard.AddComponent<Guard>();
+            foreach (var entrance in structure.entrances) {
+                Vector3 location = entrance.transform.position;
+                GameObject guard = Spawn(new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
+                guard.AddComponent<Guard>();
+            }
         }
     }
 

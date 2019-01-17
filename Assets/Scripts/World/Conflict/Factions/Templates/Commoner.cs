@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Commoner : MonoBehaviour {
-
+public class Commoner : MonoBehaviour 
+{
     // properties
 
     public Actor Me { get; set; }
@@ -59,6 +59,7 @@ public class Commoner : MonoBehaviour {
 
     public void OnHarvesting()
     {
+        Me.Actions.Movement.ResetPath();
         Harvest();
     }
 
@@ -107,13 +108,11 @@ public class Commoner : MonoBehaviour {
     {
         Me.Actions.Movement.ResetPath();
 
-        if (Me.Load.Keys.Count > 0) {
-            Transact();
-        } else {
-            Harvest();
+        if (!Transact()) {
+            if (!Harvest()) {
+                OnIdle();
+            }
         }
-
-        OnIdle();
     }
 
 
@@ -132,22 +131,26 @@ public class Commoner : MonoBehaviour {
     // private
 
 
-    private void Harvest()
+    private bool Harvest()
     {
-        var nearest_harvest_point = new List<Resource>(FindObjectsOfType<Resource>())
+        var nearest_harvest = new List<Resource>(FindObjectsOfType<Resource>())
             .Where(r => r.owner == Me.Faction)
             .OrderBy(r => Vector3.Distance(transform.position, r.transform.position))
             .ToList()
             .First();
 
-        Collider _collider = nearest_harvest_point.GetComponent<Collider>();
+        Collider _collider = nearest_harvest.GetComponent<Collider>();
         Vector3 closest_spot = _collider.ClosestPointOnBounds(transform.position);
         float distance = Vector3.Distance(closest_spot, transform.position);
 
         if (distance <= Movement.ReachedThreshold) {
-            Me.Actions.Movement.ResetPath();
-            nearest_harvest_point.HarvestResource(Me);
+            nearest_harvest.HarvestResource(Me);
+            Me.harvesting = nearest_harvest.resource_type;
+            Me.harvested_amount = Me.Load.First().Value;
+            return true;
         }
+
+        return false;
     }
 
 
@@ -207,7 +210,7 @@ public class Commoner : MonoBehaviour {
     }
 
 
-    private void Transact()
+    private bool Transact()
     {
         Structure nearest_commercial_structure = new List<Structure>(FindObjectsOfType<Structure>())
             .Where(s => s.owner == Me.Faction && s.purpose == Structure.Purpose.Commercial)
@@ -221,6 +224,9 @@ public class Commoner : MonoBehaviour {
 
         if (distance <= Movement.ReachedThreshold) {
             nearest_commercial_structure.TransactBusiness(Me, Random.Range(1, 12) * .1f); // TODO: base amount on resources!
+            return true;
         }
+
+        return false;
     }
 }

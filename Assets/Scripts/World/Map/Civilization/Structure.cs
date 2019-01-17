@@ -71,6 +71,7 @@ public class Structure : MonoBehaviour
         float factored_amount = _amount * revenue_factor;
         Revenue += (owner == Conflict.Faction.Ghaddim) ? Ghaddim.AfterTaxIncome(factored_amount) : Mhoddim.AfterTaxIncome(factored_amount);
         _unit.Load.Clear(); // TODO: store the resources!
+        _unit.harvesting = Resources.Type.None;
     }
 
 

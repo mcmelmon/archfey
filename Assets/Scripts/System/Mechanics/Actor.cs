@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Actor : MonoBehaviour
 {
+    // Inspector settings
+    public Resources.Type harvesting = Resources.Type.None;
+    public int harvested_amount = 0;
+
     // properties
 
     public Actions Actions { get; set; }
