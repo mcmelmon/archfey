@@ -1,18 +1,38 @@
 ﻿using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class Structure : MonoBehaviour
 {
+    public enum Purpose { Civic = 0, Commercial = 1, Industrial = 2, Military = 3, Residential = 4, Sacred = 5 };
+
     // Inspector settings
+    public Conflict.Faction owner;
+    public Purpose purpose;
+
     public int armor_class = 13;
-    public int damage_resistance = 0;
+    public int damage_resistance;
     public int maximum_hit_points = 100;
 
     public List<Transform> entrances = new List<Transform>();
-    public Conflict.Faction owner;
 
+    public float revenue_factor;
+    public float revenue;
+
+    [Serializable]
+    public struct InventoriedGoods {
+        public Resources.Type type;
+        public int amount;
+
+        public InventoriedGoods(Resources.Type _type, int _amount) {
+            this.type = _type;
+            this.amount = _amount;
+        }
+    }
+
+    public List<InventoriedGoods> inventory_rows = new List<InventoriedGoods>();
 
     // properties
 
@@ -31,6 +51,12 @@ public class Structure : MonoBehaviour
     }
 
     // public
+
+
+    public float CurrentHitPointPercentage()
+    {
+        return ((float)CurrentHitPoints / (float)maximum_hit_points);
+    }
 
 
     public void GainStructure(int _amount)
@@ -54,20 +80,27 @@ public class Structure : MonoBehaviour
     }
 
 
+    public void TransactBusiness(Actor _unit, float _amount)
+    {
+        BookRevenue(_amount);
+        StoreGoods(_unit);
+    }
+
+
     // private
+
+
+    private void BookRevenue(float _amount)
+    {
+        float factored_amount = _amount * revenue_factor;
+        revenue += (owner == Conflict.Faction.Ghaddim) ? Ghaddim.AfterTaxIncome(factored_amount) : Mhoddim.AfterTaxIncome(factored_amount);
+    }
 
 
     private int DamageAfterResistance(int _damage, Weapon.DamageType _type)
     {
         return (_damage <= 0 || Resistances == null) ? _damage : (_damage -= _damage * (Resistances[_type] / 100));
     }
-
-
-    private float CurrentHitPointPercentage()
-    {
-        return ((float)CurrentHitPoints / (float)maximum_hit_points);
-    }
-
 
     private void SetComponents()
     {
@@ -89,6 +122,20 @@ public class Structure : MonoBehaviour
             [Weapon.DamageType.Slashing] = 25,
             [Weapon.DamageType.Thunder] = 0
         };
+    }
+
+
+    private void StoreGoods(Actor _unit)
+    {
+        foreach(KeyValuePair<Resource, int> pair in _unit.Load) {
+            InventoriedGoods inventory_row = inventory_rows.First(r => r.type == pair.Key.resource_type);
+            int amount = inventory_row.amount + pair.Value;
+            inventory_rows.Remove(inventory_row);
+            inventory_rows.Add(new InventoriedGoods(pair.Key.resource_type, amount));
+        }
+
+        _unit.Load.Clear();
+        _unit.harvesting = Resources.Type.None;
     }
 
 

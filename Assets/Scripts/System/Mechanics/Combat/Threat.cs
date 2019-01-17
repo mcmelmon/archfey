@@ -149,7 +149,11 @@ public class Threat : MonoBehaviour {
 
             for (int i = 0; i < keys.Length; i++) {
                 // use for loop to avoid modifying collection in foreach
-                Threats[keys[i]]--;
+                if (keys[i] == null) { 
+                    Threats.Remove(keys[i]);
+                    continue;
+                }
+                Threats[keys[i]] -= 3;
                 if (Threats[keys[i]] <= 0) Threats.Remove(keys[i]);
             }
         }

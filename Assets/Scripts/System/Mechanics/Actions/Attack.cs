@@ -32,6 +32,7 @@ public class Attack : MonoBehaviour
 
     public void AttackEnemiesInRange()
     {
+        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         SelectEnemy();
         StrikeEnemy();
     }
@@ -46,7 +47,6 @@ public class Attack : MonoBehaviour
         AvailableMeleeTargets.AddRange(Me.Senses.Actors
                                          .Where(actor => !Me.Actions.Decider.IsFriendOrNeutral(actor) && Vector3.Distance(transform.position, actor.transform.position) < LongestMeleeRange())
                                          .OrderBy(actor => actor.Health.CurrentHitPoints)
-                                         .Reverse()
                                          .Select(actor => actor.gameObject)
                                          .ToList());
 
@@ -58,7 +58,6 @@ public class Attack : MonoBehaviour
         AvailableRangedTargets.AddRange(Me.Senses.Actors
                                           .Where(actor => !Me.Actions.Decider.IsFriendOrNeutral(actor) && Vector3.Distance(transform.position, actor.transform.position) < LongestRangedRange())
                                           .OrderBy(actor => actor.Health.CurrentHitPoints)
-                                          .Reverse()
                                           .Select(actor => actor.gameObject)
                                           .ToList());
 
@@ -131,9 +130,9 @@ public class Attack : MonoBehaviour
     {
         foreach (var weapon in AvailableWeapons) {
             if (weapon.range == 0 && weapon.has_reach) {
-                return 2f;
+                return 3f;
             } else if (weapon.range == 0) {
-                return 1f;
+                return 2f;
             }
         }
 

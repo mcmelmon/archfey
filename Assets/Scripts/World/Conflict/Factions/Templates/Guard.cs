@@ -34,7 +34,8 @@ public class Guard : MonoBehaviour
         List<Actor> friends_in_need = Me.Actions.Decider.FriendsInNeed;
 
         if (friends_in_need.Count > 0) {
-            Me.Actions.Movement.SetDestination(friends_in_need[Random.Range(0, friends_in_need.Count)].transform.position);
+            Me.Actions.Movement.Agent.speed = 2 * Me.Actions.Movement.Speed;
+            Me.Actions.Movement.SetDestination(friends_in_need[Random.Range(0, friends_in_need.Count)].gameObject);
             Me.Actions.Decider.FriendsInNeed.Clear();
         }
     }
@@ -55,6 +56,7 @@ public class Guard : MonoBehaviour
 
     public void OnHostileActorsSighted()
     {
+        Me.Actions.CallForHelp();
         Me.Actions.CloseWithEnemies();
         Me.Actions.Attack.AttackEnemiesInRange();
     }
@@ -68,8 +70,8 @@ public class Guard : MonoBehaviour
 
     public void OnIdle()
     {
-        Route _route = GetComponent<Route>();
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
+        Route _route = GetComponent<Route>();
         Me.Actions.SheathWeapon();
 
         if (_route == null) {
@@ -77,8 +79,8 @@ public class Guard : MonoBehaviour
             _route.Retracing = true;
 
             var structures = new List<Structure>(FindObjectsOfType<Structure>())
-                .Where(structure => structure.owner == Me.Faction)
-                .OrderBy(structure => Vector3.Distance(transform.position, transform.transform.position))
+                .Where(s => s.owner == Me.Faction && (s.purpose == Structure.Purpose.Military || s.purpose == Structure.Purpose.Civic))
+                .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
                 .ToList();
 
             foreach (var structure in structures) {
@@ -86,14 +88,16 @@ public class Guard : MonoBehaviour
                     _route.Add(entrance.transform.position);
                 }
             }
-            Me.Actions.Movement.SetDestination(_route.SetNext());
         }
 
+        Me.Actions.Movement.SetDestination(_route.SetNext());
     }
 
 
     public void OnMovingToGoal()
     {
+        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
+        Me.Actions.SheathWeapon();
         Me.Senses.Sight();
     }
 
@@ -153,7 +157,6 @@ public class Guard : MonoBehaviour
         Me.Actions.OnIdle = OnIdle;
         Me.Actions.OnInCombat = OnInCombat;
         Me.Actions.OnMovingToGoal = OnMovingToGoal;
-        Me.Actions.OnPerformingTask = OnPerformingTask;
         Me.Actions.OnReachedGoal = OnReachedGoal;
         Me.Actions.OnUnderAttack = OnUnderAttack;
         Me.Actions.OnWatch = OnWatch;

@@ -47,7 +47,7 @@ public class Gnoll : MonoBehaviour
             Collider _collider = Me.Actions.Decider.HostileStructures[Random.Range(0, Me.Actions.Decider.HostileStructures.Count)].GetComponent<Collider>();
             Vector3 destination = _collider.ClosestPointOnBounds(transform.position);
 
-            Me.Actions.Movement.SetDestination(destination);
+            Me.Actions.Movement.SetDestination(Me.Actions.Decider.HostileStructures[Random.Range(0, Me.Actions.Decider.HostileStructures.Count)].gameObject);
         }
         Me.Actions.Attack.AttackEnemiesInRange();
     }
@@ -61,7 +61,7 @@ public class Gnoll : MonoBehaviour
         List<Objective> objectives = Objectives.HeldByFaction[Conflict.Instance.EnemyFaction(Me)];
         if (objectives.Count > 0) {
             Objective next_objective = objectives[Random.Range(0, objectives.Count)];
-            Me.Actions.Movement.SetDestination(next_objective.claim_nodes[0].transform.position);
+            Me.Actions.Movement.SetDestination(next_objective.claim_nodes[0].gameObject);
         }
     }
 
@@ -75,6 +75,7 @@ public class Gnoll : MonoBehaviour
 
     public void OnMovingToGoal()
     {
+        Me.Actions.SheathWeapon();
         Me.Senses.Sight();
     }
 
@@ -127,7 +128,6 @@ public class Gnoll : MonoBehaviour
         Me.Actions.OnIdle = OnIdle;
         Me.Actions.OnInCombat = OnInCombat;
         Me.Actions.OnMovingToGoal = OnMovingToGoal;
-        Me.Actions.OnPerformingTask = OnPerformingTask;
         Me.Actions.OnReachedGoal = OnReachedGoal;
         Me.Actions.OnUnderAttack = OnUnderAttack;
         Me.Actions.OnWatch = OnWatch;

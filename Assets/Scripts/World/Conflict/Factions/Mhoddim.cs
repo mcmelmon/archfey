@@ -1,17 +1,35 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Mhoddim : MonoBehaviour {
-
+public class Mhoddim : MonoBehaviour
+{
     // properties
 
     public Actor Actor { get; set; }
+    public static float TaxRate { get; set; }
     public static Threat Threat { get; set; }
 
 
     // static
+
+
+    public static float AfterTaxIncome(float transaction)
+    {
+        float tax = TaxRate * transaction;
+
+        var structures = new List<Structure>(FindObjectsOfType<Structure>())
+            .Where(s => s.owner == Conflict.Faction.Mhoddim && s.purpose == Structure.Purpose.Civic)
+            .ToList();
+
+        foreach (var structure in structures) {
+            structure.revenue += tax / structures.Count;
+        }
+
+        return transaction - tax;
+    }
 
 
     public static GameObject SpawnUnit(Vector3 _point)
@@ -32,6 +50,7 @@ public class Mhoddim : MonoBehaviour {
     private void Awake()
     {
         Actor = GetComponent<Actor>();
+        TaxRate = 0.25f;
         Threat = gameObject.AddComponent<Threat>();  // threat for the faction, not for individuals (don't add to game objects)
     }
 
