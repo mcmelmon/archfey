@@ -34,17 +34,42 @@ public class Defense : MonoBehaviour
     {
         // must be called by Conflict instead of Start to ensure Map setup complete
 
-        var civilian = FindObjectsOfType<Structure>()
-            .Where(s => (s.purpose == Structure.Purpose.Residential) && s.owner == Conflict.Faction.Mhoddim);
+        var farmers = FindObjectsOfType<Structure>()
+            .Where(s => s.Wants().Contains(Resources.Type.Farm) && s.owner == Conflict.Faction.Mhoddim);
+
+        var miners = FindObjectsOfType<Structure>()
+            .Where(s => (s.Wants().Contains(Resources.Type.Copper) || s.Wants().Contains(Resources.Type.Iron) || s.Wants().Contains(Resources.Type.Gold) && s.owner == Conflict.Faction.Mhoddim));
+
+        var woodcutters = FindObjectsOfType<Structure>()
+            .Where(s => s.Wants().Contains(Resources.Type.Lumber) && s.owner == Conflict.Faction.Mhoddim);
 
         var military = FindObjectsOfType<Structure>()
-            .Where(s => (s.purpose == Structure.Purpose.Military || s.purpose == Structure.Purpose.Civic) && s.owner == Conflict.Faction.Mhoddim);
+            .Where(s => s.purpose == Structure.Purpose.Military && s.owner == Conflict.Faction.Mhoddim);
 
-        foreach (var structure in civilian) {
+        foreach (var structure in farmers) {
             foreach (var entrance in structure.entrances) {
                 Vector3 location = entrance.transform.position;
                 GameObject commoner = Spawn(new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
                 commoner.AddComponent<Commoner>();
+                commoner.GetComponent<Stats>().Skills.Add(Characters.SkillAttributes.First(sa => sa.skill == Characters.Skill.Farmer));
+            }
+        }
+
+        foreach (var structure in miners) {
+            foreach (var entrance in structure.entrances) {
+                Vector3 location = entrance.transform.position;
+                GameObject commoner = Spawn(new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
+                commoner.AddComponent<Commoner>();
+                commoner.GetComponent<Stats>().Skills.Add(Characters.SkillAttributes.First(sa => sa.skill == Characters.Skill.Miner));
+            }
+        }
+
+        foreach (var structure in woodcutters) {
+            foreach (var entrance in structure.entrances) {
+                Vector3 location = entrance.transform.position;
+                GameObject commoner = Spawn(new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
+                commoner.AddComponent<Commoner>();
+                commoner.gameObject.GetComponent<Stats>().Skills.Add(Characters.SkillAttributes.First(sa => sa.skill == Characters.Skill.Woodcutter));
             }
         }
 

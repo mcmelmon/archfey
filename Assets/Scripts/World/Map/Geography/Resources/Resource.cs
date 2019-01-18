@@ -11,6 +11,7 @@ public class Resource : MonoBehaviour
     public int initial_quantity;
     public int harvest_increment;
     public int full_harvest;
+    public List<Characters.Skill> required_skills;
 
     // properties
 
@@ -32,9 +33,19 @@ public class Resource : MonoBehaviour
     // public
 
 
+    public bool AccessibleTo(Actor _unit)
+    {
+        foreach (var unit_skill in _unit.Stats.Skills) {
+            if (required_skills.Contains(unit_skill.skill)) return true;
+        }
+
+        return false;
+    }
+
+
     public void HarvestResource(Actor _harvestor)
     {
-        if (!_harvestor.Stats.Skills.Contains(Characters.Skill.Harvesting)) return;
+        if (!Characters.Instance.Harvester(_harvestor)) return;
 
         int optimal_harvest = harvest_increment * _harvestor.Stats.ProficiencyBonus;
         int harvested = optimal_harvest;

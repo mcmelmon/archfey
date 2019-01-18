@@ -134,7 +134,7 @@ public class Decider : MonoBehaviour
 
     private bool FullLoad()
     {
-        if (!Me.Stats.Skills.Contains(Characters.Skill.Harvesting)) return false;
+        if (!Characters.Instance.Harvester(Me)) return false;
 
         foreach (var pair in Me.Load) {  // there "should" only be at most one pair at any given time
             return pair.Value >= pair.Key.full_harvest;
@@ -146,20 +146,7 @@ public class Decider : MonoBehaviour
 
     private bool Harvesting()
     {
-        return (Me.Stats.Skills.Contains(Characters.Skill.Harvesting) && !FullLoad() && Me.harvesting != Resources.Type.None);
-
-        // I can harvest, but am I close enough?
-        //var nearest_harvest = new List<Resource>(FindObjectsOfType<Resource>())
-        //    .Where(r => r.owner == Me.Faction)
-        //    .OrderBy(r => Vector3.Distance(transform.position, r.transform.position))
-        //    .ToList()
-        //    .First();
-
-        //Collider _collider = nearest_harvest.GetComponent<Collider>();
-        //Vector3 closest_spot = _collider.ClosestPointOnBounds(transform.position);
-        //float distance = Vector3.Distance(closest_spot, transform.position);
-
-        //return distance <= Movement.ReachedThreshold;
+        return (Characters.Instance.Harvester(Me) && !FullLoad() && Me.harvesting != Resources.Type.None);
     }
 
 

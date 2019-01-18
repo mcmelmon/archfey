@@ -203,7 +203,8 @@ MonoBehaviour:
   perpetual: 1
   initial_quantity: 0
   harvest_increment: 1
-  full_harvest: 10
+  full_harvest: 5
+  required_skills: 00000000
 --- !u!114 &2153911066012038719
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -227,3 +228,4 @@ MonoBehaviour:
   - {fileID: 7309093206866377131}
   revenue_factor: 0
   revenue: 0
+  inventory_rows: []

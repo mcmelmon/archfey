@@ -17,6 +17,7 @@ public class Conflict : MonoBehaviour
     // properties
 
     public static Dictionary<Faction, int> Casualties { get; set; }
+    public static Characters Characters { get; set; }
     public Conflict.Role NextWave { get; set; }
     public static Conflict Instance { get; set; }
     public static int ToHitBase { get; set; }
@@ -141,7 +142,7 @@ public class Conflict : MonoBehaviour
 
     private void GenerateStats()
     {
-        Characters.GenerateStats();
+        Characters.Instance.GenerateStats();
     }
 
 
@@ -152,6 +153,7 @@ public class Conflict : MonoBehaviour
             [Faction.Ghaddim] = 0,
             [Faction.Mhoddim] = 0
         };
+        Characters = gameObject.AddComponent<Characters>();
         current_tick = 0;
         ToHitBase = 10;
         Units = new List<GameObject>();

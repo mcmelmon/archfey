@@ -117,23 +117,7 @@ MonoBehaviour:
   - {fileID: 7689789575358307038}
   revenue_factor: 1.5
   revenue: 0
-  inventory_rows:
-  - type: 0
-    amount: 0
-  - type: 1
-    amount: 0
-  - type: 2
-    amount: 0
-  - type: 3
-    amount: 0
-  - type: 4
-    amount: 0
-  - type: 5
-    amount: 0
-  - type: 6
-    amount: 0
-  - type: 7
-    amount: 0
+  inventory_rows: []
 --- !u!208 &6550712517133750925
 NavMeshObstacle:
   m_ObjectHideFlags: 0

@@ -87,6 +87,13 @@ public class Structure : MonoBehaviour
     }
 
 
+    public List<Resources.Type> Wants()
+    {
+        var desired_goods = inventory_rows.Select(good => good.type);
+        return desired_goods.ToList();
+    }
+
+
     // private
 
 

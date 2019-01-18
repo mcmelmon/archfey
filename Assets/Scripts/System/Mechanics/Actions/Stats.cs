@@ -27,8 +27,8 @@ public class Stats : MonoBehaviour
     public Dictionary<Weapon.DamageType, int> Resistances { get; set; }
 
     public int ProficiencyBonus { get; set; }
-    public List<Characters.Skill> Expertise { get; set; }
-    public List<Characters.Skill> Skills { get; set; }
+    public List<Characters.SkillAttribute> Expertise { get; set; }
+    public List<Characters.SkillAttribute> Skills { get; set; }
 
 
     // Unity
@@ -149,8 +149,9 @@ public class Stats : MonoBehaviour
     {
         Me = GetComponentInParent<Actor>();
         DefenseRating = ArmorClass + Me.Stats.DexterityProficiency;
-        Expertise = new List<Characters.Skill>();
-        Skills = new List<Characters.Skill>();
+
+        Expertise = new List<Characters.SkillAttribute>();
+        Skills = new List<Characters.SkillAttribute>();
     }
 
 
