@@ -7,6 +7,7 @@ public class Actor : MonoBehaviour
     // Inspector settings
     public Resources.Type harvesting = Resources.Type.None;
     public int harvested_amount = 0;
+    public int experience_points;
 
     // properties
 

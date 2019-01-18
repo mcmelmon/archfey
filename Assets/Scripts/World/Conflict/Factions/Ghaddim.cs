@@ -27,7 +27,6 @@ public class Ghaddim : MonoBehaviour {
     public static GameObject SpawnUnit(Vector3 _point)
     {
         Ghaddim _ghaddim = Instantiate(Conflict.Instance.ghaddim_prefab, _point, Conflict.Instance.ghaddim_prefab.transform.rotation);  // drop from on high to avoid being inside buildings
-        _ghaddim.gameObject.AddComponent<Characters>();
 
         return _ghaddim.gameObject;
     }

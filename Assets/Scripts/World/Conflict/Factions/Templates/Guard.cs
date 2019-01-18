@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Guard : MonoBehaviour
 {
@@ -70,27 +71,7 @@ public class Guard : MonoBehaviour
 
     public void OnIdle()
     {
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
-        Route _route = GetComponent<Route>();
-        Me.Actions.SheathWeapon();
-
-        if (_route == null) {
-            _route = gameObject.AddComponent<Route>();
-            _route.Retracing = true;
-
-            var structures = new List<Structure>(FindObjectsOfType<Structure>())
-                .Where(s => s.owner == Me.Faction && (s.purpose == Structure.Purpose.Military || s.purpose == Structure.Purpose.Civic))
-                .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
-                .ToList();
-
-            foreach (var structure in structures) {
-                foreach (var entrance in structure.entrances) {
-                    _route.Add(entrance.transform.position);
-                }
-            }
-        }
-
-        Me.Actions.Movement.SetDestination(_route.SetNext());
+        Me.Senses.Sight();
     }
 
 

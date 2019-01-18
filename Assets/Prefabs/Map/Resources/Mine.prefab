@@ -109,4 +109,5 @@ MonoBehaviour:
   perpetual: 0
   initial_quantity: 1000
   harvest_increment: 1
-  full_harvest: 20
+  full_harvest: 4
+  required_skills: 01000000
