@@ -13,21 +13,6 @@ public class Characters : MonoBehaviour
         Guard = 3
     };
 
-    public enum Attribute { Charisma = 0, Dexterity = 1, Constitution = 2, Intelligence = 3, Strength = 4, Wisdom = 5 };
-    public enum Skill { Farmer = 0, Miner = 1, Woodcutter = 2 };
-
-    public struct SkillAttribute
-    {
-        public Skill skill;
-        public Attribute attribute;
-
-        public SkillAttribute(Skill _skill, Attribute _attribute)
-        {
-            this.skill = _skill;
-            this.attribute = _attribute;
-        }
-    }
-
     public static Dictionary<Template, int> proficiency_bonus = new Dictionary<Template, int>();
 
     public static Dictionary<Template, int> charisma_proficiency = new Dictionary<Template, int>();
@@ -52,7 +37,6 @@ public class Characters : MonoBehaviour
     // properties
 
     public static Characters Instance { get; set; }
-    public static List<SkillAttribute> SkillAttributes { get; set; }
 
 
     // Unity
@@ -67,7 +51,6 @@ public class Characters : MonoBehaviour
             return;
         }
         Instance = this;
-        SetComponents();
     }
 
 
@@ -78,13 +61,6 @@ public class Characters : MonoBehaviour
     {
         BaseCharacterTemplate();
         CreatureTemplates();
-    }
-
-
-    public bool Harvester(Actor _unit)
-    {
-        var harvesting_skills = _unit.Stats.Skills.Where(s => s.skill == Skill.Farmer || s.skill == Skill.Miner || s.skill == Skill.Woodcutter).ToList();
-        return harvesting_skills.Count > 0;
     }
 
 
@@ -151,16 +127,5 @@ public class Characters : MonoBehaviour
         available_weapons[Template.Guard] = new List<Weapon>() { Weapons.Instance.longbow_prefab, Weapons.Instance.spear_prefab };
         hit_dice[Template.Guard] = 2;
         perception_range[Template.Guard] = 25f;
-    }
-
-
-    private void SetComponents()
-    {
-        SkillAttributes = new List<SkillAttribute>()
-        {
-            new SkillAttribute(Skill.Farmer, Attribute.Wisdom),
-            new SkillAttribute(Skill.Miner, Attribute.Constitution),
-            new SkillAttribute(Skill.Woodcutter, Attribute.Dexterity)
-        };
     }
 }

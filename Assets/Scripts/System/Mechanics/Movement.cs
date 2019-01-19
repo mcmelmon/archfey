@@ -77,7 +77,6 @@ public class Movement : MonoBehaviour
         while (!Agent.hasPath && attempt < max_attempts) {
             if (Agent.isOnNavMesh) {
                 Agent.SetDestination(new Vector3(_destination.x, Geography.Terrain.SampleHeight(_destination), _destination.z));
-                Me.Actions.Decider.has_path = true;
             } else {
                 attempt++;
                 NavMesh.SamplePosition(Agent.transform.position, out NavMeshHit hit, 10.0f, NavMesh.AllAreas);

@@ -104,10 +104,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0efa840f60fe4df18f446c21f9a3156, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resource_type: 0
+  raw_resource: 0
   owner: 2
   perpetual: 0
   initial_quantity: 1000
   harvest_increment: 1
   full_harvest: 4
-  required_skills: 01000000
+  required_tools: 03000000

@@ -48,7 +48,7 @@ public class Commoner : MonoBehaviour
         if (Me.Load.Keys.Count == 0) return;
         
         Structure nearest_commercial_structure = new List<Structure>(FindObjectsOfType<Structure>())
-            .Where(s => s.owner == Me.Faction && s.Wants().Contains(Me.Load.First().Key.resource_type))
+            .Where(s => s.owner == Me.Faction && s.Wants().Contains(Me.Load.First().Key.raw_resource))
             .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
             .ToList()
             .First();
@@ -88,13 +88,19 @@ public class Commoner : MonoBehaviour
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         Me.Actions.SheathWeapon();
 
-        var harvest_points = new List<Resource>(FindObjectsOfType<Resource>())
+        var harvest_points = new List<HarvestingNode>(FindObjectsOfType<HarvestingNode>())
             .Where(r => r.owner == Me.Faction && r.AccessibleTo(Me))
             .ToList();
 
-        Resource _resource = harvest_points[Random.Range(0, harvest_points.Count)];
+        HarvestingNode _resource = harvest_points[Random.Range(0, harvest_points.Count)];
 
         Me.Actions.Movement.SetDestination(_resource.gameObject);
+    }
+
+
+    public void OnManufacturing()
+    {
+        // TODO: advance manufacturing stage
     }
 
 
@@ -133,7 +139,7 @@ public class Commoner : MonoBehaviour
 
     private bool Harvest()
     {
-        var nearest_harvest = new List<Resource>(FindObjectsOfType<Resource>())
+        var nearest_harvest = new List<HarvestingNode>(FindObjectsOfType<HarvestingNode>())
             .Where(r => r.owner == Me.Faction)
             .OrderBy(r => Vector3.Distance(transform.position, r.transform.position))
             .ToList()
@@ -145,10 +151,13 @@ public class Commoner : MonoBehaviour
 
         if (distance <= Movement.ReachedThreshold) {
             nearest_harvest.HarvestResource(Me);
-            Me.harvesting = nearest_harvest.resource_type;
+            Me.harvesting = nearest_harvest.raw_resource;
             Me.harvested_amount = Me.Load.First().Value;
             return true;
         }
+
+        // We've gotten bumped away from our harvest node
+        Me.Actions.Movement.SetDestination(nearest_harvest.gameObject);
 
         return false;
     }
@@ -172,6 +181,7 @@ public class Commoner : MonoBehaviour
         Me.Actions.OnHostileStructuresSighted = OnHostileStructuresSighted;
         Me.Actions.OnIdle = OnIdle;
         Me.Actions.OnInCombat = OnInCombat;
+        Me.Actions.OnManufacturing = OnManufacturing;
         Me.Actions.OnMovingToGoal = OnMovingToGoal;
         Me.Actions.OnReachedGoal = OnReachedGoal;
         Me.Actions.OnUnderAttack = OnUnderAttack;
@@ -214,7 +224,7 @@ public class Commoner : MonoBehaviour
         if (Me.Load.Count <= 0) return false;
 
         Structure nearest_structure = new List<Structure>(FindObjectsOfType<Structure>())
-            .Where(s => s.owner == Me.Faction && s.Wants().Contains(Me.Load.First().Key.resource_type))
+            .Where(s => s.owner == Me.Faction && s.Wants().Contains(Me.Load.First().Key.raw_resource))
             .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
             .ToList()
             .First();

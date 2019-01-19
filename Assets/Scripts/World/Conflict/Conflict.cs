@@ -20,6 +20,7 @@ public class Conflict : MonoBehaviour
     public static Characters Characters { get; set; }
     public Conflict.Role NextWave { get; set; }
     public static Conflict Instance { get; set; }
+    public static Proficiencies Proficiencies { get; set; }
     public static int ToHitBase { get; set; }
     public static List<GameObject> Units { get; set; }
     public static Faction Victor { get; set; }
@@ -155,6 +156,7 @@ public class Conflict : MonoBehaviour
         };
         Characters = gameObject.AddComponent<Characters>();
         current_tick = 0;
+        Proficiencies = gameObject.AddComponent<Proficiencies>();
         ToHitBase = 10;
         Units = new List<GameObject>();
         Victor = Faction.None;

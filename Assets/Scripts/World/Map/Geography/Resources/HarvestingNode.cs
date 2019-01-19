@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Resource : MonoBehaviour
+public class HarvestingNode : MonoBehaviour
 {
     // Inspector settings
-    public Resources.Type resource_type;
+    public Resources.Raw raw_resource;
     public Conflict.Faction owner;
     public bool perpetual;
     public int initial_quantity;
     public int harvest_increment;
     public int full_harvest;
-    public List<Characters.Skill> required_skills;
+    public List<Proficiencies.Tool> required_tools;
 
     // properties
 
@@ -35,8 +35,8 @@ public class Resource : MonoBehaviour
 
     public bool AccessibleTo(Actor _unit)
     {
-        foreach (var unit_skill in _unit.Stats.Skills) {
-            if (required_skills.Contains(unit_skill.skill)) return true;
+        foreach (var tool in _unit.Stats.Tools) {
+            if (required_tools.Contains(tool)) return true;
         }
 
         return false;
@@ -45,7 +45,7 @@ public class Resource : MonoBehaviour
 
     public void HarvestResource(Actor _harvestor)
     {
-        if (!Characters.Instance.Harvester(_harvestor)) return;
+        if (!Proficiencies.Instance.Harvester(_harvestor)) return;
 
         int optimal_harvest = harvest_increment * _harvestor.Stats.ProficiencyBonus;
         int harvested = optimal_harvest;

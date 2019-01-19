@@ -5,7 +5,7 @@ using UnityEngine;
 public class Actor : MonoBehaviour
 {
     // Inspector settings
-    public Resources.Type harvesting = Resources.Type.None;
+    public Resources.Raw harvesting = Resources.Raw.None;
     public int harvested_amount = 0;
     public int experience_points;
 
@@ -16,7 +16,7 @@ public class Actor : MonoBehaviour
     public Fey Fey { get; set; }
     public Ghaddim Ghaddim { get; set; }
     public Health Health { get; set; }
-    public Dictionary<Resource, int> Load { get; set; }
+    public Dictionary<HarvestingNode, int> Load { get; set; }
     public Mhoddim Mhoddim { get; set; }
     public Conflict.Role Role { get; set; }
     public Senses Senses { get; set; }
@@ -43,7 +43,7 @@ public class Actor : MonoBehaviour
         Ghaddim = GetComponent<Ghaddim>();
         Health = GetComponent<Health>();
         Mhoddim = GetComponent<Mhoddim>();
-        Load = new Dictionary<Resource, int>();
+        Load = new Dictionary<HarvestingNode, int>();
         Role = Conflict.Role.None;  // offense and defense set this role for mortals
         Senses = GetComponent<Senses>();
         Size = GetComponent<Renderer>().bounds.extents.magnitude;
