@@ -100,6 +100,12 @@ public class Structure : MonoBehaviour
     }
 
 
+    public Transform NearestEntranceTo(Transform _location)
+    {
+        return entrances.OrderBy(s => Vector3.Distance(transform.position, _location.position)).Reverse().ToList().First();
+    }
+
+
     public void StoreFinishedGoods(Industry.Product _product, int _amount)
     {
         InventoriedGoods inventory_row = finished_goods.First(fg => fg.product_name == _product.name);
@@ -149,7 +155,6 @@ public class Structure : MonoBehaviour
                 AttachedArtisans.Add(artisan);
             }
         }
-
     }
 
 

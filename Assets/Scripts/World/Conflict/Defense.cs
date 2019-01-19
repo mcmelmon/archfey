@@ -75,6 +75,7 @@ public class Defense : MonoBehaviour
                 Vector3 location = entrance.transform.position;
                 GameObject guard = Spawn(new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
                 guard.AddComponent<Guard>();
+                guard.GetComponent<Guard>().Post = entrance;
                 guard.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Perception);
                 guard.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Intimidation);
             }
@@ -101,6 +102,7 @@ public class Defense : MonoBehaviour
     {
         GameObject commoner = Spawn(new Vector3(_entrance.position.x, Geography.Terrain.SampleHeight(_entrance.position), _entrance.position.z));
         commoner.AddComponent<Commoner>();
+        commoner.GetComponent<Commoner>().Post = _entrance;
         commoner.GetComponent<Stats>().Tools.Add(_tool);
 
         return commoner.GetComponent<Actor>();

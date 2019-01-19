@@ -10,6 +10,7 @@ public class Guard : MonoBehaviour
     // properties
 
     public Actor Me { get; set; }
+    public Transform Post { get; set; }
 
 
     // Unity
@@ -36,7 +37,7 @@ public class Guard : MonoBehaviour
 
         if (friends_in_need.Count > 0) {
             Me.Actions.Movement.Agent.speed = 2 * Me.Actions.Movement.Speed;
-            Me.Actions.Movement.SetDestination(friends_in_need[Random.Range(0, friends_in_need.Count)].gameObject);
+            Me.Actions.Movement.SetDestination(friends_in_need[Random.Range(0, friends_in_need.Count)].transform);
             Me.Actions.Decider.FriendsInNeed.Clear();
         }
     }
@@ -72,6 +73,7 @@ public class Guard : MonoBehaviour
     public void OnIdle()
     {
         Me.Senses.Sight();
+        ReturnToPost();
     }
 
 
@@ -119,6 +121,16 @@ public class Guard : MonoBehaviour
 
 
     // private
+
+
+    private void ReturnToPost()
+    {
+        float distance = Vector3.Distance(transform.position, Post.position);
+
+        if (distance > 0.01) {
+            Me.Actions.Movement.Agent.destination = Post.position;
+        }
+    }
 
 
     private void SetStats()

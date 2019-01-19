@@ -8,6 +8,7 @@ public class Commoner : MonoBehaviour
     // properties
 
     public Actor Me { get; set; }
+    public Transform Post { get; set; }
 
 
     // Unity
@@ -50,10 +51,11 @@ public class Commoner : MonoBehaviour
         Structure nearest_commercial_structure = new List<Structure>(FindObjectsOfType<Structure>())
             .Where(s => s.owner == Me.Faction && s.Wants().Contains(Me.Load.First().Key.raw_resource))
             .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
+            .Reverse()
             .ToList()
             .First();
 
-        Me.Actions.Movement.SetDestination(nearest_commercial_structure.gameObject);
+        Me.Actions.Movement.SetDestination(nearest_commercial_structure.NearestEntranceTo(transform));
     }
 
 
@@ -94,13 +96,14 @@ public class Commoner : MonoBehaviour
 
         HarvestingNode _resource = harvest_points[Random.Range(0, harvest_points.Count)];
 
-        Me.Actions.Movement.SetDestination(_resource.gameObject);
+        Me.Actions.Movement.SetDestination(_resource.transform);
     }
 
 
     public void OnManufacturing()
     {
         // TODO: advance manufacturing stage
+        ReturnToPost();
     }
 
 
@@ -157,9 +160,20 @@ public class Commoner : MonoBehaviour
         }
 
         // We've gotten bumped away from our harvest node
-        Me.Actions.Movement.SetDestination(nearest_harvest.gameObject);
+        Me.Actions.Movement.SetDestination(nearest_harvest.transform);
 
         return false;
+    }
+
+
+    private void ReturnToPost()
+    {
+        float distance = Vector3.Distance(transform.position, Post.position);
+
+        if (distance > 0.01)
+        {
+            Me.Actions.Movement.Agent.destination = Post.position;
+        }
     }
 
 

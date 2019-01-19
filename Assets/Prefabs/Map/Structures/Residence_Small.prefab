@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3405155821636499999}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.8}
+  m_LocalPosition: {x: 0, y: 0, z: 0.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1836404562259616756}
@@ -138,6 +138,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91eaf97416c524f5baa0376c9e33c0ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  owner: 0
+  purpose: 4
   armor_class: 13
   damage_resistance: 2
   maximum_hit_points: 50
@@ -145,9 +147,10 @@ MonoBehaviour:
   - {fileID: 1240449877066094147}
   - {fileID: 93392602775864311}
   - {fileID: 9078073628154243822}
-  owner: 0
-  purpose: 4
   revenue_factor: 0
+  revenue_cp: 0
+  raw_materials: []
+  finished_goods: []
 --- !u!208 &6287298310510022034
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -188,7 +191,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8000754737101079607}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: 0, z: 0.2}
+  m_LocalPosition: {x: 0.8333334, y: 0, z: 0.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1836404562259616756}
@@ -218,7 +221,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9015869881610903755}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.8}
+  m_LocalPosition: {x: 0, y: 0, z: -0.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1836404562259616756}
