@@ -45,13 +45,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0efa840f60fe4df18f446c21f9a3156, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resource_type: 6
+  raw_resource: 7
   owner: 2
   perpetual: 0
   initial_quantity: 1000
   harvest_increment: 1
   full_harvest: 6
-  required_skills: 02000000
+  required_tools: 04000000
 --- !u!65 &180220608017853677
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -105,7 +105,7 @@ GameObject:
   - component: {fileID: 1937792687512137004}
   - component: {fileID: 4918298858383937193}
   m_Layer: 0
-  m_Name: Civic_Large
+  m_Name: Commercial_Large
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -199,6 +199,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91eaf97416c524f5baa0376c9e33c0ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  owner: 0
+  purpose: 1
   armor_class: 16
   damage_resistance: 6
   maximum_hit_points: 250
@@ -207,9 +209,9 @@ MonoBehaviour:
   - {fileID: 422304222863201838}
   - {fileID: 8597020341892899154}
   - {fileID: 7422083226908310301}
-  owner: 0
-  purpose: 0
   revenue_factor: 0
+  revenue: 0
+  inventory_rows: []
 --- !u!208 &4918298858383937193
 NavMeshObstacle:
   m_ObjectHideFlags: 0

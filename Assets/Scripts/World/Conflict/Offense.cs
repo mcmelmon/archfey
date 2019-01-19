@@ -48,6 +48,16 @@ public class Offense : MonoBehaviour
     }
 
 
+    public Actor SpawnToolUser(Proficiencies.Tool _tool, Transform _entrance)
+    {
+        GameObject commoner = Spawn(new Vector3(_entrance.position.x, Geography.Terrain.SampleHeight(_entrance.position), _entrance.position.z));
+        commoner.AddComponent<Commoner>();
+        commoner.GetComponent<Stats>().Tools.Add(_tool);
+
+        return commoner.GetComponent<Actor>();
+    }
+
+
     // private
 
 

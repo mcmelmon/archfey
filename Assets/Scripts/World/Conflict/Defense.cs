@@ -34,42 +34,39 @@ public class Defense : MonoBehaviour
     {
         // must be called by Conflict instead of Start to ensure Map setup complete
 
-        var farmers = FindObjectsOfType<Structure>()
-            .Where(s => s.Wants().Contains(Resources.Type.Farm) && s.owner == Conflict.Faction.Mhoddim);
+        var farmers = FindObjectsOfType<HarvestingNode>()
+            .Where(r => r.raw_resource == Resources.Raw.Farm && r.owner == Conflict.Faction.Mhoddim);
 
         var miners = FindObjectsOfType<Structure>()
-            .Where(s => (s.Wants().Contains(Resources.Type.Copper) || s.Wants().Contains(Resources.Type.Iron) || s.Wants().Contains(Resources.Type.Gold) && s.owner == Conflict.Faction.Mhoddim));
+            .Where(s => (s.Wants().Contains(Resources.Raw.Copper) || s.Wants().Contains(Resources.Raw.Iron) || s.Wants().Contains(Resources.Raw.Gold) && s.owner == Conflict.Faction.Mhoddim));
 
         var woodcutters = FindObjectsOfType<Structure>()
-            .Where(s => s.Wants().Contains(Resources.Type.Lumber) && s.owner == Conflict.Faction.Mhoddim);
+            .Where(s => s.Wants().Contains(Resources.Raw.Timber) && s.owner == Conflict.Faction.Mhoddim);
 
         var military = FindObjectsOfType<Structure>()
             .Where(s => s.purpose == Structure.Purpose.Military && s.owner == Conflict.Faction.Mhoddim);
 
-        foreach (var structure in farmers) {
-            foreach (var entrance in structure.entrances) {
+        foreach (var farm in farmers) {
+            foreach (var entrance in farm.GetComponent<Structure>().entrances) {
                 Vector3 location = entrance.transform.position;
-                GameObject commoner = Spawn(new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
-                commoner.AddComponent<Commoner>();
-                commoner.GetComponent<Stats>().Skills.Add(Characters.SkillAttributes.First(sa => sa.skill == Characters.Skill.Farmer));
+                Actor commoner = SpawnToolUser(Proficiencies.Tool.Farmer, entrance.transform);
+  
             }
         }
 
         foreach (var structure in miners) {
             foreach (var entrance in structure.entrances) {
                 Vector3 location = entrance.transform.position;
-                GameObject commoner = Spawn(new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
-                commoner.AddComponent<Commoner>();
-                commoner.GetComponent<Stats>().Skills.Add(Characters.SkillAttributes.First(sa => sa.skill == Characters.Skill.Miner));
+                Actor commoner = SpawnToolUser(Proficiencies.Tool.Miner, entrance.transform);
+
             }
         }
 
         foreach (var structure in woodcutters) {
             foreach (var entrance in structure.entrances) {
                 Vector3 location = entrance.transform.position;
-                GameObject commoner = Spawn(new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
-                commoner.AddComponent<Commoner>();
-                commoner.gameObject.GetComponent<Stats>().Skills.Add(Characters.SkillAttributes.First(sa => sa.skill == Characters.Skill.Woodcutter));
+                Actor commoner = SpawnToolUser(Proficiencies.Tool.Woodcutter, entrance.transform);
+
             }
         }
 
@@ -78,6 +75,8 @@ public class Defense : MonoBehaviour
                 Vector3 location = entrance.transform.position;
                 GameObject guard = Spawn(new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
                 guard.AddComponent<Guard>();
+                guard.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Perception);
+                guard.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Intimidation);
             }
         }
     }
@@ -95,6 +94,16 @@ public class Defense : MonoBehaviour
                 }
             }
         }
+    }
+
+
+    public Actor SpawnToolUser(Proficiencies.Tool _tool, Transform _entrance)
+    {
+        GameObject commoner = Spawn(new Vector3(_entrance.position.x, Geography.Terrain.SampleHeight(_entrance.position), _entrance.position.z));
+        commoner.AddComponent<Commoner>();
+        commoner.GetComponent<Stats>().Tools.Add(_tool);
+
+        return commoner.GetComponent<Actor>();
     }
 
 

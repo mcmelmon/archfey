@@ -1,10 +1,11 @@
 ﻿using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Resources : MonoBehaviour
 {
-    public enum Type
+    public enum Raw
     {
         Copper = 0,
         Farm = 1,
@@ -12,14 +13,21 @@ public class Resources : MonoBehaviour
         Game = 3,
         Gold = 4,
         Iron = 5,
-        Lumber = 6,
-        Skins = 7,
+        Skins = 6,
+        Timber = 7,
         None = 99
     };
 
+    [Serializable]
+    public struct RawValue {
+        public Raw material;
+        public float value_cp ;
+    }
+
     // Inspector settings
 
-    public List<Resource> available_resources;
+    public List<HarvestingNode> harvesting_nodes;
+    public List<RawValue> resource_valuations;
 
     // properties
 

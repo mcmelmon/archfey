@@ -27,8 +27,9 @@ public class Stats : MonoBehaviour
     public Dictionary<Weapon.DamageType, int> Resistances { get; set; }
 
     public int ProficiencyBonus { get; set; }
-    public List<Characters.SkillAttribute> Expertise { get; set; }
-    public List<Characters.SkillAttribute> Skills { get; set; }
+    public List<Proficiencies.Skill> Expertise { get; set; }
+    public List<Proficiencies.Skill> Skills { get; set; }
+    public List<Proficiencies.Tool> Tools { get; set; }
 
 
     // Unity
@@ -122,7 +123,7 @@ public class Stats : MonoBehaviour
 
     private void ManageResources()
     {
-        StartCoroutine(RegenerateMana());
+        StartCoroutine(RegainSpells());
     }
 
 
@@ -136,7 +137,7 @@ public class Stats : MonoBehaviour
     }
 
 
-    private IEnumerator RegenerateMana()
+    private IEnumerator RegainSpells()
     {
         while (false)
         {
@@ -150,8 +151,9 @@ public class Stats : MonoBehaviour
         Me = GetComponentInParent<Actor>();
         DefenseRating = ArmorClass + Me.Stats.DexterityProficiency;
 
-        Expertise = new List<Characters.SkillAttribute>();
-        Skills = new List<Characters.SkillAttribute>();
+        Expertise = new List<Proficiencies.Skill>();
+        Skills = new List<Proficiencies.Skill>();
+        Tools = new List<Proficiencies.Tool>();
     }
 
 

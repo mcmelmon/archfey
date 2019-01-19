@@ -20,12 +20,13 @@ public class Mhoddim : MonoBehaviour
     {
         float tax = TaxRate * transaction;
 
+        // An outpost will not accumulate tax revenue until it has a civic structure
         var structures = new List<Structure>(FindObjectsOfType<Structure>())
             .Where(s => s.owner == Conflict.Faction.Mhoddim && s.purpose == Structure.Purpose.Civic)
             .ToList();
 
         foreach (var structure in structures) {
-            structure.revenue += tax / structures.Count;
+            structure.revenue_cp += tax / structures.Count;
         }
 
         return transaction - tax;
@@ -34,7 +35,7 @@ public class Mhoddim : MonoBehaviour
 
     public static GameObject SpawnUnit(Vector3 _point)
     {
-        Mhoddim _mhoddim = Instantiate(Conflict.Instance.mhoddim_prefab, _point, Conflict.Instance.mhoddim_prefab.transform.rotation);  // drop from on high to avoid being in buildings etc.
+        Mhoddim _mhoddim = Instantiate(Conflict.Instance.mhoddim_prefab, _point, Conflict.Instance.mhoddim_prefab.transform.rotation);
 
         if (_mhoddim.GetComponent<NavMeshAgent>() == null) {
             Debug.Log("No agent.");

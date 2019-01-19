@@ -17,17 +17,17 @@ public class Decider : MonoBehaviour
         HostileStructuresSighted = 8,
         Idle = 9,
         InCombat = 10,
-        MovingToGoal = 11,
-        ReachedGoal = 12,
-        UnderAttack = 13,
-        Watch = 14
+        Manufacturing = 12,
+        MovingToGoal = 13,
+        ReachedGoal = 14,
+        UnderAttack = 15,
+        Watch = 16
     };
     
     // Inspector settings
     
     public State state;
     public State previous_state;
-    public bool has_path = false;
 
     // properties
 
@@ -62,6 +62,8 @@ public class Decider : MonoBehaviour
             SetState(State.InCombat);
         } else if (UnderAttack()) {
             SetState(State.UnderAttack);
+        } else if (Manufacturing()) {
+            SetState(State.Manufacturing);
         } else if (HostileActorsSighted()) {
             SetState(State.HostileActorsSighted);
         } else if (FullLoad()) {
@@ -134,7 +136,7 @@ public class Decider : MonoBehaviour
 
     private bool FullLoad()
     {
-        if (!Characters.Instance.Harvester(Me)) return false;
+        if (!Proficiencies.Instance.Harvester(Me)) return false;
 
         foreach (var pair in Me.Load) {  // there "should" only be at most one pair at any given time
             return pair.Value >= pair.Key.full_harvest;
@@ -146,7 +148,7 @@ public class Decider : MonoBehaviour
 
     private bool Harvesting()
     {
-        return (Characters.Instance.Harvester(Me) && !FullLoad() && Me.harvesting != Resources.Type.None);
+        return (Proficiencies.Instance.Harvester(Me) && !FullLoad() && Me.harvesting != Resources.Raw.None);
     }
 
 
@@ -209,6 +211,12 @@ public class Decider : MonoBehaviour
     }
 
 
+    private bool Manufacturing()
+    {
+        return Industry.Manufacturers.Contains(Me);
+    }
+
+
     private bool Moving()
     {
         return Me.Actions.Movement.InProgress();
@@ -217,7 +225,7 @@ public class Decider : MonoBehaviour
 
     private bool ReachedGoal()
     {
-        return state == State.MovingToGoal && !Me.Actions.Movement.InProgress();
+        return (previous_state == State.MovingToGoal || previous_state == State.Idle) && !Me.Actions.Movement.InProgress();
     }
 
 
