@@ -32,7 +32,8 @@ public class Proficiencies : MonoBehaviour
         Carpenter = 1,
         Farmer = 2,
         Miner = 3,
-        Woodcutter = 4, 
+        Woodcarver = 4,
+        Woodcutter = 5,
         None = 99 };
 
     public struct SkillAttribute
@@ -83,6 +84,13 @@ public class Proficiencies : MonoBehaviour
 
 
     // public
+
+
+    public bool Artisan(Actor _unit)
+    {
+        var my_crafting_tools = _unit.Stats.Tools.Where(t => t == Tool.Blacksmith || t == Tool.Carpenter || t == Tool.Woodcarver).ToList();
+        return my_crafting_tools.Count > 0;
+    }
 
 
     public bool Harvester(Actor _unit)

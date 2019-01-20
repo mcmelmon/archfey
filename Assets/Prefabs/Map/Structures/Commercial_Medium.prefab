@@ -116,8 +116,9 @@ MonoBehaviour:
   - {fileID: 6455165012835783459}
   - {fileID: 7689789575358307038}
   revenue_factor: 1.5
-  revenue: 0
-  inventory_rows: []
+  revenue_cp: 0
+  raw_materials: []
+  finished_goods: []
 --- !u!208 &6550712517133750925
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -158,7 +159,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6292593372192473578}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.7}
+  m_LocalPosition: {x: 0, y: 0, z: -0.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6068985714765612536}
@@ -188,7 +189,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8241080096178275353}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.7}
+  m_LocalPosition: {x: 0, y: 0, z: 0.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6068985714765612536}

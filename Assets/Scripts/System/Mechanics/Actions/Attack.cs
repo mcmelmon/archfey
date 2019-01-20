@@ -38,10 +38,10 @@ public class Attack : MonoBehaviour
     }
 
 
-    public void EnemyAtMeleeOrRange()
+    public void SetEnemyRanges()
     {
-        if (transform == null) return;
-
+        if (Me == null) return;
+        
         ClearTargets();
 
         AvailableMeleeTargets.AddRange(Me.Senses.Actors
@@ -76,12 +76,9 @@ public class Attack : MonoBehaviour
 
     public void EquipMeleeWeapon()
     {
-        if (EquippedMeleeWeapon == null)
-        {
-            foreach (var weapon in AvailableWeapons)
-            {
-                if (weapon.range == 0)
-                {
+        if (EquippedMeleeWeapon == null) {
+            foreach (var weapon in AvailableWeapons) {
+                if (weapon.range == 0) {
                     EquippedMeleeWeapon = Instantiate(weapon, transform.Find("AttackOrigin").transform.position, transform.rotation);
                     EquippedMeleeWeapon.transform.position += 0.2f * Vector3.forward;
                     EquippedMeleeWeapon.transform.parent = transform;
@@ -96,12 +93,9 @@ public class Attack : MonoBehaviour
 
     public void EquipRangedWeapon()
     {
-        if (EquippedRangedWeapon == null)
-        {
-            foreach (var weapon in AvailableWeapons)
-            {
-                if (weapon.range > 0)
-                {
+        if (EquippedRangedWeapon == null) {
+            foreach (var weapon in AvailableWeapons) {
+                if (weapon.range > 0) {
                     EquippedRangedWeapon = Instantiate(weapon, transform.Find("AttackOrigin").transform.position, transform.rotation);
                     EquippedRangedWeapon.transform.position += 0.2f * Vector3.forward;
                     EquippedRangedWeapon.transform.parent = transform;

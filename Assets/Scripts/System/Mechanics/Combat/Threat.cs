@@ -70,8 +70,7 @@ public class Threat : MonoBehaviour {
         float shortest_distance = float.MaxValue;
         float distance;
 
-        for (int i = 0; i < Me.Actions.Decider.Enemies.Count; i++)
-        {
+        for (int i = 0; i < Me.Actions.Decider.Enemies.Count; i++) {
             Actor enemy = Me.Actions.Decider.Enemies[i];
             if (enemy == null) continue;
             if (transform == null) break;

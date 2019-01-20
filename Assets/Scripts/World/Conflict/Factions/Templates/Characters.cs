@@ -82,7 +82,7 @@ public class Characters : MonoBehaviour
         darkvision_range[Template.Base] = 0f;
         hit_dice[Template.Base] = 1;
         hit_dice_type[Template.Base] = 8;
-        perception_range[Template.Base] = 20f;
+        perception_range[Template.Base] = 25f;
         speed[Template.Base] = 1.5f;
 
         resistances[Template.Base] = new Dictionary<Weapon.DamageType, int>
@@ -126,6 +126,6 @@ public class Characters : MonoBehaviour
         armor_class[Template.Guard] = 16;
         available_weapons[Template.Guard] = new List<Weapon>() { Weapons.Instance.longbow_prefab, Weapons.Instance.spear_prefab };
         hit_dice[Template.Guard] = 2;
-        perception_range[Template.Guard] = 25f;
+        perception_range[Template.Guard] = 30f;
     }
 }
