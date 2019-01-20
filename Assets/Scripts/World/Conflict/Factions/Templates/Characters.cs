@@ -129,3 +129,20 @@ public class Characters : MonoBehaviour
         perception_range[Template.Guard] = 30f;
     }
 }
+
+public class StatBlock
+{
+    public int proficiency_bonus;
+    public int charisma_proficiency;
+    public int constituion_proficiency;
+    public int dexterity_proficiency;
+    public int intelligence_proficiency;
+    public int strength_proficiency;
+    public int wisdom_proficiency;
+    public int actions_per_round;
+    public int armor_class;
+    public int hit_dice;
+    public int hit_dice_type;
+    public int starting_hit_dice;
+    public float speed;
+}

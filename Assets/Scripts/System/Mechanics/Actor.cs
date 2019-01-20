@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
+
 
 public class Actor : MonoBehaviour
 {
@@ -30,6 +32,42 @@ public class Actor : MonoBehaviour
     private void Awake()
     {
         SetComponents();
+    }
+
+
+    // public
+
+
+    public IEnumerator GetStatsFromServer(string name)
+    {
+        UnityWebRequest www = UnityWebRequest.Get("http://localhost:3000/stat_blocks.json?name=" + name);
+        StatBlock stat_block = new StatBlock();
+        yield return www.SendWebRequest();
+
+        if (www.isNetworkError || www.isHttpError)
+        {
+            Debug.Log(www.error);
+        }
+        else
+        {
+            stat_block = JsonUtility.FromJson<StatBlock>(www.downloadHandler.text);
+        }
+
+        Actions.ActionsPerRound = stat_block.actions_per_round;
+        Actions.Movement.Speed = stat_block.speed;
+        Actions.Movement.Agent.speed = stat_block.speed;
+
+        Health.HitDice = stat_block.hit_dice;
+        Health.HitDiceType = stat_block.hit_dice_type;
+
+        Stats.ArmorClass = stat_block.armor_class;
+        Stats.CharismaProficiency = stat_block.charisma_proficiency;
+        Stats.ConstitutionProficiency = stat_block.constituion_proficiency;
+        Stats.DexterityProficiency = stat_block.dexterity_proficiency;
+        Stats.IntelligenceProficiency = stat_block.intelligence_proficiency;
+        Stats.StrengthProficiency = stat_block.strength_proficiency;
+        Stats.WisdomProficiency = stat_block.wisdom_proficiency;
+        Stats.ProficiencyBonus = stat_block.proficiency_bonus;
     }
 
 
