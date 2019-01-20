@@ -46,12 +46,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   raw_resource: 7
-  owner: 2
+  owner: 0
   perpetual: 0
   initial_quantity: 1000
   harvest_increment: 1
   full_harvest: 6
-  required_tools: 04000000
+  required_tools: 05000000
 --- !u!65 &180220608017853677
 BoxCollider:
   m_ObjectHideFlags: 0

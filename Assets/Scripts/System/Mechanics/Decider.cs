@@ -54,32 +54,37 @@ public class Decider : MonoBehaviour
     public void ChooseState()
     {
         Me.Senses.Sight();
-        Me.Actions.Attack.EnemyAtMeleeOrRange();
+        Enemies = Me.Senses.Actors.Where(a => !IsFriendOrNeutral(a)).ToList();
+        Friends = Me.Senses.Actors.Where(IsFriendOrNeutral).ToList();
+
+        Me.Actions.Attack.SetEnemyRanges();
 
         if (transform == null) {
             return;
+        } else if (BadlyInjured()) {
+            SetState(State.BadlyInjured);
         } else if (InCombat()) {
             SetState(State.InCombat);
         } else if (UnderAttack()) {
             SetState(State.UnderAttack);
-        } else if (Manufacturing()) {
-            SetState(State.Manufacturing);
-        } else if (HostileActorsSighted()) {
-            SetState(State.HostileActorsSighted);
-        } else if (FullLoad()) {
-            SetState(State.FullLoad);
-        } else if (Harvesting()) {
-            SetState(State.Harvesting);
         } else if (CallsForHelp()) {
             SetState(State.FriendsInNeed);
+        } else if (HostileActorsSighted()) {
+            SetState(State.HostileActorsSighted);
         } else if (DamagedFriendlyStructures()) {
             SetState(State.DamagedFriendlyStructuresSighted);
         } else if (HostileStructuresSighted()) {
             SetState(State.HostileStructuresSighted);
-        } else if (Moving()) {
-            SetState(State.MovingToGoal);
+        } else if (Manufacturing()) {
+            SetState(State.Manufacturing);
         } else if (ReachedGoal()) {
             SetState(State.ReachedGoal);
+        } else if (FullLoad()) {
+            SetState(State.FullLoad);
+        } else if (Harvesting()) {
+            SetState(State.Harvesting);
+        } else if (Moving()) {
+            SetState(State.MovingToGoal);
         } else if (Watching()) {
             SetState(State.Watch);
         } else {
@@ -90,8 +95,17 @@ public class Decider : MonoBehaviour
 
     public List<Actor> IdentifyFriends()
     {
-        FriendlyActorsSighted();
+        Friends = Me.Senses.Actors.Where(IsFriendOrNeutral).ToList();
+
         return Friends;
+    }
+
+
+    public List<Actor> IdentifyEnemies()
+    {
+        Enemies = Me.Senses.Actors.Where(a => !IsFriendOrNeutral(a)).ToList();
+
+        return Enemies;
     }
 
 
@@ -108,19 +122,12 @@ public class Decider : MonoBehaviour
     // private
 
 
+    private bool BadlyInjured() => Me.Health.BadlyInjured();
+
+
     private bool CallsForHelp()
     {
         return FriendsInNeed.Count > 0;
-    }
-
-
-    private bool FriendlyActorsSighted()
-    {
-        Friends = Me.Senses.Actors
-                    .Where(IsFriendOrNeutral)
-                    .ToList();
-
-        return Friends.Count > 0;
     }
 
 
@@ -148,17 +155,13 @@ public class Decider : MonoBehaviour
 
     private bool Harvesting()
     {
-        return (Proficiencies.Instance.Harvester(Me) && !FullLoad() && Me.harvesting != Resources.Raw.None);
+        return Proficiencies.Instance.Harvester(Me) && !FullLoad() && Me.harvesting != Resources.Raw.None;
     }
 
 
     private bool HostileActorsSighted()
     {
-        Enemies = Me.Senses.Actors
-                    .Where(actor => !IsFriendOrNeutral(actor))
-                    .ToList();
-
-        return Enemies.Count > 0;
+        return previous_state != State.FriendsInNeed && Enemies.Count > 0;
     }
 
 
@@ -225,7 +228,7 @@ public class Decider : MonoBehaviour
 
     private bool ReachedGoal()
     {
-        return (previous_state == State.MovingToGoal || previous_state == State.Idle) && !Me.Actions.Movement.InProgress();
+        return (previous_state == State.MovingToGoal || previous_state == State.FullLoad || previous_state == State.Idle) && !Me.Actions.Movement.InProgress();
     }
 
 

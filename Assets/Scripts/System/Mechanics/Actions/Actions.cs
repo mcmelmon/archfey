@@ -54,6 +54,7 @@ public class Actions : MonoBehaviour
         switch (Decider.state)
         {
             case Decider.State.BadlyInjured:
+                OnBadlyInjured.Invoke();
                 break;
             case Decider.State.FriendsInNeed:
                 OnFriendsInNeed.Invoke();
@@ -107,9 +108,15 @@ public class Actions : MonoBehaviour
     public void CallForHelp()
     {
         List<Actor> friends = Decider.IdentifyFriends();
+
+        // TODO: this should be possible as a Select, but there are type problems, and may be a problem if 
+        // actors are destroyed in process
         for (int i = 0; i < friends.Count; i++) {
-            if (!friends[i].Actions.Decider.FriendsInNeed.Contains(Me))
-                friends[i].Actions.Decider.FriendsInNeed.Add(Me);
+            if (Me == null) break;
+            if (friends[i] != null && !friends[i].Actions.Decider.FriendsInNeed.Contains(Me)) {
+                if (friends[i].GetComponent<Guard>() != null || Me.GetComponent<Commoner>() == null) // commoners rally around guards, but not other commoners
+                    friends[i].Actions.Decider.FriendsInNeed.Add(Me);
+            }
         }
     }
 
@@ -156,40 +163,39 @@ public class Actions : MonoBehaviour
     {
         // TODO: we may want to stay at range
 
+        if (transform == null) return;
+
         if (Me.Actions.Attack.EquippedRangedWeapon != null) {
             Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         } else {
             Movement.Agent.speed = 2 * Movement.Speed;
         }
 
-        if (Movement != null) {
-            Actor nearest_enemy = Decider.Threat.Nearest();
+        Actor nearest_enemy = Decider.Threat.Nearest();
 
-            if (nearest_enemy != null) {
-                Movement.SetDestination(nearest_enemy.transform);
-            } else {
-                Decider.state = Decider.previous_state;
-            }
+        if (nearest_enemy != null) {
+            StartCoroutine(TrackEnemy(nearest_enemy));
         }
     }
 
 
     public void FleeFromEnemies()
     {
+        if (Me == null) return;
+
         Movement.Agent.speed = 2 * Movement.Speed;
         SheathWeapon();
 
         Vector3 run_away_from = Vector3.zero;
 
-        var _enemy = Me.Senses.Actors
-                         .Where(actor => !Me.Actions.Decider.IsFriendOrNeutral(actor))
-                         .First(actor => actor.Health.CurrentHitPoints > 0);
+        var enemies = Me.Actions.Decider.IdentifyEnemies();
 
-        Vector3 run_away_direction = (transform.position - _enemy.transform.position).normalized;
-        Vector3 run_away_to = transform.position + (run_away_direction * Movement.Agent.speed * Movement.Agent.speed);
-        Movement.Route = null;
-        Movement.ResetPath();
-        Movement.SetDestination(run_away_to);
+        if (enemies.Count > 0) {
+            var _enemy = enemies.OrderBy(e => Vector3.Distance(transform.position, e.transform.position)).First();
+            Vector3 run_away_direction = (transform.position - _enemy.transform.position).normalized;
+            Vector3 run_away_to = transform.position + (run_away_direction * Movement.Agent.speed * Movement.Agent.speed);
+            Movement.SetDestination(run_away_to);
+        }
     }
 
 
@@ -257,5 +263,18 @@ public class Actions : MonoBehaviour
             [Weapon.DamageType.Slashing] = 0,
             [Weapon.DamageType.Thunder] = 0
         };
+    }
+
+
+    private IEnumerator TrackEnemy(Actor _enemy)
+    {
+        float separation = Vector3.Distance(transform.position, _enemy.transform.position);
+        int count = 0;
+
+        while (_enemy != null && count < 6 && separation > Movement.ReachedThreshold) {
+            Movement.SetDestination(_enemy.transform);
+            count++;
+            yield return new WaitForSeconds(1);
+        }
     }
 }

@@ -85,6 +85,7 @@ public class Industry : MonoBehaviour
         _structure.StoreFinishedGoods(_product, 1);
     }
 
+
     private void SetComponents()
     {
         ExchangeRates = new Dictionary<Coin, int>

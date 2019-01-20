@@ -25,37 +25,30 @@ public class Commoner : MonoBehaviour
 
     public void OnBadlyInjured()
     {
-
+        Me.Actions.Movement.ResetPath();
+        Me.Actions.Decider.FriendsInNeed.Clear();
+        Me.Actions.FleeFromEnemies();
     }
 
 
     public void OnFriendsInNeed()
     {
+        Me.Actions.CloseWithEnemies();
+        Me.Actions.Attack.AttackEnemiesInRange();
         Me.Actions.Decider.FriendsInNeed.Clear();
     }
 
 
     public void OnDamagedFriendlyStructuresSighted()
     {
-        Me.Actions.CallForHelp();
         // repair
     }
 
 
     public void OnFullLoad()
     {
-        Transact();
-
-        if (Me.Load.Keys.Count == 0) return;
-        
-        Structure nearest_commercial_structure = new List<Structure>(FindObjectsOfType<Structure>())
-            .Where(s => s.owner == Me.Faction && s.Wants().Contains(Me.Load.First().Key.raw_resource))
-            .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
-            .Reverse()
-            .ToList()
-            .First();
-
-        Me.Actions.Movement.SetDestination(nearest_commercial_structure.NearestEntranceTo(transform));
+        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
+        DeliverLoad();
     }
 
 
@@ -68,20 +61,26 @@ public class Commoner : MonoBehaviour
 
     public void OnHostileActorsSighted()
     {
-        Me.Actions.FleeFromEnemies();
+        Me.Actions.Decider.FriendsInNeed.Clear();
         Me.Actions.CallForHelp();
+        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed * 2;
+        AbandonLoad();
+        FindGuard();
     }
 
 
     public void OnHostileStructuresSighted()
     {
+        Me.Actions.CallForHelp();
         Me.Actions.FleeFromEnemies();
     }
 
 
     public void OnInCombat()
     {
-        Me.Actions.FleeFromEnemies();
+        Me.Actions.Decider.FriendsInNeed.Clear();
+        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
+        Me.Actions.Attack.AttackEnemiesInRange();
     }
 
 
@@ -90,13 +89,13 @@ public class Commoner : MonoBehaviour
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         Me.Actions.SheathWeapon();
 
-        var harvest_points = new List<HarvestingNode>(FindObjectsOfType<HarvestingNode>())
-            .Where(r => r.owner == Me.Faction && r.AccessibleTo(Me))
-            .ToList();
+        // TODO: if badly injured, go to center of town
 
-        HarvestingNode _resource = harvest_points[Random.Range(0, harvest_points.Count)];
-
-        Me.Actions.Movement.SetDestination(_resource.transform);
+        if (Proficiencies.Instance.Harvester(Me)) {
+            GoToWork();
+        } else if (Proficiencies.Instance.Artisan(Me)) {
+            GoHome();
+        }
     }
 
 
@@ -109,6 +108,7 @@ public class Commoner : MonoBehaviour
 
     public void OnMovingToGoal()
     {
+        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         Me.Senses.Sight();
     }
 
@@ -116,6 +116,8 @@ public class Commoner : MonoBehaviour
     public void OnReachedGoal()
     {
         Me.Actions.Movement.ResetPath();
+        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
+        Me.Actions.Decider.FriendsInNeed.Clear();
 
         if (!Transact()) {
             if (!Harvest()) {
@@ -127,7 +129,9 @@ public class Commoner : MonoBehaviour
 
     public void OnUnderAttack()
     {
-        Me.Actions.FleeFromEnemies();
+        Me.Actions.Decider.FriendsInNeed.Clear();
+        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
+        Me.Actions.Attack.AttackEnemiesInRange();
     }
 
 
@@ -138,6 +142,61 @@ public class Commoner : MonoBehaviour
 
 
     // private
+
+
+    private void AbandonLoad()
+    {
+        Me.Load.Clear();
+        Me.harvesting = Resources.Raw.None;
+    }
+
+
+    private void DeliverLoad()
+    {
+        Structure nearest_commercial_structure = new List<Structure>(FindObjectsOfType<Structure>())
+            .Where(s => s.owner == Me.Faction && s.Wants().Contains(Me.Load.First().Key.raw_resource))
+            .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
+            .ToList()
+            .First();
+
+        Me.Actions.Movement.SetDestination(nearest_commercial_structure.NearestEntranceTo(transform));
+    }
+
+
+    private void FindGuard()
+    {
+        Structure nearest_military_structure = new List<Structure>(FindObjectsOfType<Structure>())
+            .Where(s => s.owner == Me.Faction && s.purpose == Structure.Purpose.Military)
+            .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
+            .ToList()
+            .First();
+
+        Me.Actions.Movement.SetDestination(nearest_military_structure.NearestEntranceTo(transform));
+    }
+
+
+    private void GoHome()
+    {
+        Structure nearest_residential_structure = new List<Structure>(FindObjectsOfType<Structure>())
+            .Where(s => s.owner == Me.Faction && s.purpose == Structure.Purpose.Residential)
+            .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
+            .ToList()
+            .First();
+
+        Me.Actions.Movement.SetDestination(nearest_residential_structure.NearestEntranceTo(transform));
+    }
+
+
+    private void GoToWork()
+    {
+        var harvest_points = new List<HarvestingNode>(FindObjectsOfType<HarvestingNode>())
+            .Where(r => r.owner == Me.Faction && r.AccessibleTo(Me))
+            .ToList();
+
+        HarvestingNode _resource = harvest_points[Random.Range(0, harvest_points.Count)];
+
+        Me.Actions.Movement.SetDestination(_resource.transform);
+    }
 
 
     private bool Harvest()

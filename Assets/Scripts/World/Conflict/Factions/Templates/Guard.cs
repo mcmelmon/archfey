@@ -27,19 +27,15 @@ public class Guard : MonoBehaviour
 
     public void OnBadlyInjured()
     {
-
+        Me.Actions.Decider.FriendsInNeed.Clear();
     }
 
 
     public void OnFriendsInNeed()
     {
-        List<Actor> friends_in_need = Me.Actions.Decider.FriendsInNeed;
-
-        if (friends_in_need.Count > 0) {
-            Me.Actions.Movement.Agent.speed = 2 * Me.Actions.Movement.Speed;
-            Me.Actions.Movement.SetDestination(friends_in_need[Random.Range(0, friends_in_need.Count)].transform);
-            Me.Actions.Decider.FriendsInNeed.Clear();
-        }
+        Me.Actions.CloseWithEnemies();
+        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Decider.FriendsInNeed.Clear();
     }
 
 
@@ -51,6 +47,8 @@ public class Guard : MonoBehaviour
 
     public void OnInCombat()
     {
+        Me.Actions.CallForHelp();
+        Me.Actions.Decider.FriendsInNeed.Clear();
         Me.Actions.CloseWithEnemies();
         Me.Actions.Attack.AttackEnemiesInRange();
     }
@@ -58,7 +56,7 @@ public class Guard : MonoBehaviour
 
     public void OnHostileActorsSighted()
     {
-        Me.Actions.CallForHelp();
+        Me.Actions.Decider.FriendsInNeed.Clear();
         Me.Actions.CloseWithEnemies();
         Me.Actions.Attack.AttackEnemiesInRange();
     }
@@ -107,6 +105,7 @@ public class Guard : MonoBehaviour
 
     public void OnUnderAttack()
     {
+        Me.Actions.Decider.FriendsInNeed.Clear();
         Me.Actions.CloseWithEnemies();
         Me.Actions.Attack.AttackEnemiesInRange();
     }

@@ -33,6 +33,12 @@ public class Health : MonoBehaviour {
     // public 
 
 
+    public bool BadlyInjured()
+    {
+        return CurrentHealthPercentage() <= 0.4f;
+    }
+
+
     public void LoseHealth(float amount, Actor _attacker = null)
     {
         CurrentHitPoints -= Mathf.RoundToInt(amount);
@@ -71,6 +77,7 @@ public class Health : MonoBehaviour {
     {
         CurrentHitPoints = MaximumHitPoints = (Me.Stats.ConstitutionProficiency * HitDice) + (HitDice * HitDiceType / 2) + 1;
     }
+
 
     // private
 

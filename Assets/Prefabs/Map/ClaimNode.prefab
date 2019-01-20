@@ -475,7 +475,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   claim_resistance: 0
   maximum_claim_points: 50
-  claim_indicator: {fileID: 0}
+  claim_indicator: {fileID: 541501656948682100}
 --- !u!1 &8846047106382623107
 GameObject:
   m_ObjectHideFlags: 0

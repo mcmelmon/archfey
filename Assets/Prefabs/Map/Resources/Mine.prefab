@@ -105,7 +105,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   raw_resource: 0
-  owner: 2
+  owner: 0
   perpetual: 0
   initial_quantity: 1000
   harvest_increment: 1
