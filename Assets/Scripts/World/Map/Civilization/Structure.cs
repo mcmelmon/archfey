@@ -35,6 +35,7 @@ public class Structure : MonoBehaviour
     private void Awake()
     {
         SetComponents();
+        StartCoroutine(PruneAttachedUnits());
     }
 
     // public
@@ -116,6 +117,22 @@ public class Structure : MonoBehaviour
     {
         return (_damage <= 0 || Resistances == null) ? _damage : (_damage -= _damage * (Resistances[_type] / 100));
     }
+
+
+    private IEnumerator PruneAttachedUnits()
+    {
+        while (true) {
+            yield return new WaitForSeconds(Turn.ActionThreshold);
+
+            for (int i = 0; i < AttachedUnits.Count; i++) {
+                // use for loop to avoid modifying collection in foreach
+                if (AttachedUnits[i] == null) {
+                    AttachedUnits.Remove(AttachedUnits[i]);
+                }
+            }
+        }
+    }
+
 
     private void SetComponents()
     {

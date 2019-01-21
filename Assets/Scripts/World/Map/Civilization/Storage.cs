@@ -145,12 +145,17 @@ public class Storage : MonoBehaviour
     private void SpawnArtisanFor(Industry.Product _product)
     {
         Actor primary_artistan, secondary_artisan;
+        Structure random_residence = FindObjectsOfType<Structure>()
+            .Where(s => s.owner == Structure.owner && s.purpose == Structure.Purpose.Residential && s.GetComponent<HarvestingNode>() == null)
+            .OrderBy(s => UnityEngine.Random.value)
+            .ToList()
+            .First();
 
         var primary_artisans = Structure.AttachedUnits.Where(a => a.Stats.Tools.Contains(_product.primary_tool)).ToList();
         if (primary_artisans.Count == 0) {
             primary_artistan = (Structure.owner == Conflict.Faction.Ghaddim)
-                ? Offense.Instance.SpawnToolUser(_product.primary_tool)
-                         : Defense.Instance.SpawnToolUser(_product.primary_tool);
+                ? Offense.Instance.SpawnToolUser(_product.primary_tool, random_residence.RandomEntrance().transform)
+                         : Defense.Instance.SpawnToolUser(_product.primary_tool, random_residence.RandomEntrance().transform);
             Structure.AttachedUnits.Add(primary_artistan);
         }
 
@@ -159,8 +164,8 @@ public class Storage : MonoBehaviour
 
             if (secondary_artisans.Count == 0) {
                 secondary_artisan = (Structure.owner == Conflict.Faction.Ghaddim)
-                    ? Offense.Instance.SpawnToolUser(_product.secondary_tool)
-                             : Defense.Instance.SpawnToolUser(_product.secondary_tool);
+                    ? Offense.Instance.SpawnToolUser(_product.secondary_tool, random_residence.RandomEntrance().transform)
+                             : Defense.Instance.SpawnToolUser(_product.secondary_tool, random_residence.RandomEntrance().transform);
                 Structure.AttachedUnits.Add(secondary_artisan);
             }
         }
