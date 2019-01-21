@@ -34,39 +34,32 @@ public class Defense : MonoBehaviour
     {
         // must be called by Conflict instead of Start to ensure Map setup complete
 
-        var farmers = FindObjectsOfType<HarvestingNode>()
-            .Where(r => r.raw_resource == Resources.Raw.Farm && r.owner == Conflict.Faction.Mhoddim);
-
-        var miners = FindObjectsOfType<Structure>()
-            .Where(s => (s.Wants().Contains(Resources.Raw.Copper) || s.Wants().Contains(Resources.Raw.Iron) || s.Wants().Contains(Resources.Raw.Gold) && s.owner == Conflict.Faction.Mhoddim));
-
-        var woodcutters = FindObjectsOfType<Structure>()
-            .Where(s => s.Wants().Contains(Resources.Raw.Timber) && s.owner == Conflict.Faction.Mhoddim);
+        var residences = FindObjectsOfType<Structure>()
+            .Where(s => s.purpose == Structure.Purpose.Residential && s.owner == Conflict.Faction.Mhoddim)
+            .ToList();
 
         var military = FindObjectsOfType<Structure>()
             .Where(s => s.purpose == Structure.Purpose.Military && s.owner == Conflict.Faction.Mhoddim);
 
-        foreach (var farm in farmers) {
-            foreach (var entrance in farm.GetComponent<Structure>().entrances) {
-                Vector3 location = entrance.transform.position;
-                Actor commoner = SpawnToolUser(Proficiencies.Tool.Farmer, entrance.transform);
-  
-            }
-        }
-
-        foreach (var structure in miners) {
-            foreach (var entrance in structure.entrances) {
-                Vector3 location = entrance.transform.position;
-                Actor commoner = SpawnToolUser(Proficiencies.Tool.Miner, entrance.transform);
-
-            }
-        }
-
-        foreach (var structure in woodcutters) {
-            foreach (var entrance in structure.entrances) {
-                Vector3 location = entrance.transform.position;
-                Actor commoner = SpawnToolUser(Proficiencies.Tool.Woodcutter, entrance.transform);
-
+        foreach (var residence in residences) {
+            foreach (var entrance in residence.entrances) {
+                Vector3 location = entrance.position;
+                Actor commoner;
+                int roll = Random.Range(0, 3);
+                switch (roll) {
+                    case 0:
+                        commoner = SpawnToolUser(Proficiencies.Tool.Farmer, entrance);
+                        residence.AttachedUnits.Add(commoner);
+                        break;
+                    case 1:
+                        commoner = SpawnToolUser(Proficiencies.Tool.Miner, entrance);
+                        residence.AttachedUnits.Add(commoner);
+                        break;
+                    case 2:
+                        commoner = SpawnToolUser(Proficiencies.Tool.Woodcutter, entrance);
+                        residence.AttachedUnits.Add(commoner);
+                        break;
+                }
             }
         }
 
@@ -78,6 +71,7 @@ public class Defense : MonoBehaviour
                 guard.GetComponent<Guard>().Post = entrance;
                 guard.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Perception);
                 guard.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Intimidation);
+                structure.AttachedUnits.Add(guard.GetComponent<Actor>());
             }
         }
     }
@@ -85,27 +79,64 @@ public class Defense : MonoBehaviour
 
     public void Reinforce()
     {
-        foreach (var objective in Objectives.Instance.objectives) {
-            if (objective.Claim == Conflict.Faction.Mhoddim) {
-                for (int i = 0; i < 0; i++) {
-                    Circle spawn_circle = Circle.New(objective.claim_nodes[0].transform.position, 3);
-                    Vector3 _point = spawn_circle.RandomContainedPoint();
-                    GameObject guard = Spawn(new Vector3(_point.x, objective.claim_nodes[0].transform.position.y, _point.z));
-                    guard.AddComponent<Guard>();
+        List<Structure> residences = FindObjectsOfType<Structure>()
+            .Where(s => s.owner == Conflict.Faction.Mhoddim && s.purpose == Structure.Purpose.Residential && s.AttachedUnits.Count < s.entrances.Count)
+            .ToList();
+
+        List<Structure> military = FindObjectsOfType<Structure>()
+            .Where(s => s.owner == Conflict.Faction.Mhoddim && s.purpose == Structure.Purpose.Military && s.AttachedUnits.Count < s.entrances.Count)
+            .ToList();
+
+        foreach (var structure in residences) {
+            foreach (var entrance in structure.entrances) {
+                if (structure.AttachedUnits.Count >= structure.entrances.Count) break;
+
+                Vector3 location = entrance.position;
+                Actor commoner;
+                int roll = Random.Range(0, 3);
+
+                // artisans will only be regenerated when storage facilities report materials available
+                switch (roll) {
+                    case 0:
+                        commoner = SpawnToolUser(Proficiencies.Tool.Farmer, entrance);
+                        structure.AttachedUnits.Add(commoner);
+                        break;
+                    case 1:
+                        commoner = SpawnToolUser(Proficiencies.Tool.Miner, entrance);
+                        structure.AttachedUnits.Add(commoner);
+                        break;
+                    case 2:
+                        commoner = SpawnToolUser(Proficiencies.Tool.Woodcutter, entrance);
+                        structure.AttachedUnits.Add(commoner);
+                        break;
                 }
+            }
+        }
+
+        foreach (var structure in military) {
+            foreach (var entrance in structure.entrances) {
+                if (structure.AttachedUnits.Count >= structure.entrances.Count) break;
+                Vector3 location = entrance.transform.position;
+                GameObject guard = Spawn(new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
+                guard.AddComponent<Guard>();
+                guard.GetComponent<Guard>().Post = entrance;
+                guard.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Perception);
+                guard.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Intimidation);
+                structure.AttachedUnits.Add(guard.GetComponent<Actor>());
             }
         }
     }
 
 
-    public Actor SpawnToolUser(Proficiencies.Tool _tool, Transform _entrance)
+    public Actor SpawnToolUser(Proficiencies.Tool _tool, Transform _location)
     {
-        GameObject commoner = Spawn(new Vector3(_entrance.position.x, Geography.Terrain.SampleHeight(_entrance.position), _entrance.position.z));
+        GameObject commoner = Spawn(new Vector3(_location.position.x, Geography.Terrain.SampleHeight(_location.position), _location.position.z));
         commoner.AddComponent<Commoner>();
-        commoner.GetComponent<Commoner>().Post = _entrance;
+        commoner.GetComponent<Commoner>().Post = _location;
         commoner.GetComponent<Stats>().Tools.Add(_tool);
+        Actor _actor = commoner.GetComponent<Actor>();
 
-        return commoner.GetComponent<Actor>();
+        return _actor ;
     }
 
 

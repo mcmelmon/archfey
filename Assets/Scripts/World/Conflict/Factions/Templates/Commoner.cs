@@ -89,13 +89,7 @@ public class Commoner : MonoBehaviour
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         Me.Actions.SheathWeapon();
 
-        // TODO: if badly injured, go to center of town
-
-        if (Proficiencies.Instance.Harvester(Me)) {
-            GoToWork();
-        } else if (Proficiencies.Instance.Artisan(Me)) {
-            GoHome();
-        }
+        GoToWork();
     }
 
 
@@ -121,7 +115,9 @@ public class Commoner : MonoBehaviour
 
         if (!Transact()) {
             if (!Harvest()) {
-                OnIdle();
+                if (!Craft()) {
+                    OnIdle();
+                }
             }
         }
     }
@@ -151,15 +147,44 @@ public class Commoner : MonoBehaviour
     }
 
 
-    private void DeliverLoad()
+    private bool Craft()
     {
-        Structure nearest_commercial_structure = new List<Structure>(FindObjectsOfType<Structure>())
-            .Where(s => s.owner == Me.Faction && s.Wants().Contains(Me.Load.First().Key.raw_resource))
+        if (!Proficiencies.Instance.Artisan(Me)) return false;
+
+        Storage nearest_storage = new List<Storage>(FindObjectsOfType<Storage>())
+            .Where(s => s.UsefulToMe(Me))
             .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
             .ToList()
             .First();
 
-        Me.Actions.Movement.SetDestination(nearest_commercial_structure.NearestEntranceTo(transform));
+        Collider _collider = nearest_storage.GetComponent<Collider>();
+        Vector3 closest_spot = _collider.ClosestPointOnBounds(transform.position);
+        float distance = Vector3.Distance(closest_spot, transform.position);
+
+        if (distance < Movement.ReachedThreshold) {
+            Industry.Product product = Industry.Instance.products.First(p => p.name == nearest_storage.finished_goods[0].product_name);
+
+            if (Industry.Instance.Manufacture(nearest_storage, product, Me)) {
+                nearest_storage.RemoveMaterials(product.primary_raw_material, product.primary_materials_required);
+                if (product.secondary_raw_material != Resources.Raw.None)
+                    nearest_storage.RemoveMaterials(product.secondary_raw_material, product.secondary_materials_required);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    private void DeliverLoad()
+    {
+        Structure nearest_commercial_structure = new List<Structure>(FindObjectsOfType<Structure>())
+            .Where(s => s.owner == Me.Faction && s.Storage != null && s.MaterialsWanted().Contains(Me.Load.First().Key.raw_resource))
+            .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
+            .ToList()
+            .First();
+
+        Me.Actions.Movement.SetDestination(nearest_commercial_structure.RandomEntrance());
     }
 
 
@@ -171,31 +196,32 @@ public class Commoner : MonoBehaviour
             .ToList()
             .First();
 
-        Me.Actions.Movement.SetDestination(nearest_military_structure.NearestEntranceTo(transform));
+        Me.Actions.Movement.SetDestination(nearest_military_structure.transform);
     }
 
 
     private void GoHome()
     {
-        Structure nearest_residential_structure = new List<Structure>(FindObjectsOfType<Structure>())
-            .Where(s => s.owner == Me.Faction && s.purpose == Structure.Purpose.Residential)
-            .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
-            .ToList()
-            .First();
-
-        Me.Actions.Movement.SetDestination(nearest_residential_structure.NearestEntranceTo(transform));
+        Me.Actions.Movement.SetDestination(Post);
     }
 
 
     private void GoToWork()
     {
-        var harvest_points = new List<HarvestingNode>(FindObjectsOfType<HarvestingNode>())
-            .Where(r => r.owner == Me.Faction && r.AccessibleTo(Me))
-            .ToList();
+        if (Proficiencies.Instance.Harvester(Me)) {
+            HarvestingNode harvest_point = new List<HarvestingNode>(FindObjectsOfType<HarvestingNode>())
+                .Where(r => r.owner == Me.Faction && r.AccessibleTo(Me))
+                .OrderBy(s => Random.value)
+                .ToList()
+                .First();
+                
+            Me.Actions.Movement.SetDestination(harvest_point.transform);
+        } else if (Proficiencies.Instance.Artisan(Me)) {
+            Structure work = new List<Structure>(FindObjectsOfType<Structure>())
+                .First(s => s.AttachedUnits.Contains(Me));
 
-        HarvestingNode _resource = harvest_points[Random.Range(0, harvest_points.Count)];
-
-        Me.Actions.Movement.SetDestination(_resource.transform);
+            Me.Actions.Movement.SetDestination(work.RandomEntrance().transform);
+        }
     }
 
 
@@ -278,7 +304,7 @@ public class Commoner : MonoBehaviour
         if (Me.Load.Count <= 0) return false;
 
         Structure nearest_structure = new List<Structure>(FindObjectsOfType<Structure>())
-            .Where(s => s.owner == Me.Faction && s.Wants().Contains(Me.Load.First().Key.raw_resource))
+            .Where(s => s.owner == Me.Faction && s.Storage != null && s.MaterialsWanted().Contains(Me.Load.First().Key.raw_resource))
             .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
             .ToList()
             .First();
@@ -288,7 +314,7 @@ public class Commoner : MonoBehaviour
         float distance = Vector3.Distance(closest_spot, transform.position) - Me.Size;
 
         if (distance <= Movement.ReachedThreshold) {
-            nearest_structure.TransactBusiness(Me, Random.Range(1, 12) * .1f); // TODO: base amount on resources!
+            nearest_structure.DeliverMaterials(Me, Random.Range(1, 12) * .1f); // TODO: base amount on resources!
             return true;
         }
 

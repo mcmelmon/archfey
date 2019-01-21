@@ -69,11 +69,7 @@ public class Conflict : MonoBehaviour
         GenerateStats();
         //CreateNavigationMesh();
         ChooseSides();
-        if (World.Instance.battleground) {
-            Offense.Instance.Deploy();  // defense has already deployed
-        } else {
-            StartCoroutine(Waves());
-        }
+        StartCoroutine(Waves());
     }
 
 
@@ -172,18 +168,8 @@ public class Conflict : MonoBehaviour
         while (!Victory) {
             yield return new WaitForSeconds(60f);
 
-            Light the_sun = World.Instance.Sun();
-
-            switch (NextWave) {
-                case Role.Defense:
-                    Defense.Instance.Reinforce();
-                    NextWave = Role.Offense;
-                    break;
-                case Role.Offense:
-                    Offense.Instance.Deploy();
-                    NextWave = Role.Defense;
-                    break;
-            }
+            Defense.Instance.Reinforce();
+            Offense.Instance.Reinforce();
         }
     }
 }
