@@ -49,7 +49,7 @@ public class Defense : MonoBehaviour
         foreach (var farm in farmers) {
             foreach (var entrance in farm.GetComponent<Structure>().entrances) {
                 Vector3 location = entrance.transform.position;
-                Actor commoner = SpawnToolUser(Proficiencies.Tool.Farmer, entrance.transform);
+                Actor commoner = SpawnToolUser(Proficiencies.Tool.Farmer);
   
             }
         }
@@ -57,7 +57,7 @@ public class Defense : MonoBehaviour
         foreach (var structure in miners) {
             foreach (var entrance in structure.entrances) {
                 Vector3 location = entrance.transform.position;
-                Actor commoner = SpawnToolUser(Proficiencies.Tool.Miner, entrance.transform);
+                Actor commoner = SpawnToolUser(Proficiencies.Tool.Miner);
 
             }
         }
@@ -65,7 +65,7 @@ public class Defense : MonoBehaviour
         foreach (var structure in woodcutters) {
             foreach (var entrance in structure.entrances) {
                 Vector3 location = entrance.transform.position;
-                Actor commoner = SpawnToolUser(Proficiencies.Tool.Woodcutter, entrance.transform);
+                Actor commoner = SpawnToolUser(Proficiencies.Tool.Woodcutter);
 
             }
         }
@@ -98,11 +98,25 @@ public class Defense : MonoBehaviour
     }
 
 
-    public Actor SpawnToolUser(Proficiencies.Tool _tool, Transform _entrance)
+    public Actor SpawnToolUser(Proficiencies.Tool _tool)
     {
-        GameObject commoner = Spawn(new Vector3(_entrance.position.x, Geography.Terrain.SampleHeight(_entrance.position), _entrance.position.z));
+        Structure random_residence = _tool != Proficiencies.Tool.Farmer
+            ? new List<Structure>(FindObjectsOfType<Structure>())
+                .Where(s => s.owner == Faction && s.purpose == Structure.Purpose.Residential && s.GetComponent<HarvestingNode>() == null)
+                .OrderBy(s => Random.value)
+                .ToList()
+                .First()
+            : new List<Structure>(FindObjectsOfType<Structure>())
+                .Where(s => s.owner == Faction && s.purpose == Structure.Purpose.Residential && s.GetComponent<HarvestingNode>() != null)
+                .OrderBy(s => Random.value)
+                .ToList()
+                .First();
+
+        Transform entrance = random_residence.RandomEntrance();
+
+        GameObject commoner = Spawn(new Vector3(entrance.position.x, Geography.Terrain.SampleHeight(entrance.position), entrance.position.z));
         commoner.AddComponent<Commoner>();
-        commoner.GetComponent<Commoner>().Post = _entrance;
+        commoner.GetComponent<Commoner>().Post = entrance;
         commoner.GetComponent<Stats>().Tools.Add(_tool);
 
         return commoner.GetComponent<Actor>();

@@ -48,10 +48,19 @@ public class Offense : MonoBehaviour
     }
 
 
-    public Actor SpawnToolUser(Proficiencies.Tool _tool, Transform _entrance)
+    public Actor SpawnToolUser(Proficiencies.Tool _tool)
     {
-        GameObject commoner = Spawn(new Vector3(_entrance.position.x, Geography.Terrain.SampleHeight(_entrance.position), _entrance.position.z));
+        Structure randon_non_farm_residence = new List<Structure>(FindObjectsOfType<Structure>())
+            .Where(s => s.owner == Faction && s.purpose == Structure.Purpose.Residential && s.GetComponent<HarvestingNode>() == null)
+            .OrderBy(s => Random.value)
+            .ToList()
+            .First();
+
+        Transform entrance = randon_non_farm_residence.RandomEntrance();
+
+        GameObject commoner = Spawn(new Vector3(entrance.position.x, Geography.Terrain.SampleHeight(entrance.position), entrance.position.z));
         commoner.AddComponent<Commoner>();
+        commoner.GetComponent<Commoner>().Post = entrance;
         commoner.GetComponent<Stats>().Tools.Add(_tool);
 
         return commoner.GetComponent<Actor>();

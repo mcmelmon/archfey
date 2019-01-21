@@ -56,6 +56,17 @@ public class Storage : MonoBehaviour
     // public
 
 
+    public void RemoveMaterials(Resources.Raw _material, int _amount)
+    {
+        StoredMaterials inventory_row = raw_materials.First(r => r.material == _material);
+        int new_amount = inventory_row.amount - _amount;
+        if (new_amount < 0) new_amount = 0;
+        float value = new_amount * Resources.Instance.resource_valuations.First(rv => rv.material == _material).value_cp;
+        raw_materials.Remove(inventory_row);
+        raw_materials.Add(new StoredMaterials(_material, new_amount, value));
+    }
+
+
     public void StoreMaterials(Actor _unit)
     {
         foreach (KeyValuePair<HarvestingNode, int> pair in _unit.Load)
@@ -82,14 +93,21 @@ public class Storage : MonoBehaviour
     }
 
 
-    public void RemoveMaterials(Resources.Raw _material, int _amount)
+    public bool UsefulToMe(Actor _artisan)
     {
-        StoredMaterials inventory_row = raw_materials.First(r => r.material == _material);
-        int new_amount = inventory_row.amount - _amount;
-        if (new_amount < 0) new_amount = 0;
-        float value = new_amount * Resources.Instance.resource_valuations.First(rv => rv.material == _material).value_cp;
-        raw_materials.Remove(inventory_row);
-        raw_materials.Add(new StoredMaterials(_material, new_amount, value));
+        var my_products = Industry.Instance
+                                  .products
+                                  .Where(p => _artisan.Stats.Tools.Contains(p.primary_tool) || _artisan.Stats.Tools.Contains(p.primary_tool))
+                                  .Select(p => p.name)
+                                  .ToList();
+
+        foreach (var stored_good in finished_goods) {
+            if (my_products.Contains(stored_good.product_name)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 
@@ -111,12 +129,6 @@ public class Storage : MonoBehaviour
                 if (raw_materials.First(r => r.material == product.primary_raw_material).amount > product.primary_materials_required) {
                     if (product.secondary_raw_material == Resources.Raw.None || raw_materials.First(r => r.material == product.secondary_raw_material).amount > product.secondary_materials_required) {
                         SpawnArtisanFor(product); // if we have the materials, spawn a tool maker if one is not available
-
-                        if (Industry.Instance.Manufacture(this, product, Structure.AttachedUnits)) {
-                            RemoveMaterials(product.primary_raw_material, product.primary_materials_required);
-                            if (product.secondary_raw_material != Resources.Raw.None)
-                                RemoveMaterials(product.secondary_raw_material, product.secondary_materials_required);
-                        }
                     }
                 }
             }
@@ -137,8 +149,8 @@ public class Storage : MonoBehaviour
         var primary_artisans = Structure.AttachedUnits.Where(a => a.Stats.Tools.Contains(_product.primary_tool)).ToList();
         if (primary_artisans.Count == 0) {
             primary_artistan = (Structure.owner == Conflict.Faction.Ghaddim)
-                ? Offense.Instance.SpawnToolUser(_product.primary_tool, Structure.entrances[0])
-                         : Defense.Instance.SpawnToolUser(_product.primary_tool, Structure.entrances[0]);
+                ? Offense.Instance.SpawnToolUser(_product.primary_tool)
+                         : Defense.Instance.SpawnToolUser(_product.primary_tool);
             Structure.AttachedUnits.Add(primary_artistan);
         }
 
@@ -147,8 +159,8 @@ public class Storage : MonoBehaviour
 
             if (secondary_artisans.Count == 0) {
                 secondary_artisan = (Structure.owner == Conflict.Faction.Ghaddim)
-                    ? Offense.Instance.SpawnToolUser(_product.secondary_tool, Structure.entrances[1])
-                             : Defense.Instance.SpawnToolUser(_product.secondary_tool, Structure.entrances[1]);
+                    ? Offense.Instance.SpawnToolUser(_product.secondary_tool)
+                             : Defense.Instance.SpawnToolUser(_product.secondary_tool);
                 Structure.AttachedUnits.Add(secondary_artisan);
             }
         }

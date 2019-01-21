@@ -763,7 +763,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 264195861}
-  m_LocalRotation: {x: -0.06334523, y: -0.08485528, z: -0.70380133, w: 0.70246047}
+  m_LocalRotation: {x: -0.1803763, y: 0.035137113, z: -0.7105112, w: 0.67926705}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1162,7 +1162,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: -0.000017075474
+    Value: 0.0000048296733
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -1327,8 +1327,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 465733991}
-  m_LocalRotation: {x: 0.21850678, y: -0.3695002, z: 0.08983947, w: 0.8986953}
-  m_LocalPosition: {x: 171.2771, y: 147, z: 297.57382}
+  m_LocalRotation: {x: 0.21850699, y: -0.36949986, z: 0.08983945, w: 0.8986954}
+  m_LocalPosition: {x: 171.27708, y: 147, z: 297.57382}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 625565791}
@@ -2168,7 +2168,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: -0.000017075474
+    Value: 0.0000048296733
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -2950,7 +2950,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 829675727}
-  m_LocalRotation: {x: -0.000000044703484, y: -0.000000029802322, z: 0.35760936, w: 0.9338713}
+  m_LocalRotation: {x: -0.000000014901163, y: 0.000000029802326, z: 0.35760954, w: 0.9338712}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -3459,7 +3459,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963679513}
-  m_LocalRotation: {x: -0.022728903, y: -0.07432061, z: -0.69969416, w: 0.7102028}
+  m_LocalRotation: {x: -0.022727368, y: -0.07432603, z: -0.6998807, w: 0.71001846}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -5035,7 +5035,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: -0.000017075474
+    Value: 0.0000048296733
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -6196,7 +6196,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: -0.000017075474
+    Value: 0.0000048296733
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1

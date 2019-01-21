@@ -67,12 +67,6 @@ public class Structure : MonoBehaviour
     }
 
 
-    public Transform NearestEntranceTo(Transform _location)
-    {
-        return entrances.OrderBy(s => Vector3.Distance(transform.position, _location.position)).Reverse().ToList().First();
-    }
-
-
     public void DeliverMaterials(Actor _unit, float _amount)
     {
         BookRevenue(_amount);
@@ -89,6 +83,23 @@ public class Structure : MonoBehaviour
         }
 
         return null;
+    }
+
+
+    public Transform NearestEntranceTo(Transform _location)
+    {
+        return entrances.OrderBy(s => Vector3.Distance(transform.position, _location.position)).Reverse().ToList().First();
+    }
+
+
+    public Transform RandomEntrance()
+    {
+        Transform entrance = null;
+
+        if (entrances.Count > 0)
+            entrance = entrances[Random.Range(0, entrances.Count)];
+
+        return entrance;
     }
 
 
