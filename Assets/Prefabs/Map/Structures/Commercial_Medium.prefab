@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4193039534615603700}
   - component: {fileID: 1030376154693374304}
   - component: {fileID: 6550712517133750925}
+  - component: {fileID: 92616215416065777}
   m_Layer: 0
   m_Name: Commercial_Medium
   m_TagString: Untagged
@@ -115,10 +116,7 @@ MonoBehaviour:
   entrances:
   - {fileID: 6455165012835783459}
   - {fileID: 7689789575358307038}
-  revenue_factor: 1.5
   revenue_cp: 0
-  raw_materials: []
-  finished_goods: []
 --- !u!208 &6550712517133750925
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -135,6 +133,20 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0, z: 0}
   m_TimeToStationary: 0.5
+--- !u!114 &92616215416065777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5568962823331700554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e92cb8dec07fc47958d2dbebd878171a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  raw_materials: []
+  finished_goods: []
 --- !u!1 &6292593372192473578
 GameObject:
   m_ObjectHideFlags: 0

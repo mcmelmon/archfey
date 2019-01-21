@@ -34,17 +34,17 @@ public class Offense : MonoBehaviour
     {
         // must be called by Conflict instead of Start to ensure Map setup complete
 
-        var military = FindObjectsOfType<Structure>()
-            .Where(s => s.purpose == Structure.Purpose.Military && s.owner == Conflict.Faction.Ghaddim);
+        //var military = FindObjectsOfType<Structure>()
+        //    .Where(s => s.purpose == Structure.Purpose.Military && s.owner == Conflict.Faction.Ghaddim);
 
-        foreach (var structure in military) {
-            foreach (var entrance in structure.entrances)
-            {
-                Vector3 location = entrance.transform.position;
-                GameObject gnoll = Spawn(new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
-                gnoll.AddComponent<Gnoll>();
-            }
-        }
+        //foreach (var structure in military) {
+        //    foreach (var entrance in structure.entrances)
+        //    {
+        //        Vector3 location = entrance.transform.position;
+        //        GameObject gnoll = Spawn(new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
+        //        gnoll.AddComponent<Gnoll>();
+        //    }
+        //}
     }
 
 

@@ -154,7 +154,7 @@ public class Commoner : MonoBehaviour
     private void DeliverLoad()
     {
         Structure nearest_commercial_structure = new List<Structure>(FindObjectsOfType<Structure>())
-            .Where(s => s.owner == Me.Faction && s.Wants().Contains(Me.Load.First().Key.raw_resource))
+            .Where(s => s.owner == Me.Faction && s.Storage != null && s.MaterialsWanted().Contains(Me.Load.First().Key.raw_resource))
             .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
             .ToList()
             .First();
@@ -278,7 +278,7 @@ public class Commoner : MonoBehaviour
         if (Me.Load.Count <= 0) return false;
 
         Structure nearest_structure = new List<Structure>(FindObjectsOfType<Structure>())
-            .Where(s => s.owner == Me.Faction && s.Wants().Contains(Me.Load.First().Key.raw_resource))
+            .Where(s => s.owner == Me.Faction && s.Storage != null && s.MaterialsWanted().Contains(Me.Load.First().Key.raw_resource))
             .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
             .ToList()
             .First();
@@ -288,7 +288,7 @@ public class Commoner : MonoBehaviour
         float distance = Vector3.Distance(closest_spot, transform.position) - Me.Size;
 
         if (distance <= Movement.ReachedThreshold) {
-            nearest_structure.TransactBusiness(Me, Random.Range(1, 12) * .1f); // TODO: base amount on resources!
+            nearest_structure.DeliverMaterials(Me, Random.Range(1, 12) * .1f); // TODO: base amount on resources!
             return true;
         }
 

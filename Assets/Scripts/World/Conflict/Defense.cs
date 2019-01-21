@@ -38,10 +38,10 @@ public class Defense : MonoBehaviour
             .Where(r => r.raw_resource == Resources.Raw.Farm && r.owner == Conflict.Faction.Mhoddim);
 
         var miners = FindObjectsOfType<Structure>()
-            .Where(s => (s.Wants().Contains(Resources.Raw.Copper) || s.Wants().Contains(Resources.Raw.Iron) || s.Wants().Contains(Resources.Raw.Gold) && s.owner == Conflict.Faction.Mhoddim));
+            .Where(s => s.Storage != null && (s.MaterialsWanted().Contains(Resources.Raw.Copper) || s.MaterialsWanted().Contains(Resources.Raw.Iron) || s.MaterialsWanted().Contains(Resources.Raw.Gold) && s.owner == Conflict.Faction.Mhoddim));
 
         var woodcutters = FindObjectsOfType<Structure>()
-            .Where(s => s.Wants().Contains(Resources.Raw.Timber) && s.owner == Conflict.Faction.Mhoddim);
+            .Where(s => s.Storage != null && s.MaterialsWanted().Contains(Resources.Raw.Timber) && s.owner == Conflict.Faction.Mhoddim);
 
         var military = FindObjectsOfType<Structure>()
             .Where(s => s.purpose == Structure.Purpose.Military && s.owner == Conflict.Faction.Mhoddim);

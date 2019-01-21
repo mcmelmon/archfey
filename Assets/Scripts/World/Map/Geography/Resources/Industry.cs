@@ -50,14 +50,14 @@ public class Industry : MonoBehaviour
     // public
 
 
-    public bool Manufacture(Structure _structure, Product _product, List<Actor> _artisans)
+    public bool Manufacture(Storage _storage, Product _product, List<Actor> _artisans)
     {
         foreach (var artisan in _artisans) {
             if (Manufacturers.Contains(artisan)) return false;
         }
 
         Manufacturers.AddRange(_artisans);
-        StartCoroutine(ManufacturingProgress(_structure, _product, _artisans));
+        StartCoroutine(ManufacturingProgress(_storage, _product, _artisans));
         return true;
     }
 
@@ -65,7 +65,7 @@ public class Industry : MonoBehaviour
     // private
 
 
-    private IEnumerator ManufacturingProgress(Structure _structure, Product _product, List<Actor> _artisans)
+    private IEnumerator ManufacturingProgress(Storage _storage, Product _product, List<Actor> _artisans)
     {
         int turn = 0;
         float time_to_finish = 12 * _product.market_value_cp / 500f;  // The formula is 1 day per 5gp; but we will say every turn = 2 hours instead of 6 seconds
@@ -82,7 +82,7 @@ public class Industry : MonoBehaviour
             Manufacturers.Remove(artisan);
         }
 
-        _structure.StoreFinishedGoods(_product, 1);
+        _storage.StoreProducts(_product, 1);
     }
 
 
