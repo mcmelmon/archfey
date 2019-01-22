@@ -66,7 +66,7 @@ public class Conflict : MonoBehaviour
 
     public void Hajime()
     {
-        GenerateStats();
+        PopulateStats();
         //CreateNavigationMesh();
         ChooseSides();
         StartCoroutine(Waves());
@@ -133,11 +133,10 @@ public class Conflict : MonoBehaviour
         Defense.Instance.Faction = Faction.Mhoddim;
         Offense.Instance.Faction = Faction.Ghaddim;
         Defense.Instance.Deploy();
-        NextWave = Role.Offense;
     }
 
 
-    private void GenerateStats()
+    private void PopulateStats()
     {
         Characters.Instance.GenerateStats();
     }

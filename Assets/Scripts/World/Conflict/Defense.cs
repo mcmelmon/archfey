@@ -48,15 +48,15 @@ public class Defense : MonoBehaviour
                 int roll = Random.Range(0, 3);
                 switch (roll) {
                     case 0:
-                        commoner = SpawnToolUser(Proficiencies.Tool.Farmer, entrance);
+                        commoner = SpawnToolUser("Farmer", entrance);
                         residence.AttachedUnits.Add(commoner);
                         break;
                     case 1:
-                        commoner = SpawnToolUser(Proficiencies.Tool.Miner, entrance);
+                        commoner = SpawnToolUser("Lumberjack", entrance);
                         residence.AttachedUnits.Add(commoner);
                         break;
                     case 2:
-                        commoner = SpawnToolUser(Proficiencies.Tool.Woodcutter, entrance);
+                        commoner = SpawnToolUser("Miner", entrance);
                         residence.AttachedUnits.Add(commoner);
                         break;
                 }
@@ -98,15 +98,15 @@ public class Defense : MonoBehaviour
                 // artisans will only be regenerated when storage facilities report materials available
                 switch (roll) {
                     case 0:
-                        commoner = SpawnToolUser(Proficiencies.Tool.Farmer, entrance);
+                        commoner = SpawnToolUser("Farmer", entrance);
                         structure.AttachedUnits.Add(commoner);
                         break;
                     case 1:
-                        commoner = SpawnToolUser(Proficiencies.Tool.Miner, entrance);
+                        commoner = SpawnToolUser("Lumberjack", entrance);
                         structure.AttachedUnits.Add(commoner);
                         break;
                     case 2:
-                        commoner = SpawnToolUser(Proficiencies.Tool.Woodcutter, entrance);
+                        commoner = SpawnToolUser("Miner", entrance);
                         structure.AttachedUnits.Add(commoner);
                         break;
                 }
@@ -128,7 +128,7 @@ public class Defense : MonoBehaviour
     }
 
 
-    public Actor SpawnToolUser(Proficiencies.Tool _tool, Transform _location)
+    public Actor SpawnToolUser(string _tool, Transform _location)
     {
         GameObject commoner = Spawn(new Vector3(_location.position.x, Geography.Terrain.SampleHeight(_location.position), _location.position.z));
         commoner.AddComponent<Commoner>();

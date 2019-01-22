@@ -5,13 +5,13 @@ using UnityEngine;
 public class HarvestingNode : MonoBehaviour
 {
     // Inspector settings
-    public Resources.Raw raw_resource;
+    public string material;
     public Conflict.Faction owner;
     public bool perpetual;
     public int initial_quantity;
     public int harvest_increment;
     public int full_harvest;
-    public List<Proficiencies.Tool> required_tools;
+    public List<string> required_tools;
 
     // properties
 

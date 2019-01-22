@@ -7,7 +7,7 @@ using UnityEngine.Networking;
 public class Actor : MonoBehaviour
 {
     // Inspector settings
-    public Resources.Raw harvesting = Resources.Raw.None;
+    public string harvesting = "";
     public int harvested_amount = 0;
     public int experience_points;
 
@@ -40,17 +40,14 @@ public class Actor : MonoBehaviour
 
     public IEnumerator GetStatsFromServer(string name)
     {
-        UnityWebRequest www = UnityWebRequest.Get("http://localhost:3000/stat_blocks.json?name=" + name);
-        StatBlock stat_block = new StatBlock();
+        UnityWebRequest www = UnityWebRequest.Get("http://localhost:3000/stat_blocks/" + name + ".json");
+        JSON_StatBlock stat_block = new JSON_StatBlock();
         yield return www.SendWebRequest();
 
-        if (www.isNetworkError || www.isHttpError)
-        {
+        if (www.isNetworkError || www.isHttpError) {
             Debug.Log(www.error);
-        }
-        else
-        {
-            stat_block = JsonUtility.FromJson<StatBlock>(www.downloadHandler.text);
+        } else {
+            stat_block = JsonUtility.FromJson<JSON_StatBlock>(www.downloadHandler.text);
         }
 
         Actions.ActionsPerRound = stat_block.actions_per_round;
@@ -88,5 +85,23 @@ public class Actor : MonoBehaviour
         Stats = GetComponent<Stats>();
 
         Faction = (Fey != null) ? Conflict.Faction.Fey : (Ghaddim != null) ? Conflict.Faction.Ghaddim : Conflict.Faction.Mhoddim;
+    }
+
+
+    public class JSON_StatBlock
+    {
+        public int proficiency_bonus;
+        public int charisma_proficiency;
+        public int constituion_proficiency;
+        public int dexterity_proficiency;
+        public int intelligence_proficiency;
+        public int strength_proficiency;
+        public int wisdom_proficiency;
+        public int actions_per_round;
+        public int armor_class;
+        public int hit_dice;
+        public int hit_dice_type;
+        public int starting_hit_dice;
+        public float speed;
     }
 }

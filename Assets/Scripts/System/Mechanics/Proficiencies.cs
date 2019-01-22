@@ -27,14 +27,6 @@ public class Proficiencies : MonoBehaviour
         Stealth = 16,
         Survival = 17
     };
-    public enum Tool { 
-        Blacksmith = 0,
-        Carpenter = 1,
-        Farmer = 2,
-        Miner = 3,
-        Woodcarver = 4,
-        Woodcutter = 5,
-        None = 99 };
 
     public struct SkillAttribute
     {
@@ -50,10 +42,10 @@ public class Proficiencies : MonoBehaviour
 
     public struct ToolSynergy
     {
-        public Tool tool;
+        public string tool;
         public List<Skill> synergistic_skills;
 
-        public ToolSynergy(Tool _tool, List<Skill> _skills)
+        public ToolSynergy(string _tool, List<Skill> _skills)
         {
             this.tool = _tool;
             this.synergistic_skills = _skills;
@@ -88,14 +80,14 @@ public class Proficiencies : MonoBehaviour
 
     public bool Artisan(Actor _unit)
     {
-        var my_crafting_tools = _unit.Stats.Tools.Where(t => t == Tool.Blacksmith || t == Tool.Carpenter || t == Tool.Woodcarver).ToList();
+        var my_crafting_tools = _unit.Stats.Tools.Where(t => t == "Carpenter").ToList();
         return my_crafting_tools.Count > 0;
     }
 
 
     public bool Harvester(Actor _unit)
     {
-        var my_harvesting_tools = _unit.Stats.Tools.Where(t => t == Tool.Farmer || t == Tool.Miner || t == Tool.Woodcutter).ToList();
+        var my_harvesting_tools = _unit.Stats.Tools.Where(t => t == "Farmer" || t == "Lumberjack" || t == "Miner").ToList();
         return my_harvesting_tools.Count > 0;
     }
 
@@ -129,9 +121,9 @@ public class Proficiencies : MonoBehaviour
 
         ToolSynergies = new List<ToolSynergy>()
         {
-            new ToolSynergy(Tool.Farmer, new List<Skill>{ Skill.AnimalHandling, Skill.Insight, Skill.Nature, Skill.Survival }),
-            new ToolSynergy(Tool.Miner, new List<Skill>{ Skill.Investigation, Skill.Perception, Skill.Survival }),
-            new ToolSynergy(Tool.Woodcutter, new List<Skill>{ Skill.Arcana, Skill.History, Skill.Nature }),
+            new ToolSynergy("Farmer", new List<Skill>{ Skill.AnimalHandling, Skill.Insight, Skill.Nature, Skill.Survival }),
+            new ToolSynergy("Lumberjack", new List<Skill>{ Skill.Investigation, Skill.Perception, Skill.Survival }),
+            new ToolSynergy("Miner", new List<Skill>{ Skill.Arcana, Skill.History, Skill.Nature }),
         };
     }
 }

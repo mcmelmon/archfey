@@ -155,7 +155,7 @@ public class Decider : MonoBehaviour
 
     private bool Harvesting()
     {
-        return Proficiencies.Instance.Harvester(Me) && !FullLoad() && Me.harvesting != Resources.Raw.None;
+        return Proficiencies.Instance.Harvester(Me) && !FullLoad() && Me.harvesting != "";
     }
 
 
@@ -216,7 +216,7 @@ public class Decider : MonoBehaviour
 
     private bool Manufacturing()
     {
-        return Industry.Manufacturers.Contains(Me);
+        return Industry.Crafters.Contains(Me);
     }
 
 

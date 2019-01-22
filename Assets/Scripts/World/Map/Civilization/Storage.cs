@@ -9,11 +9,11 @@ public class Storage : MonoBehaviour
     [Serializable]
     public struct StoredMaterials
     {
-        public Resources.Raw material;
+        public string material;
         public int amount;
         public float value_cp;
 
-        public StoredMaterials(Resources.Raw _material, int _amount, float _value)
+        public StoredMaterials(string _material, int _amount, float _value)
         {
             this.material = _material;
             this.amount = _amount;
@@ -24,20 +24,20 @@ public class Storage : MonoBehaviour
     [Serializable]
     public struct StoredProducts
     {
-        public string product_name;
-        public int amount;
+        public string name;
+        public int quantity;
         public float value_cp;
 
         public StoredProducts(string _name, int _amount)
         {
-            this.product_name = _name;
-            this.amount = _amount;
-            this.value_cp = Industry.Instance.products.First(p => p.name == _name).market_value_cp * _amount;
+            this.name = _name;
+            this.quantity = _amount;
+            this.value_cp = Industry.Products.First(p => p.Name == _name).Value_CP * _amount;
         }
     }
 
-    public List<StoredMaterials> raw_materials = new List<StoredMaterials>();
-    public List<StoredProducts> finished_goods = new List<StoredProducts>();
+    public List<StoredMaterials> materials = new List<StoredMaterials>();
+    public List<StoredProducts> products = new List<StoredProducts>();
 
     // properties
 
@@ -49,6 +49,11 @@ public class Storage : MonoBehaviour
     private void Awake()
     {
         SetComponents();
+    }
+
+
+    private void Start()
+    {
         StartCoroutine(MonitorStorage());
     }
 
@@ -56,14 +61,14 @@ public class Storage : MonoBehaviour
     // public
 
 
-    public void RemoveMaterials(Resources.Raw _material, int _amount)
+    public void RemoveMaterials(string _material, int _amount)
     {
-        StoredMaterials inventory_row = raw_materials.First(r => r.material == _material);
+        StoredMaterials inventory_row = materials.First(r => r.material == _material);
         int new_amount = inventory_row.amount - _amount;
         if (new_amount < 0) new_amount = 0;
-        float value = new_amount * Resources.Instance.resource_valuations.First(rv => rv.material == _material).value_cp;
-        raw_materials.Remove(inventory_row);
-        raw_materials.Add(new StoredMaterials(_material, new_amount, value));
+        float value = new_amount * 1; // TODO: implement resource value
+        materials.Remove(inventory_row);
+        materials.Add(new StoredMaterials(_material, new_amount, value));
     }
 
 
@@ -71,38 +76,37 @@ public class Storage : MonoBehaviour
     {
         foreach (KeyValuePair<HarvestingNode, int> pair in _unit.Load)
         {
-            StoredMaterials inventory_row = raw_materials.First(r => r.material == pair.Key.raw_resource);
+            StoredMaterials inventory_row = materials.First(r => r.material == pair.Key.material);
             int new_amount = inventory_row.amount + pair.Value;
-            float value = new_amount * Resources.Instance.resource_valuations.First(rv => rv.material == pair.Key.raw_resource).value_cp;
-            raw_materials.Remove(inventory_row);
-            raw_materials.Add(new StoredMaterials(pair.Key.raw_resource, new_amount, value));
+            float value = new_amount * 5;  // TODO: implement resource value
+            materials.Remove(inventory_row);
+            materials.Add(new StoredMaterials(pair.Key.material, new_amount, value));
         }
 
         _unit.Load.Clear();
-        _unit.harvesting = Resources.Raw.None;
+        _unit.harvesting = "";
     }
 
 
     public void StoreProducts(Industry.Product _product, int _amount)
     {
-        StoredProducts inventory_row = finished_goods.First(fg => fg.product_name == _product.name);
-        int new_amount = inventory_row.amount + _amount;
-        float value = new_amount * _product.market_value_cp;
-        finished_goods.Remove(inventory_row);
-        finished_goods.Add(new StoredProducts(_product.name, new_amount));
+        StoredProducts inventory_row = products.First(fg => fg.name == _product.Name);
+        int new_amount = inventory_row.quantity + _amount;
+        float value = new_amount * _product.Value_CP;
+        products.Remove(inventory_row);
+        products.Add(new StoredProducts(_product.Name, new_amount));
     }
 
 
     public bool UsefulToMe(Actor _artisan)
     {
-        var my_products = Industry.Instance
-                                  .products
-                                  .Where(p => _artisan.Stats.Tools.Contains(p.primary_tool) || _artisan.Stats.Tools.Contains(p.primary_tool))
-                                  .Select(p => p.name)
+        var my_products = Industry.Products
+                                  .Where(p => _artisan.Stats.Tools.Contains(p.Tool) || _artisan.Stats.Tools.Contains(p.Tool))
+                                  .Select(p => p.Name)
                                   .ToList();
 
-        foreach (var stored_good in finished_goods) {
-            if (my_products.Contains(stored_good.product_name)) {
+        foreach (var stored_good in products) {
+            if (my_products.Contains(stored_good.name)) {
                 return true;
             }
         }
@@ -117,21 +121,21 @@ public class Storage : MonoBehaviour
     private IEnumerator MonitorStorage()
     {
         while (true) {
-            yield return new WaitForSeconds(Turn.ActionThreshold); // TODO: make this much longer
+            if (Industry.Products.Count == 0) { 
+                yield return new WaitForSeconds(Turn.ActionThreshold);
+            }
 
-            List<Resources.Raw> resources = raw_materials.Select(row => row.material).ToList();
-            List<Industry.Product> potential_products = Industry.Instance.products
-                .Where(p => resources.Contains(p.primary_raw_material)
-                       && (Mathf.Approximately(p.secondary_materials_required, 0)
-                           || resources.Contains(p.secondary_raw_material))).ToList();
+            List<string> resources = materials.Select(row => row.material).ToList();
+            List<Industry.Product> potential_products = Industry.Products
+                .Where(p => resources.Contains(p.Material)).ToList();
 
             foreach (var product in potential_products) {
-                if (raw_materials.First(r => r.material == product.primary_raw_material).amount > product.primary_materials_required) {
-                    if (product.secondary_raw_material == Resources.Raw.None || raw_materials.First(r => r.material == product.secondary_raw_material).amount > product.secondary_materials_required) {
-                        SpawnArtisanFor(product); // if we have the materials, spawn a tool maker if one is not available
-                    }
+                if (materials.First(r => r.material == product.Material).amount > product.MaterialAmount) {
+                SpawnArtisanFor(product); // if we have the materials, spawn a tool maker if one is not available
                 }
             }
+
+            yield return new WaitForSeconds(Turn.ActionThreshold);
         }
     }
 
@@ -144,30 +148,19 @@ public class Storage : MonoBehaviour
 
     private void SpawnArtisanFor(Industry.Product _product)
     {
-        Actor primary_artistan, secondary_artisan;
+        Actor primary_artistan;
         Structure random_residence = FindObjectsOfType<Structure>()
             .Where(s => s.owner == Structure.owner && s.purpose == Structure.Purpose.Residential && s.GetComponent<HarvestingNode>() == null)
             .OrderBy(s => UnityEngine.Random.value)
             .ToList()
             .First();
 
-        var primary_artisans = Structure.AttachedUnits.Where(a => a.Stats.Tools.Contains(_product.primary_tool)).ToList();
+        var primary_artisans = Structure.AttachedUnits.Where(a => a.Stats.Tools.Contains(_product.Tool)).ToList();
         if (primary_artisans.Count == 0) {
             primary_artistan = (Structure.owner == Conflict.Faction.Ghaddim)
-                ? Offense.Instance.SpawnToolUser(_product.primary_tool, random_residence.RandomEntrance().transform)
-                         : Defense.Instance.SpawnToolUser(_product.primary_tool, random_residence.RandomEntrance().transform);
+                ? Offense.Instance.SpawnToolUser(_product.Tool, random_residence.RandomEntrance().transform)
+                         : Defense.Instance.SpawnToolUser(_product.Tool, random_residence.RandomEntrance().transform);
             Structure.AttachedUnits.Add(primary_artistan);
-        }
-
-        if (_product.secondary_tool != Proficiencies.Tool.None) {
-            var secondary_artisans = Structure.AttachedUnits.Where(a => a.Stats.Tools.Contains(_product.secondary_tool)).ToList();
-
-            if (secondary_artisans.Count == 0) {
-                secondary_artisan = (Structure.owner == Conflict.Faction.Ghaddim)
-                    ? Offense.Instance.SpawnToolUser(_product.secondary_tool, random_residence.RandomEntrance().transform)
-                             : Defense.Instance.SpawnToolUser(_product.secondary_tool, random_residence.RandomEntrance().transform);
-                Structure.AttachedUnits.Add(secondary_artisan);
-            }
         }
     }
 }

@@ -386,8 +386,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 92616215416065777, guid: 03adf205da7e24f16be4e1c071586e1a,
         type: 3}
+      propertyPath: materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 92616215416065777, guid: 03adf205da7e24f16be4e1c071586e1a,
+        type: 3}
       propertyPath: raw_materials.Array.data[0].material
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 92616215416065777, guid: 03adf205da7e24f16be4e1c071586e1a,
+        type: 3}
+      propertyPath: materials.Array.data[0].material
+      value: Agriculture
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 03adf205da7e24f16be4e1c071586e1a, type: 3}
@@ -592,6 +602,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7117833533856721747, guid: 777359a83166047819eef488f19070dd,
         type: 3}
+      propertyPath: materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7117833533856721747, guid: 777359a83166047819eef488f19070dd,
+        type: 3}
       propertyPath: raw_materials.Array.data[1].material
       value: 4
       objectReference: {fileID: 0}
@@ -599,6 +614,11 @@ PrefabInstance:
         type: 3}
       propertyPath: raw_materials.Array.data[2].material
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7117833533856721747, guid: 777359a83166047819eef488f19070dd,
+        type: 3}
+      propertyPath: materials.Array.data[0].material
+      value: Copper
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 777359a83166047819eef488f19070dd, type: 3}
@@ -763,8 +783,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 264195861}
-  m_LocalRotation: {x: -0.063484594, y: -0.084620625, z: -0.7016911, w: 0.70458406}
-  m_LocalPosition: {x: -0.000010845912, y: 0.0000049278733, z: 0.000009534827}
+  m_LocalRotation: {x: -0.1843941, y: 0.03521606, z: -0.7130764, w: 0.6754856}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 398282301}
@@ -1162,7 +1182,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: -0.0000034150946
+    Value: 0.0000034150946
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -1327,8 +1347,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 465733991}
-  m_LocalRotation: {x: 0.21850684, y: -0.36950034, z: 0.08983953, w: 0.8986953}
-  m_LocalPosition: {x: 171.2771, y: 147, z: 297.57382}
+  m_LocalRotation: {x: 0.21850698, y: -0.36949986, z: 0.08983945, w: 0.8986954}
+  m_LocalPosition: {x: 171.27708, y: 147, z: 297.57382}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 625565791}
@@ -2104,7 +2124,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 625565790}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.000010845912, y: -0.0000049278733, z: -0.000009534827}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 963679514}
@@ -2168,7 +2188,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: -0.0000034150946
+    Value: 0.0000034150946
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -2542,15 +2562,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42bb823098d8348ee9100d49e83798be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  products:
-  - name: Lumber
-    primary_tool: 1
-    secondary_tool: 99
-    primary_raw_material: 7
-    primary_materials_required: 10
-    secondary_raw_material: 99
-    secondary_materials_required: 0
-    market_value_cp: 1000
 --- !u!1 &665651580
 GameObject:
   m_ObjectHideFlags: 0
@@ -2950,7 +2961,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 829675727}
-  m_LocalRotation: {x: -0.00000032782555, y: -0.0000005364418, z: 0.35761, w: 0.9338711}
+  m_LocalRotation: {x: -0.000000059604645, y: -0.000000029802322, z: 0.031836763,
+    w: 0.9994931}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -3459,8 +3471,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963679513}
-  m_LocalRotation: {x: -0.09056952, y: -0.006075502, z: -0.7160564, w: 0.6921153}
-  m_LocalPosition: {x: -0.000010845912, y: 0.0000049278733, z: 0.000009534827}
+  m_LocalRotation: {x: -0.02269876, y: -0.06899294, z: -0.7010134, w: 0.70944}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1287826548}
@@ -5035,7 +5047,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: -0.0000034150946
+    Value: 0.0000034150946
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -5231,12 +5243,17 @@ PrefabInstance:
     - target: {fileID: 1414231970136352044, guid: e3c65ff109a304fab81f8ce193692935,
         type: 3}
       propertyPath: required_tools.Array.data[0]
-      value: 3
+      value: Miner
       objectReference: {fileID: 0}
     - target: {fileID: 1414231970136352044, guid: e3c65ff109a304fab81f8ce193692935,
         type: 3}
       propertyPath: owner
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1414231970136352044, guid: e3c65ff109a304fab81f8ce193692935,
+        type: 3}
+      propertyPath: material
+      value: Copper
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e3c65ff109a304fab81f8ce193692935, type: 3}
@@ -6196,7 +6213,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: -0.0000034150946
+    Value: 0.0000034150946
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -9682,12 +9699,32 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 92616215416065777, guid: 03adf205da7e24f16be4e1c071586e1a,
         type: 3}
+      propertyPath: materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 92616215416065777, guid: 03adf205da7e24f16be4e1c071586e1a,
+        type: 3}
+      propertyPath: products.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 92616215416065777, guid: 03adf205da7e24f16be4e1c071586e1a,
+        type: 3}
       propertyPath: raw_materials.Array.data[0].material
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 92616215416065777, guid: 03adf205da7e24f16be4e1c071586e1a,
         type: 3}
       propertyPath: finished_goods.Array.data[0].product_name
+      value: Lumber
+      objectReference: {fileID: 0}
+    - target: {fileID: 92616215416065777, guid: 03adf205da7e24f16be4e1c071586e1a,
+        type: 3}
+      propertyPath: materials.Array.data[0].material
+      value: Timber
+      objectReference: {fileID: 0}
+    - target: {fileID: 92616215416065777, guid: 03adf205da7e24f16be4e1c071586e1a,
+        type: 3}
+      propertyPath: products.Array.data[0].name
       value: Lumber
       objectReference: {fileID: 0}
     m_RemovedComponents: []
