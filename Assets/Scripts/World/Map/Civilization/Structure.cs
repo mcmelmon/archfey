@@ -76,10 +76,10 @@ public class Structure : MonoBehaviour
     }
 
 
-    public List<Resources.Raw> MaterialsWanted()
+    public List<string> MaterialsWanted()
     {
         if (Storage != null) {
-            var wanted_materials = Storage.raw_materials.Select(s => s.material);
+            var wanted_materials = Storage.materials.Select(s => s.material);
             return wanted_materials.ToList();
         }
 

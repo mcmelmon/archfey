@@ -45,13 +45,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0efa840f60fe4df18f446c21f9a3156, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  raw_resource: 7
+  material: Timber
   owner: 0
   perpetual: 0
   initial_quantity: 1000
   harvest_increment: 1
-  full_harvest: 6
-  required_tools: 05000000
+  full_harvest: 1
+  required_tools:
+  - Lumberjack
 --- !u!65 &180220608017853677
 BoxCollider:
   m_ObjectHideFlags: 0

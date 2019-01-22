@@ -17,6 +17,7 @@ public class Actions : MonoBehaviour
     public Stealth Stealth { get; set; }
 
     public Action OnBadlyInjured { get; set; }
+    public Action OnCrafting { get; set; }
     public Action OnFriendsInNeed { get; set; }
     public Action OnFriendlyActorsSighted { get; set; }
     public Action OnFullLoad { get; set; }
@@ -26,7 +27,6 @@ public class Actions : MonoBehaviour
     public Action OnHostileStructuresSighted { get; set; }
     public Action OnIdle { get; set; }
     public Action OnInCombat { get; set; }
-    public Action OnManufacturing { get; set; }
     public Action OnMovingToGoal { get; set; }
     public Action OnReachedGoal { get; set; }
     public Action OnUnderAttack { get; set; }
@@ -56,6 +56,9 @@ public class Actions : MonoBehaviour
             case Decider.State.BadlyInjured:
                 OnBadlyInjured.Invoke();
                 break;
+            case Decider.State.Crafting:
+                OnCrafting.Invoke();
+                break;
             case Decider.State.FriendsInNeed:
                 OnFriendsInNeed.Invoke();
                 break;
@@ -82,9 +85,6 @@ public class Actions : MonoBehaviour
                 break;
             case Decider.State.InCombat:
                 OnInCombat.Invoke();
-                break;
-            case Decider.State.Manufacturing:
-                OnManufacturing.Invoke();
                 break;
             case Decider.State.MovingToGoal:
                 OnMovingToGoal.Invoke();

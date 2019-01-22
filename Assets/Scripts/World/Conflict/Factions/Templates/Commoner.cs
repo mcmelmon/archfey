@@ -31,6 +31,12 @@ public class Commoner : MonoBehaviour
     }
 
 
+    public void OnCrafting()
+    {
+
+    }
+
+
     public void OnFriendsInNeed()
     {
         Me.Actions.CloseWithEnemies();
@@ -93,13 +99,6 @@ public class Commoner : MonoBehaviour
     }
 
 
-    public void OnManufacturing()
-    {
-        // TODO: advance manufacturing stage
-        ReturnToPost();
-    }
-
-
     public void OnMovingToGoal()
     {
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
@@ -143,7 +142,7 @@ public class Commoner : MonoBehaviour
     private void AbandonLoad()
     {
         Me.Load.Clear();
-        Me.harvesting = Resources.Raw.None;
+        Me.harvesting = "";
     }
 
 
@@ -162,12 +161,10 @@ public class Commoner : MonoBehaviour
         float distance = Vector3.Distance(closest_spot, transform.position);
 
         if (distance < Movement.ReachedThreshold) {
-            Industry.Product product = Industry.Instance.products.First(p => p.name == nearest_storage.finished_goods[0].product_name);
+            Industry.Product product = Industry.Products.First(p => p.Name == nearest_storage.products[0].name);
 
-            if (Industry.Instance.Manufacture(nearest_storage, product, Me)) {
-                nearest_storage.RemoveMaterials(product.primary_raw_material, product.primary_materials_required);
-                if (product.secondary_raw_material != Resources.Raw.None)
-                    nearest_storage.RemoveMaterials(product.secondary_raw_material, product.secondary_materials_required);
+            if (Industry.Instance.Craft(nearest_storage, product, Me)) {
+                nearest_storage.RemoveMaterials(product.Material, product.MaterialAmount);
                 return true;
             }
         }
@@ -179,7 +176,7 @@ public class Commoner : MonoBehaviour
     private void DeliverLoad()
     {
         Structure nearest_commercial_structure = new List<Structure>(FindObjectsOfType<Structure>())
-            .Where(s => s.owner == Me.Faction && s.Storage != null && s.MaterialsWanted().Contains(Me.Load.First().Key.raw_resource))
+            .Where(s => s.owner == Me.Faction && s.Storage != null && s.MaterialsWanted().Contains(Me.Load.First().Key.material))
             .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
             .ToList()
             .First();
@@ -239,7 +236,7 @@ public class Commoner : MonoBehaviour
 
         if (distance <= Movement.ReachedThreshold) {
             nearest_harvest.HarvestResource(Me);
-            Me.harvesting = nearest_harvest.raw_resource;
+            Me.harvesting = nearest_harvest.material;
             Me.harvested_amount = Me.Load.First().Value;
             return true;
         }
@@ -272,6 +269,7 @@ public class Commoner : MonoBehaviour
         Me.Actions.Attack.EquipRangedWeapon();
 
         Me.Actions.OnBadlyInjured = OnBadlyInjured;
+        Me.Actions.OnCrafting = OnCrafting;
         Me.Actions.OnFriendsInNeed = OnFriendsInNeed;
         Me.Actions.OnFullLoad = OnFullLoad;
         Me.Actions.OnDamagedFriendlyStructuresSighted = OnDamagedFriendlyStructuresSighted;
@@ -280,7 +278,6 @@ public class Commoner : MonoBehaviour
         Me.Actions.OnHostileStructuresSighted = OnHostileStructuresSighted;
         Me.Actions.OnIdle = OnIdle;
         Me.Actions.OnInCombat = OnInCombat;
-        Me.Actions.OnManufacturing = OnManufacturing;
         Me.Actions.OnMovingToGoal = OnMovingToGoal;
         Me.Actions.OnReachedGoal = OnReachedGoal;
         Me.Actions.OnUnderAttack = OnUnderAttack;
@@ -304,7 +301,7 @@ public class Commoner : MonoBehaviour
         if (Me.Load.Count <= 0) return false;
 
         Structure nearest_structure = new List<Structure>(FindObjectsOfType<Structure>())
-            .Where(s => s.owner == Me.Faction && s.Storage != null && s.MaterialsWanted().Contains(Me.Load.First().Key.raw_resource))
+            .Where(s => s.owner == Me.Faction && s.Storage != null && s.MaterialsWanted().Contains(Me.Load.First().Key.material))
             .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
             .ToList()
             .First();

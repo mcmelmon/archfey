@@ -29,7 +29,7 @@ public class Stats : MonoBehaviour
     public int ProficiencyBonus { get; set; }
     public List<Proficiencies.Skill> Expertise { get; set; }
     public List<Proficiencies.Skill> Skills { get; set; }
-    public List<Proficiencies.Tool> Tools { get; set; }
+    public List<string> Tools { get; set; }
 
 
     // Unity
@@ -123,7 +123,7 @@ public class Stats : MonoBehaviour
 
     private void ManageResources()
     {
-        StartCoroutine(RegainSpells());
+        //TODO: StartCoroutine(RegainSpells());
     }
 
 
@@ -137,15 +137,6 @@ public class Stats : MonoBehaviour
     }
 
 
-    private IEnumerator RegainSpells()
-    {
-        while (false)
-        {
-            yield return new WaitForSeconds(Turn.ActionThreshold);
-        }
-    }
-
-
     private void SetComponents()
     {
         Me = GetComponentInParent<Actor>();
@@ -153,7 +144,7 @@ public class Stats : MonoBehaviour
 
         Expertise = new List<Proficiencies.Skill>();
         Skills = new List<Proficiencies.Skill>();
-        Tools = new List<Proficiencies.Tool>();
+        Tools = new List<string>();
     }
 
 
