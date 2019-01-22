@@ -93,7 +93,7 @@ public class Defense : MonoBehaviour
 
                 Vector3 location = entrance.position;
                 Actor commoner;
-                int roll = Random.Range(0, 3);
+                int roll = Random.Range(0, 6);
 
                 // artisans will only be regenerated when storage facilities report materials available
                 switch (roll) {
@@ -108,6 +108,9 @@ public class Defense : MonoBehaviour
                     case 2:
                         commoner = SpawnToolUser("Miner", entrance);
                         structure.AttachedUnits.Add(commoner);
+                        break;
+                    default:
+                        // roughy 50% chance that we don't replenish commoners every reinforce
                         break;
                 }
             }

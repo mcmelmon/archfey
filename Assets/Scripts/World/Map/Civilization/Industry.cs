@@ -53,7 +53,7 @@ public class Industry : MonoBehaviour
     private IEnumerator Crafting(Storage _storage, Product _product, Actor _artisan)
     {
         int turn = 0;
-        float time_to_finish = 24; // TODO: the formula is 1 day per 5gp value
+        float time_to_finish = 1 + _product.Value_CP / 100f;
 
         while (turn < time_to_finish) {
             if (_artisan.gameObject == null) break;
@@ -85,7 +85,7 @@ public class Industry : MonoBehaviour
                     Material = split[1],
                     MaterialAmount = int.Parse(split[2]),
                     Tool = split[3],
-                    Value_CP = 5    // placeholder
+                    Value_CP = int.Parse(split[4])
                 };
 
                 Products.Add(new_product);
@@ -132,5 +132,6 @@ public class Industry : MonoBehaviour
         public string material;
         public int material_amount;
         public string tool;
+        public int value_cp;
     }
 }

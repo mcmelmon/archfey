@@ -17,7 +17,7 @@ public class Decider : MonoBehaviour
         HostileStructuresSighted = 8,
         Idle = 9,
         InCombat = 10,
-        Manufacturing = 12,
+        Crafting = 12,
         MovingToGoal = 13,
         ReachedGoal = 14,
         UnderAttack = 15,
@@ -75,8 +75,8 @@ public class Decider : MonoBehaviour
             SetState(State.DamagedFriendlyStructuresSighted);
         } else if (HostileStructuresSighted()) {
             SetState(State.HostileStructuresSighted);
-        } else if (Manufacturing()) {
-            SetState(State.Manufacturing);
+        } else if (Crafting()) {
+            SetState(State.Crafting);
         } else if (ReachedGoal()) {
             SetState(State.ReachedGoal);
         } else if (FullLoad()) {
@@ -128,6 +128,12 @@ public class Decider : MonoBehaviour
     private bool CallsForHelp()
     {
         return FriendsInNeed.Count > 0;
+    }
+
+
+    private bool Crafting()
+    {
+        return Industry.Crafters.Contains(Me);
     }
 
 
@@ -211,12 +217,6 @@ public class Decider : MonoBehaviour
     private bool IsMyRole(Actor _unit)
     {
         return _unit != null && Me.Role == _unit.Role;
-    }
-
-
-    private bool Manufacturing()
-    {
-        return Industry.Crafters.Contains(Me);
     }
 
 

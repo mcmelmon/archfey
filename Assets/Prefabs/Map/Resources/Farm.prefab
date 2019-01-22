@@ -204,7 +204,7 @@ MonoBehaviour:
   perpetual: 1
   initial_quantity: 0
   harvest_increment: 1
-  full_harvest: 5
+  full_harvest: 1
   required_tools:
   - Farmer
 --- !u!114 &2153911066012038719

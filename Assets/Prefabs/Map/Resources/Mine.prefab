@@ -109,6 +109,6 @@ MonoBehaviour:
   perpetual: 0
   initial_quantity: 1000
   harvest_increment: 1
-  full_harvest: 4
+  full_harvest: 2
   required_tools:
   - Miner

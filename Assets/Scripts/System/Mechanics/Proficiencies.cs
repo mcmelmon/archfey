@@ -80,7 +80,7 @@ public class Proficiencies : MonoBehaviour
 
     public bool Artisan(Actor _unit)
     {
-        var my_crafting_tools = _unit.Stats.Tools.Where(t => t == "Carpenter").ToList();
+        var my_crafting_tools = _unit.Stats.Tools.Where(t => t == "Carpenter" || t == "Cook" || t == "Smith").ToList();
         return my_crafting_tools.Count > 0;
     }
 

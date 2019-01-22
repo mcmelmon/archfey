@@ -31,6 +31,12 @@ public class Commoner : MonoBehaviour
     }
 
 
+    public void OnCrafting()
+    {
+
+    }
+
+
     public void OnFriendsInNeed()
     {
         Me.Actions.CloseWithEnemies();
@@ -90,13 +96,6 @@ public class Commoner : MonoBehaviour
         Me.Actions.SheathWeapon();
 
         GoToWork();
-    }
-
-
-    public void OnManufacturing()
-    {
-        // TODO: advance manufacturing stage
-        ReturnToPost();
     }
 
 
@@ -270,6 +269,7 @@ public class Commoner : MonoBehaviour
         Me.Actions.Attack.EquipRangedWeapon();
 
         Me.Actions.OnBadlyInjured = OnBadlyInjured;
+        Me.Actions.OnCrafting = OnCrafting;
         Me.Actions.OnFriendsInNeed = OnFriendsInNeed;
         Me.Actions.OnFullLoad = OnFullLoad;
         Me.Actions.OnDamagedFriendlyStructuresSighted = OnDamagedFriendlyStructuresSighted;
@@ -278,7 +278,6 @@ public class Commoner : MonoBehaviour
         Me.Actions.OnHostileStructuresSighted = OnHostileStructuresSighted;
         Me.Actions.OnIdle = OnIdle;
         Me.Actions.OnInCombat = OnInCombat;
-        Me.Actions.OnManufacturing = OnManufacturing;
         Me.Actions.OnMovingToGoal = OnMovingToGoal;
         Me.Actions.OnReachedGoal = OnReachedGoal;
         Me.Actions.OnUnderAttack = OnUnderAttack;

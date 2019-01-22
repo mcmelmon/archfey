@@ -50,7 +50,7 @@ MonoBehaviour:
   perpetual: 0
   initial_quantity: 1000
   harvest_increment: 1
-  full_harvest: 6
+  full_harvest: 1
   required_tools:
   - Lumberjack
 --- !u!65 &180220608017853677
