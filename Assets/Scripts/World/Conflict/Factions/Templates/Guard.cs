@@ -10,7 +10,6 @@ public class Guard : MonoBehaviour
     // properties
 
     public Actor Me { get; set; }
-    public Transform Post { get; set; }
 
 
     // Unity
@@ -27,7 +26,6 @@ public class Guard : MonoBehaviour
 
     public void OnBadlyInjured()
     {
-        Me.Actions.Decider.FriendsInNeed.Clear();
     }
 
 
@@ -71,7 +69,8 @@ public class Guard : MonoBehaviour
     public void OnIdle()
     {
         Me.Senses.Sight();
-        ReturnToPost();
+        Me.Actions.SheathWeapon();
+        Me.Actions.Movement.Home();
     }
 
 
@@ -92,6 +91,7 @@ public class Guard : MonoBehaviour
     public void OnReachedGoal()
     {
         Me.Actions.Movement.ResetPath();
+        Me.Actions.Decider.FriendsInNeed.Clear();
 
         Route _route = GetComponent<Route>();
 
@@ -122,16 +122,6 @@ public class Guard : MonoBehaviour
     // private
 
 
-    private void ReturnToPost()
-    {
-        float distance = Vector3.Distance(transform.position, Post.position);
-
-        if (distance > 0.01) {
-            Me.Actions.Movement.Agent.destination = Post.position;
-        }
-    }
-
-
     private void SetStats()
     {
         Me = GetComponent<Actor>();
@@ -154,6 +144,8 @@ public class Guard : MonoBehaviour
         Me.Actions.OnWatch = OnWatch;
 
         Me.Health.SetCurrentAndMaxHitPoints();
+
+        Me.Actions.Movement.AddDestination(Movement.CommonDestination.Home, transform.position);
     }
 
 

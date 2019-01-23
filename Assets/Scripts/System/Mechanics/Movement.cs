@@ -5,11 +5,13 @@ using UnityEngine.AI;
 
 public class Movement : MonoBehaviour
 {
+    public enum CommonDestination { Home = 0, Harvest = 1, Craft = 2, Military = 3, Warehouse = 4 };
 
     // properties
 
     public Actor Me { get; set; }
     public NavMeshAgent Agent { get; set; }
+    public Dictionary<CommonDestination, Vector3> Destinations { get; set; }
     public static float ReachedThreshold { get; set; }
     public Route Route { get; set; }
     public float Speed { get; set; }
@@ -20,14 +22,25 @@ public class Movement : MonoBehaviour
 
     private void Awake()
     {
-        Agent = GetComponentInParent<NavMeshAgent>();
-        Agent.ResetPath();
-        Me = GetComponentInParent<Actor>();
-        ReachedThreshold = Me.Size;
+        SetComponents();
     }
 
 
     // public
+
+
+    public void AddDestination(CommonDestination key, Vector3 destination)
+    {
+        if (!Destinations.ContainsKey(key)) {
+            Destinations[key] = destination;
+        }
+    }
+
+
+    public void Home()
+    {
+        SetDestination(Destinations[CommonDestination.Home]);
+    }
 
 
     public bool InProgress()
@@ -45,13 +58,13 @@ public class Movement : MonoBehaviour
     }
 
 
-    public void SetDestination(Transform _target)
+    public void SetDestination(Transform _destination)
     {
         ResetPath();
 
-        Collider target_collider = _target.GetComponent<Collider>();
+        Collider target_collider = _destination.GetComponent<Collider>();
 
-        Vector3 destination = (target_collider != null) ? target_collider.ClosestPointOnBounds(transform.position) : _target.position;
+        Vector3 destination = (target_collider != null) ? target_collider.ClosestPointOnBounds(transform.position) : _destination.position;
     
         StopCoroutine(FindThePath(destination));
         StartCoroutine(FindThePath(destination));
@@ -63,6 +76,22 @@ public class Movement : MonoBehaviour
         ResetPath();
         StopCoroutine(FindThePath(destination));
         StartCoroutine(FindThePath(destination));
+    }
+
+
+    public void Warehouse()
+    {
+        SetDestination(Destinations[CommonDestination.Warehouse]);
+    }
+
+
+    public void Work()
+    {
+        if (Destinations.ContainsKey(CommonDestination.Craft)) {
+            SetDestination(Destinations[CommonDestination.Craft]);
+        } else if (Destinations.ContainsKey(CommonDestination.Harvest)) {
+            SetDestination(Destinations[CommonDestination.Harvest]);
+        }
     }
 
 
@@ -97,5 +126,15 @@ public class Movement : MonoBehaviour
     private bool ReachedNearObjective()
     {
         return Agent != null && Route != null && Route.ReachedCurrent(Agent.transform.position);
+    }
+
+
+    private void SetComponents()
+    {
+        Agent = GetComponentInParent<NavMeshAgent>();
+        Agent.ResetPath();
+        Destinations = new Dictionary<CommonDestination, Vector3>();
+        Me = GetComponentInParent<Actor>();
+        ReachedThreshold = Me.Size;
     }
 }

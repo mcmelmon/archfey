@@ -7,8 +7,10 @@ public class Commoner : MonoBehaviour
 {
     // properties
 
+    public HarvestingNode MyHarvest { get; set; }
+    public Structure MyWarehouse { get; set; }
+    public Storage MyWorkshop { get; set; }
     public Actor Me { get; set; }
-    public Transform Post { get; set; }
 
 
     // Unity
@@ -54,7 +56,8 @@ public class Commoner : MonoBehaviour
     public void OnFullLoad()
     {
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
-        DeliverLoad();
+        FindWarehouse();
+        Me.Actions.Movement.Warehouse();
     }
 
 
@@ -67,7 +70,6 @@ public class Commoner : MonoBehaviour
 
     public void OnHostileActorsSighted()
     {
-        Me.Actions.Decider.FriendsInNeed.Clear();
         Me.Actions.CallForHelp();
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed * 2;
         AbandonLoad();
@@ -84,7 +86,6 @@ public class Commoner : MonoBehaviour
 
     public void OnInCombat()
     {
-        Me.Actions.Decider.FriendsInNeed.Clear();
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         Me.Actions.Attack.AttackEnemiesInRange();
     }
@@ -95,7 +96,8 @@ public class Commoner : MonoBehaviour
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         Me.Actions.SheathWeapon();
 
-        GoToWork();
+        FindWork();
+        Me.Actions.Movement.Work();
     }
 
 
@@ -112,9 +114,9 @@ public class Commoner : MonoBehaviour
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         Me.Actions.Decider.FriendsInNeed.Clear();
 
-        if (!Transact()) {
-            if (!Harvest()) {
-                if (!Craft()) {
+        if (!Harvest()) {
+            if (!Craft()) {
+                if (!Warehouse()) {
                     OnIdle();
                 }
             }
@@ -124,7 +126,6 @@ public class Commoner : MonoBehaviour
 
     public void OnUnderAttack()
     {
-        Me.Actions.Decider.FriendsInNeed.Clear();
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         Me.Actions.Attack.AttackEnemiesInRange();
     }
@@ -148,40 +149,20 @@ public class Commoner : MonoBehaviour
 
     private bool Craft()
     {
-        if (!Proficiencies.Instance.Artisan(Me)) return false;
+        if (!Proficiencies.Instance.Artisan(Me) || MyWorkshop == null) return false;
 
-        Storage nearest_storage = new List<Storage>(FindObjectsOfType<Storage>())
-            .Where(s => s.UsefulToMe(Me))
-            .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
-            .ToList()
-            .First();
-
-        Collider _collider = nearest_storage.GetComponent<Collider>();
-        Vector3 closest_spot = _collider.ClosestPointOnBounds(transform.position);
-        float distance = Vector3.Distance(closest_spot, transform.position);
+        float distance = Vector3.Distance(Me.Actions.Movement.Destinations[Movement.CommonDestination.Craft], transform.position);
 
         if (distance < Movement.ReachedThreshold) {
-            Industry.Product product = Industry.Products.First(p => p.Name == nearest_storage.products[0].name);
+            Industry.Product product = Industry.Products.First(p => p.Name == MyWorkshop.products[0].name);
 
-            if (Industry.Instance.Craft(nearest_storage, product, Me)) {
-                nearest_storage.RemoveMaterials(product.Material, product.MaterialAmount);
+            if (Industry.Instance.Craft(MyWorkshop, product, Me)) {
+                MyWorkshop.RemoveMaterials(product.Material, product.MaterialAmount);
                 return true;
             }
         }
 
         return false;
-    }
-
-
-    private void DeliverLoad()
-    {
-        Structure nearest_commercial_structure = new List<Structure>(FindObjectsOfType<Structure>())
-            .Where(s => s.owner == Me.Faction && s.Storage != null && s.MaterialsWanted().Contains(Me.Load.First().Key.material))
-            .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
-            .ToList()
-            .First();
-
-        Me.Actions.Movement.SetDestination(nearest_commercial_structure.RandomEntrance());
     }
 
 
@@ -193,69 +174,79 @@ public class Commoner : MonoBehaviour
             .ToList()
             .First();
 
+        // Don't set as a CommonDestination just yet, because the commoner should run to nearest based on current location
         Me.Actions.Movement.SetDestination(nearest_military_structure.transform);
     }
 
 
-    private void GoHome()
+    private void FindWarehouse()
     {
-        Me.Actions.Movement.SetDestination(Post);
+        MyWarehouse = new List<Structure>(FindObjectsOfType<Structure>())
+            .Where(s => s.owner == Me.Faction && s.Storage != null && s.MaterialsWanted().Contains(Me.Load.First().Key.material))
+            .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
+            .ToList()
+            .First();
+
+        if (MyWarehouse == null) return;
+
+        Vector3 entrance = MyWarehouse.RandomEntrance().transform.position;
+        Vector3 grounded_entrance = new Vector3(entrance.x, Geography.Terrain.SampleHeight(entrance), entrance.z);
+
+        Me.Actions.Movement.AddDestination(Movement.CommonDestination.Warehouse, grounded_entrance);
     }
 
 
-    private void GoToWork()
+    private void FindWork()
     {
+        if (MyHarvest != null || MyWorkshop != null) return; 
+
         if (Proficiencies.Instance.Harvester(Me)) {
-            HarvestingNode harvest_point = new List<HarvestingNode>(FindObjectsOfType<HarvestingNode>())
+            MyHarvest = new List<HarvestingNode>(FindObjectsOfType<HarvestingNode>())
                 .Where(r => r.owner == Me.Faction && r.AccessibleTo(Me))
-                .OrderBy(s => Random.value)
+                .OrderBy(r => Vector3.Distance(transform.position, r.transform.position))
                 .ToList()
                 .First();
-                
-            Me.Actions.Movement.SetDestination(harvest_point.transform);
-        } else if (Proficiencies.Instance.Artisan(Me)) {
-            Structure work = new List<Structure>(FindObjectsOfType<Structure>())
-                .First(s => s.AttachedUnits.Contains(Me));
 
-            Me.Actions.Movement.SetDestination(work.RandomEntrance().transform);
+            if (MyHarvest == null) return;
+
+            Collider _collider = MyHarvest.GetComponent<Collider>();
+            Me.Actions.Movement.AddDestination(Movement.CommonDestination.Harvest, _collider.ClosestPointOnBounds(transform.position));
+
+        } else if (Proficiencies.Instance.Artisan(Me)) {
+            MyWorkshop = FindObjectsOfType<Structure>()
+                .First(s => s.AttachedUnits.Contains(Me))
+                .Storage;
+
+            if (MyWorkshop == null) return;
+
+            Collider _collider = MyWorkshop.GetComponent<Collider>();
+            Me.Actions.Movement.AddDestination(Movement.CommonDestination.Craft, _collider.ClosestPointOnBounds(transform.position));
         }
+    }
+
+
+
+    private void GoHome()
+    {
+        Me.Actions.Movement.Home();
     }
 
 
     private bool Harvest()
     {
-        var nearest_harvest = new List<HarvestingNode>(FindObjectsOfType<HarvestingNode>())
-            .Where(r => r.owner == Me.Faction)
-            .OrderBy(r => Vector3.Distance(transform.position, r.transform.position))
-            .ToList()
-            .First();
+        if (!Proficiencies.Instance.Harvester(Me) || MyHarvest == null) return false;
 
-        Collider _collider = nearest_harvest.GetComponent<Collider>();
-        Vector3 closest_spot = _collider.ClosestPointOnBounds(transform.position);
-        float distance = Vector3.Distance(closest_spot, transform.position);
+        // MyHarvest is the node itself, not the "destination"
+        float distance = Vector3.Distance(Me.Actions.Movement.Destinations[Movement.CommonDestination.Harvest], transform.position);
 
         if (distance <= Movement.ReachedThreshold) {
-            nearest_harvest.HarvestResource(Me);
-            Me.harvesting = nearest_harvest.material;
+            MyHarvest.HarvestResource(Me);
+            Me.harvesting = MyHarvest.material;
             Me.harvested_amount = Me.Load.First().Value;
             return true;
         }
 
-        // We've gotten bumped away from our harvest node
-        Me.Actions.Movement.SetDestination(nearest_harvest.transform);
-
         return false;
-    }
-
-
-    private void ReturnToPost()
-    {
-        float distance = Vector3.Distance(transform.position, Post.position);
-
-        if (distance > 0.01)
-        {
-            Me.Actions.Movement.Agent.destination = Post.position;
-        }
     }
 
 
@@ -284,6 +275,8 @@ public class Commoner : MonoBehaviour
         Me.Actions.OnWatch = OnWatch;
 
         Me.Health.SetCurrentAndMaxHitPoints();
+
+        Me.Actions.Movement.AddDestination(Movement.CommonDestination.Home, transform.position);
     }
 
 
@@ -296,22 +289,14 @@ public class Commoner : MonoBehaviour
     }
 
 
-    private bool Transact()
+    private bool Warehouse()
     {
-        if (Me.Load.Count <= 0) return false;
+        if (Me.Load.Count <= 0 || MyWarehouse == null) return false;
 
-        Structure nearest_structure = new List<Structure>(FindObjectsOfType<Structure>())
-            .Where(s => s.owner == Me.Faction && s.Storage != null && s.MaterialsWanted().Contains(Me.Load.First().Key.material))
-            .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
-            .ToList()
-            .First();
-
-        Collider _collider = nearest_structure.GetComponent<Collider>();
-        Vector3 closest_spot = _collider.ClosestPointOnBounds(transform.position);
-        float distance = Vector3.Distance(closest_spot, transform.position) - Me.Size;
-
+        float distance = Vector3.Distance(Me.Actions.Movement.Destinations[Movement.CommonDestination.Warehouse], transform.position);
+        
         if (distance <= Movement.ReachedThreshold) {
-            nearest_structure.DeliverMaterials(Me, Random.Range(1, 12) * .1f); // TODO: base amount on resources!
+            MyWarehouse.DeliverMaterials(Me, Random.Range(1, 12) * .1f); // TODO: base amount on resources!
             return true;
         }
 

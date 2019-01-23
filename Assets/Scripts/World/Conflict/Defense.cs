@@ -68,7 +68,6 @@ public class Defense : MonoBehaviour
                 Vector3 location = entrance.transform.position;
                 GameObject guard = Spawn(new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
                 guard.AddComponent<Guard>();
-                guard.GetComponent<Guard>().Post = entrance;
                 guard.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Perception);
                 guard.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Intimidation);
                 structure.AttachedUnits.Add(guard.GetComponent<Actor>());
@@ -93,7 +92,7 @@ public class Defense : MonoBehaviour
 
                 Vector3 location = entrance.position;
                 Actor commoner;
-                int roll = Random.Range(0, 6);
+                int roll = Random.Range(0, 24);
 
                 // artisans will only be regenerated when storage facilities report materials available
                 switch (roll) {
@@ -110,7 +109,7 @@ public class Defense : MonoBehaviour
                         structure.AttachedUnits.Add(commoner);
                         break;
                     default:
-                        // roughy 50% chance that we don't replenish commoners every reinforce
+                        // roughy 12% chance that we don't replenish commoners every reinforce
                         break;
                 }
             }
@@ -122,7 +121,6 @@ public class Defense : MonoBehaviour
                 Vector3 location = entrance.transform.position;
                 GameObject guard = Spawn(new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
                 guard.AddComponent<Guard>();
-                guard.GetComponent<Guard>().Post = entrance;
                 guard.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Perception);
                 guard.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Intimidation);
                 structure.AttachedUnits.Add(guard.GetComponent<Actor>());
@@ -135,7 +133,6 @@ public class Defense : MonoBehaviour
     {
         GameObject commoner = Spawn(new Vector3(_location.position.x, Geography.Terrain.SampleHeight(_location.position), _location.position.z));
         commoner.AddComponent<Commoner>();
-        commoner.GetComponent<Commoner>().Post = _location;
         commoner.GetComponent<Stats>().Tools.Add(_tool);
         Actor _actor = commoner.GetComponent<Actor>();
 
