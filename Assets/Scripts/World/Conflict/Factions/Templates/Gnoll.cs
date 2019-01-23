@@ -132,6 +132,8 @@ public class Gnoll : MonoBehaviour
         Me.Actions.OnWatch = OnWatch;
 
         Me.Health.SetCurrentAndMaxHitPoints();  // calculated from hit dice and constitution, set in base stats
+
+        Me.Actions.Movement.AddDestination(Movement.CommonDestination.Home, transform.position);
     }
 
 

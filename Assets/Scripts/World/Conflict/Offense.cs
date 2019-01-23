@@ -80,7 +80,6 @@ public class Offense : MonoBehaviour
     {
         GameObject commoner = Spawn(new Vector3(_location.position.x, Geography.Terrain.SampleHeight(_location.position), _location.position.z));
         commoner.AddComponent<Commoner>();
-        commoner.GetComponent<Commoner>().Post = _location;
         commoner.GetComponent<Stats>().Tools.Add(_tool);
         Actor _actor = commoner.GetComponent<Actor>();
 

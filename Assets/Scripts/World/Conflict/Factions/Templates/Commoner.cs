@@ -7,8 +7,10 @@ public class Commoner : MonoBehaviour
 {
     // properties
 
+    public HarvestingNode MyHarvest { get; set; }
+    public Structure MyWarehouse { get; set; }
+    public Structure MyWorkshop { get; set; }
     public Actor Me { get; set; }
-    public Transform Post { get; set; }
 
 
     // Unity
@@ -95,7 +97,8 @@ public class Commoner : MonoBehaviour
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         Me.Actions.SheathWeapon();
 
-        GoToWork();
+        FindWork();
+        Me.Actions.Movement.Work();
     }
 
 
@@ -199,63 +202,51 @@ public class Commoner : MonoBehaviour
 
     private void GoHome()
     {
-        Me.Actions.Movement.SetDestination(Post);
+        Me.Actions.Movement.Home();
     }
 
 
-    private void GoToWork()
+    private void FindWork()
     {
+        if (MyHarvest != null || MyWorkshop != null) return; 
+
         if (Proficiencies.Instance.Harvester(Me)) {
-            HarvestingNode harvest_point = new List<HarvestingNode>(FindObjectsOfType<HarvestingNode>())
+            MyHarvest = new List<HarvestingNode>(FindObjectsOfType<HarvestingNode>())
                 .Where(r => r.owner == Me.Faction && r.AccessibleTo(Me))
-                .OrderBy(s => Random.value)
+                .OrderBy(r => Vector3.Distance(transform.position, r.transform.position))
                 .ToList()
                 .First();
-                
-            Me.Actions.Movement.SetDestination(harvest_point.transform);
+
+            if (MyHarvest == null) return;
+
+            Collider _collider = MyHarvest.GetComponent<Collider>();
+            Me.Actions.Movement.AddDestination(Movement.CommonDestination.Harvest, _collider.ClosestPointOnBounds(transform.position));
+
         } else if (Proficiencies.Instance.Artisan(Me)) {
-            Structure work = new List<Structure>(FindObjectsOfType<Structure>())
+            MyWorkshop = new List<Structure>(FindObjectsOfType<Structure>())
                 .First(s => s.AttachedUnits.Contains(Me));
 
-            Me.Actions.Movement.SetDestination(work.RandomEntrance().transform);
+            if (MyWorkshop == null) return;
+
+            Me.Actions.Movement.AddDestination(Movement.CommonDestination.Harvest, MyWorkshop.RandomEntrance().transform.position);
         }
     }
 
 
     private bool Harvest()
     {
-        var nearest_harvest = new List<HarvestingNode>(FindObjectsOfType<HarvestingNode>())
-            .Where(r => r.owner == Me.Faction)
-            .OrderBy(r => Vector3.Distance(transform.position, r.transform.position))
-            .ToList()
-            .First();
+        if (!Me.Actions.Movement.Destinations.ContainsKey(Movement.CommonDestination.Harvest)) return false;
 
-        Collider _collider = nearest_harvest.GetComponent<Collider>();
-        Vector3 closest_spot = _collider.ClosestPointOnBounds(transform.position);
-        float distance = Vector3.Distance(closest_spot, transform.position);
+        float distance = Vector3.Distance(Me.Actions.Movement.Destinations[Movement.CommonDestination.Harvest], transform.position);
 
         if (distance <= Movement.ReachedThreshold) {
-            nearest_harvest.HarvestResource(Me);
-            Me.harvesting = nearest_harvest.material;
+            MyHarvest.HarvestResource(Me);
+            Me.harvesting = MyHarvest.material;
             Me.harvested_amount = Me.Load.First().Value;
             return true;
         }
 
-        // We've gotten bumped away from our harvest node
-        Me.Actions.Movement.SetDestination(nearest_harvest.transform);
-
         return false;
-    }
-
-
-    private void ReturnToPost()
-    {
-        float distance = Vector3.Distance(transform.position, Post.position);
-
-        if (distance > 0.01)
-        {
-            Me.Actions.Movement.Agent.destination = Post.position;
-        }
     }
 
 
@@ -284,6 +275,8 @@ public class Commoner : MonoBehaviour
         Me.Actions.OnWatch = OnWatch;
 
         Me.Health.SetCurrentAndMaxHitPoints();
+
+        Me.Actions.Movement.AddDestination(Movement.CommonDestination.Home, transform.position);
     }
 
 
