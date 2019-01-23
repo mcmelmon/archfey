@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class Movement : MonoBehaviour
 {
-    public enum CommonDestination { Home = 0, Harvest = 1, Craft = 2, Military = 3, Storage = 4 };
+    public enum CommonDestination { Home = 0, Harvest = 1, Craft = 2, Military = 3, Warehouse = 4 };
 
     // properties
 
@@ -76,6 +76,12 @@ public class Movement : MonoBehaviour
         ResetPath();
         StopCoroutine(FindThePath(destination));
         StartCoroutine(FindThePath(destination));
+    }
+
+
+    public void Warehouse()
+    {
+        SetDestination(Destinations[CommonDestination.Warehouse]);
     }
 
 

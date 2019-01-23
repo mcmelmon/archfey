@@ -26,7 +26,6 @@ public class Guard : MonoBehaviour
 
     public void OnBadlyInjured()
     {
-        Me.Actions.Decider.FriendsInNeed.Clear();
     }
 
 
@@ -70,6 +69,7 @@ public class Guard : MonoBehaviour
     public void OnIdle()
     {
         Me.Senses.Sight();
+        Me.Actions.SheathWeapon();
         Me.Actions.Movement.Home();
     }
 
@@ -91,6 +91,7 @@ public class Guard : MonoBehaviour
     public void OnReachedGoal()
     {
         Me.Actions.Movement.ResetPath();
+        Me.Actions.Decider.FriendsInNeed.Clear();
 
         Route _route = GetComponent<Route>();
 
