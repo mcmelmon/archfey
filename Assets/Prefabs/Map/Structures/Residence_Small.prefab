@@ -42,8 +42,8 @@ GameObject:
   - component: {fileID: 2776626413011567459}
   - component: {fileID: 706683586981038982}
   - component: {fileID: 614997845821881761}
-  - component: {fileID: 3873774168604017296}
   - component: {fileID: 416076875545358578}
+  - component: {fileID: 3873774168604017296}
   m_Layer: 0
   m_Name: Residence_Small
   m_TagString: Untagged
@@ -125,6 +125,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!208 &416076875545358578
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7241173340846632686}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!114 &3873774168604017296
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146,22 +162,6 @@ MonoBehaviour:
   - {fileID: 1465906694895881415}
   - {fileID: 2937847666151361576}
   revenue_cp: 0
---- !u!208 &416076875545358578
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7241173340846632686}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0, z: 0}
-  m_TimeToStationary: 0.5
 --- !u!1 &7813180422977395198
 GameObject:
   m_ObjectHideFlags: 0

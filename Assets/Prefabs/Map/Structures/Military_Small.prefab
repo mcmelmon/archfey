@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 4290550770939270924}
   - component: {fileID: 2721080141306871056}
   - component: {fileID: 6365549786765697215}
-  - component: {fileID: 3205201426538466965}
   - component: {fileID: 872495044657242867}
+  - component: {fileID: 3205201426538466965}
   m_Layer: 0
   m_Name: Military_Small
   m_TagString: Untagged
@@ -94,6 +94,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!208 &872495044657242867
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2718389586875480}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!114 &3205201426538466965
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113,26 +129,7 @@ MonoBehaviour:
   maximum_hit_points: 75
   entrances:
   - {fileID: 8728330541011134966}
-  revenue_factor: 0
   revenue_cp: 0
-  raw_materials: []
-  finished_goods: []
---- !u!208 &872495044657242867
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2718389586875480}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0, z: 0}
-  m_TimeToStationary: 0.5
 --- !u!1 &4688698140925289691
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,7 +9,7 @@ public class Commoner : MonoBehaviour
 
     public HarvestingNode MyHarvest { get; set; }
     public Structure MyWarehouse { get; set; }
-    public Storage MyWorkshop { get; set; }
+    public Workshop MyWorkshop { get; set; }
     public Actor Me { get; set; }
 
 
@@ -153,16 +153,7 @@ public class Commoner : MonoBehaviour
 
         float distance = Vector3.Distance(Me.Actions.Movement.Destinations[Movement.CommonDestination.Craft], transform.position);
 
-        if (distance < Movement.ReachedThreshold) {
-            Industry.Product product = Industry.Products.First(p => p.Name == MyWorkshop.products[0].name);
-
-            if (Industry.Instance.Craft(MyWorkshop, product, Me)) {
-                MyWorkshop.RemoveMaterials(product.Material, product.MaterialAmount);
-                return true;
-            }
-        }
-
-        return false;
+        return distance < Movement.ReachedThreshold && MyWorkshop.Craft(Me);
     }
 
 
@@ -198,7 +189,7 @@ public class Commoner : MonoBehaviour
 
     private void FindWork()
     {
-        if (MyHarvest != null || MyWorkshop != null) return; 
+        if (MyHarvest != null || MyWorkshop != null) return; // work has found us
 
         if (Proficiencies.Instance.Harvester(Me)) {
             MyHarvest = new List<HarvestingNode>(FindObjectsOfType<HarvestingNode>())
@@ -213,10 +204,7 @@ public class Commoner : MonoBehaviour
             Me.Actions.Movement.AddDestination(Movement.CommonDestination.Harvest, _collider.ClosestPointOnBounds(transform.position));
 
         } else if (Proficiencies.Instance.Artisan(Me)) {
-            MyWorkshop = FindObjectsOfType<Structure>()
-                .First(s => s.AttachedUnits.Contains(Me))
-                .Storage;
-
+            MyWorkshop = FindObjectsOfType<Workshop>().First(ws => ws.UsefulTo(Me));
             if (MyWorkshop == null) return;
 
             Collider _collider = MyWorkshop.GetComponent<Collider>();

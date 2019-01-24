@@ -27,6 +27,7 @@ public class Structure : MonoBehaviour
     public float OriginalYScale { get; set; }
     public Dictionary<Weapon.DamageType, int> Resistances { get; set; }
     public Storage Storage { get; set; }
+    public Workshop Workshop { get; set; }
 
 
     // Unity
@@ -156,6 +157,7 @@ public class Structure : MonoBehaviour
             [Weapon.DamageType.Thunder] = 0
         };
         Storage = GetComponent<Storage>();
+        Workshop = GetComponent<Workshop>();
     }
 
 

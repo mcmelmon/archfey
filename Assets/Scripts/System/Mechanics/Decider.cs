@@ -133,7 +133,7 @@ public class Decider : MonoBehaviour
 
     private bool Crafting()
     {
-        return Industry.Crafters.Contains(Me);
+        return Industry.CurrentlyCrafting.Contains(Me);
     }
 
 

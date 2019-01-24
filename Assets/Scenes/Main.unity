@@ -409,6 +409,36 @@ PrefabInstance:
       propertyPath: products.Array.data[0].name
       value: Rations_Basic
       objectReference: {fileID: 0}
+    - target: {fileID: 1959893620325225840, guid: 03adf205da7e24f16be4e1c071586e1a,
+        type: 3}
+      propertyPath: materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1959893620325225840, guid: 03adf205da7e24f16be4e1c071586e1a,
+        type: 3}
+      propertyPath: products.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1959893620325225840, guid: 03adf205da7e24f16be4e1c071586e1a,
+        type: 3}
+      propertyPath: materials.Array.data[0].material
+      value: Agriculture
+      objectReference: {fileID: 0}
+    - target: {fileID: 1959893620325225840, guid: 03adf205da7e24f16be4e1c071586e1a,
+        type: 3}
+      propertyPath: products.Array.data[0].name
+      value: Rations_Basic
+      objectReference: {fileID: 0}
+    - target: {fileID: 3130585683468975202, guid: 03adf205da7e24f16be4e1c071586e1a,
+        type: 3}
+      propertyPath: shop_tools.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3130585683468975202, guid: 03adf205da7e24f16be4e1c071586e1a,
+        type: 3}
+      propertyPath: shop_tools.Array.data[0]
+      value: Cook
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 03adf205da7e24f16be4e1c071586e1a, type: 3}
 --- !u!4 &31336670 stripped
@@ -640,7 +670,38 @@ PrefabInstance:
       propertyPath: products.Array.data[0].name
       value: Nails_Copper
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 2004779004467918157, guid: 777359a83166047819eef488f19070dd,
+        type: 3}
+      propertyPath: materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2004779004467918157, guid: 777359a83166047819eef488f19070dd,
+        type: 3}
+      propertyPath: products.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2004779004467918157, guid: 777359a83166047819eef488f19070dd,
+        type: 3}
+      propertyPath: materials.Array.data[0].material
+      value: Copper
+      objectReference: {fileID: 0}
+    - target: {fileID: 2004779004467918157, guid: 777359a83166047819eef488f19070dd,
+        type: 3}
+      propertyPath: products.Array.data[0].name
+      value: Nails_Copper
+      objectReference: {fileID: 0}
+    - target: {fileID: 26959642980413864, guid: 777359a83166047819eef488f19070dd,
+        type: 3}
+      propertyPath: shop_tools.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 26959642980413864, guid: 777359a83166047819eef488f19070dd,
+        type: 3}
+      propertyPath: shop_tools.Array.data[0]
+      value: Smith
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 777359a83166047819eef488f19070dd, type: 3}
 --- !u!4 &173703505 stripped
 Transform:
@@ -803,7 +864,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 264195861}
-  m_LocalRotation: {x: -0.06331404, y: -0.062212132, z: -0.69702214, w: 0.71153444}
+  m_LocalRotation: {x: -0.063374415, y: -0.0646199, z: -0.6911567, w: 0.71701497}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1202,7 +1263,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: 1.221333e-12
+    Value: -8.14222e-13
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -1367,7 +1428,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 465733991}
-  m_LocalRotation: {x: 0.2185803, y: -0.36876574, z: 0.089660965, w: 0.89899695}
+  m_LocalRotation: {x: 0.21862257, y: -0.36834183, z: 0.0895579, w: 0.89917064}
   m_LocalPosition: {x: 171.27708, y: 147, z: 297.57382}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2208,7 +2269,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: 1.221333e-12
+    Value: -8.14222e-13
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -2981,7 +3042,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 829675727}
-  m_LocalRotation: {x: -0.0000000745058, y: -0.000000029802319, z: 0.06374805, w: 0.99796605}
+  m_LocalRotation: {x: -0.000000029802322, y: -0, z: 0.065984935, w: 0.9978206}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -3490,7 +3551,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963679513}
-  m_LocalRotation: {x: -0.057297595, y: -0.0066809645, z: -0.7137757, w: 0.6979948}
+  m_LocalRotation: {x: -0.021747483, y: -0.04314768, z: -0.70237064, w: 0.7101696}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -5066,7 +5127,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: 1.221333e-12
+    Value: -8.14222e-13
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -6232,7 +6293,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: 1.221333e-12
+    Value: -8.14222e-13
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -9745,6 +9806,36 @@ PrefabInstance:
         type: 3}
       propertyPath: products.Array.data[0].name
       value: Lumber
+      objectReference: {fileID: 0}
+    - target: {fileID: 1959893620325225840, guid: 03adf205da7e24f16be4e1c071586e1a,
+        type: 3}
+      propertyPath: materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1959893620325225840, guid: 03adf205da7e24f16be4e1c071586e1a,
+        type: 3}
+      propertyPath: products.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1959893620325225840, guid: 03adf205da7e24f16be4e1c071586e1a,
+        type: 3}
+      propertyPath: materials.Array.data[0].material
+      value: Timber
+      objectReference: {fileID: 0}
+    - target: {fileID: 1959893620325225840, guid: 03adf205da7e24f16be4e1c071586e1a,
+        type: 3}
+      propertyPath: products.Array.data[0].name
+      value: Lumber
+      objectReference: {fileID: 0}
+    - target: {fileID: 3130585683468975202, guid: 03adf205da7e24f16be4e1c071586e1a,
+        type: 3}
+      propertyPath: shop_tools.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3130585683468975202, guid: 03adf205da7e24f16be4e1c071586e1a,
+        type: 3}
+      propertyPath: shop_tools.Array.data[0]
+      value: Carpenter
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 03adf205da7e24f16be4e1c071586e1a, type: 3}
