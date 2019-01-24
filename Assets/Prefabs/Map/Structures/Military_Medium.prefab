@@ -42,8 +42,8 @@ GameObject:
   - component: {fileID: 568212138882800251}
   - component: {fileID: 6150191307080519329}
   - component: {fileID: 992323990541946344}
-  - component: {fileID: 8460281098842039071}
   - component: {fileID: 5482008893656893947}
+  - component: {fileID: 8460281098842039071}
   m_Layer: 0
   m_Name: Military_Medium
   m_TagString: Untagged
@@ -129,6 +129,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!208 &5482008893656893947
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1606735809495864604}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!114 &8460281098842039071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,26 +169,7 @@ MonoBehaviour:
   - {fileID: 1165152595180821829}
   - {fileID: 6244887024169709196}
   - {fileID: 1262913105913133301}
-  revenue_factor: 0
   revenue_cp: 0
-  raw_materials: []
-  finished_goods: []
---- !u!208 &5482008893656893947
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1606735809495864604}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0, z: 0}
-  m_TimeToStationary: 0.5
 --- !u!1 &1875190427587488743
 GameObject:
   m_ObjectHideFlags: 0
