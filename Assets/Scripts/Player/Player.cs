@@ -141,12 +141,9 @@ public class Player : MonoBehaviour {
     {
         while (true)
         {
-            if (CurrentAmber < amber_pool_maximum)
-            {
+            if (CurrentAmber < amber_pool_maximum) {
                 IncreaseAmber(1);
-            }
-            else
-            {
+            } else {
                 CurrentAmber = amber_pool_maximum;
             }
 
@@ -160,12 +157,10 @@ public class Player : MonoBehaviour {
     {
         while (true)
         {
-            if (CurrentMana < mana_pool_maximum) // don't check IsCaster in while (or outside enumerator); it will be false at first and prevent the coroutine from starting
+            if (CurrentMana < mana_pool_maximum) // don't check IsCaster in while (or outside enumerator); it will be false at first and prevent the coroutine from starting 
             {
                 IncreaseMana(mana_pool_maximum * mana_replenishment_rate);
-            }
-            else
-            {
+            } else {
                 CurrentMana = mana_pool_maximum;
             }
 
