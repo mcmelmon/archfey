@@ -67,7 +67,6 @@ public class Conflict : MonoBehaviour
     public void Hajime()
     {
         PopulateStats();
-        //CreateNavigationMesh();
         ChooseSides();
         StartCoroutine(Waves());
     }

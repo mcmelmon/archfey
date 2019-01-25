@@ -50,7 +50,7 @@ public class Flora : MonoBehaviour {
     {
         SetComponents();
         PlantTrees();
-        CarpetForest();
+        //CarpetForest();
         CoverForest();
     }
 
@@ -72,7 +72,7 @@ public class Flora : MonoBehaviour {
         float[,] _carpet = noise.GenerateNoiseMap(Width, Depth, seed, scale, octaves, persistance, lacunarity, offset);
         Carpet = Layer(_carpet);
         Carpet.transform.localScale = new Vector3(75, 1, 75);
-        Carpet.transform.position = new Vector3(Geography.Instance.GetResolution() / 2f, 0.1f, Geography.Instance.GetResolution() / 2f);
+        Carpet.transform.position = new Vector3(Geography.Instance.GetResolution() / 2f, 100.1f, Geography.Instance.GetResolution() / 2f);
         Carpet.name = "Carpet";
     }
 
@@ -94,7 +94,7 @@ public class Flora : MonoBehaviour {
             float[,] _canopy = noise.GenerateNoiseMap(Width, Depth, seed, scale, octaves, persistance, lacunarity, offset);
             ForestLayers[i] = Layer(_canopy, true);
             ForestLayers[i].transform.localScale = new Vector3(75, -1, 75);
-            ForestLayers[i].transform.position = new Vector3(Geography.Instance.GetResolution() / 2f, 50f + (i * 25f), Geography.Instance.GetResolution() / 2f);
+            ForestLayers[i].transform.position = new Vector3(Geography.Instance.GetResolution() / 2f, 170f + (i * 50f), Geography.Instance.GetResolution() / 2f);
             ForestLayers[i].name = "Canopy";
         }
     }

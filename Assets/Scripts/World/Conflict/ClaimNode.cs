@@ -7,8 +7,6 @@ public class ClaimNode : MonoBehaviour
 {
     // Inspector settings
 
-    [Header("Claiming")]
-    public int claim_resistance = 0;
     public int maximum_claim_points = 50;
     public Slider claim_indicator;
 
@@ -17,7 +15,6 @@ public class ClaimNode : MonoBehaviour
     public List<Actor> Attackers { get; set; }
     public bool Claimed { get; set; }
     public Conflict.Faction ClaimFaction { get; set; }
-    public float ClaimResistance { get; set; }
     public float CurrentClaimPoints { get; set; }
     public List<Actor> Defenders { get; set; }
     public Conflict.Faction OccupyingFaction { get; set; }
@@ -43,9 +40,6 @@ public class ClaimNode : MonoBehaviour
         CurrentClaimPoints = 0;
         OccupyingFaction = ClaimFaction = Conflict.Faction.None;
         Claimed = false;
-        foreach (var rend in Objective.renderers) {
-            rend.material = Objective.unclaimed_skin;
-        }
     }
 
 
@@ -95,14 +89,11 @@ public class ClaimNode : MonoBehaviour
 
         if (CurrentClaimPoints >= maximum_claim_points) return;
 
-        CurrentClaimPoints += Mathf.Clamp((defender.Stats.ProficiencyBonus - ClaimResistance), 0, defender.Stats.ProficiencyBonus);  // TODO: give commoners expertise
+        CurrentClaimPoints += defender.Stats.ProficiencyBonus;
         if (CurrentClaimPoints >= maximum_claim_points) {
             CurrentClaimPoints = maximum_claim_points;
             ClaimFaction = OccupyingFaction = defender.Faction;
             Claimed = true;
-            foreach (var rend in Objective.renderers) {
-                rend.material = (ClaimFaction == Conflict.Faction.Ghaddim) ? Objective.ghaddim_skin : Objective.mhoddim_skin;
-            }
         }
     }
 
@@ -157,7 +148,7 @@ public class ClaimNode : MonoBehaviour
             OccupyingFaction = attacker.Faction;
             BoostClaim(attacker);
         } else {
-            CurrentClaimPoints -= Mathf.Clamp((attacker.Stats.ProficiencyBonus - ClaimResistance), 0, attacker.Stats.ProficiencyBonus);
+            CurrentClaimPoints -= attacker.Stats.ProficiencyBonus;
             if (CurrentClaimPoints <= 0) ClearAllClaim();
         }
     }
@@ -170,7 +161,6 @@ public class ClaimNode : MonoBehaviour
         Attackers = new List<Actor>();
         Claimed = Objective.initial_claim != Conflict.Faction.None;
         ClaimFaction = Objective.initial_claim;
-        ClaimResistance = claim_resistance;
         CurrentClaimPoints = (ClaimFaction == Conflict.Faction.None) ? 0 : maximum_claim_points;
         Defenders = new List<Actor>();
         OccupyingFaction = ClaimFaction;

@@ -1,22 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Objective : MonoBehaviour
 {
     // Inspector settings
-    [Header("Claim")]
-    // Claim covers which faction benefits from controling the objective
+
     public Conflict.Faction initial_claim;
     public List<ClaimNode> claim_nodes;
-
-    [Header("Rendering")]
-    // Rendering tints the objective based on controling faction
-    public Material ghaddim_skin;
-    public Material mhoddim_skin;
-    public Material unclaimed_skin;
-    public List<Renderer> renderers;
 
     // properties
 
@@ -30,6 +22,12 @@ public class Objective : MonoBehaviour
     private void Awake()
     {
         SetComponents();
+    }
+
+
+    private void Start()
+    {
+        StartCoroutine(CheckClaim());
     }
 
 
@@ -58,8 +56,7 @@ public class Objective : MonoBehaviour
     {
         float[] claims = new float[claim_nodes.Count];
         float sum = 0;
-        for (int i = 0; i < claim_nodes.Count; i++)
-        {
+        for (int i = 0; i < claim_nodes.Count; i++) {
             sum += claim_nodes[i].CurrentClaimPercentage();
         }
 
@@ -70,8 +67,6 @@ public class Objective : MonoBehaviour
     private IEnumerator CheckClaim()
     {
         while (true) {
-            yield return new WaitForSeconds(Turn.ActionThreshold);
-
             Conflict.Faction new_faction = Conflict.Faction.None;
             Conflict.Faction previous_faction = Claim;
 
@@ -94,6 +89,7 @@ public class Objective : MonoBehaviour
             if (new_faction != previous_faction) {
                 TransferClaim(new_faction, previous_faction);
             }
+            yield return new WaitForSeconds(Turn.ActionThreshold);
         }
     }
 
@@ -102,11 +98,6 @@ public class Objective : MonoBehaviour
     {
         Claim = initial_claim;
         Claimed = Claim != Conflict.Faction.None;
-        StartCoroutine(CheckClaim());
-
-        foreach (var rend in renderers) {
-            rend.material = (initial_claim == Conflict.Faction.None) ? unclaimed_skin : (initial_claim == Conflict.Faction.Ghaddim) ? ghaddim_skin : mhoddim_skin;
-        }
     }
 
 
@@ -114,18 +105,6 @@ public class Objective : MonoBehaviour
     {
         Claimed = true;
         Claim = new_faction;
-
-        switch (Claim) {
-            case Conflict.Faction.Ghaddim:
-                GetComponentInChildren<Renderer>().material = ghaddim_skin;
-                break;
-            case Conflict.Faction.Mhoddim:
-                GetComponentInChildren<Renderer>().material = mhoddim_skin;
-                break;
-            case Conflict.Faction.None:
-                GetComponentInChildren<Renderer>().material = unclaimed_skin;
-                break;
-        }
 
         Objectives.Instance.AccountForClaim(new_faction, previous_faction, this);
         ObjectiveControlUI.Instance.ChangeClaim(Claim, previous_faction);
