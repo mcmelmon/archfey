@@ -106,7 +106,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attack_bonus: 0
   damage_bonus: 0
-  damage_die: 4
+  dice_type: 4
+  number_of_dice: 1
   damage_type: 1
   expected_damage: 3
   has_reach: 0

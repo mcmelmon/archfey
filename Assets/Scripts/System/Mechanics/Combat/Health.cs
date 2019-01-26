@@ -75,7 +75,7 @@ public class Health : MonoBehaviour {
 
     public void SetCurrentAndMaxHitPoints()
     {
-        CurrentHitPoints = MaximumHitPoints = (Me.Stats.ConstitutionProficiency * HitDice) + (HitDice * HitDiceType / 2) + 1;
+        CurrentHitPoints = MaximumHitPoints = (Me.Stats.AttributeProficiency[Proficiencies.Attribute.Constitution] * HitDice) + (HitDice * HitDiceType / 2) + 1;
     }
 
 

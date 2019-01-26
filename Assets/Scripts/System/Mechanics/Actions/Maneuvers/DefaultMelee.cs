@@ -55,12 +55,14 @@ public class DefaultMelee : MonoBehaviour
 
         if (target_actor != null) {
             if (target_actor.Health != null && target_actor.Actions.Stats != null && Me.Actions != null) {
-                int damage_roll = (Critical) ? Random.Range(0, Weapon.damage_die * 2) + 1 : Random.Range(0, Weapon.damage_die) + 1;
-                Damage = target_actor.Actions.Stats.DamageAfterDefenses(damage_roll + DamageModifier, Weapon.damage_type);
+                int damage_roll = (Critical) ? (Me.Actions.RollDie(Weapon.dice_type, Weapon.number_of_dice) * 2) + 1 : Me.Actions.RollDie(Weapon.dice_type, Weapon.number_of_dice) + 1;
+                damage_roll += DamageModifier;
+                Damage = target_actor.Actions.Stats.DamageAfterDefenses(damage_roll, Weapon.damage_type);
                 target_actor.Health.LoseHealth(Damage, Me);
             }
         } else if (target_structure != null) {
-            int damage_roll = (Critical) ? Random.Range(0, Weapon.damage_die * 2) + 1 : Random.Range(0, Weapon.damage_die) + 1;
+            int damage_roll = (Critical) ? Me.Actions.RollDie(Weapon.dice_type, Weapon.number_of_dice) + 1 : Random.Range(0, Weapon.dice_type) + 1;
+            damage_roll += DamageModifier;
             target_structure.LoseStructure(damage_roll, Weapon.damage_type);
         }
 
@@ -118,11 +120,11 @@ public class DefaultMelee : MonoBehaviour
     private void SetModifiers()
     {
         if (Weapon.is_light) {
-            AttackModifier = Me.Stats.DexterityProficiency + Weapon.attack_bonus + Actions.SuperiorWeapons[Weapon.damage_type];
-            DamageModifier = Me.Stats.DexterityProficiency + Weapon.damage_bonus + Actions.SuperiorWeapons[Weapon.damage_type];
+            AttackModifier = Me.Stats.AttributeProficiency[Proficiencies.Attribute.Dexterity] + Weapon.attack_bonus;
+            DamageModifier = Me.Stats.AttributeProficiency[Proficiencies.Attribute.Dexterity] + Weapon.damage_bonus;
         } else {
-            AttackModifier = Me.Stats.StrengthProficiency + Weapon.attack_bonus + Actions.SuperiorWeapons[Weapon.damage_type];
-            DamageModifier = Me.Stats.StrengthProficiency + Weapon.damage_bonus + Actions.SuperiorWeapons[Weapon.damage_type];
+            AttackModifier = Me.Stats.AttributeProficiency[Proficiencies.Attribute.Dexterity] + Weapon.attack_bonus;
+            DamageModifier = Me.Stats.AttributeProficiency[Proficiencies.Attribute.Dexterity] + Weapon.damage_bonus;
         }
     }
 }

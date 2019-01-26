@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &9087117754225772727
+--- !u!1 &2209484634554539111
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,47 +8,49 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5095304856992256944}
-  - component: {fileID: 6235682685688967755}
-  - component: {fileID: 2525543160197307101}
-  - component: {fileID: 768835700546945483}
-  - component: {fileID: 4807167172828228394}
+  - component: {fileID: 5125978558736653159}
+  - component: {fileID: 8965120036681844578}
+  - component: {fileID: 5604517299677907830}
+  - component: {fileID: 7538675726709049415}
+  - component: {fileID: 5413045312044100838}
+  - component: {fileID: 4572898142235872632}
   m_Layer: 0
-  m_Name: Longbow
+  m_Name: Shrine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5095304856992256944
+--- !u!4 &5125978558736653159
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9087117754225772727}
+  m_GameObject: {fileID: 2209484634554539111}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_LocalScale: {x: 5, y: 4, z: 5}
+  m_Children:
+  - {fileID: 1523498764160231772}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &6235682685688967755
+--- !u!33 &8965120036681844578
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9087117754225772727}
+  m_GameObject: {fileID: 2209484634554539111}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &2525543160197307101
+--- !u!23 &5604517299677907830
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9087117754225772727}
+  m_GameObject: {fileID: 2209484634554539111}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -79,47 +81,80 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &768835700546945483
+--- !u!65 &7538675726709049415
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9087117754225772727}
+  m_GameObject: {fileID: 2209484634554539111}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4807167172828228394
+--- !u!114 &5413045312044100838
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9087117754225772727}
+  m_GameObject: {fileID: 2209484634554539111}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 343f8faffa6de4d0687c032dacb2bb1b, type: 3}
+  m_Script: {fileID: 11500000, guid: 91eaf97416c524f5baa0376c9e33c0ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attack_bonus: 0
-  damage_bonus: 0
-  dice_type: 8
-  number_of_dice: 1
-  damage_type: 7
-  expected_damage: 5
-  has_reach: 0
-  is_finese: 0
-  is_heavy: 1
-  is_light: 0
-  is_loaded: 0
-  is_magic: 0
-  is_silvered: 0
-  is_thrown: 0
-  is_two_handed: 1
-  is_versatile: 0
-  projectile_prefab: {fileID: 1616139879216142, guid: 5ef6dfd2c2595457cafd0f83612f3c8a,
-    type: 3}
-  range: 15
+  owner: 0
+  purpose: 0
+  armor_class: 13
+  damage_resistance: 0
+  maximum_hit_points: 100
+  entrances:
+  - {fileID: 1523498764160231772}
+  revenue_cp: 0
+--- !u!114 &4572898142235872632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2209484634554539111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56e40803f62f34260a4cb3d00901fffb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  materials: []
+  products: []
+--- !u!1 &7002825223179949295
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1523498764160231772}
+  m_Layer: 0
+  m_Name: Entrance
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1523498764160231772
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7002825223179949295}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5125978558736653159}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

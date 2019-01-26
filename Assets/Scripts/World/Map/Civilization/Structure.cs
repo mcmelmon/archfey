@@ -25,7 +25,7 @@ public class Structure : MonoBehaviour
     public int CurrentHitPoints { get; set; }
     public float OriginalY { get; set; }
     public float OriginalYScale { get; set; }
-    public Dictionary<Weapon.DamageType, int> Resistances { get; set; }
+    public Dictionary<Weapons.DamageType, int> Resistances { get; set; }
     public Storage Storage { get; set; }
     public Workshop Workshop { get; set; }
 
@@ -58,12 +58,12 @@ public class Structure : MonoBehaviour
     }
 
 
-    public void LoseStructure(int _amount, Weapon.DamageType _type)
+    public void LoseStructure(int amount, Weapons.DamageType type)
     {
         if (CurrentHitPoints == 0) return;
 
-        int reduced_amount = (_amount - damage_resistance > 0) ? _amount - damage_resistance : 0;
-        CurrentHitPoints -= DamageAfterResistance(reduced_amount, _type);
+        int reduced_amount = (amount - damage_resistance > 0) ? amount - damage_resistance : 0;
+        CurrentHitPoints -= DamageAfterResistance(reduced_amount, type);
         if (CurrentHitPoints <= 0) CurrentHitPoints = 0;
         UpdateStructure();
     }
@@ -108,15 +108,15 @@ public class Structure : MonoBehaviour
     // private
 
 
-    private void BookRevenue(float _amount)
+    private void BookRevenue(float amount)
     {
-        revenue_cp += (owner == Conflict.Faction.Ghaddim) ? Ghaddim.AfterTaxIncome(_amount) : Mhoddim.AfterTaxIncome(_amount);
+        revenue_cp += (owner == Conflict.Faction.Ghaddim) ? Ghaddim.AfterTaxIncome(amount) : Mhoddim.AfterTaxIncome(amount);
     }
 
 
-    private int DamageAfterResistance(int _damage, Weapon.DamageType _type)
+    private int DamageAfterResistance(int damage, Weapons.DamageType type)
     {
-        return (_damage <= 0 || Resistances == null) ? _damage : (_damage -= _damage * (Resistances[_type] / 100));
+        return (damage <= 0 || Resistances == null) ? damage : (damage -= damage * (Resistances[type] / 100));
     }
 
 
@@ -141,20 +141,20 @@ public class Structure : MonoBehaviour
         CurrentHitPoints = maximum_hit_points;
         OriginalY = transform.position.y;
         OriginalYScale = transform.localScale.y;
-        Resistances = new Dictionary<Weapon.DamageType, int>  // TODO: override some reistances
+        Resistances = new Dictionary<Weapons.DamageType, int>  // TODO: override some reistances
         {
-            [Weapon.DamageType.Acid] = 0,
-            [Weapon.DamageType.Bludgeoning] = 25,
-            [Weapon.DamageType.Cold] = 25,
-            [Weapon.DamageType.Fire] = -50,
-            [Weapon.DamageType.Force] = 0,
-            [Weapon.DamageType.Lightning] = 0,
-            [Weapon.DamageType.Necrotic] = 0,
-            [Weapon.DamageType.Piercing] = 50,
-            [Weapon.DamageType.Poison] = 100,
-            [Weapon.DamageType.Psychic] = 100,
-            [Weapon.DamageType.Slashing] = 25,
-            [Weapon.DamageType.Thunder] = 0
+            [Weapons.DamageType.Acid] = 0,
+            [Weapons.DamageType.Bludgeoning] = 25,
+            [Weapons.DamageType.Cold] = 25,
+            [Weapons.DamageType.Fire] = -50,
+            [Weapons.DamageType.Force] = 0,
+            [Weapons.DamageType.Lightning] = 0,
+            [Weapons.DamageType.Necrotic] = 0,
+            [Weapons.DamageType.Piercing] = 50,
+            [Weapons.DamageType.Poison] = 100,
+            [Weapons.DamageType.Psychic] = 100,
+            [Weapons.DamageType.Slashing] = 25,
+            [Weapons.DamageType.Thunder] = 0
         };
         Storage = GetComponent<Storage>();
         Workshop = GetComponent<Workshop>();

@@ -31,9 +31,7 @@ public class Actions : MonoBehaviour
     public Action OnReachedGoal { get; set; }
     public Action OnUnderAttack { get; set; }
     public Action OnWatch { get; set; }
-
-    public static Dictionary<Weapon.DamageType, int> SuperiorWeapons { get; set; }
-
+    
 
     // Unity
 
@@ -199,35 +197,15 @@ public class Actions : MonoBehaviour
     }
 
 
-    public void Maneuver()
+    public int RollDie(int dice_type, int number_of_rolls)
     {
-    //    // TODO: allow units to pick from their own particular spells
+        return UnityEngine.Random.Range(1, dice_type + 1) * number_of_rolls;
+    }
 
-    //    if (Decider.Enemies.Count == 0) return;
 
-    //    FerociousClaw _claw = Resources.gameObject.GetComponent<FerociousClaw>();
-
-    //    if (_claw != null && Resources.CurrentEnergy >= _claw.EnergyCost)
-    //    {
-    //        float lowest_health = float.MaxValue;
-    //        float health;
-    //        Actor chosen_target = null;
-
-    //        foreach (var enemy in Decider.Enemies)
-    //        {
-    //            if (Vector3.Distance(enemy.transform.position, transform.position) < _claw.Range)
-    //            {
-    //                health = enemy.Health.CurrentHitPoints;
-    //                if (health < lowest_health)
-    //                {
-    //                    lowest_health = health;
-    //                    chosen_target = enemy;
-    //                }
-    //            }
-    //        }
-
-    //        if (chosen_target != null) _claw.Cast(chosen_target);
-    //    }
+    public bool RollSavingThrow(Proficiencies.Attribute attribute, int challenge_rating)
+    {
+        return UnityEngine.Random.Range(1, 21) + Me.Stats.AttributeProficiency[attribute] > challenge_rating;
     }
 
 
@@ -248,21 +226,6 @@ public class Actions : MonoBehaviour
         Stats = GetComponentInParent<Stats>();
         Me = GetComponentInParent<Actor>();
         Movement = GetComponent<Movement>();
-        SuperiorWeapons = new Dictionary<Weapon.DamageType, int>
-        {
-            [Weapon.DamageType.Acid] = 0,
-            [Weapon.DamageType.Bludgeoning] = 0,
-            [Weapon.DamageType.Cold] = 0,
-            [Weapon.DamageType.Fire] = 0,
-            [Weapon.DamageType.Force] = 0,
-            [Weapon.DamageType.Lightning] = 0,
-            [Weapon.DamageType.Necrotic] = 0,
-            [Weapon.DamageType.Piercing] = 0,
-            [Weapon.DamageType.Poison] = 0,
-            [Weapon.DamageType.Psychic] = 0,
-            [Weapon.DamageType.Slashing] = 0,
-            [Weapon.DamageType.Thunder] = 0
-        };
     }
 
 

@@ -4,28 +4,13 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour {
 
-    public enum DamageType { 
-        Acid = 0,
-        Bludgeoning = 1,
-        Cold = 2,
-        Fire = 3,
-        Force = 4,
-        Lightning = 5,
-        Necrotic = 6,
-        Piercing = 7,
-        Poison = 8,
-        Psychic = 9,
-        Radiant = 10,
-        Slashing = 11,
-        Thunder = 12
-    };
-
     // Inspector settings
 
     public int attack_bonus;
     public int damage_bonus;
-    public int damage_die;
-    public DamageType damage_type;
+    public int dice_type;
+    public int number_of_dice;
+    public Weapons.DamageType damage_type;
     public int expected_damage;
     public bool has_reach;
     public bool is_finese;

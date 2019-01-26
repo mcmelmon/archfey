@@ -213,7 +213,6 @@ public class Commoner : MonoBehaviour
     }
 
 
-
     private void GoHome()
     {
         Me.Actions.Movement.Home();

@@ -14,7 +14,7 @@ public class Characters : MonoBehaviour
     public static Dictionary<Template, float> darkvision_range = new Dictionary<Template, float>();
     public static Dictionary<Template, float> perception_range = new Dictionary<Template, float>();
     public static Dictionary<Template, List<Weapon>> available_weapons = new Dictionary<Template, List<Weapon>>();
-    public static Dictionary<Template, Dictionary<Weapon.DamageType, int>> resistances = new Dictionary<Template, Dictionary<Weapon.DamageType, int>>();
+    public static Dictionary<Template, Dictionary<Weapons.DamageType, int>> resistances = new Dictionary<Template, Dictionary<Weapons.DamageType, int>>();
 
     // properties
 
@@ -54,20 +54,20 @@ public class Characters : MonoBehaviour
     {
         darkvision_range[Template.Base] = 0f;
         perception_range[Template.Base] = 25f;
-        resistances[Template.Base] = new Dictionary<Weapon.DamageType, int>
+        resistances[Template.Base] = new Dictionary<Weapons.DamageType, int>
         {
-            [Weapon.DamageType.Acid] = 0,
-            [Weapon.DamageType.Bludgeoning] = 0,
-            [Weapon.DamageType.Cold] = 0,
-            [Weapon.DamageType.Fire] = 0,
-            [Weapon.DamageType.Force] = 0,
-            [Weapon.DamageType.Lightning] = 0,
-            [Weapon.DamageType.Necrotic] = 0,
-            [Weapon.DamageType.Piercing] = 0,
-            [Weapon.DamageType.Poison] = 0,
-            [Weapon.DamageType.Psychic] = 0,
-            [Weapon.DamageType.Slashing] = 0,
-            [Weapon.DamageType.Thunder] = 0
+            [Weapons.DamageType.Acid] = 0,
+            [Weapons.DamageType.Bludgeoning] = 0,
+            [Weapons.DamageType.Cold] = 0,
+            [Weapons.DamageType.Fire] = 0,
+            [Weapons.DamageType.Force] = 0,
+            [Weapons.DamageType.Lightning] = 0,
+            [Weapons.DamageType.Necrotic] = 0,
+            [Weapons.DamageType.Piercing] = 0,
+            [Weapons.DamageType.Poison] = 0,
+            [Weapons.DamageType.Psychic] = 0,
+            [Weapons.DamageType.Slashing] = 0,
+            [Weapons.DamageType.Thunder] = 0
         };
     }
 

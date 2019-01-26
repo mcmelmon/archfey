@@ -41,6 +41,9 @@ public class Defense : MonoBehaviour
         var military = FindObjectsOfType<Structure>()
             .Where(s => s.purpose == Structure.Purpose.Military && s.owner == Conflict.Faction.Mhoddim);
 
+        var sacred = FindObjectsOfType<Structure>()
+            .Where(s => s.purpose == Structure.Purpose.Sacred && s.owner == Conflict.Faction.Mhoddim);
+
         foreach (var residence in residences) {
             foreach (var entrance in residence.entrances) {
                 Vector3 location = entrance.position;
@@ -71,6 +74,19 @@ public class Defense : MonoBehaviour
                 guard.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Perception);
                 guard.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Intimidation);
                 structure.AttachedUnits.Add(guard.GetComponent<Actor>());
+            }
+        }
+
+
+        foreach (var structure in sacred) {
+            foreach (var entrance in structure.entrances) {
+                Vector3 location = entrance.transform.position;
+                GameObject acolyte = Spawn(new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
+                acolyte.AddComponent<Acolyte>();
+                acolyte.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Medicine);
+                acolyte.GetComponent<Stats>().Expertise.Add(Proficiencies.Skill.Medicine);
+                acolyte.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Religion);
+                structure.AttachedUnits.Add(acolyte.GetComponent<Actor>());
             }
         }
     }

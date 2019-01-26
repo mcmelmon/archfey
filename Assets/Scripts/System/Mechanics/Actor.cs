@@ -58,13 +58,16 @@ public class Actor : MonoBehaviour
         Health.HitDiceType = stat_block.hit_dice_type;
 
         Stats.ArmorClass = stat_block.armor_class;
-        Stats.CharismaProficiency = stat_block.charisma_proficiency;
-        Stats.ConstitutionProficiency = stat_block.constituion_proficiency;
-        Stats.DexterityProficiency = stat_block.dexterity_proficiency;
-        Stats.IntelligenceProficiency = stat_block.intelligence_proficiency;
-        Stats.StrengthProficiency = stat_block.strength_proficiency;
-        Stats.WisdomProficiency = stat_block.wisdom_proficiency;
+        Stats.AttributeProficiency[Proficiencies.Attribute.Charisma] = stat_block.charisma_proficiency;
+        Stats.AttributeProficiency[Proficiencies.Attribute.Constitution] = stat_block.constituion_proficiency;
+        Stats.AttributeProficiency[Proficiencies.Attribute.Dexterity] = stat_block.dexterity_proficiency;
+        Stats.AttributeProficiency[Proficiencies.Attribute.Intelligence] = stat_block.intelligence_proficiency;
+        Stats.AttributeProficiency[Proficiencies.Attribute.Strength] = stat_block.strength_proficiency;
+        Stats.AttributeProficiency[Proficiencies.Attribute.Wisdom] = stat_block.wisdom_proficiency;
         Stats.ProficiencyBonus = stat_block.proficiency_bonus;
+
+        Stats.Family = stat_block.family;
+        Stats.Size = stat_block.size;
     }
 
 
@@ -103,5 +106,7 @@ public class Actor : MonoBehaviour
         public int hit_dice_type;
         public int starting_hit_dice;
         public float speed;
+        public string family;
+        public string size;
     }
 }
