@@ -70,8 +70,8 @@ public class Objective : MonoBehaviour
             Conflict.Faction new_faction = Conflict.Faction.None;
             Conflict.Faction previous_faction = Claim;
 
-            foreach (var control_point in claim_nodes) {
-                Conflict.Faction point_faction = control_point.ClaimFaction;
+            foreach (var node in claim_nodes) {
+                Conflict.Faction point_faction = node.ClaimFaction;
 
                 if (new_faction == Conflict.Faction.None)
                     // We have just entered the loop
@@ -103,8 +103,10 @@ public class Objective : MonoBehaviour
 
     private void TransferClaim(Conflict.Faction new_faction, Conflict.Faction previous_faction)
     {
-        Claimed = true;
-        Claim = new_faction;
+        if (new_faction != Conflict.Faction.None) {
+            Claimed = true;
+            Claim = new_faction;
+        }
 
         Objectives.Instance.AccountForClaim(new_faction, previous_faction, this);
         ObjectiveControlUI.Instance.ChangeClaim(Claim, previous_faction);

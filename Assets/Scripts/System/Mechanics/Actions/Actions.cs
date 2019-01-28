@@ -27,6 +27,7 @@ public class Actions : MonoBehaviour
     public Action OnHostileStructuresSighted { get; set; }
     public Action OnIdle { get; set; }
     public Action OnInCombat { get; set; }
+    public Action OnMedic { get; set; }
     public Action OnMovingToGoal { get; set; }
     public Action OnReachedGoal { get; set; }
     public Action OnUnderAttack { get; set; }
@@ -52,52 +53,55 @@ public class Actions : MonoBehaviour
         switch (Decider.state)
         {
             case Decider.State.BadlyInjured:
-                OnBadlyInjured.Invoke();
+                OnBadlyInjured?.Invoke();
                 break;
             case Decider.State.Crafting:
-                OnCrafting.Invoke();
+                OnCrafting?.Invoke();
                 break;
             case Decider.State.FriendsInNeed:
-                OnFriendsInNeed.Invoke();
+                OnFriendsInNeed?.Invoke();
                 break;
             case Decider.State.FriendlyActorsSighted:
-                OnFriendlyActorsSighted.Invoke();
+                OnFriendlyActorsSighted?.Invoke();
                 break;
             case Decider.State.DamagedFriendlyStructuresSighted:
-                OnDamagedFriendlyStructuresSighted.Invoke();
+                OnDamagedFriendlyStructuresSighted?.Invoke();
                 break;
             case Decider.State.FullLoad:
-                OnFullLoad.Invoke();
+                OnFullLoad?.Invoke();
                 break;
             case Decider.State.Harvesting:
-                OnHarvetsing.Invoke();
+                OnHarvetsing?.Invoke();
                 break;
             case Decider.State.HostileActorsSighted:
-                OnHostileActorsSighted.Invoke();
+                OnHostileActorsSighted?.Invoke();
                 break;
             case Decider.State.HostileStructuresSighted:
-                OnHostileStructuresSighted.Invoke();
+                OnHostileStructuresSighted?.Invoke();
                 break;
             case Decider.State.Idle:
-                OnIdle.Invoke();
+                OnIdle?.Invoke();
                 break;
             case Decider.State.InCombat:
-                OnInCombat.Invoke();
+                OnInCombat?.Invoke();
+                break;
+            case Decider.State.Medic:
+                OnMedic?.Invoke();
                 break;
             case Decider.State.MovingToGoal:
-                OnMovingToGoal.Invoke();
+                OnMovingToGoal?.Invoke();
                 break;
             case Decider.State.ReachedGoal:
-                OnReachedGoal.Invoke();
+                OnReachedGoal?.Invoke();
                 break;
             case Decider.State.UnderAttack:
-                OnUnderAttack.Invoke();
+                OnUnderAttack?.Invoke();
                 break;
             case Decider.State.Watch:
-                OnWatch.Invoke();
+                OnWatch?.Invoke();
                 break;
             default:
-                OnIdle.Invoke();
+                OnIdle?.Invoke();
                 break;
         }
     }
@@ -116,44 +120,6 @@ public class Actions : MonoBehaviour
                     friends[i].Actions.Decider.FriendsInNeed.Add(Me);
             }
         }
-    }
-
-
-    public void CastDefensiveSpell()
-    {
-
-    }
-
-
-    public void CastOffensiveSpell()
-    {
-        //// TODO: allow units to pick from their own particular spells
-
-        //if (Decider.Enemies.Count == 0) return;
-
-        //Smite _smite = Resources.gameObject.GetComponent<Smite>();
-
-        //if (_smite != null)
-        //{
-        //    float lowest_health = float.MaxValue;
-        //    float health;
-        //    Actor chosen_target = null;
-
-        //    foreach (var enemy in Decider.Enemies)
-        //    {
-        //        if (Vector3.Distance(enemy.transform.position, transform.position) < _smite.Range)
-        //        {
-        //            health = enemy.Health.CurrentHitPoints;
-        //            if (health < lowest_health)
-        //            {
-        //                lowest_health = health;
-        //                chosen_target = enemy;
-        //            }
-        //        }
-        //    }
-
-        //    if (chosen_target != null) _smite.Cast(chosen_target);
-        //}
     }
 
 
@@ -199,7 +165,14 @@ public class Actions : MonoBehaviour
 
     public int RollDie(int dice_type, int number_of_rolls)
     {
-        return UnityEngine.Random.Range(1, dice_type + 1) * number_of_rolls;
+        int result = 0;
+
+        for (int i = 0; i < number_of_rolls; i++)
+        {
+            int roll = UnityEngine.Random.Range(1, dice_type + 1);
+            result += roll;
+        }
+        return result;
     }
 
 

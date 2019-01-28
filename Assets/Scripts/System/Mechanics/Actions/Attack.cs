@@ -32,6 +32,8 @@ public class Attack : MonoBehaviour
 
     public void AttackEnemiesInRange()
     {
+        // TODO: attack the PrimaryThreat chosen by Decider, not just one from "available targets" (which is still important for range-finding)
+
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         SelectEnemy();
         StrikeEnemy();

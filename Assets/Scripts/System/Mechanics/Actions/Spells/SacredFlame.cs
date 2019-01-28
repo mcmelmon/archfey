@@ -9,6 +9,7 @@ public class SacredFlame : MonoBehaviour
     public Actor Me { get; set; }
     public Weapons.DamageType DamageType { get; set; }
     public int Die { get; set; }
+    public int Level { get; set; }
     public int NumberOfDice { get; set; }
     public float Range { get; set; }
     public Magic.School School { get; set; }
@@ -62,6 +63,7 @@ public class SacredFlame : MonoBehaviour
     {
         DamageType = Weapons.DamageType.Radiant;
         Die = 8;
+        Level = 0;
         Me = GetComponentInParent<Actor>();
         Range = 10f;
         School = Magic.School.Evocation;

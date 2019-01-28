@@ -26,6 +26,9 @@ public class Guard : MonoBehaviour
 
     public void OnBadlyInjured()
     {
+        Me.Actions.Movement.ResetPath();
+        Me.Actions.Decider.FriendsInNeed.Clear();
+        FindShrine();
     }
 
 
@@ -122,6 +125,18 @@ public class Guard : MonoBehaviour
     // private
 
 
+    private void FindShrine()
+    {
+        Structure nearest_sacred_structure = new List<Structure>(FindObjectsOfType<Structure>())
+            .Where(s => s.owner == Me.Faction && s.purpose == Structure.Purpose.Sacred)
+            .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
+            .ToList()
+            .First();
+
+        Me.Actions.Movement.SetDestination(nearest_sacred_structure.transform);
+    }
+
+
     private void SetStats()
     {
         Me = GetComponent<Actor>();
@@ -142,9 +157,6 @@ public class Guard : MonoBehaviour
         Me.Actions.OnReachedGoal = OnReachedGoal;
         Me.Actions.OnUnderAttack = OnUnderAttack;
         Me.Actions.OnWatch = OnWatch;
-
-        Me.Health.SetCurrentAndMaxHitPoints();
-
         Me.Actions.Movement.AddDestination(Movement.CommonDestination.Home, transform.position);
     }
 

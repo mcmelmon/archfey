@@ -66,6 +66,7 @@ public class Characters : MonoBehaviour
             [Weapons.DamageType.Piercing] = 0,
             [Weapons.DamageType.Poison] = 0,
             [Weapons.DamageType.Psychic] = 0,
+            [Weapons.DamageType.Radiant] = 0,
             [Weapons.DamageType.Slashing] = 0,
             [Weapons.DamageType.Thunder] = 0
         };

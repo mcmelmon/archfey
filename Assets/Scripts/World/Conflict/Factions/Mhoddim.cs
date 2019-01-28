@@ -66,7 +66,7 @@ public class Mhoddim : MonoBehaviour
 
     public Actor BiggestFactionThreat()
     {
-        return Threat.BiggestThreat();
+        return Threat.PrimaryThreat();
     }
 
 

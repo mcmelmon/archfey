@@ -35,7 +35,7 @@ public class Health : MonoBehaviour {
 
     public bool BadlyInjured()
     {
-        return CurrentHealthPercentage() <= 0.4f;
+        return CurrentHealthPercentage() <= 0.6f;
     }
 
 
@@ -75,7 +75,7 @@ public class Health : MonoBehaviour {
 
     public void SetCurrentAndMaxHitPoints()
     {
-        CurrentHitPoints = MaximumHitPoints = (Me.Stats.AttributeProficiency[Proficiencies.Attribute.Constitution] * HitDice) + (HitDice * HitDiceType / 2) + 1;
+        CurrentHitPoints = MaximumHitPoints = Mathf.RoundToInt((Me.Stats.AttributeProficiency[Proficiencies.Attribute.Constitution] * HitDice) + (HitDice * HitDiceType / 2f) + 1);
     }
 
 

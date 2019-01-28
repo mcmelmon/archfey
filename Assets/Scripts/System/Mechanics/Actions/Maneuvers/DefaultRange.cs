@@ -60,7 +60,7 @@ public class DefaultRange : MonoBehaviour
 
         if (target_actor != null) {
             if (target_actor.Health != null && target_actor.Actions.Stats != null && Me.Actions != null) {
-                int damage_roll = (Critical) ? (Me.Actions.RollDie(Weapon.dice_type, Weapon.number_of_dice) * 2) + 1 : Me.Actions.RollDie(Weapon.dice_type, Weapon.number_of_dice) + 1;
+                int damage_roll = (Critical) ? (Me.Actions.RollDie(Weapon.dice_type, Weapon.number_of_dice) * 2) + 1 : Me.Actions.RollDie(Weapon.dice_type, Weapon.number_of_dice);
                 damage_roll += DamageModifier;
                 Damage = target_actor.Actions.Stats.DamageAfterDefenses(damage_roll + DamageModifier, Weapon.damage_type);
                 target_actor.Health.LoseHealth(Damage, Me);
@@ -74,8 +74,10 @@ public class DefaultRange : MonoBehaviour
 
     private void CheckAdvantageAndDisadvantage()
     {
-        var friends_in_melee = Me.Actions.Decider.Friends.Where(f => Vector3.Distance(transform.position, f.transform.position) < 2f).ToList();
-
+        var friends_in_melee = Me.Senses.Actors
+                                 .Where(f => Me.Actions.Decider.IsFriendOrNeutral(f) && Vector3.Distance(transform.position, f.transform.position) < 2f)
+                                 .ToList();
+                                 
         if (Me.Actions.Attack.AvailableMeleeTargets.Count > 0) {
             Disadvantage = true;
         } 

@@ -68,6 +68,9 @@ public class Actor : MonoBehaviour
 
         Stats.Family = stat_block.family;
         Stats.Size = stat_block.size;
+
+        Health.SetCurrentAndMaxHitPoints();
+
     }
 
 
