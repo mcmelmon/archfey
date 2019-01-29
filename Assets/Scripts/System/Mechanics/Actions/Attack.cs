@@ -152,9 +152,37 @@ public class Attack : MonoBehaviour
     }
 
 
+    private void RemoveSanctuaryTargets()
+    {
+        List<GameObject> protected_melee_actors = AvailableMeleeTargets
+            .Where(target => target.GetComponent<Actor>() != null && Sanctuary.ProtectedTargets.ContainsKey(target.GetComponent<Actor>()) && !Me.Actions.Decider.Threat.Threats.ContainsKey(target.GetComponent<Actor>()))
+            .ToList();
+
+        List<GameObject> protected_ranged_actors = AvailableRangedTargets
+            .Where(target => target.GetComponent<Actor>() != null && Sanctuary.ProtectedTargets.ContainsKey(target.GetComponent<Actor>()) && !Me.Actions.Decider.Threat.Threats.ContainsKey(target.GetComponent<Actor>()))
+            .ToList();
+
+        foreach (var target in protected_melee_actors) {
+            if (!Me.Actions.RollSavingThrow(Proficiencies.Attribute.Wisdom, Sanctuary.ProtectedTargets[target.GetComponent<Actor>()].ChallengeRating)) {
+                AvailableMeleeTargets.Remove(target);
+            }
+        }
+
+        foreach (var target in protected_ranged_actors) {
+            if (!Me.Actions.RollSavingThrow(Proficiencies.Attribute.Wisdom, Sanctuary.ProtectedTargets[target.GetComponent<Actor>()].ChallengeRating)) {
+                AvailableMeleeTargets.Remove(target);
+            }
+        }
+    }
+
+
     private void SelectEnemy()
     {
         // attack targets in melee range before those at distance
+
+        // TODO: the Decider should pick the target, based on priority preferences
+
+        RemoveSanctuaryTargets();
 
         if (AvailableMeleeTargets.Count > 0) {
             CurrentMeleeTarget = TargetMelee();
@@ -200,21 +228,12 @@ public class Attack : MonoBehaviour
 
     private GameObject TargetMelee()
     {
-        if (AvailableMeleeTargets.Count > 0) {
-            return AvailableMeleeTargets[0];
-        }
-
-        return null;
+        return AvailableMeleeTargets.Count > 0 ? AvailableMeleeTargets[0] : null;
     }
 
 
     private GameObject TargetRanged()
     {
-        if (AvailableRangedTargets.Count > 0)
-        {
-            return AvailableRangedTargets[0];
-        }
-
-        return null;
+        return AvailableRangedTargets.Count > 0 ? AvailableRangedTargets[0] : null;
     }
 }

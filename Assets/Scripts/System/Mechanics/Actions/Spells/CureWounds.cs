@@ -42,7 +42,7 @@ public class CureWounds : MonoBehaviour
     private void ApplyHealing()
     {
         int healing_roll = Me.Actions.RollDie(Die, NumberOfDice);
-        Target.Health.RecoverHealth(healing_roll);
+        Target.Health.RecoverHealth(healing_roll + Me.Stats.AttributeProficiency[Proficiencies.Attribute.Wisdom]);
     }
 
 
@@ -51,7 +51,7 @@ public class CureWounds : MonoBehaviour
         GameObject sparkles = Instantiate(SpellEffects.Instance.fountain_of_healing_prefab, Target.transform.position, Target.transform.rotation, Target.transform);
         sparkles.name = "Healing";
         sparkles.transform.position += new Vector3(0, 3, 0);
-        Destroy(sparkles, 0.5f);
+        Destroy(sparkles, 2f);
     }
 
 

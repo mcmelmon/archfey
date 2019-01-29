@@ -83,9 +83,8 @@ public class DefaultMelee : MonoBehaviour
     private void DisplayEffects(Vector3 _location)
     {
         GameObject _impact = Instantiate(SpellEffects.Instance.physical_strike_prefab, _location + new Vector3(1, 4f, 0), SpellEffects.Instance.physical_strike_prefab.transform.rotation);
-        _impact.transform.parent = transform;
         _impact.name = "Impact";
-        Destroy(_impact, 1f);
+        Destroy(_impact, 2f);
     }
 
 

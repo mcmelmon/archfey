@@ -11,6 +11,7 @@ public class Acolyte : MonoBehaviour
     public CureWounds CureWounds { get; set; }
     public Magic Magic { get; set; }
     public SacredFlame SacredFlame { get; set; }
+    public Sanctuary Sanctuary { get; set; }
 
 
     // Unity
@@ -44,9 +45,8 @@ public class Acolyte : MonoBehaviour
 
     public void OnHostileActorsSighted()
     {
-        Me.Actions.CloseWithEnemies();
-        AttackWithSpell();
         Me.Actions.CallForHelp();
+        CastSanctuary();
     }
 
 
@@ -124,6 +124,12 @@ public class Acolyte : MonoBehaviour
     }
 
 
+    private void CastSanctuary()
+    {
+        if (Magic.HaveSpellSlot(Magic.Level.First) && !Sanctuary.ProtectedTargets.ContainsKey(Me)) Sanctuary.Cast(Me);
+    }
+
+
     private void SetComponents()
     {
         Me = GetComponent<Actor>();
@@ -157,6 +163,8 @@ public class Acolyte : MonoBehaviour
 
         CureWounds = gameObject.AddComponent<CureWounds>();
         SacredFlame = gameObject.AddComponent<SacredFlame>();
+        Sanctuary = gameObject.AddComponent<Sanctuary>();
+
         Magic = gameObject.AddComponent<Magic>();
         Magic.SpellSlots[Magic.Level.First] = 3;
         Magic.SpellsLeft[Magic.Level.First] = 3;
@@ -172,7 +180,7 @@ public class Acolyte : MonoBehaviour
         if (nearby_wounded.Count > 0) {
             Actor wounded = nearby_wounded.OrderBy(f => f.Health.CurrentHealthPercentage()).Reverse().ToList().First();
 
-            if (wounded != null) {
+            if (wounded != null && Magic.HaveSpellSlot(Magic.Level.First)) {
                 Magic.UseSpellSlot(Magic.Level.First);
                 CureWounds.Cast(wounded);
             }
