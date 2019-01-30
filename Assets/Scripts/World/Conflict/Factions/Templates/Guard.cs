@@ -85,9 +85,11 @@ public class Guard : MonoBehaviour
     }
 
 
-    public void OnPerformingTask()
+    public void OnNeedsRest()
     {
-
+        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
+        Me.Actions.SheathWeapon();
+        Me.Actions.Movement.SetDestination(Me.Actions.Movement.Destinations[Movement.CommonDestination.Home]);
     }
 
 
@@ -111,6 +113,7 @@ public class Guard : MonoBehaviour
         Me.Actions.Decider.FriendsInNeed.Clear();
         Me.Actions.CloseWithEnemies();
         Me.Actions.Attack.AttackEnemiesInRange();
+        Me.RestCounter = 0;
     }
 
 
@@ -154,6 +157,7 @@ public class Guard : MonoBehaviour
         Me.Actions.OnIdle = OnIdle;
         Me.Actions.OnInCombat = OnInCombat;
         Me.Actions.OnMovingToGoal = OnMovingToGoal;
+        Me.Actions.OnNeedsRest = OnNeedsRest;
         Me.Actions.OnReachedGoal = OnReachedGoal;
         Me.Actions.OnUnderAttack = OnUnderAttack;
         Me.Actions.OnWatch = OnWatch;

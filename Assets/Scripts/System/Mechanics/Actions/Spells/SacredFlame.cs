@@ -52,7 +52,7 @@ public class SacredFlame : MonoBehaviour
 
     private void DisplayEffects()
     {
-        GameObject flare = Instantiate(SpellEffects.Instance.smite_prefab, Target.transform.position, Target.transform.rotation, Target.transform);
+        GameObject flare = Instantiate(SpellEffects.Instance.sacred_flame_prefab, Target.transform.position, Target.transform.rotation, Target.transform);
         flare.name = "SacredFlame";
         flare.transform.position += new Vector3(0, 3, 0);
         Destroy(flare, 0.5f);

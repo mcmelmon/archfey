@@ -3,7 +3,15 @@ guid: 3691a3d1275ba40ea8d01c1d6a89ab67
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - fountain_of_healing_prefab: {fileID: 1693805012097464, guid: 10e9bfe16bc7048eab897affc81e4aea,
+      type: 3}
+  - physical_strike_prefab: {fileID: 1710435542514214, guid: 21ad8cd3e2ef64a6e8adf8d98532382d,
+      type: 3}
+  - sacred_flame_prefab: {fileID: 2320384277542771427, guid: 3469609925de449af9f389e48256e36a,
+      type: 3}
+  - sanctuary_prefab: {fileID: 1688692553284273664, guid: 686737c38b69d4d87987ba9abbc19f20,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

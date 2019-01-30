@@ -97,6 +97,7 @@ public class Gnoll : MonoBehaviour
     {
         Me.Actions.CloseWithEnemies();
         Me.Actions.Attack.AttackEnemiesInRange();
+        Me.RestCounter = 0;
     }
 
 

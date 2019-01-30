@@ -11,6 +11,7 @@ public class Magic : MonoBehaviour
 
     public Dictionary<Level, int> SpellSlots { get; set; }
     public Dictionary<Level, int> SpellsLeft { get; set; }
+    public bool UsedSlot { get; set; }
 
 
     // Unity
@@ -66,5 +67,6 @@ public class Magic : MonoBehaviour
             [Level.Eighth] = 0,
             [Level.Ninth] = 0
         };
+        UsedSlot = false;
     }
 }

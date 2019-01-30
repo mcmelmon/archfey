@@ -33,6 +33,7 @@ public class CureWounds : MonoBehaviour
 
         ApplyHealing();
         DisplayEffects();
+        Me.Magic.UsedSlot = true;
     }
 
 

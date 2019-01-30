@@ -36,6 +36,7 @@ public class Sanctuary : MonoBehaviour
         Level = _level;
 
         ProtectTarget();
+        Me.Magic.UsedSlot = true;
     }
 
 
@@ -44,7 +45,7 @@ public class Sanctuary : MonoBehaviour
 
     private void DisplayEffects()
     {
-        Effects = Instantiate(SpellEffects.Instance.fountain_of_healing_prefab, Target.transform.position, Target.transform.rotation, Target.transform);
+        Effects = Instantiate(SpellEffects.Instance.sanctuary_prefab, Target.transform.position, Target.transform.rotation, Target.transform);
         Effects.name = "Sanctuary";
         Effects.transform.position += new Vector3(0, 3, 0);
     }

@@ -864,7 +864,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 264195861}
-  m_LocalRotation: {x: -0.06377552, y: -0.12123509, z: -0.67687297, w: 0.72324127}
+  m_LocalRotation: {x: -0.06427663, y: -0.13003118, z: -0.67213446, w: 0.7260825}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1263,7 +1263,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: 0.0000034150946
+    Value: 0.000007636384
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -1428,7 +1428,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 465733991}
-  m_LocalRotation: {x: 0.21865268, y: -0.3677146, z: 0.08939126, w: 0.8994366}
+  m_LocalRotation: {x: 0.21860822, y: -0.368484, z: 0.08959237, w: 0.8991125}
   m_LocalPosition: {x: 480.2771, y: 117, z: 21.073818}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2269,7 +2269,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: 0.0000034150946
+    Value: 0.000007636384
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -3042,7 +3042,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 829675727}
-  m_LocalRotation: {x: -0.00000016391276, y: 0.00032201406, z: 0.3721687, w: 0.928165}
+  m_LocalRotation: {x: -0.000000029802322, y: 0.00000017881393, z: 0.37552187, w: 0.92681354}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -3551,7 +3551,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963679513}
-  m_LocalRotation: {x: -0.021863297, y: -0.12573083, z: -0.6933144, w: 0.70924544}
+  m_LocalRotation: {x: -0.11693233, y: -0.0068095922, z: -0.71863306, w: 0.6854539}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -3666,8 +3666,8 @@ MonoBehaviour:
     type: 3}
   physical_strike_prefab: {fileID: 1710435542514214, guid: 21ad8cd3e2ef64a6e8adf8d98532382d,
     type: 3}
-  smite_prefab: {fileID: 8152340743969959684, guid: 3469609925de449af9f389e48256e36a,
-    type: 3}
+  sacred_flame_prefab: {fileID: 0}
+  sanctuary_prefab: {fileID: 0}
 --- !u!1 &969520623
 GameObject:
   m_ObjectHideFlags: 0
@@ -5124,7 +5124,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: 0.0000034150946
+    Value: 0.000007636384
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -6291,7 +6291,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: 0.0000034150946
+    Value: 0.000007636384
     m_MaxSpeed: 80
     m_AccelTime: 0.1
     m_DecelTime: 0.1

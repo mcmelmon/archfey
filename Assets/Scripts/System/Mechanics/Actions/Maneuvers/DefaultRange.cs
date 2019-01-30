@@ -88,9 +88,9 @@ public class DefaultRange : MonoBehaviour
 
     private void DisplayEffects(Vector3 _location)
     {
-        GameObject _impact = Instantiate(SpellEffects.Instance.physical_strike_prefab, _location + new Vector3(1, 4f, 0), SpellEffects.Instance.physical_strike_prefab.transform.rotation);
+        GameObject _impact = Instantiate(SpellEffects.Instance.physical_strike_prefab, _location, SpellEffects.Instance.physical_strike_prefab.transform.rotation);
         _impact.name = "Impact";
-        Destroy(_impact, 2f);
+        Destroy(_impact, 3f);
     }
 
 

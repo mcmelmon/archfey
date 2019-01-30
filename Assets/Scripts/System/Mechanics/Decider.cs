@@ -21,7 +21,9 @@ public class Decider : MonoBehaviour
         Crafting,
         Medic,
         MovingToGoal,
+        NeedsRest,
         ReachedGoal,
+        Resting,
         UnderAttack,
         Watch
     };
@@ -54,26 +56,29 @@ public class Decider : MonoBehaviour
     public void ChooseState()
     {
         Me.Senses.Sight();
-        Me.Actions.Attack.SetEnemyRanges();
 
         if (transform == null) {
             return;
-        } else if (BadlyInjured()) {
-            SetState(State.BadlyInjured);
         } else if (Medic()) {
             SetState(State.Medic);
+        } else if (Resting()) {
+            SetState(State.Resting);
+        } else if (NeedsRest()) {
+            SetState(State.NeedsRest);
+        } else if (BadlyInjured()) {
+            SetState(State.BadlyInjured);
         } else if (InCombat()) {
             SetState(State.InCombat);
         } else if (UnderAttack()) {
             SetState(State.UnderAttack);
-        } else if (CallsForHelp()) {
-            SetState(State.FriendsInNeed);
         } else if (HostileActorsSighted()) {
             SetState(State.HostileActorsSighted);
         } else if (DamagedFriendlyStructures()) {
             SetState(State.DamagedFriendlyStructuresSighted);
         } else if (HostileStructuresSighted()) {
             SetState(State.HostileStructuresSighted);
+        } else if (CallsForHelp()) {
+            SetState(State.FriendsInNeed);
         } else if (Crafting()) {
             SetState(State.Crafting);
         } else if (ReachedGoal()) {
@@ -216,7 +221,7 @@ public class Decider : MonoBehaviour
 
     private bool Medic()
     {
-        return Me.Senses.Actors.Where(IsFriendOrNeutral).ToList().Where(friend => friend.Health.BadlyInjured() == true).ToList().Count > 0;
+        return Me.Magic != null && Me.Magic.HaveSpellSlot(Magic.Level.First) && Me.Senses.Actors.Where(IsFriendOrNeutral).ToList().Where(friend => friend.Health.BadlyInjured() == true).ToList().Count > 0;
     }
 
 
@@ -226,9 +231,21 @@ public class Decider : MonoBehaviour
     }
 
 
+    private bool NeedsRest()
+    {
+        bool spent_spell_slots = Me.Magic != null && Me.Magic.UsedSlot;
+        return !Me.Actions.Attack.Engaged() && !HostileActorsSighted() && (Me.Health.CurrentHitPoints < Me.Health.MaximumHitPoints || spent_spell_slots );
+    }
+
+
     private bool ReachedGoal()
     {
         return (previous_state == State.MovingToGoal || previous_state == State.FullLoad || previous_state == State.Idle) && !Me.Actions.Movement.InProgress();
+    }
+
+    private bool Resting()
+    {
+        return previous_state == State.NeedsRest && !Me.Actions.Movement.InProgress();
     }
 
 

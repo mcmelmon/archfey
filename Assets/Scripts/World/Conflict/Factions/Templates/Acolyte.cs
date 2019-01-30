@@ -9,7 +9,6 @@ public class Acolyte : MonoBehaviour
 
     public Actor Me { get; set; }
     public CureWounds CureWounds { get; set; }
-    public Magic Magic { get; set; }
     public SacredFlame SacredFlame { get; set; }
     public Sanctuary Sanctuary { get; set; }
 
@@ -28,8 +27,8 @@ public class Acolyte : MonoBehaviour
 
     public void OnBadlyInjured()
     {
-        if (Magic.HaveSpellSlot(Magic.Level.First)) {
-            Magic.UseSpellSlot(Magic.Level.First);
+        if (Me.Magic.HaveSpellSlot(Magic.Level.First)) {
+            Me.Magic.UseSpellSlot(Magic.Level.First);
             CureWounds.Cast(Me);
         }
     }
@@ -38,15 +37,15 @@ public class Acolyte : MonoBehaviour
     public void OnFriendsInNeed()
     {
         Me.Actions.CloseWithEnemies();
-        AttackWithSpell();
         Me.Actions.Decider.FriendsInNeed.Clear();
     }
 
 
     public void OnHostileActorsSighted()
     {
-        Me.Actions.CallForHelp();
-        CastSanctuary();
+        Me.Actions.Decider.FriendsInNeed.Clear();
+        Me.Actions.CloseWithEnemies();
+        if (!CastSanctuary()) AttackWithSpell();
     }
 
 
@@ -79,7 +78,7 @@ public class Acolyte : MonoBehaviour
 
         Me.Actions.Movement.SetDestination(wounded.transform.position);
 
-        TreatWounded();
+        if (!TreatWounded()) AttackWithSpell();
     }
 
 
@@ -87,6 +86,14 @@ public class Acolyte : MonoBehaviour
     {
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         Me.Senses.Sight();
+    }
+
+
+    public void OnNeedsRest()
+    {
+        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
+        Me.Actions.SheathWeapon();
+        Me.Actions.Movement.SetDestination(Me.Actions.Movement.Destinations[Movement.CommonDestination.Home]);
     }
 
 
@@ -102,6 +109,7 @@ public class Acolyte : MonoBehaviour
     {
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         AttackWithSpell();
+        Me.RestCounter = 0;
     }
 
 
@@ -117,16 +125,21 @@ public class Acolyte : MonoBehaviour
     private void AttackWithSpell()
     {
         Actor target = Me.Actions.Decider.Threat.PrimaryThreat();
-
-        if (Vector3.Distance(target.transform.position, transform.position) < SacredFlame.Range) {
+        
+        if (target != null && Vector3.Distance(target.transform.position, transform.position) < SacredFlame.Range) {
             SacredFlame.Cast(target);
         }
     }
 
 
-    private void CastSanctuary()
+    private bool CastSanctuary()
     {
-        if (Magic.HaveSpellSlot(Magic.Level.First) && !Sanctuary.ProtectedTargets.ContainsKey(Me)) Sanctuary.Cast(Me);
+        if (Me.Magic.HaveSpellSlot(Magic.Level.First) && !Sanctuary.ProtectedTargets.ContainsKey(Me)) {
+            Sanctuary.Cast(Me);
+            return true;
+        }
+
+        return false;
     }
 
 
@@ -165,13 +178,13 @@ public class Acolyte : MonoBehaviour
         SacredFlame = gameObject.AddComponent<SacredFlame>();
         Sanctuary = gameObject.AddComponent<Sanctuary>();
 
-        Magic = gameObject.AddComponent<Magic>();
-        Magic.SpellSlots[Magic.Level.First] = 3;
-        Magic.SpellsLeft[Magic.Level.First] = 3;
+        Me.Magic = gameObject.AddComponent<Magic>();
+        Me.Magic.SpellSlots[Magic.Level.First] = 3;
+        Me.Magic.SpellsLeft[Magic.Level.First] = 3;
     }
 
 
-    private void TreatWounded()
+    private bool TreatWounded()
     {
         var nearby_wounded = Me.Senses.Actors
                                .Where(f => Me.Actions.Decider.IsFriendOrNeutral(f) && f.Health.BadlyInjured() && Vector3.Distance(transform.position, f.transform.position) < 2f + Me.Size)
@@ -180,10 +193,13 @@ public class Acolyte : MonoBehaviour
         if (nearby_wounded.Count > 0) {
             Actor wounded = nearby_wounded.OrderBy(f => f.Health.CurrentHealthPercentage()).Reverse().ToList().First();
 
-            if (wounded != null && Magic.HaveSpellSlot(Magic.Level.First)) {
-                Magic.UseSpellSlot(Magic.Level.First);
+            if (wounded != null && Me.Magic.HaveSpellSlot(Magic.Level.First)) {
+                Me.Magic.UseSpellSlot(Magic.Level.First);
                 CureWounds.Cast(wounded);
+                return true;
             }
         }
+
+        return false;
     }
 }

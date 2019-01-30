@@ -29,6 +29,7 @@ public class Actions : MonoBehaviour
     public Action OnInCombat { get; set; }
     public Action OnMedic { get; set; }
     public Action OnMovingToGoal { get; set; }
+    public Action OnNeedsRest { get; set; }
     public Action OnReachedGoal { get; set; }
     public Action OnUnderAttack { get; set; }
     public Action OnWatch { get; set; }
@@ -91,8 +92,14 @@ public class Actions : MonoBehaviour
             case Decider.State.MovingToGoal:
                 OnMovingToGoal?.Invoke();
                 break;
+            case Decider.State.NeedsRest:
+                OnNeedsRest?.Invoke();
+                break;
             case Decider.State.ReachedGoal:
                 OnReachedGoal?.Invoke();
+                break;
+            case Decider.State.Resting:
+                Rest();
                 break;
             case Decider.State.UnderAttack:
                 OnUnderAttack?.Invoke();
@@ -190,6 +197,17 @@ public class Actions : MonoBehaviour
 
 
     // private
+
+
+    private void Rest()
+    {
+        if (Me.RestCounter == Actor.rested_at) {
+            Me.Health.RecoverHealth(RollDie(Me.Health.HitDiceType, 1));
+            Me.RestCounter = 0;
+        } else {
+            Me.RestCounter++;
+        }
+    }
 
 
     private void SetComponents()

@@ -6,6 +6,8 @@ using UnityEngine.Networking;
 
 public class Actor : MonoBehaviour
 {
+    public const int rested_at = 5;
+
     // Inspector settings
     public string harvesting = "";
     public int harvested_amount = 0;
@@ -19,7 +21,9 @@ public class Actor : MonoBehaviour
     public Ghaddim Ghaddim { get; set; }
     public Health Health { get; set; }
     public Dictionary<HarvestingNode, int> Load { get; set; }
+    public Magic Magic { get; set; }
     public Mhoddim Mhoddim { get; set; }
+    public int RestCounter { get; set; }
     public Conflict.Role Role { get; set; }
     public Senses Senses { get; set; }
     public float Size { get; set; }
@@ -85,6 +89,7 @@ public class Actor : MonoBehaviour
         Health = GetComponent<Health>();
         Mhoddim = GetComponent<Mhoddim>();
         Load = new Dictionary<HarvestingNode, int>();
+        RestCounter = 0;
         Role = Conflict.Role.None;  // offense and defense set this role for mortals
         Senses = GetComponent<Senses>();
         Size = GetComponent<Renderer>().bounds.extents.magnitude;
