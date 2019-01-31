@@ -40,12 +40,6 @@ public class Guard : MonoBehaviour
     }
 
 
-    public void OnDamagedFriendlyStructuresSighted()
-    {
-
-    }
-
-
     public void OnInCombat()
     {
         Me.Actions.CallForHelp();
@@ -151,7 +145,6 @@ public class Guard : MonoBehaviour
 
         Me.Actions.OnBadlyInjured = OnBadlyInjured;
         Me.Actions.OnFriendsInNeed = OnFriendsInNeed;
-        Me.Actions.OnDamagedFriendlyStructuresSighted = OnDamagedFriendlyStructuresSighted;
         Me.Actions.OnHostileActorsSighted = OnHostileActorsSighted;
         Me.Actions.OnHostileStructuresSighted = OnHostileStructuresSighted;
         Me.Actions.OnIdle = OnIdle;

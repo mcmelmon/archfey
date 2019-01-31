@@ -29,7 +29,8 @@ public class Commoner : MonoBehaviour
     {
         Me.Actions.Movement.ResetPath();
         Me.Actions.Decider.FriendsInNeed.Clear();
-        FindShrine();
+        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed * 2;
+        Me.Actions.Movement.Home();
     }
 
 
@@ -110,7 +111,7 @@ public class Commoner : MonoBehaviour
 
     public void OnNeedsRest()
     {
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
+        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed * 2;
         Me.Actions.SheathWeapon();
         Me.Actions.Movement.SetDestination(Me.Actions.Movement.Destinations[Movement.CommonDestination.Home]);
     }

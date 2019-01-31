@@ -34,21 +34,11 @@ public class Defense : MonoBehaviour
     {
         // must be called by Conflict instead of Start to ensure Map setup complete
 
-        var residences = FindObjectsOfType<Structure>()
-            .Where(s => s.purpose == Structure.Purpose.Residential && s.owner == Conflict.Faction.Mhoddim)
-            .ToList();
-
-        var military = FindObjectsOfType<Structure>()
-            .Where(s => s.purpose == Structure.Purpose.Military && s.owner == Conflict.Faction.Mhoddim);
-
-        var sacred = FindObjectsOfType<Structure>()
-            .Where(s => s.purpose == Structure.Purpose.Sacred && s.owner == Conflict.Faction.Mhoddim);
-
-        foreach (var residence in residences) {
+        foreach (var residence in Residences()) {
             foreach (var entrance in residence.entrances) {
                 Vector3 location = entrance.position;
                 Actor commoner;
-                int roll = Random.Range(0, 3);
+                int roll = Random.Range(0, 6);
                 switch (roll) {
                     case 0:
                         commoner = SpawnToolUser("Farmer", entrance);
@@ -62,11 +52,13 @@ public class Defense : MonoBehaviour
                         commoner = SpawnToolUser("Miner", entrance);
                         residence.AttachedUnits.Add(commoner);
                         break;
+                    default:
+                        break;
                 }
             }
         }
 
-        foreach (var structure in military) {
+        foreach (var structure in Military()) {
             foreach (var entrance in structure.entrances) {
                 Vector3 location = entrance.transform.position;
                 GameObject guard = Spawn(new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
@@ -78,7 +70,7 @@ public class Defense : MonoBehaviour
         }
 
 
-        foreach (var structure in sacred) {
+        foreach (var structure in Sacred()) {
             foreach (var entrance in structure.entrances) {
                 Vector3 location = entrance.transform.position;
                 GameObject acolyte = Spawn(new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
@@ -94,15 +86,8 @@ public class Defense : MonoBehaviour
 
     public void Reinforce()
     {
-        List<Structure> residences = FindObjectsOfType<Structure>()
-            .Where(s => s.owner == Conflict.Faction.Mhoddim && s.purpose == Structure.Purpose.Residential && s.AttachedUnits.Count < s.entrances.Count)
-            .ToList();
 
-        List<Structure> military = FindObjectsOfType<Structure>()
-            .Where(s => s.owner == Conflict.Faction.Mhoddim && s.purpose == Structure.Purpose.Military && s.AttachedUnits.Count < s.entrances.Count)
-            .ToList();
-
-        foreach (var structure in residences) {
+        foreach (var structure in Residences()) {
             foreach (var entrance in structure.entrances) {
                 if (structure.AttachedUnits.Count >= structure.entrances.Count) break;
 
@@ -131,7 +116,7 @@ public class Defense : MonoBehaviour
             }
         }
 
-        foreach (var structure in military) {
+        foreach (var structure in Military()) {
             foreach (var entrance in structure.entrances) {
                 if (structure.AttachedUnits.Count >= structure.entrances.Count) break;
                 Vector3 location = entrance.transform.position;
@@ -140,6 +125,20 @@ public class Defense : MonoBehaviour
                 guard.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Perception);
                 guard.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Intimidation);
                 structure.AttachedUnits.Add(guard.GetComponent<Actor>());
+            }
+        }
+
+
+        foreach (var structure in Sacred()) {
+            foreach (var entrance in structure.entrances) {
+                if (structure.AttachedUnits.Count >= structure.entrances.Count) break;
+                Vector3 location = entrance.transform.position;
+                GameObject acolyte = Spawn(new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
+                acolyte.AddComponent<Acolyte>();
+                acolyte.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Medicine);
+                acolyte.GetComponent<Stats>().Expertise.Add(Proficiencies.Skill.Medicine);
+                acolyte.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Religion);
+                structure.AttachedUnits.Add(acolyte.GetComponent<Actor>());
             }
         }
     }
@@ -157,6 +156,30 @@ public class Defense : MonoBehaviour
 
 
     // private
+
+
+    private List<Structure> Military()
+    {
+        return FindObjectsOfType<Structure>()
+                .Where(s => s.purpose == Structure.Purpose.Military && s.owner == Conflict.Faction.Mhoddim)
+                .ToList();
+    }
+
+
+    private List<Structure> Residences()
+    {
+        return FindObjectsOfType<Structure>()
+                .Where(s => s.owner == Conflict.Faction.Mhoddim && s.purpose == Structure.Purpose.Residential && s.AttachedUnits.Count < s.entrances.Count)
+                .ToList();
+    }
+
+
+    private List<Structure> Sacred()
+    {
+        return FindObjectsOfType<Structure>()
+                .Where(s => s.purpose == Structure.Purpose.Sacred && s.owner == Conflict.Faction.Mhoddim)
+                .ToList();
+    }
 
 
     private void SetComponents()

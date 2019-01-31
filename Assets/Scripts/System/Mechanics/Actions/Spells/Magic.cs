@@ -1,15 +1,16 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Magic : MonoBehaviour
 {
-    public enum Level { First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth, Ninth };
-    public enum School { Abjuration = 0, Conjuration = 1, Divination = 2, Enchantment = 3, Evocation = 4, Illusion = 5, Necromancy = 6, Transmutation = 7 };
+    public enum Level { First = 1, Second = 2, Third = 3, Fourth = 4, Fifth = 5, Sixth = 6, Seventh = 7, Eighth = 8, Ninth = 9 };
+    public enum School { Abjuration, Conjuration, Divination, Enchantment, Evocation, Illusion, Necromancy, Transmutation };
 
     // properties
 
-    public Dictionary<Level, int> SpellSlots { get; set; }
+    public Dictionary<Level, int> MaximumSpellSlots { get; set; }
     public Dictionary<Level, int> SpellsLeft { get; set; }
     public bool UsedSlot { get; set; }
 
@@ -30,6 +31,22 @@ public class Magic : MonoBehaviour
     }
 
 
+    public void RecoverSpellLevels()
+    {
+        if (!UsedSlot) return;
+
+        foreach (Level _level in Enum.GetValues(typeof(Level))) {
+            if (SpellsLeft[_level] < MaximumSpellSlots[_level]) {
+                SpellsLeft[_level] = MaximumSpellSlots[_level];
+                break;  // only recover from one depleted level per rest cyle, starting at First
+            }
+        }
+        var used_levels = SpellsLeft.Where(sl => sl.Value < MaximumSpellSlots[sl.Key]).ToList();
+
+        UsedSlot &= used_levels.Count > 0;
+    }
+
+
     public void UseSpellSlot(Level _level)
     {
         if (HaveSpellSlot(_level)) {
@@ -43,7 +60,7 @@ public class Magic : MonoBehaviour
 
     private void SetComponents()
     {
-        SpellSlots = new Dictionary<Level, int>
+        MaximumSpellSlots = new Dictionary<Level, int>
         {
             [Level.First] = 0,
             [Level.Second] = 0,

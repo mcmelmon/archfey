@@ -91,9 +91,9 @@ public class Acolyte : MonoBehaviour
 
     public void OnNeedsRest()
     {
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
+        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed * 2;
         Me.Actions.SheathWeapon();
-        Me.Actions.Movement.SetDestination(Me.Actions.Movement.Destinations[Movement.CommonDestination.Home]);
+        Me.Actions.Movement.Home();
     }
 
 
@@ -160,6 +160,7 @@ public class Acolyte : MonoBehaviour
         Me.Actions.OnInCombat = OnInCombat;
         Me.Actions.OnMedic = OnMedic;
         Me.Actions.OnMovingToGoal = OnMovingToGoal;
+        Me.Actions.OnNeedsRest = OnNeedsRest;
         Me.Actions.OnReachedGoal = OnReachedGoal;
         Me.Actions.OnUnderAttack = OnUnderAttack;
         Me.Actions.OnWatch = OnWatch;
@@ -179,7 +180,7 @@ public class Acolyte : MonoBehaviour
         Sanctuary = gameObject.AddComponent<Sanctuary>();
 
         Me.Magic = gameObject.AddComponent<Magic>();
-        Me.Magic.SpellSlots[Magic.Level.First] = 3;
+        Me.Magic.MaximumSpellSlots[Magic.Level.First] = 3;
         Me.Magic.SpellsLeft[Magic.Level.First] = 3;
     }
 

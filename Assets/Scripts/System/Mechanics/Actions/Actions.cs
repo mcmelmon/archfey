@@ -174,8 +174,7 @@ public class Actions : MonoBehaviour
     {
         int result = 0;
 
-        for (int i = 0; i < number_of_rolls; i++)
-        {
+        for (int i = 0; i < number_of_rolls; i++) {
             int roll = UnityEngine.Random.Range(1, dice_type + 1);
             result += roll;
         }
@@ -203,6 +202,7 @@ public class Actions : MonoBehaviour
     {
         if (Me.RestCounter == Actor.rested_at) {
             Me.Health.RecoverHealth(RollDie(Me.Health.HitDiceType, 1));
+            if (Me.Magic != null) Me.Magic.RecoverSpellLevels();
             Me.RestCounter = 0;
         } else {
             Me.RestCounter++;

@@ -141,6 +141,8 @@ public class Decider : MonoBehaviour
 
     private bool DamagedFriendlyStructures()
     {
+        if (Me.Actions.OnDamagedFriendlyStructuresSighted == null) return false;
+
         FriendlyStructures = Me.Senses.Structures
                                .Where(structure => structure.owner == Me.Faction && structure.CurrentHitPoints < structure.maximum_hit_points)
                                .ToList();
@@ -245,7 +247,7 @@ public class Decider : MonoBehaviour
 
     private bool Resting()
     {
-        return previous_state == State.NeedsRest && !Me.Actions.Movement.InProgress();
+        return (previous_state == State.NeedsRest || previous_state == State.Resting) && NeedsRest() && !Me.Actions.Movement.InProgress();
     }
 
 
