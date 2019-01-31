@@ -7,21 +7,25 @@ public class Decider : MonoBehaviour
 {
     public enum State
     {
-        BadlyInjured = 1,
-        DamagedFriendlyStructuresSighted = 2,
-        FriendsInNeed = 3,
-        FriendlyActorsSighted = 4,
-        FullLoad = 5,
-        Harvesting = 6,
-        HostileActorsSighted = 7,
-        HostileStructuresSighted = 8,
-        Idle = 9,
-        InCombat = 10,
-        Crafting = 12,
-        MovingToGoal = 13,
-        ReachedGoal = 14,
-        UnderAttack = 15,
-        Watch = 16
+        None,
+        BadlyInjured,
+        DamagedFriendlyStructuresSighted,
+        FriendsInNeed,
+        FriendlyActorsSighted,
+        FullLoad,
+        Harvesting,
+        HostileActorsSighted,
+        HostileStructuresSighted,
+        Idle,
+        InCombat,
+        Crafting,
+        Medic,
+        MovingToGoal,
+        NeedsRest,
+        ReachedGoal,
+        Resting,
+        UnderAttack,
+        Watch
     };
     
     // Inspector settings
@@ -31,8 +35,6 @@ public class Decider : MonoBehaviour
 
     // properties
 
-    public List<Actor> Enemies { get; set; }
-    public List<Actor> Friends { get; set; }
     public List<Actor> FriendsInNeed { get; set; }
     public List<Structure> FriendlyStructures { get; set; }
     public List<Structure> HostileStructures { get; set; }
@@ -54,27 +56,29 @@ public class Decider : MonoBehaviour
     public void ChooseState()
     {
         Me.Senses.Sight();
-        Enemies = Me.Senses.Actors.Where(a => !IsFriendOrNeutral(a)).ToList();
-        Friends = Me.Senses.Actors.Where(IsFriendOrNeutral).ToList();
-
-        Me.Actions.Attack.SetEnemyRanges();
 
         if (transform == null) {
             return;
+        } else if (Medic()) {
+            SetState(State.Medic);
+        } else if (Resting()) {
+            SetState(State.Resting);
+        } else if (NeedsRest()) {
+            SetState(State.NeedsRest);
         } else if (BadlyInjured()) {
             SetState(State.BadlyInjured);
         } else if (InCombat()) {
             SetState(State.InCombat);
         } else if (UnderAttack()) {
             SetState(State.UnderAttack);
-        } else if (CallsForHelp()) {
-            SetState(State.FriendsInNeed);
         } else if (HostileActorsSighted()) {
             SetState(State.HostileActorsSighted);
         } else if (DamagedFriendlyStructures()) {
             SetState(State.DamagedFriendlyStructuresSighted);
         } else if (HostileStructuresSighted()) {
             SetState(State.HostileStructuresSighted);
+        } else if (CallsForHelp()) {
+            SetState(State.FriendsInNeed);
         } else if (Crafting()) {
             SetState(State.Crafting);
         } else if (ReachedGoal()) {
@@ -95,17 +99,13 @@ public class Decider : MonoBehaviour
 
     public List<Actor> IdentifyFriends()
     {
-        Friends = Me.Senses.Actors.Where(IsFriendOrNeutral).ToList();
-
-        return Friends;
+        return Me.Senses.Actors.Where(IsFriendOrNeutral).ToList();
     }
 
 
     public List<Actor> IdentifyEnemies()
     {
-        Enemies = Me.Senses.Actors.Where(a => !IsFriendOrNeutral(a)).ToList();
-
-        return Enemies;
+        return Me.Senses.Actors.Where(a => !IsFriendOrNeutral(a)).ToList();
     }
 
 
@@ -122,7 +122,9 @@ public class Decider : MonoBehaviour
     // private
 
 
-    private bool BadlyInjured() => Me.Health.BadlyInjured();
+    private bool BadlyInjured(){
+        return Me.Health.BadlyInjured();
+    }
 
 
     private bool CallsForHelp()
@@ -139,6 +141,8 @@ public class Decider : MonoBehaviour
 
     private bool DamagedFriendlyStructures()
     {
+        if (Me.Actions.OnDamagedFriendlyStructuresSighted == null) return false;
+
         FriendlyStructures = Me.Senses.Structures
                                .Where(structure => structure.owner == Me.Faction && structure.CurrentHitPoints < structure.maximum_hit_points)
                                .ToList();
@@ -167,7 +171,7 @@ public class Decider : MonoBehaviour
 
     private bool HostileActorsSighted()
     {
-        return previous_state != State.FriendsInNeed && Enemies.Count > 0;
+        return previous_state != State.FriendsInNeed && Me.Senses.Actors.Where(a => !IsFriendOrNeutral(a)).ToList().Count > 0;
     }
 
 
@@ -183,14 +187,11 @@ public class Decider : MonoBehaviour
 
     private bool InCombat()
     {
+        // TODO: actually attack the chosen foe; currently, Attack just chooses an available target
+
         Actor foe = null;
 
-        if (Me.Actions.Attack.Engaged()) {
-            foe = Threat.BiggestThreat();
-            if (foe != null) {
-                if (!Enemies.Contains(foe)) Enemies.Add(foe);
-            }
-        }
+        if (Me.Actions.Attack.Engaged()) foe = Threat.PrimaryThreat();
         return foe != null;
     }
 
@@ -220,9 +221,22 @@ public class Decider : MonoBehaviour
     }
 
 
+    private bool Medic()
+    {
+        return Me.Magic != null && Me.Magic.HaveSpellSlot(Magic.Level.First) && Me.Senses.Actors.Where(IsFriendOrNeutral).ToList().Where(friend => friend.Health.BadlyInjured() == true).ToList().Count > 0;
+    }
+
+
     private bool Moving()
     {
         return Me.Actions.Movement.InProgress();
+    }
+
+
+    private bool NeedsRest()
+    {
+        bool spent_spell_slots = Me.Magic != null && Me.Magic.UsedSlot;
+        return !Me.Actions.Attack.Engaged() && !HostileActorsSighted() && (Me.Health.CurrentHitPoints < Me.Health.MaximumHitPoints || spent_spell_slots );
     }
 
 
@@ -231,12 +245,15 @@ public class Decider : MonoBehaviour
         return (previous_state == State.MovingToGoal || previous_state == State.FullLoad || previous_state == State.Idle) && !Me.Actions.Movement.InProgress();
     }
 
+    private bool Resting()
+    {
+        return (previous_state == State.NeedsRest || previous_state == State.Resting) && NeedsRest() && !Me.Actions.Movement.InProgress();
+    }
+
 
     private void SetComponents()
     {
         FriendsInNeed = new List<Actor>();
-        Enemies = new List<Actor>();
-        Friends = new List<Actor>();
         Me = GetComponentInParent<Actor>();
         HostileStructures = new List<Structure>();
         Threat = GetComponent<Threat>();
@@ -253,16 +270,7 @@ public class Decider : MonoBehaviour
 
     private bool UnderAttack()
     {
-        if (Threat.Threats.Count > 0) {
-            Actor foe = Threat.BiggestThreat();
-            if (foe != null) {
-                if (!Enemies.Contains(foe)) Enemies.Add(foe);
-
-            }
-            return true;
-        }
-
-        return false;
+        return Threat.Threats.Count > 0;
     }
 
 

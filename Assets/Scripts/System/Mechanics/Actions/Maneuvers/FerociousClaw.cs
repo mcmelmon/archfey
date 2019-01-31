@@ -48,12 +48,12 @@ public class FerociousClaw : MonoBehaviour
         if (target_actor != null) {
             if (target_actor.Health != null && target_actor.Actions.Stats != null && Me.Actions != null) {
                 int damage_roll = Random.Range(0, 10) + 1;
-                Damage = target_actor.Actions.Stats.DamageAfterDefenses(damage_roll + DamageModifier, Weapon.DamageType.Slashing);
+                Damage = target_actor.Actions.Stats.DamageAfterDefenses(damage_roll + DamageModifier, Weapons.DamageType.Slashing);
                 target_actor.Health.LoseHealth(Damage, Me);
             }
         } else if (target_structure != null) {
             int damage_roll = Random.Range(0, 10) + 1;
-            target_structure.LoseStructure(damage_roll, Weapon.DamageType.Slashing);
+            target_structure.LoseStructure(damage_roll, Weapons.DamageType.Slashing);
         }
     }
 
@@ -94,7 +94,7 @@ public class FerociousClaw : MonoBehaviour
 
     private void SetModifiers()
     {
-        AttackModifier = Me.Stats.StrengthProficiency;
-        DamageModifier = Me.Stats.StrengthProficiency;
+        AttackModifier = Me.Stats.AttributeProficiency[Proficiencies.Attribute.Strength];
+        DamageModifier = Me.Stats.AttributeProficiency[Proficiencies.Attribute.Strength];
     }
 }

@@ -106,7 +106,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attack_bonus: 0
   damage_bonus: 0
-  damage_die: 8
+  dice_type: 8
+  number_of_dice: 1
   damage_type: 7
   expected_damage: 5
   has_reach: 1
@@ -119,4 +120,5 @@ MonoBehaviour:
   is_thrown: 0
   is_two_handed: 0
   is_versatile: 1
+  projectile_prefab: {fileID: 0}
   range: 0

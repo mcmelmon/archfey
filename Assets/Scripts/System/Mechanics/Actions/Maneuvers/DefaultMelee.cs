@@ -55,12 +55,14 @@ public class DefaultMelee : MonoBehaviour
 
         if (target_actor != null) {
             if (target_actor.Health != null && target_actor.Actions.Stats != null && Me.Actions != null) {
-                int damage_roll = (Critical) ? Random.Range(0, Weapon.damage_die * 2) + 1 : Random.Range(0, Weapon.damage_die) + 1;
-                Damage = target_actor.Actions.Stats.DamageAfterDefenses(damage_roll + DamageModifier, Weapon.damage_type);
+                int damage_roll = (Critical) ? (Me.Actions.RollDie(Weapon.dice_type, Weapon.number_of_dice) * 2) + 1 : Me.Actions.RollDie(Weapon.dice_type, Weapon.number_of_dice);
+                damage_roll += DamageModifier;
+                Damage = target_actor.Actions.Stats.DamageAfterDefenses(damage_roll, Weapon.damage_type);
                 target_actor.Health.LoseHealth(Damage, Me);
             }
         } else if (target_structure != null) {
-            int damage_roll = (Critical) ? Random.Range(0, Weapon.damage_die * 2) + 1 : Random.Range(0, Weapon.damage_die) + 1;
+            int damage_roll = (Critical) ? Me.Actions.RollDie(Weapon.dice_type, Weapon.number_of_dice) + 1 : Random.Range(0, Weapon.dice_type) + 1;
+            damage_roll += DamageModifier;
             target_structure.LoseStructure(damage_roll, Weapon.damage_type);
         }
 
@@ -70,7 +72,9 @@ public class DefaultMelee : MonoBehaviour
 
     private void CheckAdvantageAndDisadvantage()
     {
-        var friends_in_melee = Me.Actions.Decider.Friends.Where(f => Vector3.Distance(transform.position, f.transform.position) < 2f).ToList();
+        var friends_in_melee = Me.Senses.Actors
+                                 .Where(f => Me.Actions.Decider.IsFriendOrNeutral(f) && Vector3.Distance(transform.position, f.transform.position) < 2f)
+                                 .ToList();
 
         Advantage |= friends_in_melee.Count > Me.Actions.Attack.AvailableMeleeTargets.Count;
     }
@@ -78,10 +82,9 @@ public class DefaultMelee : MonoBehaviour
 
     private void DisplayEffects(Vector3 _location)
     {
-        GameObject _impact = Instantiate(SpellEffects.Instance.physical_strike_prefab, _location + new Vector3(1, 4f, 0), SpellEffects.Instance.physical_strike_prefab.transform.rotation);
-        _impact.transform.parent = transform;
+        GameObject _impact = Instantiate(SpellEffects.Instance.physical_strike_prefab, _location, SpellEffects.Instance.physical_strike_prefab.transform.rotation);
         _impact.name = "Impact";
-        Destroy(_impact, 1f);
+        Destroy(_impact, 3f);
     }
 
 
@@ -118,11 +121,11 @@ public class DefaultMelee : MonoBehaviour
     private void SetModifiers()
     {
         if (Weapon.is_light) {
-            AttackModifier = Me.Stats.DexterityProficiency + Weapon.attack_bonus + Actions.SuperiorWeapons[Weapon.damage_type];
-            DamageModifier = Me.Stats.DexterityProficiency + Weapon.damage_bonus + Actions.SuperiorWeapons[Weapon.damage_type];
+            AttackModifier = Me.Stats.AttributeProficiency[Proficiencies.Attribute.Dexterity] + Weapon.attack_bonus;
+            DamageModifier = Me.Stats.AttributeProficiency[Proficiencies.Attribute.Dexterity] + Weapon.damage_bonus;
         } else {
-            AttackModifier = Me.Stats.StrengthProficiency + Weapon.attack_bonus + Actions.SuperiorWeapons[Weapon.damage_type];
-            DamageModifier = Me.Stats.StrengthProficiency + Weapon.damage_bonus + Actions.SuperiorWeapons[Weapon.damage_type];
+            AttackModifier = Me.Stats.AttributeProficiency[Proficiencies.Attribute.Dexterity] + Weapon.attack_bonus;
+            DamageModifier = Me.Stats.AttributeProficiency[Proficiencies.Attribute.Dexterity] + Weapon.damage_bonus;
         }
     }
 }

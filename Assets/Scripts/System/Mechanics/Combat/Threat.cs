@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Threat : MonoBehaviour {
 
+    public enum TargetPreference { Damaging, Nearest, Weakest };
+
     // properties
 
     public Actor Me { get; set; }
@@ -33,12 +35,6 @@ public class Threat : MonoBehaviour {
     }
 
 
-    public Actor BiggestThreat()
-    {
-        return MostDamaging() ?? Nearest();
-    }
-
-
     public bool IsAThreat(Actor _unit)
     {
         return Threats.ContainsKey(_unit);
@@ -47,43 +43,29 @@ public class Threat : MonoBehaviour {
 
     public Actor MostDamaging()
     {
-        Actor most_damaging = null;
-        float value = 0f;
-
-        foreach (KeyValuePair<Actor, float> threat in Threats)
-        {
-            if (threat.Key == null) continue;  // don't modify the dictionary by removing while iterating
-            if (threat.Value > value)
-            {
-                value = threat.Value;
-                most_damaging = threat.Key;
-            }
-        }
-
-        return most_damaging;
+        return Threats.Count > 0 ? Threats.OrderBy(threat => threat.Value).Reverse().First().Key : null;
     }
 
 
     public Actor Nearest()
     {
-        Actor nearest_enemy = null;
-        float shortest_distance = float.MaxValue;
-        float distance;
+        var enemies = Me.Senses.Actors.Where(a => !Me.Actions.Decider.IsFriendOrNeutral(a)).ToList();
+        return enemies.Count > 0 ? enemies.OrderBy(enemy => Vector3.Distance(transform.position, enemy.transform.position)).First() : null;
+    }
 
-        for (int i = 0; i < Me.Actions.Decider.Enemies.Count; i++) {
-            Actor enemy = Me.Actions.Decider.Enemies[i];
-            if (enemy == null) continue;
-            if (transform == null) break;
 
-            distance = Vector3.Distance(transform.position, enemy.transform.position);
-            if (distance < shortest_distance)
-            {
-                shortest_distance = distance;
-                nearest_enemy = enemy;
-            }
+    public Actor PrimaryThreat(TargetPreference target_preference = TargetPreference.Weakest)
+    {
+        switch (target_preference) {
+            case TargetPreference.Damaging:
+                return MostDamaging() ?? Nearest();
+            case TargetPreference.Nearest:
+                return Nearest();
+            case TargetPreference.Weakest:
+                return Weakest() ?? Nearest();
         }
 
-        return nearest_enemy;
+        return Nearest();
     }
 
 
@@ -96,6 +78,12 @@ public class Threat : MonoBehaviour {
         } else if (_faction == Conflict.Faction.Mhoddim) {
             GetComponentInParent<Mhoddim>().AddFactionThreat(_attacker, _damage);
         }
+    }
+
+
+    public Actor Weakest()
+    {
+        return Threats.Count > 0 ? Threats.OrderBy(threat => threat.Key.Health.CurrentHitPoints).First().Key : null;
     }
 
 

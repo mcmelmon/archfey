@@ -29,7 +29,8 @@ public class Commoner : MonoBehaviour
     {
         Me.Actions.Movement.ResetPath();
         Me.Actions.Decider.FriendsInNeed.Clear();
-        Me.Actions.FleeFromEnemies();
+        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed * 2;
+        Me.Actions.Movement.Home();
     }
 
 
@@ -108,6 +109,14 @@ public class Commoner : MonoBehaviour
     }
 
 
+    public void OnNeedsRest()
+    {
+        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed * 2;
+        Me.Actions.SheathWeapon();
+        Me.Actions.Movement.SetDestination(Me.Actions.Movement.Destinations[Movement.CommonDestination.Home]);
+    }
+
+
     public void OnReachedGoal()
     {
         Me.Actions.Movement.ResetPath();
@@ -128,6 +137,7 @@ public class Commoner : MonoBehaviour
     {
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         Me.Actions.Attack.AttackEnemiesInRange();
+        Me.RestCounter = 0;
     }
 
 
@@ -167,6 +177,18 @@ public class Commoner : MonoBehaviour
 
         // Don't set as a CommonDestination just yet, because the commoner should run to nearest based on current location
         Me.Actions.Movement.SetDestination(nearest_military_structure.transform);
+    }
+
+
+    private void FindShrine()
+    {
+        Structure nearest_sacred_structure = new List<Structure>(FindObjectsOfType<Structure>())
+            .Where(s => s.owner == Me.Faction && s.purpose == Structure.Purpose.Sacred)
+            .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
+            .ToList()
+            .First();
+
+        Me.Actions.Movement.SetDestination(nearest_sacred_structure.transform);
     }
 
 
@@ -213,7 +235,6 @@ public class Commoner : MonoBehaviour
     }
 
 
-
     private void GoHome()
     {
         Me.Actions.Movement.Home();
@@ -258,12 +279,10 @@ public class Commoner : MonoBehaviour
         Me.Actions.OnIdle = OnIdle;
         Me.Actions.OnInCombat = OnInCombat;
         Me.Actions.OnMovingToGoal = OnMovingToGoal;
+        Me.Actions.OnNeedsRest = OnNeedsRest;
         Me.Actions.OnReachedGoal = OnReachedGoal;
         Me.Actions.OnUnderAttack = OnUnderAttack;
         Me.Actions.OnWatch = OnWatch;
-
-        Me.Health.SetCurrentAndMaxHitPoints();
-
         Me.Actions.Movement.AddDestination(Movement.CommonDestination.Home, transform.position);
     }
 

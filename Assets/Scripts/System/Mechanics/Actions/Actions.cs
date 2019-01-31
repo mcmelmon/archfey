@@ -27,13 +27,13 @@ public class Actions : MonoBehaviour
     public Action OnHostileStructuresSighted { get; set; }
     public Action OnIdle { get; set; }
     public Action OnInCombat { get; set; }
+    public Action OnMedic { get; set; }
     public Action OnMovingToGoal { get; set; }
+    public Action OnNeedsRest { get; set; }
     public Action OnReachedGoal { get; set; }
     public Action OnUnderAttack { get; set; }
     public Action OnWatch { get; set; }
-
-    public static Dictionary<Weapon.DamageType, int> SuperiorWeapons { get; set; }
-
+    
 
     // Unity
 
@@ -54,52 +54,61 @@ public class Actions : MonoBehaviour
         switch (Decider.state)
         {
             case Decider.State.BadlyInjured:
-                OnBadlyInjured.Invoke();
+                OnBadlyInjured?.Invoke();
                 break;
             case Decider.State.Crafting:
-                OnCrafting.Invoke();
+                OnCrafting?.Invoke();
                 break;
             case Decider.State.FriendsInNeed:
-                OnFriendsInNeed.Invoke();
+                OnFriendsInNeed?.Invoke();
                 break;
             case Decider.State.FriendlyActorsSighted:
-                OnFriendlyActorsSighted.Invoke();
+                OnFriendlyActorsSighted?.Invoke();
                 break;
             case Decider.State.DamagedFriendlyStructuresSighted:
-                OnDamagedFriendlyStructuresSighted.Invoke();
+                OnDamagedFriendlyStructuresSighted?.Invoke();
                 break;
             case Decider.State.FullLoad:
-                OnFullLoad.Invoke();
+                OnFullLoad?.Invoke();
                 break;
             case Decider.State.Harvesting:
-                OnHarvetsing.Invoke();
+                OnHarvetsing?.Invoke();
                 break;
             case Decider.State.HostileActorsSighted:
-                OnHostileActorsSighted.Invoke();
+                OnHostileActorsSighted?.Invoke();
                 break;
             case Decider.State.HostileStructuresSighted:
-                OnHostileStructuresSighted.Invoke();
+                OnHostileStructuresSighted?.Invoke();
                 break;
             case Decider.State.Idle:
-                OnIdle.Invoke();
+                OnIdle?.Invoke();
                 break;
             case Decider.State.InCombat:
-                OnInCombat.Invoke();
+                OnInCombat?.Invoke();
+                break;
+            case Decider.State.Medic:
+                OnMedic?.Invoke();
                 break;
             case Decider.State.MovingToGoal:
-                OnMovingToGoal.Invoke();
+                OnMovingToGoal?.Invoke();
+                break;
+            case Decider.State.NeedsRest:
+                OnNeedsRest?.Invoke();
                 break;
             case Decider.State.ReachedGoal:
-                OnReachedGoal.Invoke();
+                OnReachedGoal?.Invoke();
+                break;
+            case Decider.State.Resting:
+                Rest();
                 break;
             case Decider.State.UnderAttack:
-                OnUnderAttack.Invoke();
+                OnUnderAttack?.Invoke();
                 break;
             case Decider.State.Watch:
-                OnWatch.Invoke();
+                OnWatch?.Invoke();
                 break;
             default:
-                OnIdle.Invoke();
+                OnIdle?.Invoke();
                 break;
         }
     }
@@ -118,44 +127,6 @@ public class Actions : MonoBehaviour
                     friends[i].Actions.Decider.FriendsInNeed.Add(Me);
             }
         }
-    }
-
-
-    public void CastDefensiveSpell()
-    {
-
-    }
-
-
-    public void CastOffensiveSpell()
-    {
-        //// TODO: allow units to pick from their own particular spells
-
-        //if (Decider.Enemies.Count == 0) return;
-
-        //Smite _smite = Resources.gameObject.GetComponent<Smite>();
-
-        //if (_smite != null)
-        //{
-        //    float lowest_health = float.MaxValue;
-        //    float health;
-        //    Actor chosen_target = null;
-
-        //    foreach (var enemy in Decider.Enemies)
-        //    {
-        //        if (Vector3.Distance(enemy.transform.position, transform.position) < _smite.Range)
-        //        {
-        //            health = enemy.Health.CurrentHitPoints;
-        //            if (health < lowest_health)
-        //            {
-        //                lowest_health = health;
-        //                chosen_target = enemy;
-        //            }
-        //        }
-        //    }
-
-        //    if (chosen_target != null) _smite.Cast(chosen_target);
-        //}
     }
 
 
@@ -199,35 +170,21 @@ public class Actions : MonoBehaviour
     }
 
 
-    public void Maneuver()
+    public int RollDie(int dice_type, int number_of_rolls)
     {
-    //    // TODO: allow units to pick from their own particular spells
+        int result = 0;
 
-    //    if (Decider.Enemies.Count == 0) return;
+        for (int i = 0; i < number_of_rolls; i++) {
+            int roll = UnityEngine.Random.Range(1, dice_type + 1);
+            result += roll;
+        }
+        return result;
+    }
 
-    //    FerociousClaw _claw = Resources.gameObject.GetComponent<FerociousClaw>();
 
-    //    if (_claw != null && Resources.CurrentEnergy >= _claw.EnergyCost)
-    //    {
-    //        float lowest_health = float.MaxValue;
-    //        float health;
-    //        Actor chosen_target = null;
-
-    //        foreach (var enemy in Decider.Enemies)
-    //        {
-    //            if (Vector3.Distance(enemy.transform.position, transform.position) < _claw.Range)
-    //            {
-    //                health = enemy.Health.CurrentHitPoints;
-    //                if (health < lowest_health)
-    //                {
-    //                    lowest_health = health;
-    //                    chosen_target = enemy;
-    //                }
-    //            }
-    //        }
-
-    //        if (chosen_target != null) _claw.Cast(chosen_target);
-    //    }
+    public bool RollSavingThrow(Proficiencies.Attribute attribute, int challenge_rating)
+    {
+        return UnityEngine.Random.Range(1, 21) + Me.Stats.AttributeProficiency[attribute] > challenge_rating;
     }
 
 
@@ -241,6 +198,18 @@ public class Actions : MonoBehaviour
     // private
 
 
+    private void Rest()
+    {
+        if (Me.RestCounter == Actor.rested_at) {
+            Me.Health.RecoverHealth(RollDie(Me.Health.HitDiceType, 1));
+            if (Me.Magic != null) Me.Magic.RecoverSpellLevels();
+            Me.RestCounter = 0;
+        } else {
+            Me.RestCounter++;
+        }
+    }
+
+
     private void SetComponents()
     {
         Attack = GetComponentInChildren<Attack>();
@@ -248,21 +217,6 @@ public class Actions : MonoBehaviour
         Stats = GetComponentInParent<Stats>();
         Me = GetComponentInParent<Actor>();
         Movement = GetComponent<Movement>();
-        SuperiorWeapons = new Dictionary<Weapon.DamageType, int>
-        {
-            [Weapon.DamageType.Acid] = 0,
-            [Weapon.DamageType.Bludgeoning] = 0,
-            [Weapon.DamageType.Cold] = 0,
-            [Weapon.DamageType.Fire] = 0,
-            [Weapon.DamageType.Force] = 0,
-            [Weapon.DamageType.Lightning] = 0,
-            [Weapon.DamageType.Necrotic] = 0,
-            [Weapon.DamageType.Piercing] = 0,
-            [Weapon.DamageType.Poison] = 0,
-            [Weapon.DamageType.Psychic] = 0,
-            [Weapon.DamageType.Slashing] = 0,
-            [Weapon.DamageType.Thunder] = 0
-        };
     }
 
 

@@ -44,7 +44,7 @@ public class Stealth : MonoBehaviour {
 
         if (!Seen || Attacking) return;
 
-        if (Random.Range(1,21) < 10 + StealthProficiency + Actor.Stats.DexterityProficiency) {
+        if (Random.Range(1,21) < 10 + StealthProficiency + Actor.Stats.AttributeProficiency[Proficiencies.Attribute.Dexterity]) {
             Seen = false;
         }
     }
@@ -92,6 +92,6 @@ public class Stealth : MonoBehaviour {
         Attacking = false;
         OriginalSkin = GetComponent<Renderer>().material;
         Seen = false;
-        StealthRating = StealthProficiency + Actor.Stats.DexterityProficiency;
+        StealthRating = StealthProficiency + Actor.Stats.AttributeProficiency[Proficiencies.Attribute.Dexterity];
     }
 }

@@ -6,6 +6,8 @@ using UnityEngine.Networking;
 
 public class Actor : MonoBehaviour
 {
+    public const int rested_at = 5;
+
     // Inspector settings
     public string harvesting = "";
     public int harvested_amount = 0;
@@ -19,7 +21,9 @@ public class Actor : MonoBehaviour
     public Ghaddim Ghaddim { get; set; }
     public Health Health { get; set; }
     public Dictionary<HarvestingNode, int> Load { get; set; }
+    public Magic Magic { get; set; }
     public Mhoddim Mhoddim { get; set; }
+    public int RestCounter { get; set; }
     public Conflict.Role Role { get; set; }
     public Senses Senses { get; set; }
     public float Size { get; set; }
@@ -58,13 +62,19 @@ public class Actor : MonoBehaviour
         Health.HitDiceType = stat_block.hit_dice_type;
 
         Stats.ArmorClass = stat_block.armor_class;
-        Stats.CharismaProficiency = stat_block.charisma_proficiency;
-        Stats.ConstitutionProficiency = stat_block.constituion_proficiency;
-        Stats.DexterityProficiency = stat_block.dexterity_proficiency;
-        Stats.IntelligenceProficiency = stat_block.intelligence_proficiency;
-        Stats.StrengthProficiency = stat_block.strength_proficiency;
-        Stats.WisdomProficiency = stat_block.wisdom_proficiency;
+        Stats.AttributeProficiency[Proficiencies.Attribute.Charisma] = stat_block.charisma_proficiency;
+        Stats.AttributeProficiency[Proficiencies.Attribute.Constitution] = stat_block.constituion_proficiency;
+        Stats.AttributeProficiency[Proficiencies.Attribute.Dexterity] = stat_block.dexterity_proficiency;
+        Stats.AttributeProficiency[Proficiencies.Attribute.Intelligence] = stat_block.intelligence_proficiency;
+        Stats.AttributeProficiency[Proficiencies.Attribute.Strength] = stat_block.strength_proficiency;
+        Stats.AttributeProficiency[Proficiencies.Attribute.Wisdom] = stat_block.wisdom_proficiency;
         Stats.ProficiencyBonus = stat_block.proficiency_bonus;
+
+        Stats.Family = stat_block.family;
+        Stats.Size = stat_block.size;
+
+        Health.SetCurrentAndMaxHitPoints();
+
     }
 
 
@@ -79,6 +89,7 @@ public class Actor : MonoBehaviour
         Health = GetComponent<Health>();
         Mhoddim = GetComponent<Mhoddim>();
         Load = new Dictionary<HarvestingNode, int>();
+        RestCounter = 0;
         Role = Conflict.Role.None;  // offense and defense set this role for mortals
         Senses = GetComponent<Senses>();
         Size = GetComponent<Renderer>().bounds.extents.magnitude;
@@ -103,5 +114,7 @@ public class Actor : MonoBehaviour
         public int hit_dice_type;
         public int starting_hit_dice;
         public float speed;
+        public string family;
+        public string size;
     }
 }

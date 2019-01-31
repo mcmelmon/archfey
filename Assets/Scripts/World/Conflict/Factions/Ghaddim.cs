@@ -55,7 +55,7 @@ public class Ghaddim : MonoBehaviour {
 
     public Actor BiggestFactionThreat()
     {
-        return Threat.BiggestThreat();
+        return Threat.PrimaryThreat();
     }
 
 

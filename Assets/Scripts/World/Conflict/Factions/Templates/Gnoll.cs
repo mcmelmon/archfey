@@ -97,6 +97,7 @@ public class Gnoll : MonoBehaviour
     {
         Me.Actions.CloseWithEnemies();
         Me.Actions.Attack.AttackEnemiesInRange();
+        Me.RestCounter = 0;
     }
 
 
@@ -130,9 +131,6 @@ public class Gnoll : MonoBehaviour
         Me.Actions.OnReachedGoal = OnReachedGoal;
         Me.Actions.OnUnderAttack = OnUnderAttack;
         Me.Actions.OnWatch = OnWatch;
-
-        Me.Health.SetCurrentAndMaxHitPoints();  // calculated from hit dice and constitution, set in base stats
-
         Me.Actions.Movement.AddDestination(Movement.CommonDestination.Home, transform.position);
     }
 

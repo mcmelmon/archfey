@@ -55,6 +55,8 @@ public class Senses : MonoBehaviour
                 Structures.Add(_structure);
             }
         }
+
+        Me.Actions.Attack.SetEnemyRanges();
     }
 
 

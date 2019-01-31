@@ -8,7 +8,8 @@ public class SpellEffects : MonoBehaviour
 
     public GameObject fountain_of_healing_prefab;
     public GameObject physical_strike_prefab;
-    public GameObject smite_prefab;
+    public GameObject sacred_flame_prefab;
+    public GameObject sanctuary_prefab;
 
     // properties
     public static SpellEffects Instance { get; set; }
