@@ -91,14 +91,6 @@ public class Guard : MonoBehaviour
     {
         Me.Actions.Movement.ResetPath();
         Me.Actions.Decider.FriendsInNeed.Clear();
-
-        Route _route = GetComponent<Route>();
-
-        if (_route != null && !_route.Completed()) {
-            Me.Actions.Movement.SetDestination(_route.SetNext());
-        } else {
-            OnIdle();
-        }
     }
 
 
