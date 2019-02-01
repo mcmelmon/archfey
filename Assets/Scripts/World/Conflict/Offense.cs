@@ -32,37 +32,9 @@ public class Offense : MonoBehaviour
 
     public void Reinforce()
     {
-        List<Structure> residences = FindObjectsOfType<Structure>()
-            .Where(s => s.owner == Conflict.Faction.Ghaddim && s.purpose == Structure.Purpose.Residential && s.AttachedUnits.Count < s.entrances.Count)
-            .ToList();
-
         List<Structure> military = FindObjectsOfType<Structure>()
             .Where(s => s.owner == Conflict.Faction.Ghaddim && s.purpose == Structure.Purpose.Military && s.AttachedUnits.Count < s.entrances.Count)
             .ToList();
-
-        foreach (var structure in residences) {
-            foreach (var entrance in structure.entrances) {
-                Vector3 location = entrance.position;
-                Actor commoner;
-                int roll = Random.Range(0, 3);
-
-                // artisans will only be regenerated when storage facilities report materials available
-                switch (roll) {
-                    case 0:
-                        commoner = SpawnToolUser("Farmer", entrance);
-                        structure.AttachedUnits.Add(commoner);
-                        break;
-                    case 1:
-                        commoner = SpawnToolUser("Lumberjack", entrance);
-                        structure.AttachedUnits.Add(commoner);
-                        break;
-                    case 2:
-                        commoner = SpawnToolUser("Miner", entrance);
-                        structure.AttachedUnits.Add(commoner);
-                        break;
-                }
-            }
-        }
 
         foreach (var structure in military) {
             foreach (var entrance in structure.entrances) {
@@ -73,17 +45,6 @@ public class Offense : MonoBehaviour
                 structure.AttachedUnits.Add(gnoll.GetComponent<Actor>());
             }
         }
-    }
-
-
-    public Actor SpawnToolUser(string _tool, Transform _location)
-    {
-        GameObject commoner = Spawn(new Vector3(_location.position.x, Geography.Terrain.SampleHeight(_location.position), _location.position.z));
-        commoner.AddComponent<Commoner>();
-        commoner.GetComponent<Stats>().Tools.Add(_tool);
-        Actor _actor = commoner.GetComponent<Actor>();
-
-        return _actor;
     }
 
 
@@ -98,11 +59,10 @@ public class Offense : MonoBehaviour
 
     private GameObject Spawn(Vector3 _point)
     {
-        GameObject _soldier = (Faction == Conflict.Faction.Ghaddim) ? Ghaddim.SpawnUnit(_point) : Mhoddim.SpawnUnit(_point);  // offense will almost always be Ghaddim
-        _soldier.transform.parent = transform;
-        _soldier.GetComponent<Actor>().Role = Conflict.Role.Offense;
-        Units.Add(_soldier);
-        Conflict.Units.Add(_soldier);
-        return _soldier;
+        GameObject new_unit = Instantiate(Civilization.Instance.actor_prefab, _point, Civilization.Instance.actor_prefab.transform.rotation);
+        new_unit.transform.parent = transform;
+        new_unit.GetComponent<Actor>().Role = Conflict.Role.Offense;
+        Units.Add(new_unit);
+        return new_unit;
     }
 }

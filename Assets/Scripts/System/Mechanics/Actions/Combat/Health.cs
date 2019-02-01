@@ -64,7 +64,6 @@ public class Health : MonoBehaviour {
     public bool Persist()
     {
         if (CurrentHitPoints <= 0) {
-            Conflict.Instance.AddCasualty(Me.Faction);
             Destroy(gameObject);
             return false;
         }

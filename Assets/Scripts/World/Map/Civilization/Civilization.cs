@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Civilization : MonoBehaviour {
+public class Civilization : MonoBehaviour 
+{
+
+    // Inspector settings
+    public GameObject actor_prefab;
 
     // properties
 

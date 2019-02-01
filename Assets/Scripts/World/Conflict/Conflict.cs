@@ -16,21 +16,9 @@ public class Conflict : MonoBehaviour
 
     // properties
 
-    public static Dictionary<Faction, int> Casualties { get; set; }
     public static Characters Characters { get; set; }
-    public Conflict.Role NextWave { get; set; }
     public static Conflict Instance { get; set; }
     public static Proficiencies Proficiencies { get; set; }
-    public static int ToHitBase { get; set; }
-    public static List<GameObject> Units { get; set; }
-    public static Faction Victor { get; set; }
-    public static bool Victory { get; set; }
-    public static Faction VictoryContender { get; set; }
-    public static int VictoryThreshold { get; set; }
-
-
-    private int victory_ticks;
-    private int current_tick;
 
 
     // Unity
@@ -45,17 +33,10 @@ public class Conflict : MonoBehaviour
         }
         Instance = this;
         SetComponents();
-        //StartCoroutine(CheckForVictory());
     }
 
 
     // public
-
-
-    public void AddCasualty(Faction _faction)
-    {
-        Casualties[_faction]++;
-    }
 
 
     public Faction EnemyFaction(Actor _unit)
@@ -81,51 +62,6 @@ public class Conflict : MonoBehaviour
     }
 
 
-    private IEnumerator CheckForVictory()
-    {
-        while (true) {
-            if (!Victory && Objectives.Instance != null && VictoryThreshold > 0)  // don't put test in while or enumerator never starts up
-            {
-                if (Objectives.HeldByFaction[Faction.Ghaddim].Count >= VictoryThreshold)
-                {
-                    if (VictoryContender == Faction.Ghaddim)
-                    {
-                        current_tick++;
-                        if (current_tick >= victory_ticks)
-                        {
-                            Victory = true;
-                            Victor = Faction.Ghaddim;
-                        }
-                    }
-                    else
-                    {
-                        current_tick = 0;
-                        VictoryContender = Faction.Ghaddim;
-                    }
-                }
-                else if (Objectives.HeldByFaction[Faction.Mhoddim].Count >= VictoryThreshold)
-                {
-                    if (VictoryContender == Faction.Mhoddim)
-                    {
-                        current_tick++;
-                        if (current_tick >= victory_ticks)
-                        {
-                            Victory = true;
-                            Victor = Faction.Mhoddim;
-                        }
-                    }
-                    else
-                    {
-                        current_tick = 0;
-                        VictoryContender = Faction.Mhoddim;
-                    }
-                }
-            }
-            yield return new WaitForSeconds(Turn.ActionThreshold);
-        }
-    }
-
-
     private void ChooseSides()
     {
 
@@ -143,27 +79,15 @@ public class Conflict : MonoBehaviour
 
     private void SetComponents()
     {
-        Casualties = new Dictionary<Faction, int>
-        {
-            [Faction.Ghaddim] = 0,
-            [Faction.Mhoddim] = 0
-        };
+
         Characters = gameObject.AddComponent<Characters>();
-        current_tick = 0;
         Proficiencies = gameObject.AddComponent<Proficiencies>();
-        ToHitBase = 10;
-        Units = new List<GameObject>();
-        Victor = Faction.None;
-        Victory = false;
-        VictoryContender = Faction.None;
-        VictoryThreshold = 0;  // set from Ruins after it has completed constructing them
-        victory_ticks = 5;
     }
 
 
     private IEnumerator Waves()
     {
-        while (!Victory) {
+        while (true) {
             yield return new WaitForSeconds(60f);
 
             Defense.Instance.Reinforce();

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -113,29 +114,13 @@ public class ClaimNode : MonoBehaviour
 
     private void IdentifyFriendAndFoe()
     {
-        float distance;
+        Attackers = FindObjectsOfType<Actor>()
+            .Where(actor => actor.Faction != ClaimFaction && Vector3.Distance(actor.transform.position, transform.position) < Movement.ReachedThreshold)
+            .ToList();
 
-        ClearAttackers();
-        ClearDefenders();
-
-        for (int i = 0; i < Conflict.Units.Count; i++) {
-            if (Conflict.Units[i] == null) continue;
-
-            Actor _unit = Conflict.Units[i].GetComponent<Actor>();
-            if (_unit == null) continue;
-
-            distance = Vector3.Distance(transform.position, _unit.transform.position);
-            if (distance < Movement.ReachedThreshold) {
-                if (_unit.Faction == ClaimFaction) {
-                    Defenders.Add(_unit);
-                } else if (ClaimFaction == Conflict.Faction.None && _unit.Faction == OccupyingFaction) {
-                    Defenders.Add(_unit);
-                }
-                else {
-                    Attackers.Add(_unit);
-                }
-            }
-        }
+        Defenders = FindObjectsOfType<Actor>()
+            .Where(actor => actor.Faction == ClaimFaction && Vector3.Distance(actor.transform.position, transform.position) < Movement.ReachedThreshold)
+            .ToList();
     }
 
 

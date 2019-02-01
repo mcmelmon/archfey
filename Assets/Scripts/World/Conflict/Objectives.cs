@@ -42,7 +42,6 @@ public class Objectives : MonoBehaviour {
     public void PlaceObjectives()
     {
         SetComponents();
-        Conflict.VictoryThreshold = Mathf.RoundToInt(objectives.Count * 0.66f);
     }
 
 

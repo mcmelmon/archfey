@@ -107,7 +107,7 @@ public class Stats : MonoBehaviour
 
     private IEnumerator ManageStatBars()
     {
-        while (!Conflict.Victory && Me.Health.MaximumHitPoints > 0)
+        while (Me.Health.MaximumHitPoints > 0)
         {
             UpdateStatBars();
             yield return new WaitForSeconds(Turn.ActionThreshold);

@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Defense : MonoBehaviour
 {
-
     // properties
 
     public Conflict.Faction Faction { get; set; }
@@ -190,11 +189,10 @@ public class Defense : MonoBehaviour
 
     private GameObject Spawn(Vector3 _point)
     {
-        GameObject _soldier = (Faction == Conflict.Faction.Ghaddim) ? Ghaddim.SpawnUnit(_point) : Mhoddim.SpawnUnit(_point);  // Defense will "almost always" be Mhoddim...
-        _soldier.transform.parent = transform;
-        _soldier.GetComponent<Actor>().Role = Conflict.Role.Defense;
-        Units.Add(_soldier);
-        Conflict.Units.Add(_soldier);
-        return _soldier;
+        GameObject new_unit = Instantiate(Civilization.Instance.actor_prefab, _point, Civilization.Instance.actor_prefab.transform.rotation);
+        new_unit.transform.parent = transform;
+        new_unit.GetComponent<Actor>().Role = Conflict.Role.Defense;
+        Units.Add(new_unit);
+        return new_unit;
     }
 }
