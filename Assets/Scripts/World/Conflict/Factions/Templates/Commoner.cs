@@ -50,7 +50,14 @@ public class Commoner : MonoBehaviour
 
     public void OnDamagedFriendlyStructuresSighted()
     {
-        // repair
+        if (!RepairStructure()) {
+            FindDamagedStructure();
+            Me.Actions.Movement.ResetPath();
+            Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed * 2;
+            Me.Actions.Movement.SetDestination(Me.Actions.Movement.Destinations[Movement.CommonDestination.Repair]);
+        } else {
+            Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
+        }
     }
 
 
@@ -126,7 +133,9 @@ public class Commoner : MonoBehaviour
         if (!Harvest()) {
             if (!Craft()) {
                 if (!Warehouse()) {
-                    OnIdle();
+                    if (!RepairStructure()) {
+                        OnIdle();
+                    }
                 }
             }
         }
@@ -167,9 +176,24 @@ public class Commoner : MonoBehaviour
     }
 
 
+    private void FindDamagedStructure()
+    {
+        Structure damaged_structure = FindObjectsOfType<Structure>()
+            .Where(s => s.owner == Me.Faction && s.CurrentHitPointPercentage() < 1f)
+            .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
+            .ToList()
+            .First();
+
+        if (damaged_structure == null) return;
+
+        Collider _collider = damaged_structure.GetComponent<Collider>();
+        Me.Actions.Movement.AddDestination(Movement.CommonDestination.Repair, _collider.ClosestPointOnBounds(transform.position));
+    }
+
+
     private void FindGuard()
     {
-        Structure nearest_military_structure = new List<Structure>(FindObjectsOfType<Structure>())
+        Structure nearest_military_structure = FindObjectsOfType<Structure>()
             .Where(s => s.owner == Me.Faction && s.purpose == Structure.Purpose.Military)
             .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
             .ToList()
@@ -182,7 +206,7 @@ public class Commoner : MonoBehaviour
 
     private void FindShrine()
     {
-        Structure nearest_sacred_structure = new List<Structure>(FindObjectsOfType<Structure>())
+        Structure nearest_sacred_structure = FindObjectsOfType<Structure>()
             .Where(s => s.owner == Me.Faction && s.purpose == Structure.Purpose.Sacred)
             .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
             .ToList()
@@ -194,7 +218,7 @@ public class Commoner : MonoBehaviour
 
     private void FindWarehouse()
     {
-        MyWarehouse = new List<Structure>(FindObjectsOfType<Structure>())
+        MyWarehouse = FindObjectsOfType<Structure>()
             .Where(s => s.owner == Me.Faction && s.Storage != null && s.MaterialsWanted().Contains(Me.Load.First().Key.material))
             .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
             .ToList()
@@ -252,6 +276,32 @@ public class Commoner : MonoBehaviour
             MyHarvest.HarvestResource(Me);
             Me.harvesting = MyHarvest.material;
             Me.harvested_amount = Me.Load.First().Value;
+            return true;
+        }
+
+        return false;
+    }
+
+
+    private bool RepairStructure()
+    {
+        if (!Me.Actions.Movement.Destinations.ContainsKey(Movement.CommonDestination.Repair)) return false;
+
+        var damaged_structures = FindObjectsOfType<Structure>()
+            .Where(s => s.owner == Me.Faction && s.CurrentHitPointPercentage() < 1f)
+            .OrderBy(s => Vector3.Distance(transform.position, s.transform.position));
+
+        if (!damaged_structures.Any()) {
+            Me.Actions.Movement.Destinations.Remove(Movement.CommonDestination.Repair);
+            return false;
+        }
+
+        Structure structure = damaged_structures.First();
+        Vector3 destination = structure.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
+        float distance = Vector3.Distance(destination, transform.position);
+
+        if (distance <= Movement.ReachedThreshold) {
+            structure.GainStructure(Me.Stats.ProficiencyBonus * 2);
             return true;
         }
 

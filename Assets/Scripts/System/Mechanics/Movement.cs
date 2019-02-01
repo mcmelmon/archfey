@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class Movement : MonoBehaviour
 {
-    public enum CommonDestination { Home = 0, Harvest = 1, Craft = 2, Military = 3, Warehouse = 4 };
+    public enum CommonDestination { Home, Harvest, Craft, Military, Repair, Warehouse };
 
     // properties
 
