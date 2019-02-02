@@ -8,7 +8,7 @@ public class Structure : MonoBehaviour
     public enum Purpose { Civic = 0, Commercial = 1, Industrial = 2, Military = 3, Residential = 4, Sacred = 5 };
 
     // Inspector settings
-    public Conflict.Alignment owner;
+    public Conflict.Alignment alignment;
     public Purpose purpose;
 
     public int armor_class = 13;

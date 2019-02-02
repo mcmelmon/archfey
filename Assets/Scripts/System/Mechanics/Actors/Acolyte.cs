@@ -36,7 +36,8 @@ public class Acolyte : MonoBehaviour
 
     public void OnFriendsInNeed()
     {
-        Me.Actions.CloseWithEnemies();
+        Me.Actions.Movement.SetDestination(Me.Actions.Decider.FriendsInNeed.First().transform);
+        AttackWithSpell();
         Me.Actions.Decider.FriendsInNeed.Clear();
     }
 
@@ -76,7 +77,8 @@ public class Acolyte : MonoBehaviour
                           .ToList()
                           .First();
 
-        Me.Actions.Movement.TrackUnit(wounded);
+        Me.Actions.Movement.SetDestination(wounded.transform);
+        StartCoroutine(Me.Actions.Movement.TrackUnit(wounded));
 
         if (!TreatWounded()) AttackWithSpell();
     }
@@ -182,6 +184,10 @@ public class Acolyte : MonoBehaviour
         Me.Magic = gameObject.AddComponent<Magic>();
         Me.Magic.MaximumSpellSlots[Magic.Level.First] = 3;
         Me.Magic.SpellsLeft[Magic.Level.First] = 3;
+
+        Me.Stats.Skills.Add(Proficiencies.Skill.Medicine);
+        Me.Stats.Expertise.Add(Proficiencies.Skill.Medicine);
+        Me.Stats.Skills.Add(Proficiencies.Skill.Religion);
     }
 
 

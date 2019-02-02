@@ -123,7 +123,7 @@ public class Actions : MonoBehaviour
         for (int i = 0; i < friends.Count; i++) {
             if (Me == null) break;
             if (friends[i] != null && !friends[i].Actions.Decider.FriendsInNeed.Contains(Me)) {
-                if (friends[i].GetComponent<Guard>() != null || Me.GetComponent<Commoner>() == null) // commoners rally around guards, but not other commoners
+                if (friends[i].GetComponent<Guard>() != null || Me.GetComponent<Guard>() != null)
                     friends[i].Actions.Decider.FriendsInNeed.Add(Me);
             }
         }

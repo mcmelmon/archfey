@@ -34,7 +34,7 @@ public class Faction : MonoBehaviour
     public void Reinforce()
     {
 
-        foreach (var structure in Residences()) {
+        foreach (var structure in Residential()) {
             foreach (var entrance in structure.entrances) {
                 if (structure.AttachedUnits.Count >= structure.entrances.Count) break;
 
@@ -43,17 +43,17 @@ public class Faction : MonoBehaviour
                 int roll = UnityEngine.Random.Range(0, 3);
 
                 // artisans will only be regenerated when storage facilities report materials available
+                // TODO: commoners really only make sense for "human-type" objectives
                 switch (roll) {
                     case 0:
-                        commoner = SpawnToolUser("Residence", "Farmer", entrance);
-                        structure.AttachedUnits.Add(commoner);
+                        commoner = SpawnToolUser("Farmer", entrance);
                         break;
                     case 1:
-                        commoner = SpawnToolUser("Residence", "Lumberjack", entrance);
+                        commoner = SpawnToolUser("Lumberjack", entrance);
                         structure.AttachedUnits.Add(commoner);
                         break;
                     case 2:
-                        commoner = SpawnToolUser("Residence", "Miner", entrance);
+                        commoner = SpawnToolUser("Miner", entrance);
                         structure.AttachedUnits.Add(commoner);
                         break;
                     default:
@@ -65,12 +65,8 @@ public class Faction : MonoBehaviour
 
         foreach (var structure in Military()) {
             foreach (var entrance in structure.entrances) {
-                if (structure.AttachedUnits.Count >= structure.entrances.Count) break;
                 Vector3 location = entrance.transform.position;
-                GameObject military_unit = Spawn("Military", new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
-                military_unit.AddComponent<Guard>();
-                military_unit.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Perception);
-                military_unit.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Intimidation);
+                GameObject military_unit = Spawn(Structure.Purpose.Military, new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
                 Actor actor = military_unit.GetComponent<Actor>();
                 actor.Alignment = alignment;
                 structure.AttachedUnits.Add(actor);
@@ -80,13 +76,8 @@ public class Faction : MonoBehaviour
 
         foreach (var structure in Sacred()) {
             foreach (var entrance in structure.entrances) {
-                if (structure.AttachedUnits.Count >= structure.entrances.Count) break;
                 Vector3 location = entrance.transform.position;
-                GameObject sacred_unit = Spawn("Sacred", new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
-                sacred_unit.AddComponent<Acolyte>();
-                sacred_unit.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Medicine);
-                sacred_unit.GetComponent<Stats>().Expertise.Add(Proficiencies.Skill.Medicine);
-                sacred_unit.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Religion);
+                GameObject sacred_unit = Spawn(Structure.Purpose.Sacred, new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
                 Actor actor = sacred_unit.GetComponent<Actor>();
                 actor.Alignment = alignment;
                 structure.AttachedUnits.Add(actor);
@@ -95,9 +86,9 @@ public class Faction : MonoBehaviour
     }
 
 
-    public Actor SpawnToolUser(string unit_name, string tool, Transform location)
+    public Actor SpawnToolUser(string tool, Transform location)
     {
-        GameObject residential_unit = Spawn(unit_name, new Vector3(location.position.x, Geography.Terrain.SampleHeight(location.position), location.position.z));
+        GameObject residential_unit = Spawn(Structure.Purpose.Residential, new Vector3(location.position.x, Geography.Terrain.SampleHeight(location.position), location.position.z));
         residential_unit.AddComponent<Commoner>();
         residential_unit.GetComponent<Stats>().Tools.Add(tool);
         Actor actor = residential_unit.GetComponent<Actor>();
@@ -113,15 +104,15 @@ public class Faction : MonoBehaviour
     private List<Structure> Military()
     {
         return FindObjectsOfType<Structure>()
-                .Where(s => s.purpose == Structure.Purpose.Military && s.owner == Conflict.Alignment.Good)
+                .Where(s => s.alignment == alignment && s.purpose == Structure.Purpose.Military && s.AttachedUnits.Count < s.entrances.Count)
                 .ToList();
     }
 
 
-    private List<Structure> Residences()
+    private List<Structure> Residential()
     {
         return FindObjectsOfType<Structure>()
-                .Where(s => s.owner == Conflict.Alignment.Good && s.purpose == Structure.Purpose.Residential && s.AttachedUnits.Count < s.entrances.Count)
+                .Where(s => s.alignment == alignment && s.purpose == Structure.Purpose.Residential && s.AttachedUnits.Count < s.entrances.Count)
                 .ToList();
     }
 
@@ -129,7 +120,7 @@ public class Faction : MonoBehaviour
     private List<Structure> Sacred()
     {
         return FindObjectsOfType<Structure>()
-                .Where(s => s.purpose == Structure.Purpose.Sacred && s.owner == Conflict.Alignment.Good)
+                .Where(s => s.alignment == alignment && s.purpose == Structure.Purpose.Sacred && s.AttachedUnits.Count < s.entrances.Count)
                 .ToList();
     }
 
@@ -140,9 +131,9 @@ public class Faction : MonoBehaviour
     }
 
 
-    private GameObject Spawn(string unit_name, Vector3 location)
+    private GameObject Spawn(Structure.Purpose purpose, Vector3 location)
     {
-        GameObject new_unit = Instantiate(faction_units.First(unit => unit.name == unit_name).prefab, location, Civilization.Instance.actor_prefab.transform.rotation);
+        GameObject new_unit = Instantiate(faction_units.First(unit => unit.name == purpose.ToString()).prefab, location, Civilization.Instance.actor_prefab.transform.rotation);
         new_unit.transform.parent = transform;
         Units.Add(new_unit);
         return new_unit;

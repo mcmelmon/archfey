@@ -26,15 +26,14 @@ public class Guard : MonoBehaviour
 
     public void OnBadlyInjured()
     {
-        Me.Actions.Movement.ResetPath();
-        Me.Actions.Decider.FriendsInNeed.Clear();
+        Me.Actions.Attack.AttackEnemiesInRange();
         FindShrine();
     }
 
 
     public void OnFriendsInNeed()
     {
-        Me.Actions.CloseWithEnemies();
+        Me.Actions.Movement.SetDestination(Me.Actions.Decider.FriendsInNeed.First().transform);
         Me.Actions.Attack.AttackEnemiesInRange();
         Me.Actions.Decider.FriendsInNeed.Clear();
     }
@@ -43,15 +42,13 @@ public class Guard : MonoBehaviour
     public void OnInCombat()
     {
         Me.Actions.CallForHelp();
-        Me.Actions.Decider.FriendsInNeed.Clear();
-        Me.Actions.CloseWithEnemies();
         Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Decider.FriendsInNeed.Clear();
     }
 
 
     public void OnHostileActorsSighted()
     {
-        Me.Actions.Decider.FriendsInNeed.Clear();
         Me.Actions.CloseWithEnemies();
         Me.Actions.Attack.AttackEnemiesInRange();
     }
@@ -123,7 +120,7 @@ public class Guard : MonoBehaviour
     private void FindShrine()
     {
         Structure nearest_sacred_structure = new List<Structure>(FindObjectsOfType<Structure>())
-            .Where(s => s.owner == Me.Alignment && s.purpose == Structure.Purpose.Sacred)
+            .Where(s => s.alignment == Me.Alignment && s.purpose == Structure.Purpose.Sacred)
             .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
             .ToList()
             .First();
@@ -162,5 +159,8 @@ public class Guard : MonoBehaviour
         Me.Senses.Darkvision = Characters.darkvision_range[Characters.Template.Base];
         Me.Senses.PerceptionRange = Characters.perception_range[Characters.Template.Guard];
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
+
+        Me.Stats.Skills.Add(Proficiencies.Skill.Perception);
+        Me.Stats.Skills.Add(Proficiencies.Skill.Intimidation);
     }
 }

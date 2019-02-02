@@ -155,7 +155,7 @@ public class Workshop : MonoBehaviour
     {
         Actor primary_artistan;
         Structure random_residence = FindObjectsOfType<Structure>()
-            .Where(s => s.owner == Storage.Structure.owner && s.purpose == Structure.Purpose.Residential && s.GetComponent<HarvestingNode>() == null)
+            .Where(s => s.alignment == Storage.Structure.alignment && s.purpose == Structure.Purpose.Residential && s.GetComponent<HarvestingNode>() == null)
             .OrderBy(s => UnityEngine.Random.value)
             .ToList()
             .First();
@@ -163,7 +163,7 @@ public class Workshop : MonoBehaviour
         var primary_artisans = Storage.Structure.AttachedUnits.Where(a => a.Stats.Tools.Contains(_product.Tool)).ToList();
         if (primary_artisans.Count == 0)
         {
-            primary_artistan = GetComponentInParent<Faction>().SpawnToolUser("Residence", _product.Tool, random_residence.RandomEntrance().transform);
+            primary_artistan = GetComponentInParent<Faction>().SpawnToolUser(_product.Tool, random_residence.RandomEntrance().transform);
             Storage.Structure.AttachedUnits.Add(primary_artistan);
         }
     }

@@ -71,14 +71,14 @@ public class Decider : MonoBehaviour
             SetState(State.InCombat);
         } else if (UnderAttack()) {
             SetState(State.UnderAttack);
-        } else if (HostileActorsSighted()) {
-            SetState(State.HostileActorsSighted);
-        } else if (DamagedFriendlyStructures()) {
-            SetState(State.DamagedFriendlyStructuresSighted);
-        } else if (HostileStructuresSighted()) {
-            SetState(State.HostileStructuresSighted);
         } else if (CallsForHelp()) {
             SetState(State.FriendsInNeed);
+        } else if (HostileActorsSighted()) {
+            SetState(State.HostileActorsSighted);
+        } else if (HostileStructuresSighted()) {
+            SetState(State.HostileStructuresSighted);
+        } else if (DamagedFriendlyStructures()) {
+            SetState(State.DamagedFriendlyStructuresSighted);
         } else if (Crafting()) {
             SetState(State.Crafting);
         } else if (ReachedGoal()) {
@@ -144,7 +144,7 @@ public class Decider : MonoBehaviour
         if (Me.Actions.OnDamagedFriendlyStructuresSighted == null) return false;
 
         FriendlyStructures = Me.Senses.Structures
-                               .Where(structure => structure.owner == Me.Alignment && structure.CurrentHitPoints < structure.maximum_hit_points)
+                               .Where(structure => structure.alignment == Me.Alignment && structure.CurrentHitPoints < structure.maximum_hit_points)
                                .ToList();
 
         return FriendlyStructures.Count > 0;
@@ -178,7 +178,7 @@ public class Decider : MonoBehaviour
     private bool HostileStructuresSighted()
     {
         HostileStructures = Me.Senses.Structures
-                              .Where(structure => structure.owner != Me.Alignment && structure.CurrentHitPoints > 0)
+                              .Where(structure => structure.alignment != Me.Alignment && structure.CurrentHitPoints > 0)
                               .ToList();
 
         return HostileStructures.Count > 0;
