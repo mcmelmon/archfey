@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -63,7 +63,8 @@ public class Conflict : MonoBehaviour
 
     private void ChooseSides()
     {
-        Defense.Instance.Deploy();
+        Faction good_faction = FindObjectsOfType<Faction>().First(faction => faction.alignment == Alignment.Good);
+        good_faction.Reinforce();
     }
 
 
@@ -86,8 +87,11 @@ public class Conflict : MonoBehaviour
         while (true) {
             yield return new WaitForSeconds(60f);
 
-            Defense.Instance.Reinforce();
-            Offense.Instance.Reinforce();
+            Faction good_faction = FindObjectsOfType<Faction>().First(faction => faction.alignment == Alignment.Good);
+            good_faction.Reinforce();
+
+            Faction evil_faction = FindObjectsOfType<Faction>().First(faction => faction.alignment == Alignment.Evil);
+            evil_faction.Reinforce();
         }
     }
 }

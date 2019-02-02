@@ -163,7 +163,7 @@ public class Workshop : MonoBehaviour
         var primary_artisans = Storage.Structure.AttachedUnits.Where(a => a.Stats.Tools.Contains(_product.Tool)).ToList();
         if (primary_artisans.Count == 0)
         {
-            primary_artistan = Defense.Instance.SpawnToolUser(_product.Tool, random_residence.RandomEntrance().transform);
+            primary_artistan = GetComponentInParent<Faction>().SpawnToolUser("Residence", _product.Tool, random_residence.RandomEntrance().transform);
             Storage.Structure.AttachedUnits.Add(primary_artistan);
         }
     }
