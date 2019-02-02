@@ -25,21 +25,4 @@ public class Civilization : MonoBehaviour
         }
         Instance = this;
     }
-
-
-    // public
-
-    public void DawnOfMhoddim()
-    {
-        LayRuins();
-    }
-
-
-    // private
-
-
-    private void LayRuins()
-    {
-        Objectives.Instance.PlaceObjectives();
-    }
 }

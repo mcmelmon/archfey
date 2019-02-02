@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -39,21 +40,21 @@ public class ObjectiveControlUI : MonoBehaviour
     // public
 
 
-    public void ChangeClaim(Conflict.Faction new_faction, Conflict.Faction previous_faction)
+    public void ChangeClaim(Conflict.Alignment new_faction, Conflict.Alignment previous_faction)
     {
-        if (new_faction != Conflict.Faction.None) {
+        if (new_faction != Conflict.Alignment.Unaligned) {
             TextMeshProUGUI faction_text = objective_captured_faction.GetComponent<TextMeshProUGUI>();
 
             switch (new_faction)
             {
-                case Conflict.Faction.Ghaddim:
-                    int ghaddim_count = Objectives.HeldByFaction[Conflict.Faction.Ghaddim].Count;
+                case Conflict.Alignment.Evil:
+                    int ghaddim_count = FindObjectsOfType<Objective>().Where(objective => objective.Claim == Conflict.Alignment.Evil).ToList().Count;
                     faction_text.text = "Gnolls";
                     objective_captured.gameObject.SetActive(true);
                     ActiveUIElements.Add(objective_captured.gameObject);
                     break;
-                case Conflict.Faction.Mhoddim:
-                    int mhoddim_count = Objectives.HeldByFaction[Conflict.Faction.Mhoddim].Count;
+                case Conflict.Alignment.Good:
+                    int mhoddim_count = FindObjectsOfType<Objective>().Where(objective => objective.Claim == Conflict.Alignment.Good).ToList().Count;
                     faction_text.text = "Peasants";
                     objective_captured.gameObject.SetActive(true);
                     ActiveUIElements.Add(objective_captured.gameObject);
@@ -63,19 +64,19 @@ public class ObjectiveControlUI : MonoBehaviour
             TextMeshProUGUI faction_text = objective_lost_faction.GetComponent<TextMeshProUGUI>();
 
             switch (previous_faction) {
-                case Conflict.Faction.Ghaddim:
-                    int ghaddim_count = Objectives.HeldByFaction[Conflict.Faction.Ghaddim].Count;
+                case Conflict.Alignment.Evil:
+                    int ghaddim_count = FindObjectsOfType<Objective>().Where(objective => objective.Claim == Conflict.Alignment.Evil).ToList().Count;
                     faction_text.text = "Gnolls";
                     objective_lost.gameObject.SetActive(true);
                     ActiveUIElements.Add(objective_lost.gameObject);
                     break;
-                case Conflict.Faction.Mhoddim:
-                    int mhoddim_count = Objectives.HeldByFaction[Conflict.Faction.Mhoddim].Count;
+                case Conflict.Alignment.Good:
+                    int mhoddim_count = FindObjectsOfType<Objective>().Where(objective => objective.Claim == Conflict.Alignment.Good).ToList().Count;
                     faction_text.text = "Peasants";
                     objective_lost.gameObject.SetActive(true);
                     ActiveUIElements.Add(objective_lost.gameObject);
                     break;
-                case Conflict.Faction.None:
+                case Conflict.Alignment.Unaligned:
                     break;
             }
         }

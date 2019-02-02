@@ -85,7 +85,6 @@ public class Mouse : MonoBehaviour
 
     private Color OriginalColor(Actor _actor)
     {
-        return (_actor.Faction == Conflict.Faction.Ghaddim) ? Conflict.Instance.ghaddim_prefab.GetComponent<Renderer>().sharedMaterial.color : Conflict.Instance.mhoddim_prefab.GetComponent<Renderer>().sharedMaterial.color;
-
+        return Civilization.Instance.actor_prefab.GetComponent<Renderer>().sharedMaterial.color;
     }
 }

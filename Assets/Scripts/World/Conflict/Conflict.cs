@@ -6,8 +6,7 @@ using UnityEngine.AI;
 public class Conflict : MonoBehaviour
 {
 
-    public enum Faction { None = 0, Ghaddim = 1, Mhoddim = 2, Fey = 3 };
-    public enum Role { None = 0, Defense = 1, Offense = 2 };
+    public enum Alignment { Unaligned = 0, Good = 1, Evil = 2, Neutral = 3 };
 
     // Inspector settings
 
@@ -39,9 +38,9 @@ public class Conflict : MonoBehaviour
     // public
 
 
-    public Faction EnemyFaction(Actor _unit)
+    public Alignment EnemyFaction(Actor _unit)
     {
-        return (_unit.Faction != Faction.None || _unit.Faction != Faction.Fey) ? (_unit.Faction == Faction.Ghaddim) ? Faction.Mhoddim : Faction.Ghaddim : Faction.None;
+        return (_unit.Alignment != Alignment.Unaligned || _unit.Alignment != Alignment.Neutral) ? ((_unit.Alignment == Alignment.Evil) ? Alignment.Good : Alignment.Evil) : Alignment.Unaligned;
     }
 
 
@@ -64,9 +63,6 @@ public class Conflict : MonoBehaviour
 
     private void ChooseSides()
     {
-
-        Defense.Instance.Faction = Faction.Mhoddim;
-        Offense.Instance.Faction = Faction.Ghaddim;
         Defense.Instance.Deploy();
     }
 

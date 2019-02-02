@@ -59,7 +59,13 @@ public class Guard : MonoBehaviour
 
     public void OnHostileStructuresSighted()
     {
+        if (Me.Actions.Decider.HostileStructures.Count > 0) {
+            Collider _collider = Me.Actions.Decider.HostileStructures[Random.Range(0, Me.Actions.Decider.HostileStructures.Count)].GetComponent<Collider>();
+            Vector3 destination = _collider.ClosestPointOnBounds(transform.position);
 
+            Me.Actions.Movement.SetDestination(Me.Actions.Decider.HostileStructures[Random.Range(0, Me.Actions.Decider.HostileStructures.Count)].transform);
+        }
+        Me.Actions.Attack.AttackEnemiesInRange();
     }
 
 
@@ -117,7 +123,7 @@ public class Guard : MonoBehaviour
     private void FindShrine()
     {
         Structure nearest_sacred_structure = new List<Structure>(FindObjectsOfType<Structure>())
-            .Where(s => s.owner == Me.Faction && s.purpose == Structure.Purpose.Sacred)
+            .Where(s => s.owner == Me.Alignment && s.purpose == Structure.Purpose.Sacred)
             .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
             .ToList()
             .First();

@@ -76,7 +76,7 @@ public class Acolyte : MonoBehaviour
                           .ToList()
                           .First();
 
-        Me.Actions.Movement.SetDestination(wounded.transform.position);
+        Me.Actions.Movement.TrackUnit(wounded);
 
         if (!TreatWounded()) AttackWithSpell();
     }

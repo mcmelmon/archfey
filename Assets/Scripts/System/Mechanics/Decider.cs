@@ -109,11 +109,11 @@ public class Decider : MonoBehaviour
     }
 
 
-    public bool IsFriendOrNeutral(Actor _unit)
+    public bool IsFriendOrNeutral(Actor other_unit)
     {
-        if (_unit == null || _unit == gameObject) return true;
-        if (IsMyFaction(_unit)) return true;
-        if (_unit.GetComponent<Fey>() != null) return true; // fey are neutral until individual units (e.g. Ents) attack (and get added to damagers)
+        if (other_unit == null || other_unit == gameObject) return true;
+        if (IsMyAlignment(other_unit)) return true;
+        if (other_unit.Alignment == Conflict.Alignment.Neutral || other_unit.Alignment == Conflict.Alignment.Unaligned) return true;
 
         return false;  // if none of the above, it's probably the other faction and no exceptions apply
     }
@@ -144,7 +144,7 @@ public class Decider : MonoBehaviour
         if (Me.Actions.OnDamagedFriendlyStructuresSighted == null) return false;
 
         FriendlyStructures = Me.Senses.Structures
-                               .Where(structure => structure.owner == Me.Faction && structure.CurrentHitPoints < structure.maximum_hit_points)
+                               .Where(structure => structure.owner == Me.Alignment && structure.CurrentHitPoints < structure.maximum_hit_points)
                                .ToList();
 
         return FriendlyStructures.Count > 0;
@@ -178,7 +178,7 @@ public class Decider : MonoBehaviour
     private bool HostileStructuresSighted()
     {
         HostileStructures = Me.Senses.Structures
-                              .Where(structure => structure.owner != Me.Faction && structure.CurrentHitPoints > 0)
+                              .Where(structure => structure.owner != Me.Alignment && structure.CurrentHitPoints > 0)
                               .ToList();
 
         return HostileStructures.Count > 0;
@@ -196,28 +196,15 @@ public class Decider : MonoBehaviour
     }
 
 
-    private bool IsAThreat(Actor _unit)
+    private bool IsAThreat(Actor unit)
     {
-        return Threat.IsAThreat(_unit);
+        return Threat.IsAThreat(unit);
     }
 
 
-    private bool IsAttackingMyFaction(Actor _unit)
+    private bool IsMyAlignment(Actor unit)
     {
-        return Me.Faction != Conflict.Faction.Fey && Me.Faction != Conflict.Faction.None
-                                  && (Me.Faction == Conflict.Faction.Ghaddim) ? (Me.Ghaddim.IsFactionThreat(_unit)) : (Me.Mhoddim.IsFactionThreat(_unit));
-    }
-
-
-    private bool IsMyFaction(Actor _unit)
-    {
-        return _unit != null && Me.Faction == _unit.Faction;
-    }
-
-
-    private bool IsMyRole(Actor _unit)
-    {
-        return _unit != null && Me.Role == _unit.Role;
+        return unit != null && Me.Alignment == unit.Alignment;
     }
 
 

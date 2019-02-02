@@ -53,7 +53,7 @@ public class Attack : MonoBehaviour
                                          .ToList());
 
         AvailableMeleeTargets.AddRange(Me.Senses.Structures
-                                         .Where(structure => structure.owner != Me.Faction && Vector3.Distance(transform.position, structure.transform.position) < LongestMeleeRange())
+                                         .Where(structure => structure.owner != Me.Alignment && Vector3.Distance(transform.position, structure.transform.position) < LongestMeleeRange())
                                          .Select(structure => structure.gameObject)
                                          .ToList());
 
@@ -64,7 +64,7 @@ public class Attack : MonoBehaviour
                                           .ToList());
 
         AvailableRangedTargets.AddRange(Me.Senses.Structures
-                                          .Where(structure => structure.owner != Me.Faction && Vector3.Distance(transform.position, structure.transform.position) < LongestRangedRange())
+                                          .Where(structure => structure.owner != Me.Alignment && Vector3.Distance(transform.position, structure.transform.position) < LongestRangedRange())
                                           .Select(structure => structure.gameObject)
                                           .ToList());
     }

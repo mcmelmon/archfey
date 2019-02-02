@@ -7,7 +7,7 @@ public class Defense : MonoBehaviour
 {
     // properties
 
-    public Conflict.Faction Faction { get; set; }
+    public Conflict.Alignment Faction { get; set; }
     public static Defense Instance { get; set; }
     public static List<GameObject> Units { get; set; }
 
@@ -64,7 +64,9 @@ public class Defense : MonoBehaviour
                 guard.AddComponent<Guard>();
                 guard.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Perception);
                 guard.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Intimidation);
-                structure.AttachedUnits.Add(guard.GetComponent<Actor>());
+                Actor actor = guard.GetComponent<Actor>();
+                actor.Alignment = Conflict.Alignment.Good;
+                structure.AttachedUnits.Add(actor);
             }
         }
 
@@ -77,7 +79,9 @@ public class Defense : MonoBehaviour
                 acolyte.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Medicine);
                 acolyte.GetComponent<Stats>().Expertise.Add(Proficiencies.Skill.Medicine);
                 acolyte.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Religion);
-                structure.AttachedUnits.Add(acolyte.GetComponent<Actor>());
+                Actor actor = acolyte.GetComponent<Actor>();
+                actor.Alignment = Conflict.Alignment.Good;
+                structure.AttachedUnits.Add(actor);
             }
         }
     }
@@ -123,7 +127,9 @@ public class Defense : MonoBehaviour
                 guard.AddComponent<Guard>();
                 guard.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Perception);
                 guard.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Intimidation);
-                structure.AttachedUnits.Add(guard.GetComponent<Actor>());
+                Actor actor = guard.GetComponent<Actor>();
+                actor.Alignment = Conflict.Alignment.Good;
+                structure.AttachedUnits.Add(actor);
             }
         }
 
@@ -137,7 +143,9 @@ public class Defense : MonoBehaviour
                 acolyte.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Medicine);
                 acolyte.GetComponent<Stats>().Expertise.Add(Proficiencies.Skill.Medicine);
                 acolyte.GetComponent<Stats>().Skills.Add(Proficiencies.Skill.Religion);
-                structure.AttachedUnits.Add(acolyte.GetComponent<Actor>());
+                Actor actor = acolyte.GetComponent<Actor>();
+                actor.Alignment = Conflict.Alignment.Good;
+                structure.AttachedUnits.Add(actor);
             }
         }
     }
@@ -148,9 +156,10 @@ public class Defense : MonoBehaviour
         GameObject commoner = Spawn(new Vector3(_location.position.x, Geography.Terrain.SampleHeight(_location.position), _location.position.z));
         commoner.AddComponent<Commoner>();
         commoner.GetComponent<Stats>().Tools.Add(_tool);
-        Actor _actor = commoner.GetComponent<Actor>();
+        Actor actor = commoner.GetComponent<Actor>();
+        actor.Alignment = Conflict.Alignment.Good;
 
-        return _actor ;
+        return actor;
     }
 
 
@@ -160,7 +169,7 @@ public class Defense : MonoBehaviour
     private List<Structure> Military()
     {
         return FindObjectsOfType<Structure>()
-                .Where(s => s.purpose == Structure.Purpose.Military && s.owner == Conflict.Faction.Mhoddim)
+                .Where(s => s.purpose == Structure.Purpose.Military && s.owner == Conflict.Alignment.Good)
                 .ToList();
     }
 
@@ -168,7 +177,7 @@ public class Defense : MonoBehaviour
     private List<Structure> Residences()
     {
         return FindObjectsOfType<Structure>()
-                .Where(s => s.owner == Conflict.Faction.Mhoddim && s.purpose == Structure.Purpose.Residential && s.AttachedUnits.Count < s.entrances.Count)
+                .Where(s => s.owner == Conflict.Alignment.Good && s.purpose == Structure.Purpose.Residential && s.AttachedUnits.Count < s.entrances.Count)
                 .ToList();
     }
 
@@ -176,7 +185,7 @@ public class Defense : MonoBehaviour
     private List<Structure> Sacred()
     {
         return FindObjectsOfType<Structure>()
-                .Where(s => s.purpose == Structure.Purpose.Sacred && s.owner == Conflict.Faction.Mhoddim)
+                .Where(s => s.purpose == Structure.Purpose.Sacred && s.owner == Conflict.Alignment.Good)
                 .ToList();
     }
 
@@ -191,7 +200,6 @@ public class Defense : MonoBehaviour
     {
         GameObject new_unit = Instantiate(Civilization.Instance.actor_prefab, _point, Civilization.Instance.actor_prefab.transform.rotation);
         new_unit.transform.parent = transform;
-        new_unit.GetComponent<Actor>().Role = Conflict.Role.Defense;
         Units.Add(new_unit);
         return new_unit;
     }

@@ -22,7 +22,7 @@ public class Mhoddim : MonoBehaviour
 
         // An outpost will not accumulate tax revenue until it has a civic structure
         var structures = new List<Structure>(FindObjectsOfType<Structure>())
-            .Where(s => s.owner == Conflict.Faction.Mhoddim && s.purpose == Structure.Purpose.Civic)
+            .Where(s => s.owner == Conflict.Alignment.Good && s.purpose == Structure.Purpose.Civic)
             .ToList();
 
         foreach (var structure in structures) {

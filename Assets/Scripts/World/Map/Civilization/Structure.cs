@@ -8,7 +8,7 @@ public class Structure : MonoBehaviour
     public enum Purpose { Civic = 0, Commercial = 1, Industrial = 2, Military = 3, Residential = 4, Sacred = 5 };
 
     // Inspector settings
-    public Conflict.Faction owner;
+    public Conflict.Alignment owner;
     public Purpose purpose;
 
     public int armor_class = 13;
@@ -110,7 +110,7 @@ public class Structure : MonoBehaviour
 
     private void BookRevenue(float amount)
     {
-        revenue_cp += (owner == Conflict.Faction.Ghaddim) ? Ghaddim.AfterTaxIncome(amount) : Mhoddim.AfterTaxIncome(amount);
+        // TODO: accumulate revenue
     }
 
 

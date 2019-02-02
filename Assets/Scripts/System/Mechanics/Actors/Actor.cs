@@ -16,15 +16,11 @@ public class Actor : MonoBehaviour
     // properties
 
     public Actions Actions { get; set; }
-    public Conflict.Faction Faction { get; set; }
-    public Fey Fey { get; set; }
-    public Ghaddim Ghaddim { get; set; }
+    public Conflict.Alignment Alignment { get; set; }
     public Health Health { get; set; }
     public Dictionary<HarvestingNode, int> Load { get; set; }
     public Magic Magic { get; set; }
-    public Mhoddim Mhoddim { get; set; }
     public int RestCounter { get; set; }
-    public Conflict.Role Role { get; set; }
     public Senses Senses { get; set; }
     public float Size { get; set; }
     public Stats Stats { get; set; }
@@ -84,18 +80,13 @@ public class Actor : MonoBehaviour
     private void SetComponents()
     {
         Actions = GetComponentInChildren<Actions>();
-        Fey = GetComponent<Fey>();
-        Ghaddim = GetComponent<Ghaddim>();
+        Alignment = Conflict.Alignment.Unaligned;
         Health = GetComponent<Health>();
-        Mhoddim = GetComponent<Mhoddim>();
         Load = new Dictionary<HarvestingNode, int>();
         RestCounter = 0;
-        Role = Conflict.Role.None;  // offense and defense set this role for mortals
         Senses = GetComponent<Senses>();
         Size = GetComponent<Renderer>().bounds.extents.magnitude;
         Stats = GetComponent<Stats>();
-
-        Faction = (Fey != null) ? Conflict.Faction.Fey : (Ghaddim != null) ? Conflict.Faction.Ghaddim : Conflict.Faction.Mhoddim;
     }
 
 

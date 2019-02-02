@@ -179,7 +179,7 @@ public class Commoner : MonoBehaviour
     private void FindDamagedStructure()
     {
         Structure damaged_structure = FindObjectsOfType<Structure>()
-            .Where(s => s.owner == Me.Faction && s.CurrentHitPointPercentage() < 1f)
+            .Where(s => s.owner == Me.Alignment && s.CurrentHitPointPercentage() < 1f)
             .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
             .ToList()
             .First();
@@ -194,7 +194,7 @@ public class Commoner : MonoBehaviour
     private void FindGuard()
     {
         Structure nearest_military_structure = FindObjectsOfType<Structure>()
-            .Where(s => s.owner == Me.Faction && s.purpose == Structure.Purpose.Military)
+            .Where(s => s.owner == Me.Alignment && s.purpose == Structure.Purpose.Military)
             .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
             .ToList()
             .First();
@@ -207,7 +207,7 @@ public class Commoner : MonoBehaviour
     private void FindShrine()
     {
         Structure nearest_sacred_structure = FindObjectsOfType<Structure>()
-            .Where(s => s.owner == Me.Faction && s.purpose == Structure.Purpose.Sacred)
+            .Where(s => s.owner == Me.Alignment && s.purpose == Structure.Purpose.Sacred)
             .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
             .ToList()
             .First();
@@ -219,7 +219,7 @@ public class Commoner : MonoBehaviour
     private void FindWarehouse()
     {
         MyWarehouse = FindObjectsOfType<Structure>()
-            .Where(s => s.owner == Me.Faction && s.Storage != null && s.MaterialsWanted().Contains(Me.Load.First().Key.material))
+            .Where(s => s.owner == Me.Alignment && s.Storage != null && s.MaterialsWanted().Contains(Me.Load.First().Key.material))
             .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
             .ToList()
             .First();
@@ -239,7 +239,7 @@ public class Commoner : MonoBehaviour
 
         if (Proficiencies.Instance.Harvester(Me)) {
             MyHarvest = new List<HarvestingNode>(FindObjectsOfType<HarvestingNode>())
-                .Where(r => r.owner == Me.Faction && r.AccessibleTo(Me))
+                .Where(r => r.owner == Me.Alignment && r.AccessibleTo(Me))
                 .OrderBy(r => Vector3.Distance(transform.position, r.transform.position))
                 .ToList()
                 .First();
@@ -288,7 +288,7 @@ public class Commoner : MonoBehaviour
         if (!Me.Actions.Movement.Destinations.ContainsKey(Movement.CommonDestination.Repair)) return false;
 
         var damaged_structures = FindObjectsOfType<Structure>()
-            .Where(s => s.owner == Me.Faction && s.CurrentHitPointPercentage() < 1f)
+            .Where(s => s.owner == Me.Alignment && s.CurrentHitPointPercentage() < 1f)
             .OrderBy(s => Vector3.Distance(transform.position, s.transform.position));
 
         if (!damaged_structures.Any()) {

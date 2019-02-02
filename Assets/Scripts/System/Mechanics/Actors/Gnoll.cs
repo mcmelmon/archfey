@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Gnoll : MonoBehaviour
@@ -58,7 +58,7 @@ public class Gnoll : MonoBehaviour
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         Me.Actions.SheathWeapon();
 
-        List<Objective> objectives = Objectives.HeldByFaction[Conflict.Instance.EnemyFaction(Me)];
+        List<Objective> objectives = FindObjectsOfType<Objective>().Where(objective => objective.Claim == Conflict.Instance.EnemyFaction(Me)).ToList();
         if (objectives.Count > 0) {
             Objective next_objective = objectives[Random.Range(0, objectives.Count)];
             Me.Actions.Movement.SetDestination(next_objective.claim_nodes[0].transform);

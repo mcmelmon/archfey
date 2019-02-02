@@ -7,7 +7,7 @@ public class Offense : MonoBehaviour
 {
     // properties
 
-    public Conflict.Faction Faction { get; set; }
+    public Conflict.Alignment Faction { get; set; }
     public static Offense Instance { get; set; }
     public static List<GameObject> Units { get; set; }
 
@@ -33,7 +33,7 @@ public class Offense : MonoBehaviour
     public void Reinforce()
     {
         List<Structure> military = FindObjectsOfType<Structure>()
-            .Where(s => s.owner == Conflict.Faction.Ghaddim && s.purpose == Structure.Purpose.Military && s.AttachedUnits.Count < s.entrances.Count)
+            .Where(s => s.owner == Conflict.Alignment.Evil && s.purpose == Structure.Purpose.Military && s.AttachedUnits.Count < s.entrances.Count)
             .ToList();
 
         foreach (var structure in military) {
@@ -42,7 +42,9 @@ public class Offense : MonoBehaviour
                 Vector3 location = entrance.position;
                 GameObject gnoll = Spawn(new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
                 gnoll.AddComponent<Gnoll>();
-                structure.AttachedUnits.Add(gnoll.GetComponent<Actor>());
+                Actor actor = gnoll.GetComponent<Actor>();
+                actor.Alignment = Conflict.Alignment.Evil;
+                structure.AttachedUnits.Add(actor);
             }
         }
     }
@@ -61,7 +63,6 @@ public class Offense : MonoBehaviour
     {
         GameObject new_unit = Instantiate(Civilization.Instance.actor_prefab, _point, Civilization.Instance.actor_prefab.transform.rotation);
         new_unit.transform.parent = transform;
-        new_unit.GetComponent<Actor>().Role = Conflict.Role.Offense;
         Units.Add(new_unit);
         return new_unit;
     }
