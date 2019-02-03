@@ -35,6 +35,8 @@ public class Decider : MonoBehaviour
 
     // properties
 
+    public List<Actor> Enemies { get; set; }
+    public List<Actor> Friends { get; set; }
     public List<Actor> FriendsInNeed { get; set; }
     public List<Structure> FriendlyStructures { get; set; }
     public List<Structure> HostileStructures { get; set; }
@@ -55,8 +57,6 @@ public class Decider : MonoBehaviour
 
     public void ChooseState()
     {
-        Me.Senses.Sight();
-
         if (transform == null) {
             return;
         } else if (Medic()) {
@@ -71,10 +71,10 @@ public class Decider : MonoBehaviour
             SetState(State.InCombat);
         } else if (UnderAttack()) {
             SetState(State.UnderAttack);
-        } else if (CallsForHelp()) {
-            SetState(State.FriendsInNeed);
         } else if (HostileActorsSighted()) {
             SetState(State.HostileActorsSighted);
+        } else if (CallsForHelp()) {
+            SetState(State.FriendsInNeed);
         } else if (HostileStructuresSighted()) {
             SetState(State.HostileStructuresSighted);
         } else if (DamagedFriendlyStructures()) {
@@ -99,23 +99,27 @@ public class Decider : MonoBehaviour
 
     public List<Actor> IdentifyFriends()
     {
-        return Me.Senses.Actors.Where(IsFriendOrNeutral).ToList();
+        Friends = Me.Senses.Actors.Where(IsFriendOrNeutral).ToList();
+        return Friends;
     }
 
 
     public List<Actor> IdentifyEnemies()
     {
-        return Me.Senses.Actors.Where(a => !IsFriendOrNeutral(a)).ToList();
+        Enemies = Me.Senses.Actors.Where(a => !IsFriendOrNeutral(a)).ToList();
+        return Enemies;
     }
 
 
     public bool IsFriendOrNeutral(Actor other_unit)
     {
-        if (other_unit == null || other_unit == gameObject) return true;
-        if (IsMyAlignment(other_unit)) return true;
-        if (other_unit.Alignment == Conflict.Alignment.Neutral || other_unit.Alignment == Conflict.Alignment.Unaligned) return true;
+        if (other_unit == null || other_unit == Me) return true;
 
-        return false;  // if none of the above, it's probably the other faction and no exceptions apply
+        if (Threat.Threats.ContainsKey(other_unit)) return false;
+
+        bool faction_hostile = Me.Faction.IsHostileTo(other_unit.Faction);
+
+        return !faction_hostile;
     }
 
 
@@ -144,7 +148,7 @@ public class Decider : MonoBehaviour
         if (Me.Actions.OnDamagedFriendlyStructuresSighted == null) return false;
 
         FriendlyStructures = Me.Senses.Structures
-                               .Where(structure => structure.alignment == Me.Alignment && structure.CurrentHitPoints < structure.maximum_hit_points)
+                               .Where(structure => structure.Faction == Me.Faction && structure.CurrentHitPoints < structure.maximum_hit_points)
                                .ToList();
 
         return FriendlyStructures.Count > 0;
@@ -171,14 +175,14 @@ public class Decider : MonoBehaviour
 
     private bool HostileActorsSighted()
     {
-        return previous_state != State.FriendsInNeed && Me.Senses.Actors.Where(a => !IsFriendOrNeutral(a)).ToList().Count > 0;
+        return IdentifyEnemies().Count > 0;
     }
 
 
     private bool HostileStructuresSighted()
     {
         HostileStructures = Me.Senses.Structures
-                              .Where(structure => structure.alignment != Me.Alignment && structure.CurrentHitPoints > 0)
+                              .Where(structure => Me.Faction.IsHostileTo(structure.Faction) && structure.CurrentHitPoints > 0)
                               .ToList();
 
         return HostileStructures.Count > 0;
@@ -210,7 +214,7 @@ public class Decider : MonoBehaviour
 
     private bool Medic()
     {
-        return Me.Magic != null && Me.Magic.HaveSpellSlot(Magic.Level.First) && Me.Senses.Actors.Where(IsFriendOrNeutral).ToList().Where(friend => friend.Health.BadlyInjured() == true).ToList().Count > 0;
+        return Me.Magic != null && Me.Magic.HaveSpellSlot(Magic.Level.First) && IdentifyFriends().Any(friend => friend.Health.BadlyInjured());
     }
 
 
@@ -240,6 +244,8 @@ public class Decider : MonoBehaviour
 
     private void SetComponents()
     {
+        Enemies = new List<Actor>();
+        Friends = new List<Actor>();
         FriendsInNeed = new List<Actor>();
         Me = GetComponentInParent<Actor>();
         HostileStructures = new List<Structure>();

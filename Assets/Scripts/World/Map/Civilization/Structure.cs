@@ -23,6 +23,7 @@ public class Structure : MonoBehaviour
 
     public List<Actor> AttachedUnits { get; set; }
     public int CurrentHitPoints { get; set; }
+    public Faction Faction { get; set; }
     public float OriginalY { get; set; }
     public float OriginalYScale { get; set; }
     public Dictionary<Weapons.DamageType, int> Resistances { get; set; }
@@ -139,6 +140,7 @@ public class Structure : MonoBehaviour
     {
         AttachedUnits = new List<Actor>();
         CurrentHitPoints = maximum_hit_points;
+        Faction = GetComponentInParent<Faction>();
         OriginalY = transform.position.y;
         OriginalYScale = transform.localScale.y;
         Resistances = new Dictionary<Weapons.DamageType, int>  // TODO: override some reistances

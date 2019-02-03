@@ -40,9 +40,11 @@ public class Commoner : MonoBehaviour
 
     public void OnFriendsInNeed()
     {
-        Me.Actions.Movement.SetDestination(Me.Actions.Decider.FriendsInNeed.First().transform);
-        Me.Actions.Attack.AttackEnemiesInRange();
-        Me.Actions.Decider.FriendsInNeed.Clear();
+        if (Me.Actions.Decider.FriendsInNeed.Any()) {
+            Me.Actions.Movement.SetDestination(Me.Actions.Decider.FriendsInNeed.First().transform);
+            Me.Actions.Attack.AttackEnemiesInRange();
+            Me.Actions.Decider.FriendsInNeed.Clear();
+        }
     }
 
 
@@ -76,10 +78,11 @@ public class Commoner : MonoBehaviour
 
     public void OnHostileActorsSighted()
     {
-        Me.Actions.CallForHelp();
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed * 2;
-        AbandonLoad();
-        FindGuard();
+        if (Me.Actions.Decider.FriendsInNeed.Count == 0) {
+            Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed * 2;
+            AbandonLoad();
+            FindGuard();
+        }
     }
 
 
@@ -110,7 +113,7 @@ public class Commoner : MonoBehaviour
     public void OnMovingToGoal()
     {
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
-        Me.Senses.Sight();
+        Me.Senses.Sense();
     }
 
 

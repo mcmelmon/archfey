@@ -54,6 +54,7 @@ public class Turn : MonoBehaviour {
 
     private void TakeAction()
     {
+        Me.Senses.Sense();
         Me.Actions.ActOnTurn();
     }
 }

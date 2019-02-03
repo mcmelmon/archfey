@@ -44,7 +44,6 @@ public class Health : MonoBehaviour {
         CurrentHitPoints -= Mathf.RoundToInt(amount);
         if (_attacker != null) {
             Me.Actions.Decider.Threat.AddThreat(_attacker, amount);
-            Me.Actions.Decider.Threat.SpreadThreat(_attacker, amount);
         }
         Me.Stats.UpdateStatBars();
     }

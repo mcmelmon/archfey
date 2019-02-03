@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Senses : MonoBehaviour
@@ -32,30 +32,12 @@ public class Senses : MonoBehaviour
     }
 
 
-    public void Sight()
+    public void Sense()
     {
-        Actors.Clear();
-        Structures.Clear();
-
         Collider[] colliders = Physics.OverlapSphere(transform.position, PerceptionRange);
 
-        for (int i = 0; i < colliders.Length; i++) {
-            Actor _actor = colliders[i].gameObject.GetComponent<Actor>();
-            Structure _structure = colliders[i].gameObject.GetComponent<Structure>();
-
-            if (_actor != null && _actor != Me) {
-                Stealth sighting_stealth = _actor.GetComponent<Stealth>();
-
-                if (sighting_stealth == null || sighting_stealth.SpottedBy(Me) && !Actors.Contains(_actor)) {
-                    Actors.Add(_actor);
-                }
-            }
-
-            if (_structure != null && !Structures.Contains(_structure)) {
-                Structures.Add(_structure);
-            }
-        }
-
+        Actors = colliders.Select(collider => collider.gameObject.GetComponent<Actor>()).OfType<Actor>().Distinct().ToList();
+        Structures = colliders.Select(collider => collider.gameObject.GetComponent<Structure>()).OfType<Structure>().Distinct().ToList();
         Me.Actions.Attack.SetEnemyRanges();
     }
 

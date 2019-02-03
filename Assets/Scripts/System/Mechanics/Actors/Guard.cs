@@ -42,6 +42,7 @@ public class Guard : MonoBehaviour
     public void OnInCombat()
     {
         Me.Actions.CallForHelp();
+        Me.Actions.CloseWithEnemies();
         Me.Actions.Attack.AttackEnemiesInRange();
         Me.Actions.Decider.FriendsInNeed.Clear();
     }
@@ -68,7 +69,6 @@ public class Guard : MonoBehaviour
 
     public void OnIdle()
     {
-        Me.Senses.Sight();
         Me.Actions.SheathWeapon();
         Me.Actions.Movement.Home();
     }
@@ -78,7 +78,6 @@ public class Guard : MonoBehaviour
     {
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         Me.Actions.SheathWeapon();
-        Me.Senses.Sight();
     }
 
 

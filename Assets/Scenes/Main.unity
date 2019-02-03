@@ -743,7 +743,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 264195861}
-  m_LocalRotation: {x: -0.06724959, y: -0.040250845, z: -0.63002616, w: 0.7726089}
+  m_LocalRotation: {x: -0.067083366, y: -0.04039772, z: -0.63250333, w: 0.77058893}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1280,8 +1280,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 465733991}
-  m_LocalRotation: {x: 0.18740626, y: -0.011349686, z: 0.0021655168, w: 0.98221457}
-  m_LocalPosition: {x: 436.5, y: 108, z: 13.630001}
+  m_LocalRotation: {x: 0.18740676, y: -0.01135081, z: 0.0021657373, w: 0.98221445}
+  m_LocalPosition: {x: 436.5, y: 108, z: 13.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 625565791}
@@ -1624,7 +1624,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 625565790}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.002079662, y: -0.0331288, z: -0.083655156}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 963679514}
@@ -2353,7 +2353,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 829675727}
-  m_LocalRotation: {x: -0.000000014901161, y: -0.0000000018626451, z: 0.4263155, w: 0.9045746}
+  m_LocalRotation: {x: -0.000000074505806, y: -0.00004092045, z: 0.42445996, w: 0.90544677}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2826,7 +2826,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963679513}
-  m_LocalRotation: {x: -0.018236373, y: -0.01387172, z: -0.9110746, w: 0.41160443}
+  m_LocalRotation: {x: -0.018189397, y: -0.013909847, z: -0.9119366, w: 0.4096919}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -4000,7 +4000,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b47044ef16dd3487f9b7656b7c63d07a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  faction_name: Sembia
   alignment: 1
+  allied_factions: []
+  rival_factions: []
   faction_units:
   - name: Residential
     prefab: {fileID: 3442360358424386194, guid: bafcbeeff7e1b4bee89145f5fa4745cf,
@@ -7260,7 +7263,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b47044ef16dd3487f9b7656b7c63d07a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  faction_name: Yeenoghu
   alignment: 2
+  allied_factions: []
+  rival_factions: []
   faction_units:
   - name: Military
     prefab: {fileID: 5542383770880094673, guid: 69b2170a34f044e02890919380c51c60,

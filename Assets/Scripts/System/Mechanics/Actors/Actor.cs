@@ -17,6 +17,7 @@ public class Actor : MonoBehaviour
 
     public Actions Actions { get; set; }
     public Conflict.Alignment Alignment { get; set; }
+    public Faction Faction { get; set; }
     public Health Health { get; set; }
     public Dictionary<HarvestingNode, int> Load { get; set; }
     public Magic Magic { get; set; }

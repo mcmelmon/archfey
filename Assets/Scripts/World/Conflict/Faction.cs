@@ -12,12 +12,16 @@ public class Faction : MonoBehaviour
     }
 
     // Inspector settings
+    public string faction_name;
     public Conflict.Alignment alignment;
+    public List<string> allied_factions;
+    public List<string> rival_factions;
     public List<FactionUnit> faction_units;
 
     // properties
 
-    public static List<GameObject> Units { get; set; }
+    public static List<Actor> Units { get; set; }
+
 
     // Unity
 
@@ -31,6 +35,24 @@ public class Faction : MonoBehaviour
     // public
 
 
+    public bool IsHostileTo(Faction other_faction)
+    {
+        if (other_faction == this) return false;
+
+        switch (alignment) {
+            case Conflict.Alignment.Evil:
+                return !allied_factions.Contains(other_faction.name);
+            case Conflict.Alignment.Good:
+                return rival_factions.Contains(other_faction.name) || other_faction.alignment == Conflict.Alignment.Evil;
+            case Conflict.Alignment.Neutral:
+                return rival_factions.Contains(other_faction.name);
+            case Conflict.Alignment.Unaligned:
+                return true;
+        }
+        return true; // in case of doubt, shoot
+    }
+
+
     public void Reinforce()
     {
 
@@ -40,13 +62,14 @@ public class Faction : MonoBehaviour
 
                 Vector3 location = entrance.position;
                 Actor commoner;
-                int roll = UnityEngine.Random.Range(0, 3);
+                int roll = UnityEngine.Random.Range(0, 9);
 
                 // artisans will only be regenerated when storage facilities report materials available
                 // TODO: commoners really only make sense for "human-type" objectives
                 switch (roll) {
                     case 0:
                         commoner = SpawnToolUser("Farmer", entrance);
+                        structure.AttachedUnits.Add(commoner);
                         break;
                     case 1:
                         commoner = SpawnToolUser("Lumberjack", entrance);
@@ -66,10 +89,8 @@ public class Faction : MonoBehaviour
         foreach (var structure in Military()) {
             foreach (var entrance in structure.entrances) {
                 Vector3 location = entrance.transform.position;
-                GameObject military_unit = Spawn(Structure.Purpose.Military, new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
-                Actor actor = military_unit.GetComponent<Actor>();
-                actor.Alignment = alignment;
-                structure.AttachedUnits.Add(actor);
+                Actor military_unit = Spawn(Structure.Purpose.Military, new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
+                structure.AttachedUnits.Add(military_unit);
             }
         }
 
@@ -77,10 +98,8 @@ public class Faction : MonoBehaviour
         foreach (var structure in Sacred()) {
             foreach (var entrance in structure.entrances) {
                 Vector3 location = entrance.transform.position;
-                GameObject sacred_unit = Spawn(Structure.Purpose.Sacred, new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
-                Actor actor = sacred_unit.GetComponent<Actor>();
-                actor.Alignment = alignment;
-                structure.AttachedUnits.Add(actor);
+                Actor sacred_unit = Spawn(Structure.Purpose.Sacred, new Vector3(location.x, Geography.Terrain.SampleHeight(location), location.z));
+                structure.AttachedUnits.Add(sacred_unit);
             }
         }
     }
@@ -88,13 +107,10 @@ public class Faction : MonoBehaviour
 
     public Actor SpawnToolUser(string tool, Transform location)
     {
-        GameObject residential_unit = Spawn(Structure.Purpose.Residential, new Vector3(location.position.x, Geography.Terrain.SampleHeight(location.position), location.position.z));
-        residential_unit.AddComponent<Commoner>();
+        Actor residential_unit = Spawn(Structure.Purpose.Residential, new Vector3(location.position.x, Geography.Terrain.SampleHeight(location.position), location.position.z));
+        residential_unit.gameObject.AddComponent<Commoner>();
         residential_unit.GetComponent<Stats>().Tools.Add(tool);
-        Actor actor = residential_unit.GetComponent<Actor>();
-        actor.Alignment = alignment;
-
-        return actor;
+        return residential_unit;
     }
 
 
@@ -127,15 +143,18 @@ public class Faction : MonoBehaviour
 
     private void SetComponents()
     {
-        Units = new List<GameObject>();
+        Units = new List<Actor>();
     }
 
 
-    private GameObject Spawn(Structure.Purpose purpose, Vector3 location)
+    private Actor Spawn(Structure.Purpose purpose, Vector3 location)
     {
         GameObject new_unit = Instantiate(faction_units.First(unit => unit.name == purpose.ToString()).prefab, location, Civilization.Instance.actor_prefab.transform.rotation);
         new_unit.transform.parent = transform;
-        Units.Add(new_unit);
-        return new_unit;
+        Actor actor = new_unit.GetComponent<Actor>();
+        actor.Alignment = alignment;
+        actor.Faction = this;
+        Units.Add(actor);
+        return actor;
     }
 }

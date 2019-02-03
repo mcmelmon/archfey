@@ -87,7 +87,7 @@ public class Acolyte : MonoBehaviour
     public void OnMovingToGoal()
     {
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
-        Me.Senses.Sight();
+        Me.Senses.Sense();
     }
 
 
