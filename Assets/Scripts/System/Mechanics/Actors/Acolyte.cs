@@ -36,7 +36,9 @@ public class Acolyte : MonoBehaviour
 
     public void OnFriendsInNeed()
     {
-        Me.Actions.Movement.SetDestination(Me.Actions.Decider.FriendsInNeed.First().transform);
+        if (Me.Actions.Decider.FriendsInNeed.First() != null) {
+            Me.Actions.Movement.SetDestination(Me.Actions.Decider.FriendsInNeed.First().transform);
+        }
         AttackWithSpell();
         Me.Actions.Decider.FriendsInNeed.Clear();
     }
@@ -93,7 +95,6 @@ public class Acolyte : MonoBehaviour
 
     public void OnNeedsRest()
     {
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed * 2;
         Me.Actions.SheathWeapon();
         Me.Actions.Movement.Home();
     }

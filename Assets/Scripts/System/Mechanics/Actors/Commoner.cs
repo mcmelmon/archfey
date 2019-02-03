@@ -40,11 +40,11 @@ public class Commoner : MonoBehaviour
 
     public void OnFriendsInNeed()
     {
-        if (Me.Actions.Decider.FriendsInNeed.Any()) {
+        if (Me.Actions.Decider.FriendsInNeed.First() != null) {
             Me.Actions.Movement.SetDestination(Me.Actions.Decider.FriendsInNeed.First().transform);
-            Me.Actions.Attack.AttackEnemiesInRange();
-            Me.Actions.Decider.FriendsInNeed.Clear();
         }
+        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Decider.FriendsInNeed.Clear();
     }
 
 

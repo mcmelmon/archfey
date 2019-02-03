@@ -8,11 +8,6 @@ public class Conflict : MonoBehaviour
 
     public enum Alignment { Unaligned = 0, Good = 1, Evil = 2, Neutral = 3 };
 
-    // Inspector settings
-
-    public Ghaddim ghaddim_prefab;
-    public Mhoddim mhoddim_prefab;
-
     // properties
 
     public static Characters Characters { get; set; }
