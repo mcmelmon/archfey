@@ -123,7 +123,7 @@ public class Actions : MonoBehaviour
         for (int i = 0; i < friends.Count; i++) {
             if (Me == null) break;
             if (friends[i] != null && !friends[i].Actions.Decider.FriendsInNeed.Contains(Me)) {
-                if (friends[i].GetComponent<Guard>() != null || Me.GetComponent<Commoner>() == null) // commoners rally around guards, but not other commoners
+                if (friends[i].GetComponent<Guard>() != null || Me.GetComponent<Guard>() != null)
                     friends[i].Actions.Decider.FriendsInNeed.Add(Me);
             }
         }
@@ -145,7 +145,7 @@ public class Actions : MonoBehaviour
         Actor nearest_enemy = Decider.Threat.Nearest();
 
         if (nearest_enemy != null) {
-            StartCoroutine(TrackEnemy(nearest_enemy));
+            StartCoroutine(Movement.TrackUnit(nearest_enemy));
         }
     }
 
@@ -217,18 +217,5 @@ public class Actions : MonoBehaviour
         Stats = GetComponentInParent<Stats>();
         Me = GetComponentInParent<Actor>();
         Movement = GetComponent<Movement>();
-    }
-
-
-    private IEnumerator TrackEnemy(Actor _enemy)
-    {
-        float separation = Vector3.Distance(transform.position, _enemy.transform.position);
-        int count = 0;
-
-        while (_enemy != null && count < 6 && separation > Movement.ReachedThreshold) {
-            Movement.SetDestination(_enemy.transform);
-            count++;
-            yield return new WaitForSeconds(1);
-        }
     }
 }

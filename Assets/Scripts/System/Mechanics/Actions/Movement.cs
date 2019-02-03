@@ -79,6 +79,19 @@ public class Movement : MonoBehaviour
     }
 
 
+    public IEnumerator TrackUnit(Actor unit)
+    {
+        float separation = Vector3.Distance(transform.position, unit.transform.position);
+        int count = 0;
+
+        while (unit != null && count < 6 && separation > Movement.ReachedThreshold) {
+            SetDestination(unit.transform);
+            count++;
+            yield return new WaitForSeconds(1);
+        }
+    }
+
+
     public void Warehouse()
     {
         SetDestination(Destinations[CommonDestination.Warehouse]);

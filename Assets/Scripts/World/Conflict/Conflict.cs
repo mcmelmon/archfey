@@ -1,36 +1,18 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class Conflict : MonoBehaviour
 {
 
-    public enum Faction { None = 0, Ghaddim = 1, Mhoddim = 2, Fey = 3 };
-    public enum Role { None = 0, Defense = 1, Offense = 2 };
-
-    // Inspector settings
-
-    public Ghaddim ghaddim_prefab;
-    public Mhoddim mhoddim_prefab;
+    public enum Alignment { Unaligned = 0, Good = 1, Evil = 2, Neutral = 3 };
 
     // properties
 
-    public static Dictionary<Faction, int> Casualties { get; set; }
     public static Characters Characters { get; set; }
-    public Conflict.Role NextWave { get; set; }
     public static Conflict Instance { get; set; }
     public static Proficiencies Proficiencies { get; set; }
-    public static int ToHitBase { get; set; }
-    public static List<GameObject> Units { get; set; }
-    public static Faction Victor { get; set; }
-    public static bool Victory { get; set; }
-    public static Faction VictoryContender { get; set; }
-    public static int VictoryThreshold { get; set; }
-
-
-    private int victory_ticks;
-    private int current_tick;
 
 
     // Unity
@@ -45,22 +27,15 @@ public class Conflict : MonoBehaviour
         }
         Instance = this;
         SetComponents();
-        //StartCoroutine(CheckForVictory());
     }
 
 
     // public
 
 
-    public void AddCasualty(Faction _faction)
+    public Alignment EnemyFaction(Actor _unit)
     {
-        Casualties[_faction]++;
-    }
-
-
-    public Faction EnemyFaction(Actor _unit)
-    {
-        return (_unit.Faction != Faction.None || _unit.Faction != Faction.Fey) ? (_unit.Faction == Faction.Ghaddim) ? Faction.Mhoddim : Faction.Ghaddim : Faction.None;
+        return (_unit.Alignment != Alignment.Unaligned || _unit.Alignment != Alignment.Neutral) ? ((_unit.Alignment == Alignment.Evil) ? Alignment.Good : Alignment.Evil) : Alignment.Unaligned;
     }
 
 
@@ -81,57 +56,10 @@ public class Conflict : MonoBehaviour
     }
 
 
-    private IEnumerator CheckForVictory()
-    {
-        while (true) {
-            if (!Victory && Objectives.Instance != null && VictoryThreshold > 0)  // don't put test in while or enumerator never starts up
-            {
-                if (Objectives.HeldByFaction[Faction.Ghaddim].Count >= VictoryThreshold)
-                {
-                    if (VictoryContender == Faction.Ghaddim)
-                    {
-                        current_tick++;
-                        if (current_tick >= victory_ticks)
-                        {
-                            Victory = true;
-                            Victor = Faction.Ghaddim;
-                        }
-                    }
-                    else
-                    {
-                        current_tick = 0;
-                        VictoryContender = Faction.Ghaddim;
-                    }
-                }
-                else if (Objectives.HeldByFaction[Faction.Mhoddim].Count >= VictoryThreshold)
-                {
-                    if (VictoryContender == Faction.Mhoddim)
-                    {
-                        current_tick++;
-                        if (current_tick >= victory_ticks)
-                        {
-                            Victory = true;
-                            Victor = Faction.Mhoddim;
-                        }
-                    }
-                    else
-                    {
-                        current_tick = 0;
-                        VictoryContender = Faction.Mhoddim;
-                    }
-                }
-            }
-            yield return new WaitForSeconds(Turn.ActionThreshold);
-        }
-    }
-
-
     private void ChooseSides()
     {
-
-        Defense.Instance.Faction = Faction.Mhoddim;
-        Offense.Instance.Faction = Faction.Ghaddim;
-        Defense.Instance.Deploy();
+        Faction good_faction = FindObjectsOfType<Faction>().First(faction => faction.alignment == Alignment.Good);
+        good_faction.Reinforce();
     }
 
 
@@ -143,31 +71,22 @@ public class Conflict : MonoBehaviour
 
     private void SetComponents()
     {
-        Casualties = new Dictionary<Faction, int>
-        {
-            [Faction.Ghaddim] = 0,
-            [Faction.Mhoddim] = 0
-        };
+
         Characters = gameObject.AddComponent<Characters>();
-        current_tick = 0;
         Proficiencies = gameObject.AddComponent<Proficiencies>();
-        ToHitBase = 10;
-        Units = new List<GameObject>();
-        Victor = Faction.None;
-        Victory = false;
-        VictoryContender = Faction.None;
-        VictoryThreshold = 0;  // set from Ruins after it has completed constructing them
-        victory_ticks = 5;
     }
 
 
     private IEnumerator Waves()
     {
-        while (!Victory) {
+        while (true) {
             yield return new WaitForSeconds(60f);
 
-            Defense.Instance.Reinforce();
-            Offense.Instance.Reinforce();
+            Faction good_faction = FindObjectsOfType<Faction>().First(faction => faction.alignment == Alignment.Good);
+            good_faction.Reinforce();
+
+            Faction evil_faction = FindObjectsOfType<Faction>().First(faction => faction.alignment == Alignment.Evil);
+            evil_faction.Reinforce();
         }
     }
 }

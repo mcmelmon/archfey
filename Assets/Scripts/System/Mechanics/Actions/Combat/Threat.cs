@@ -10,7 +10,6 @@ public class Threat : MonoBehaviour {
     // properties
 
     public Actor Me { get; set; }
-    public static Dictionary<Actor, List<Actor>> Marks { get; set; }
     public Dictionary<Actor, float> Threats { get; set; }
 
 
@@ -20,7 +19,6 @@ public class Threat : MonoBehaviour {
     private void Awake()
     {
         SetComponents();
-        StartCoroutine(ClearMarks());
         StartCoroutine(DecayThreat());
     }
 
@@ -31,7 +29,6 @@ public class Threat : MonoBehaviour {
     public void AddThreat(Actor _attacker, float _damage)
     {
         AddPersonalThreat(_attacker, _damage);
-        AddMark(_attacker);
     }
 
 
@@ -69,18 +66,6 @@ public class Threat : MonoBehaviour {
     }
 
 
-    public void SpreadThreat(Actor _attacker, float _damage)
-    {
-        Conflict.Faction _faction = GetComponentInParent<Actor>().Faction;
-
-        if (_faction == Conflict.Faction.Ghaddim) {
-            GetComponentInParent<Ghaddim>().AddFactionThreat(_attacker, _damage);
-        } else if (_faction == Conflict.Faction.Mhoddim) {
-            GetComponentInParent<Mhoddim>().AddFactionThreat(_attacker, _damage);
-        }
-    }
-
-
     public Actor Weakest()
     {
         return Threats.Count > 0 ? Threats.OrderBy(threat => threat.Key.Health.CurrentHitPoints).First().Key : null;
@@ -90,40 +75,12 @@ public class Threat : MonoBehaviour {
     // private
 
 
-    private void AddMark(Actor _attacker)
-    {
-        if (!Marks.ContainsKey(_attacker))
-        {
-            Marks[_attacker] = new List<Actor>() { Me };
-        }
-        else
-        {
-            if (!Marks[_attacker].Contains(Me)) Marks[_attacker].Add(Me);
-        }
-    }
-
-
     private void AddPersonalThreat(Actor _attacker, float _damage)
     {
         if (!Threats.ContainsKey(_attacker)) {
             Threats[_attacker] = _damage;
         } else {
             Threats[_attacker] += _damage;
-        }
-    }
-
-
-    private IEnumerator ClearMarks()
-    {
-        while (true) {
-            var keys = Marks.Keys.ToArray();
-
-            for (int i = 0; i < keys.Length; i++)
-            {
-                // use for loop to avoid modifying collection in foreach
-                if (Marks[keys[i]] == null) Marks.Remove(keys[i]);
-            }
-            yield return new WaitForSeconds(Turn.ActionThreshold);
         }
     }
 
@@ -150,7 +107,6 @@ public class Threat : MonoBehaviour {
     private void SetComponents()
     {
         Me = GetComponentInParent<Actor>();
-        Marks = new Dictionary<Actor, List<Actor>>();
         Threats = new Dictionary<Actor, float>();
     }
 }

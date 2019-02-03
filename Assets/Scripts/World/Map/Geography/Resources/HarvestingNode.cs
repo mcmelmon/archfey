@@ -6,7 +6,7 @@ public class HarvestingNode : MonoBehaviour
 {
     // Inspector settings
     public string material;
-    public Conflict.Faction owner;
+    public Conflict.Alignment owner;
     public bool perpetual;
     public int initial_quantity;
     public int harvest_increment;

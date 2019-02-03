@@ -43,30 +43,38 @@ public class Attack : MonoBehaviour
     public void SetEnemyRanges()
     {
         if (Me == null) return;
-        
+
         ClearTargets();
 
-        AvailableMeleeTargets.AddRange(Me.Senses.Actors
-                                         .Where(actor => !Me.Actions.Decider.IsFriendOrNeutral(actor) && Vector3.Distance(transform.position, actor.transform.position) < LongestMeleeRange())
-                                         .OrderBy(actor => actor.Health.CurrentHitPoints)
-                                         .Select(actor => actor.gameObject)
-                                         .ToList());
+        if (Me.Actions.Decider.IdentifyEnemies().Any()) {
+            AvailableMeleeTargets.AddRange(Me.Actions.Decider.Enemies
+                                           .Where(actor => Vector3.Distance(transform.position, actor.transform.position) <= LongestMeleeRange())
+                                           .OrderBy(actor => actor.Health.CurrentHitPoints)
+                                           .Select(actor => actor.gameObject)
+                                           .Distinct()
+                                           .ToList());
 
-        AvailableMeleeTargets.AddRange(Me.Senses.Structures
-                                         .Where(structure => structure.owner != Me.Faction && Vector3.Distance(transform.position, structure.transform.position) < LongestMeleeRange())
-                                         .Select(structure => structure.gameObject)
-                                         .ToList());
+            AvailableRangedTargets.AddRange(Me.Actions.Decider.Enemies
+                                            .Where(actor => Vector3.Distance(transform.position, actor.transform.position) > LongestMeleeRange() && Vector3.Distance(transform.position, actor.transform.position) <= LongestRangedRange())
+                                            .OrderBy(actor => actor.Health.CurrentHitPoints)
+                                            .Select(actor => actor.gameObject)
+                                            .Distinct()
+                                            .ToList());
+        }
 
-        AvailableRangedTargets.AddRange(Me.Senses.Actors
-                                          .Where(actor => !Me.Actions.Decider.IsFriendOrNeutral(actor) && Vector3.Distance(transform.position, actor.transform.position) < LongestRangedRange())
-                                          .OrderBy(actor => actor.Health.CurrentHitPoints)
-                                          .Select(actor => actor.gameObject)
-                                          .ToList());
+        if (Me.Actions.Decider.HostileStructures.Any()) {
+            AvailableMeleeTargets.AddRange(Me.Actions.Decider.HostileStructures
+                                           .Where(structure => Vector3.Distance(transform.position, structure.transform.position) <= LongestMeleeRange())
+                                           .Select(structure => structure.gameObject)
+                                           .Distinct()
+                                           .ToList());
 
-        AvailableRangedTargets.AddRange(Me.Senses.Structures
-                                          .Where(structure => structure.owner != Me.Faction && Vector3.Distance(transform.position, structure.transform.position) < LongestRangedRange())
-                                          .Select(structure => structure.gameObject)
-                                          .ToList());
+            AvailableRangedTargets.AddRange(Me.Actions.Decider.HostileStructures
+                                            .Where(structure => Vector3.Distance(transform.position, structure.transform.position) > LongestMeleeRange() && Vector3.Distance(transform.position, structure.transform.position) <= LongestRangedRange())
+                                            .Select(structure => structure.gameObject)
+                                            .Distinct()
+                                            .ToList());
+        }
     }
 
 
@@ -154,6 +162,8 @@ public class Attack : MonoBehaviour
 
     private void RemoveSanctuaryTargets()
     {
+        if (Sanctuary.ProtectedTargets == null) return;
+
         List<GameObject> protected_melee_actors = AvailableMeleeTargets
             .Where(target => target.GetComponent<Actor>() != null && Sanctuary.ProtectedTargets.ContainsKey(target.GetComponent<Actor>()) && !Me.Actions.Decider.Threat.Threats.ContainsKey(target.GetComponent<Actor>()))
             .ToList();

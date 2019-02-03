@@ -36,7 +36,10 @@ public class Acolyte : MonoBehaviour
 
     public void OnFriendsInNeed()
     {
-        Me.Actions.CloseWithEnemies();
+        if (Me.Actions.Decider.FriendsInNeed.First() != null) {
+            Me.Actions.Movement.SetDestination(Me.Actions.Decider.FriendsInNeed.First().transform);
+        }
+        AttackWithSpell();
         Me.Actions.Decider.FriendsInNeed.Clear();
     }
 
@@ -76,7 +79,8 @@ public class Acolyte : MonoBehaviour
                           .ToList()
                           .First();
 
-        Me.Actions.Movement.SetDestination(wounded.transform.position);
+        Me.Actions.Movement.SetDestination(wounded.transform);
+        StartCoroutine(Me.Actions.Movement.TrackUnit(wounded));
 
         if (!TreatWounded()) AttackWithSpell();
     }
@@ -85,13 +89,12 @@ public class Acolyte : MonoBehaviour
     public void OnMovingToGoal()
     {
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
-        Me.Senses.Sight();
+        Me.Senses.Sense();
     }
 
 
     public void OnNeedsRest()
     {
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed * 2;
         Me.Actions.SheathWeapon();
         Me.Actions.Movement.Home();
     }
@@ -182,6 +185,10 @@ public class Acolyte : MonoBehaviour
         Me.Magic = gameObject.AddComponent<Magic>();
         Me.Magic.MaximumSpellSlots[Magic.Level.First] = 3;
         Me.Magic.SpellsLeft[Magic.Level.First] = 3;
+
+        Me.Stats.Skills.Add(Proficiencies.Skill.Medicine);
+        Me.Stats.Expertise.Add(Proficiencies.Skill.Medicine);
+        Me.Stats.Skills.Add(Proficiencies.Skill.Religion);
     }
 
 

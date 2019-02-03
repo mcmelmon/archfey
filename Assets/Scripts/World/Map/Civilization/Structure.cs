@@ -8,7 +8,7 @@ public class Structure : MonoBehaviour
     public enum Purpose { Civic = 0, Commercial = 1, Industrial = 2, Military = 3, Residential = 4, Sacred = 5 };
 
     // Inspector settings
-    public Conflict.Faction owner;
+    public Conflict.Alignment alignment;
     public Purpose purpose;
 
     public int armor_class = 13;
@@ -23,6 +23,7 @@ public class Structure : MonoBehaviour
 
     public List<Actor> AttachedUnits { get; set; }
     public int CurrentHitPoints { get; set; }
+    public Faction Faction { get; set; }
     public float OriginalY { get; set; }
     public float OriginalYScale { get; set; }
     public Dictionary<Weapons.DamageType, int> Resistances { get; set; }
@@ -110,7 +111,7 @@ public class Structure : MonoBehaviour
 
     private void BookRevenue(float amount)
     {
-        revenue_cp += (owner == Conflict.Faction.Ghaddim) ? Ghaddim.AfterTaxIncome(amount) : Mhoddim.AfterTaxIncome(amount);
+        // TODO: accumulate revenue
     }
 
 
@@ -139,6 +140,7 @@ public class Structure : MonoBehaviour
     {
         AttachedUnits = new List<Actor>();
         CurrentHitPoints = maximum_hit_points;
+        Faction = GetComponentInParent<Faction>();
         OriginalY = transform.position.y;
         OriginalYScale = transform.localScale.y;
         Resistances = new Dictionary<Weapons.DamageType, int>  // TODO: override some reistances

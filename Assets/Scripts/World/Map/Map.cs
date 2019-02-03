@@ -82,7 +82,6 @@ public class Map : MonoBehaviour {
     {
         if (Geography.Instance != null) Geography.Instance.LayTheLand();
         if (Biosphere.Instance != null) Biosphere.Instance.Eden();
-        if (Civilization.Instance != null) Civilization.Instance.DawnOfMhoddim();
     }
 
 

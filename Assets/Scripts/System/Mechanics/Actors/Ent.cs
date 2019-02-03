@@ -38,6 +38,5 @@ public class Ent : MonoBehaviour {
 
     private void SetStats()
     {
-        Me.Fey.SetStats();
     }
 }
