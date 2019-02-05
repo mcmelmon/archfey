@@ -10,7 +10,6 @@ public class Conflict : MonoBehaviour
 
     // properties
 
-    public static Characters Characters { get; set; }
     public static Conflict Instance { get; set; }
     public static Proficiencies Proficiencies { get; set; }
 
@@ -72,7 +71,6 @@ public class Conflict : MonoBehaviour
     private void SetComponents()
     {
 
-        Characters = gameObject.AddComponent<Characters>();
         Proficiencies = gameObject.AddComponent<Proficiencies>();
     }
 

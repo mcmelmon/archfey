@@ -20,7 +20,6 @@ public class Stats : MonoBehaviour
 
     public int ArmorClass { get; set; }
     public Dictionary<Proficiencies.Attribute, int> AttributeProficiency { get; set; }
-    public int DefenseRating { get; set; }
     public Dictionary<Weapons.DamageType, int> Resistances { get; set; }
     public int ProficiencyBonus { get; set; }
     public List<Proficiencies.Skill> Expertise { get; set; }
@@ -37,6 +36,7 @@ public class Stats : MonoBehaviour
         StartCoroutine(StatBarsFaceCamera());
         StartCoroutine(ManageStatBars());
     }
+
 
     private void OnValidate()
     {
@@ -107,9 +107,11 @@ public class Stats : MonoBehaviour
 
     private IEnumerator ManageStatBars()
     {
-        while (Me.Health.MaximumHitPoints > 0)
-        {
-            UpdateStatBars();
+        while (true) {
+            if (Me.Health != null && Me.Health.MaximumHitPoints > 0) {
+                UpdateStatBars();
+            }
+
             yield return new WaitForSeconds(Turn.ActionThreshold);
         }
     }
@@ -133,8 +135,6 @@ public class Stats : MonoBehaviour
             [Proficiencies.Attribute.Strength] = 0,
             [Proficiencies.Attribute.Wisdom] = 0
         };
-
-        DefenseRating = ArmorClass + Me.Stats.AttributeProficiency[Proficiencies.Attribute.Dexterity];
     }
 
 
@@ -142,11 +142,13 @@ public class Stats : MonoBehaviour
     {
         while (true)
         {
-            Vector3 stats_position = transform.position;
-            Vector3 player_position = Player.Instance.viewport.transform.position;
+            if (Player.Instance != null) {
+                Vector3 stats_position = transform.position;
+                Vector3 player_position = Player.Instance.viewport.transform.position;
 
-            Quaternion rotation = Quaternion.LookRotation(player_position - stats_position, Vector3.up);
-            stat_bars.rotation = rotation;
+                Quaternion rotation = Quaternion.LookRotation(player_position - stats_position, Vector3.up);
+                stat_bars.rotation = rotation;
+            }
 
             yield return null;
         }

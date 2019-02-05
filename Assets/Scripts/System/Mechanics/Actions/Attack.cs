@@ -8,7 +8,6 @@ public class Attack : MonoBehaviour
     // properties
 
     public Actor Me { get; set; }
-    public int AttackRating { get; set; }
     public List<Weapon> AvailableWeapons { get; set; }
     public List<GameObject> AvailableMeleeTargets { get; set; }
     public List<GameObject> AvailableRangedTargets { get; set; }

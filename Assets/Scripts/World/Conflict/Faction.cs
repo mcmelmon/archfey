@@ -149,8 +149,9 @@ public class Faction : MonoBehaviour
 
     private Actor Spawn(Structure.Purpose purpose, Vector3 location)
     {
-        GameObject new_unit = Instantiate(faction_units.First(unit => unit.name == purpose.ToString()).prefab, location, Civilization.Instance.actor_prefab.transform.rotation);
-        new_unit.transform.parent = transform;
+        GameObject prefab = faction_units.First(unit => unit.name == purpose.ToString()).prefab;
+        GameObject new_unit = Instantiate(prefab, location, prefab.transform.rotation);
+        new_unit.transform.parent = FindObjectOfType<Characters>().gameObject.transform;
         Actor actor = new_unit.GetComponent<Actor>();
         actor.Alignment = alignment;
         actor.Faction = this;

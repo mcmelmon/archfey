@@ -85,6 +85,7 @@ public class Mouse : MonoBehaviour
 
     private Color OriginalColor(Actor _actor)
     {
-        return Civilization.Instance.actor_prefab.GetComponent<Renderer>().sharedMaterial.color;
+        // TODO: don't change the color of the material, add an actual effect that can just be removed
+        return Characters.Instance.player_prefab.GetComponent<Renderer>().sharedMaterial.color;
     }
 }
