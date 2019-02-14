@@ -15,6 +15,7 @@ public class Actions : MonoBehaviour
     public Movement Movement { get; set; }
     public Stats Stats { get; set; }
     public Stealth Stealth { get; set; }
+    public bool CanTakeTurn { get; set; }
 
     public Action OnBadlyInjured { get; set; }
     public Action OnCrafting { get; set; }
@@ -49,10 +50,14 @@ public class Actions : MonoBehaviour
 
     public void ActOnTurn()
     {
+        if (Me.gameObject.tag == "Player") {
+            CanTakeTurn = true;
+            return;
+        }
+
         Decider.ChooseState();
 
-        switch (Decider.state)
-        {
+        switch (Decider.state) {
             case Decider.State.BadlyInjured:
                 OnBadlyInjured?.Invoke();
                 break;
@@ -217,5 +222,6 @@ public class Actions : MonoBehaviour
         Stats = GetComponentInParent<Stats>();
         Me = GetComponentInParent<Actor>();
         Movement = GetComponent<Movement>();
+        CanTakeTurn = false; // currently only relevant for player
     }
 }

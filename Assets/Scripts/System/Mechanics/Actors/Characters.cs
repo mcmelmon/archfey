@@ -10,10 +10,11 @@ public class Characters : MonoBehaviour
 
     public enum Template
     {
-        Base = 0,
-        Commoner = 1,
-        Gnoll = 2,
-        Guard = 3
+        Base,
+        Commoner,
+        Gnoll,
+        Guard,
+        Player
     };
 
     public static Dictionary<Template, float> darkvision_range = new Dictionary<Template, float>();
@@ -90,5 +91,9 @@ public class Characters : MonoBehaviour
 
         //Guard
         available_weapons[Template.Guard] = new List<Weapon>() { Weapons.Instance.longbow_prefab, Weapons.Instance.spear_prefab };
+
+        // Player
+        darkvision_range[Template.Player] = 10f;
+        available_weapons[Template.Player] = new List<Weapon>() { Weapons.Instance.longbow_prefab, Weapons.Instance.spear_prefab };
     }
 }

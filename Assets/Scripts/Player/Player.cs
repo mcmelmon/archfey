@@ -103,5 +103,12 @@ public class Player : MonoBehaviour {
         Me.Stats.Size = "Medium";
 
         Me.Health.SetCurrentAndMaxHitPoints();
+
+        Me.Actions.Attack.AvailableWeapons = Characters.available_weapons[Characters.Template.Player];
+        Me.Actions.Attack.EquipMeleeWeapon();
+        Me.Actions.Attack.EquipRangedWeapon();
+        Me.Senses.Darkvision = Characters.darkvision_range[Characters.Template.Player];
+        Me.Senses.PerceptionRange = Characters.perception_range[Characters.Template.Base];
+        Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
     }
 }

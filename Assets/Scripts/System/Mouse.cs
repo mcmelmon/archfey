@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Mouse : MonoBehaviour
@@ -20,21 +21,21 @@ public class Mouse : MonoBehaviour
     }
     void Start()
     {
-        StartCoroutine(FeyTouch());
+        StartCoroutine(PlayerTouch());
     }
 
 
     // private
 
 
-    private IEnumerator FeyTouch()
+    private IEnumerator PlayerTouch()
     {
         while (true) {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             int faction_layer_mask = LayerMask.GetMask("Faction");
             int ui_layer_mask = LayerMask.GetMask("UI");
 
-            foreach (var selection in SelectedObjects) {
+            foreach (var selection in SelectedObjects.Where(so => so != null)) {
                 selection.GetComponent<Renderer>().material.color = highlight_color;
             }
 

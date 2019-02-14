@@ -8,11 +8,14 @@ public class CommandBarOne : MonoBehaviour {
 
     // Inspector settings
 
-    public Transform player_transform;
+    public GameObject player;
+    public GameObject attack_action;
 
     // properties
 
+    public Button AttackButton { get; set; }
     public static CommandBarOne Instance { get; set; }
+    public Actor Me { get; set; }
     
 
     // Unity
@@ -27,22 +30,39 @@ public class CommandBarOne : MonoBehaviour {
             return;
         }
         Instance = this;
-        StartCoroutine(Metrics());
-    }
-
-
-    private void Start()
-    {
+        SetComponents();
+        StartCoroutine(CooldownTimer());
     }
 
 
     // public
 
+    public void Attack()
+    {
+        if (Me.Actions.CanTakeTurn) {
+            AttackButton.interactable = false;
+            Me.Actions.CanTakeTurn = false;
+            Me.Actions.Decider.IdentifyEnemies();
+            Me.Actions.Attack.AttackEnemiesInRange();
+        }
+    }
 
-    public IEnumerator Metrics()
+
+    public IEnumerator CooldownTimer()
     {
         while (true) {
+            if (AttackButton != null && Me.Actions != null) 
+                AttackButton.interactable = Me.Actions.CanTakeTurn;
             yield return new WaitForSeconds(Turn.ActionThreshold);
         }
+    }
+
+
+    // private
+
+    private void SetComponents()
+    {
+        AttackButton = attack_action.GetComponent<Button>();
+        Me = player.GetComponent<Actor>();
     }
 }
