@@ -4,10 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Waypoint
-  - Node
-  - Installation
   - Actor
+  - Interactable
   layers:
   - Default
   - TransparentFX
@@ -34,8 +32,8 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - Faction
+  - Ground
+  - Interactable
   - 
   - 
   - 

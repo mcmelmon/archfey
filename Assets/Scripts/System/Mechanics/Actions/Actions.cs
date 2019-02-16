@@ -50,10 +50,7 @@ public class Actions : MonoBehaviour
 
     public void ActOnTurn()
     {
-        if (Me.gameObject.tag == "Player") {
-            CanTakeTurn = true;
-            return;
-        }
+        CanTakeTurn |= Me.gameObject.tag == "Player";
 
         Decider.ChooseState();
 
