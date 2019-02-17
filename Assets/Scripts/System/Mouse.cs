@@ -7,16 +7,27 @@ public class Mouse : MonoBehaviour
 {
     // Inspector settings
 
+    public float double_click_delay;
     public Color highlight_color;
 
     // properties
 
     public static Actor HoveredObject { get; set; }
+    public static Mouse Instance { get; set; }
+    public static float LastClickTime { get; set; }
     public static List<Actor> SelectedObjects { get; set; }
 
 
     private void Awake()
     {
+        if (Instance != null) {
+            Debug.LogError("More than one mouse instance!");
+            Destroy(this);
+            return;
+        }
+        Instance = this;
+
+        LastClickTime = 0f;
         SelectedObjects = new List<Actor>();
     }
 
@@ -36,6 +47,16 @@ public class Mouse : MonoBehaviour
             }
             SelectedObjects.Clear();
         }
+    }
+
+
+    // public
+
+
+    public Color OriginalColor(Actor _actor)
+    {
+        // TODO: don't change the color of the material, add an actual effect that can just be removed
+        return Characters.Instance.player_prefab.GetComponent<Renderer>().sharedMaterial.color;
     }
 
 
@@ -80,23 +101,26 @@ public class Mouse : MonoBehaviour
                 int ground_layer_mask = LayerMask.GetMask("Ground");
                 int ui_layer_mask = LayerMask.GetMask("UI");
 
-
                 if (Physics.Raycast(ray, out RaycastHit interactable_hit, 150f, interactable_layer_mask, QueryTriggerInteraction.Ignore)) {
                     GameObject selected = interactable_hit.transform.gameObject;
 
-                    Actor selected_object = selected.GetComponent<Actor>();
-                    if (selected_object != null) {
-
+                    Actor selected_actor = selected.GetComponent<Actor>();
+                    if (selected_actor != null) {
                         if (Input.GetKeyDown("left shift") || Input.GetKeyDown("right shift"))
                         { // TODO: the shift keys are not being detected
-                            SelectedObjects.Add(selected_object);
+                            SelectedObjects.Add(selected_actor);
                         } else {
                             foreach (var selection in SelectedObjects) {
                                 selection.GetComponent<Renderer>().material.color = OriginalColor(selection);
                             }
                             SelectedObjects.Clear();
-                            SelectedObjects.Add(selected_object);
+                            SelectedObjects.Add(selected_actor);
                         }
+
+                        if (Time.time - LastClickTime < double_click_delay) {
+                            StartCoroutine(Player.Instance.Me.Actions.Movement.TrackUnit(selected_actor));
+                        }
+                        LastClickTime = Time.time;
                     }
                 } else if (Physics.Raycast(ray, out RaycastHit ground_hit, 150f, ground_layer_mask, QueryTriggerInteraction.Ignore)) {
                     ClearSelection();
@@ -122,12 +146,5 @@ public class Mouse : MonoBehaviour
             selection.GetComponent<Renderer>().material.color = OriginalColor(selection);
         }
         SelectedObjects.Clear();
-    }
-
-
-    private Color OriginalColor(Actor _actor)
-    {
-        // TODO: don't change the color of the material, add an actual effect that can just be removed
-        return Characters.Instance.player_prefab.GetComponent<Renderer>().sharedMaterial.color;
     }
 }
