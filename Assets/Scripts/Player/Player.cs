@@ -7,21 +7,13 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour {
 
     // Inspector settings
-    public float agility = 30f;
-    public float speed = 12f;
-    public float mana_haste_factor;
-    public float mana_pool_maximum;
-    public float magic_potency;
-    public float mana_replenishment_rate;
-    public float amber_pool_maximum;
-
+    public float speed = 15f;
     public CinemachineFreeLook viewport;
 
     // properties
 
-    public float CurrentAmber { get; set; }
-    public float CurrentMana { get; set; }
     public static Player Instance { get; set; }
+    public Actor Me { get; set; }
 
     // Unity
 
@@ -39,68 +31,25 @@ public class Player : MonoBehaviour {
 
     private void Start()
     {
+        SetComponents();
         StartCoroutine(Movement());
-        StartCoroutine(RegenerateAmber());
-        StartCoroutine(RegenerateMana());
     }
 
 
     // public
 
 
-    public float CurrentAmberPercentage()
+    public void OnIdle()
     {
-        return (CurrentAmber >= amber_pool_maximum) ? 1 : CurrentAmber / amber_pool_maximum;
+        Me.Actions.Movement.ResetPath();
+        Me.Actions.Decider.FriendsInNeed.Clear();
     }
 
-
-
-    public float CurrentManaPercentage()
+    public void OnReachedGoal()
     {
-        return (CurrentMana >= mana_pool_maximum) ? 1 : CurrentMana / mana_pool_maximum;
+        Me.Actions.Movement.ResetPath();
+        Me.Actions.Decider.FriendsInNeed.Clear();
     }
-
-
-    public void DecreaseAmber(float _amount)
-    {
-        CurrentAmber -= _amount;
-        if (CurrentAmber < 0) CurrentAmber = 0;
-    }
-
-
-    public void IncreaseAmber(float _amount)
-    {
-        CurrentAmber += _amount;
-        if (CurrentAmber > amber_pool_maximum) CurrentAmber = amber_pool_maximum;
-    }
-
-
-    public void DecreaseMana(float _amount)
-    {
-        CurrentMana -= _amount;
-        if (CurrentMana < 0) CurrentMana = 0;
-    }
-
-
-    public void IncreaseMana(float _amount)
-    {
-        CurrentMana += _amount;
-        if (CurrentMana > mana_pool_maximum) CurrentMana = mana_pool_maximum;
-    }
-
-
-    public void UpdateAmberBar() 
-    {
-        CommandBarOne.Instance.amber_bar.value = CurrentAmberPercentage();
-
-    }
-
-
-    public void UpdateManaBar()
-    {
-        CommandBarOne.Instance.mana_bar.value = CurrentManaPercentage();
-    }
-
 
     // private
 
@@ -125,10 +74,9 @@ public class Player : MonoBehaviour {
             Vector3 movement = Vector3.zero;
 
             float forward = Input.GetAxis("Vertical") * speed * Time.deltaTime;
-            float rotation = Input.GetAxis("Horizontal") * agility * Time.deltaTime;
+            float rotation = Input.GetAxis("Horizontal") * 30 * Time.deltaTime;
 
-            if (!Mathf.Approximately(forward, 0) || !Mathf.Approximately(rotation, 0))
-            {
+            if (!Mathf.Approximately(forward, 0) || !Mathf.Approximately(rotation, 0)) {
                 transform.rotation *= Quaternion.AngleAxis(rotation, Vector3.up);
                 transform.position += transform.TransformDirection(Vector3.forward) * forward;
                 AdjustCameraDistance();
@@ -137,42 +85,48 @@ public class Player : MonoBehaviour {
     }
 
 
-    private IEnumerator RegenerateAmber()
-    {
-        while (true)
-        {
-            if (CurrentAmber < amber_pool_maximum) {
-                IncreaseAmber(1);
-            } else {
-                CurrentAmber = amber_pool_maximum;
-            }
-
-            UpdateAmberBar();
-            yield return new WaitForSeconds(Turn.ActionThreshold);
-        }
-    }
-
-
-    private IEnumerator RegenerateMana()
-    {
-        while (true)
-        {
-            if (CurrentMana < mana_pool_maximum) // don't check IsCaster in while (or outside enumerator); it will be false at first and prevent the coroutine from starting 
-            {
-                IncreaseMana(mana_pool_maximum * mana_replenishment_rate);
-            } else {
-                CurrentMana = mana_pool_maximum;
-            }
-
-            UpdateManaBar();
-            yield return new WaitForSeconds(Turn.ActionThreshold);
-        }
-    }
-
-
     private void SetComponents()
     {
-        CurrentMana = mana_pool_maximum;
-        CurrentAmber = 0;
+        Me = GetComponent<Actor>();
+        Me.Actions = GetComponentInChildren<Actions>();
+        Me.Alignment = Conflict.Alignment.Neutral;
+        Me.Faction = GetComponent<Faction>();
+        Me.Health = GetComponent<Health>();
+        Me.Load = new Dictionary<HarvestingNode, int>();
+        Me.RestCounter = 0;
+        Me.Senses = GetComponent<Senses>();
+        Me.Size = GetComponent<Renderer>().bounds.extents.magnitude;
+        Me.Stats = GetComponent<Stats>();
+
+        Me.Actions.ActionsPerRound = 1;
+        Me.Actions.Movement.Speed = speed;
+        Me.Actions.Movement.Agent.speed = speed;
+
+        Me.Health.HitDice = 20;
+        Me.Health.HitDiceType = 8;
+
+        Me.Stats.ArmorClass = 18;
+        Me.Stats.AttributeProficiency[Proficiencies.Attribute.Charisma] = 5;
+        Me.Stats.AttributeProficiency[Proficiencies.Attribute.Constitution] = 2;
+        Me.Stats.AttributeProficiency[Proficiencies.Attribute.Dexterity] = 4;
+        Me.Stats.AttributeProficiency[Proficiencies.Attribute.Intelligence] = 3;
+        Me.Stats.AttributeProficiency[Proficiencies.Attribute.Strength] = 1;
+        Me.Stats.AttributeProficiency[Proficiencies.Attribute.Wisdom] = 5;
+        Me.Stats.ProficiencyBonus = 6;
+
+        Me.Stats.Family = "Humanoid";
+        Me.Stats.Size = "Medium";
+
+        Me.Health.SetCurrentAndMaxHitPoints();
+
+        Me.Actions.Attack.AvailableWeapons = Characters.available_weapons[Characters.Template.Player];
+        Me.Actions.Attack.EquipMeleeWeapon();
+        Me.Actions.Attack.EquipRangedWeapon();
+        Me.Senses.Darkvision = Characters.darkvision_range[Characters.Template.Player];
+        Me.Senses.PerceptionRange = Characters.perception_range[Characters.Template.Base];
+        Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
+
+        Me.Actions.OnIdle = OnIdle;
+        Me.Actions.OnReachedGoal = OnReachedGoal;
     }
 }

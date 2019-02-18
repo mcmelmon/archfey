@@ -53,29 +53,27 @@ public class Movement : MonoBehaviour
 
     public void ResetPath()
     {
-        if (Agent.isOnNavMesh) 
-            Agent.ResetPath();
+        Agent.ResetPath();
     }
 
 
-    public void SetDestination(Transform _destination)
+    public void SetDestination(Transform target_object)
     {
         ResetPath();
-
-        Collider target_collider = _destination.GetComponent<Collider>();
-
-        Vector3 destination = (target_collider != null) ? target_collider.ClosestPointOnBounds(transform.position) : _destination.position;
-    
-        StopCoroutine(FindThePath(destination));
-        StartCoroutine(FindThePath(destination));
+        Collider target_collider = target_object.GetComponent<Collider>();
+        Vector3 destination = (target_collider != null) ? target_collider.ClosestPointOnBounds(transform.position) : target_object.position;
+        Vector3 new_facing = Vector3.RotateTowards(transform.forward, transform.position - destination, 30f * Time.deltaTime, 0f);
+        transform.rotation = Quaternion.LookRotation(new_facing);
+        Agent.SetDestination(new Vector3(destination.x, Geography.Terrain.SampleHeight(destination), destination.z));
     }
 
 
     public void SetDestination(Vector3 destination)
     {
         ResetPath();
-        StopCoroutine(FindThePath(destination));
-        StartCoroutine(FindThePath(destination));
+        Vector3 new_facing = Vector3.RotateTowards(transform.forward, transform.position - destination, 30f * Time.deltaTime, 0f);
+        transform.rotation = Quaternion.LookRotation(new_facing);
+        Agent.SetDestination(new Vector3(destination.x, Geography.Terrain.SampleHeight(destination), destination.z));
     }
 
 
@@ -84,8 +82,9 @@ public class Movement : MonoBehaviour
         float separation = Vector3.Distance(transform.position, unit.transform.position);
         int count = 0;
 
-        while (unit != null && count < 6 && separation > Movement.ReachedThreshold) {
-            SetDestination(unit.transform);
+        while (unit != null && count < 6 && separation > ReachedThreshold) {
+            Vector3 new_facing = Vector3.RotateTowards(transform.forward, transform.position - unit.transform.position, 30f * Time.deltaTime, 0f);
+            SetDestination(unit.MoveToInteractionPoint(transform.position));
             count++;
             yield return new WaitForSeconds(1);
         }
@@ -111,14 +110,15 @@ public class Movement : MonoBehaviour
     // private
 
 
-    private IEnumerator FindThePath(Vector3 _destination)
+    private IEnumerator FindThePath(Vector3 destination)
     {
+        // In case agents start getting spawned away from the navmesh...
         int attempt = 0;
         int max_attempts = 5;
 
         while (!Agent.hasPath && attempt < max_attempts) {
             if (Agent.isOnNavMesh) {
-                Agent.SetDestination(new Vector3(_destination.x, Geography.Terrain.SampleHeight(_destination), _destination.z));
+                Agent.SetDestination(new Vector3(destination.x, Geography.Terrain.SampleHeight(destination), destination.z));
             } else {
                 attempt++;
                 NavMesh.SamplePosition(Agent.transform.position, out NavMeshHit hit, 10.0f, NavMesh.AllAreas);

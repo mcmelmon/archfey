@@ -8,7 +8,6 @@ public class Attack : MonoBehaviour
     // properties
 
     public Actor Me { get; set; }
-    public int AttackRating { get; set; }
     public List<Weapon> AvailableWeapons { get; set; }
     public List<GameObject> AvailableMeleeTargets { get; set; }
     public List<GameObject> AvailableRangedTargets { get; set; }
@@ -48,14 +47,14 @@ public class Attack : MonoBehaviour
 
         if (Me.Actions.Decider.IdentifyEnemies().Any()) {
             AvailableMeleeTargets.AddRange(Me.Actions.Decider.Enemies
-                                           .Where(actor => Vector3.Distance(transform.position, actor.transform.position) <= LongestMeleeRange())
+                                           .Where(actor => actor != null && Vector3.Distance(transform.position, actor.transform.position) <= LongestMeleeRange())
                                            .OrderBy(actor => actor.Health.CurrentHitPoints)
                                            .Select(actor => actor.gameObject)
                                            .Distinct()
                                            .ToList());
 
             AvailableRangedTargets.AddRange(Me.Actions.Decider.Enemies
-                                            .Where(actor => Vector3.Distance(transform.position, actor.transform.position) > LongestMeleeRange() && Vector3.Distance(transform.position, actor.transform.position) <= LongestRangedRange())
+                                            .Where(actor => actor != null && Vector3.Distance(transform.position, actor.transform.position) > LongestMeleeRange() && Vector3.Distance(transform.position, actor.transform.position) <= LongestRangedRange())
                                             .OrderBy(actor => actor.Health.CurrentHitPoints)
                                             .Select(actor => actor.gameObject)
                                             .Distinct()

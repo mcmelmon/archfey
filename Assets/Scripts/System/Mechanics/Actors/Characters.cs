@@ -3,12 +3,18 @@ using UnityEngine;
 
 public class Characters : MonoBehaviour
 {
+
+    // Inspector settings
+    public GameObject player_prefab;
+
+
     public enum Template
     {
-        Base = 0,
-        Commoner = 1,
-        Gnoll = 2,
-        Guard = 3
+        Base,
+        Commoner,
+        Gnoll,
+        Guard,
+        Player
     };
 
     public static Dictionary<Template, float> darkvision_range = new Dictionary<Template, float>();
@@ -34,6 +40,7 @@ public class Characters : MonoBehaviour
             return;
         }
         Instance = this;
+        GenerateStats();
     }
 
 
@@ -53,7 +60,7 @@ public class Characters : MonoBehaviour
     private static void BaseCharacterTemplate()
     {
         darkvision_range[Template.Base] = 0f;
-        perception_range[Template.Base] = 25f;
+        perception_range[Template.Base] = 20f;
         resistances[Template.Base] = new Dictionary<Weapons.DamageType, int>
         {
             [Weapons.DamageType.Acid] = 0,
@@ -84,6 +91,9 @@ public class Characters : MonoBehaviour
 
         //Guard
         available_weapons[Template.Guard] = new List<Weapon>() { Weapons.Instance.longbow_prefab, Weapons.Instance.spear_prefab };
-        perception_range[Template.Guard] = 30f;
+
+        // Player
+        darkvision_range[Template.Player] = 10f;
+        available_weapons[Template.Player] = new List<Weapon>() { Weapons.Instance.longbow_prefab, Weapons.Instance.spear_prefab };
     }
 }

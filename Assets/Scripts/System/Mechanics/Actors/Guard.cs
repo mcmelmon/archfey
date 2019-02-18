@@ -156,7 +156,7 @@ public class Guard : MonoBehaviour
     {
         Me.Actions.Attack.AvailableWeapons = Characters.available_weapons[Characters.Template.Guard];
         Me.Senses.Darkvision = Characters.darkvision_range[Characters.Template.Base];
-        Me.Senses.PerceptionRange = Characters.perception_range[Characters.Template.Guard];
+        Me.Senses.PerceptionRange = Characters.perception_range[Characters.Template.Base];
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
 
         Me.Stats.Skills.Add(Proficiencies.Skill.Perception);

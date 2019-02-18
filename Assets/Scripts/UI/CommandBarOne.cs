@@ -8,15 +8,14 @@ public class CommandBarOne : MonoBehaviour {
 
     // Inspector settings
 
-    public Ent ent_prefab;
-    public Transform fey_transform;
-    public Slider mana_bar;
-    public Slider amber_bar;
-    public Transform player_transform;
+    public GameObject player;
+    public GameObject attack_action;
 
     // properties
 
+    public Button AttackButton { get; set; }
     public static CommandBarOne Instance { get; set; }
+    public Actor Me { get; set; }
     
 
     // Unity
@@ -31,48 +30,39 @@ public class CommandBarOne : MonoBehaviour {
             return;
         }
         Instance = this;
-        StartCoroutine(Metrics());
-    }
-
-
-    private void Start()
-    {
-        amber_bar.value = 0;
-        mana_bar.value = 1;
+        SetComponents();
+        StartCoroutine(CooldownTimer());
     }
 
 
     // public
 
-
-    public void DireOak()
+    public void Attack()
     {
-        Vector3 starting_position = new Vector3(player_transform.position.x, 0f, player_transform.position.z) + new Vector3(0, ent_prefab.transform.position.y, 0);
-        Vector3 summon_position = starting_position + player_transform.TransformDirection(Vector3.forward) * 20f;
-        Ent _ent = ent_prefab.SummonEnt(summon_position, fey_transform);
-    }
-
-
-    public void FountainOfHealing()
-    {
-        foreach (var target in Mouse.SelectedObjects) {
-            Player.Instance.GetComponentInChildren<FountainOfHealing>().Cast(target);
+        if (Me.Actions.CanTakeTurn) {
+            AttackButton.interactable = false;
+            Me.Actions.CanTakeTurn = false;
+            Me.Actions.Decider.IdentifyEnemies();
+            Me.Actions.Attack.AttackEnemiesInRange();
         }
     }
 
 
-    public IEnumerator Metrics()
+    public IEnumerator CooldownTimer()
     {
         while (true) {
-            amber_bar.value = Player.Instance.CurrentAmberPercentage();
-            mana_bar.value = Player.Instance.CurrentManaPercentage();
+            if (AttackButton != null && Me.Actions != null) 
+                AttackButton.interactable = Me.Actions.CanTakeTurn;
             yield return new WaitForSeconds(Turn.ActionThreshold);
         }
     }
 
 
-    public void Raven()
-    {
+    // private
 
+    private void SetComponents()
+    {
+        AttackButton = attack_action.GetComponent<Button>();
+        Me = player.GetComponent<Actor>();
     }
 }

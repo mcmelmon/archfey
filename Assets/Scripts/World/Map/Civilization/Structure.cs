@@ -49,6 +49,14 @@ public class Structure : MonoBehaviour
     }
 
 
+    public void DeliverMaterials(Actor _unit, float _amount)
+    {
+        BookRevenue(_amount);
+        if (Storage != null)
+            Storage.StoreMaterials(_unit);
+    }
+
+
     public void GainStructure(int _amount)
     {
         if (CurrentHitPoints == maximum_hit_points) return;
@@ -67,14 +75,6 @@ public class Structure : MonoBehaviour
         CurrentHitPoints -= DamageAfterResistance(reduced_amount, type);
         if (CurrentHitPoints <= 0) CurrentHitPoints = 0;
         UpdateStructure();
-    }
-
-
-    public void DeliverMaterials(Actor _unit, float _amount)
-    {
-        BookRevenue(_amount);
-        if (Storage != null)
-            Storage.StoreMaterials(_unit);
     }
 
 
