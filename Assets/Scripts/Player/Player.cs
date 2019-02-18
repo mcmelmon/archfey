@@ -36,6 +36,21 @@ public class Player : MonoBehaviour {
     }
 
 
+    // public
+
+
+    public void OnIdle()
+    {
+        Me.Actions.Movement.ResetPath();
+        Me.Actions.Decider.FriendsInNeed.Clear();
+    }
+
+    public void OnReachedGoal()
+    {
+        Me.Actions.Movement.ResetPath();
+        Me.Actions.Decider.FriendsInNeed.Clear();
+    }
+
     // private
 
 
@@ -110,5 +125,8 @@ public class Player : MonoBehaviour {
         Me.Senses.Darkvision = Characters.darkvision_range[Characters.Template.Player];
         Me.Senses.PerceptionRange = Characters.perception_range[Characters.Template.Base];
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
+
+        Me.Actions.OnIdle = OnIdle;
+        Me.Actions.OnReachedGoal = OnReachedGoal;
     }
 }

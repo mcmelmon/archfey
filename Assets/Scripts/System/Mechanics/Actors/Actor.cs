@@ -76,7 +76,7 @@ public class Actor : MonoBehaviour
 
     public Vector3 MoveToInteractionPoint(Vector3 from_point)
     {
-        Vector3 toward_approach = (from_point - transform.position).normalized * 1f;
+        Vector3 toward_approach = (from_point - transform.position).normalized * Movement.ReachedThreshold;
 
         return GetComponent<Collider>().ClosestPointOnBounds(from_point) + toward_approach;
     }

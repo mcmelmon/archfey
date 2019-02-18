@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Mouse : MonoBehaviour
 {
@@ -12,10 +13,10 @@ public class Mouse : MonoBehaviour
 
     // properties
 
-    public static Actor HoveredObject { get; set; }
+    public static GameObject HoveredObject { get; set; }
     public static Mouse Instance { get; set; }
     public static float LastClickTime { get; set; }
-    public static List<Actor> SelectedObjects { get; set; }
+    public static List<GameObject> SelectedObjects { get; set; }
 
 
     private void Awake()
@@ -28,7 +29,7 @@ public class Mouse : MonoBehaviour
         Instance = this;
 
         LastClickTime = 0f;
-        SelectedObjects = new List<Actor>();
+        SelectedObjects = new List<GameObject>();
     }
 
 
@@ -43,20 +44,10 @@ public class Mouse : MonoBehaviour
     {
         if (Input.GetKeyDown("escape")) {
             for (int i = 0; i < SelectedObjects.Count; i++) {
-                SelectedObjects[i].GetComponent<Renderer>().material.color = OriginalColor(SelectedObjects[i]);
+                SelectedObjects[i].GetComponent<Renderer>().material.color -= highlight_color;
             }
             SelectedObjects.Clear();
         }
-    }
-
-
-    // public
-
-
-    public Color OriginalColor(Actor _actor)
-    {
-        // TODO: don't change the color of the material, add an actual effect that can just be removed
-        return Characters.Instance.player_prefab.GetComponent<Renderer>().sharedMaterial.color;
     }
 
 
@@ -75,14 +66,13 @@ public class Mouse : MonoBehaviour
 
                 if (HoveredObject != null)
                     // If we hovered over something earlier, reset its color
-                    HoveredObject.GetComponent<Renderer>().material.color = OriginalColor(HoveredObject);
+                    HoveredObject.GetComponent<Renderer>().material.color -= highlight_color;
 
-                HoveredObject = hover.GetComponent<Actor>();
-                if (HoveredObject == null) yield return null;
-                HoveredObject.GetComponent<Renderer>().material.color = highlight_color;
+                HoveredObject = hover;
+                if (HoveredObject != null) HoveredObject.GetComponent<Renderer>().material.color += highlight_color;
             } else {
                 if (HoveredObject != null) {
-                    HoveredObject.GetComponent<Renderer>().material.color = OriginalColor(HoveredObject);
+                    HoveredObject.GetComponent<Renderer>().material.color -= highlight_color;
                     HoveredObject = null;
                 }
             }
@@ -96,43 +86,36 @@ public class Mouse : MonoBehaviour
     {
         while (true) {
             if (Input.GetMouseButtonDown(0)) {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                int interactable_layer_mask = LayerMask.GetMask("Interactable");
-                int ground_layer_mask = LayerMask.GetMask("Ground");
-                int ui_layer_mask = LayerMask.GetMask("UI");
+                if (!EventSystem.current.IsPointerOverGameObject()) {
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    int interactable_layer_mask = LayerMask.GetMask("Interactable");
+                    int ground_layer_mask = LayerMask.GetMask("Ground");
 
-                if (Physics.Raycast(ray, out RaycastHit interactable_hit, 150f, interactable_layer_mask, QueryTriggerInteraction.Ignore)) {
-                    GameObject selected = interactable_hit.transform.gameObject;
+                    if (Physics.Raycast(ray, out RaycastHit interactable_hit, 150f, interactable_layer_mask, QueryTriggerInteraction.Ignore)) {
+                        GameObject selected_object = interactable_hit.transform.gameObject;
 
-                    Actor selected_actor = selected.GetComponent<Actor>();
-                    if (selected_actor != null) {
-                        if (Input.GetKeyDown("left shift") || Input.GetKeyDown("right shift"))
-                        { // TODO: the shift keys are not being detected
-                            SelectedObjects.Add(selected_actor);
-                        } else {
-                            foreach (var selection in SelectedObjects) {
-                                selection.GetComponent<Renderer>().material.color = OriginalColor(selection);
+                        if (selected_object != null) {
+                            if (Input.GetKeyDown("left shift") || Input.GetKeyDown("right shift")) { // TODO: the shift keys are not being detected
+                                SelectedObjects.Add(selected_object);
+                            } else {
+                                foreach (var selection in SelectedObjects.Where(so => so != null)) {
+                                    selection.GetComponent<Renderer>().material.color -= highlight_color;
+                                }
+                                SelectedObjects.Clear();
+                                SelectedObjects.Add(selected_object);
                             }
-                            SelectedObjects.Clear();
-                            SelectedObjects.Add(selected_actor);
-                        }
 
-                        if (Time.time - LastClickTime < double_click_delay) {
-                            StartCoroutine(Player.Instance.Me.Actions.Movement.TrackUnit(selected_actor));
+                            if (Time.time - LastClickTime < double_click_delay) HandleDoubleClick(selected_object);
+                            selected_object.GetComponent<Renderer>().material.color += highlight_color;
                         }
-                        LastClickTime = Time.time;
+                    } else if (Physics.Raycast(ray, out RaycastHit ground_hit, 150f, ground_layer_mask, QueryTriggerInteraction.Ignore)) {
+                        ClearSelection();
+                        Player.Instance.Me.Actions.Movement.SetDestination(ground_hit.point);
+                    } else {
+                        ClearSelection();
                     }
-                } else if (Physics.Raycast(ray, out RaycastHit ground_hit, 150f, ground_layer_mask, QueryTriggerInteraction.Ignore)) {
-                    ClearSelection();
-                    Player.Instance.Me.Actions.Movement.SetDestination(ground_hit.point);
                 }
-                else {
-                    ClearSelection();
-                }
-            }
-
-            foreach (var selection in SelectedObjects) {
-                selection.GetComponent<Renderer>().material.color = highlight_color;
+                LastClickTime = Time.time;
             }
 
             yield return null;
@@ -142,9 +125,24 @@ public class Mouse : MonoBehaviour
 
     private void ClearSelection()
     {
-        foreach (var selection in SelectedObjects) {
-            selection.GetComponent<Renderer>().material.color = OriginalColor(selection);
+        foreach (var selection in SelectedObjects.Where(so => so != null)) {
+            selection.GetComponent<Renderer>().material.color -= highlight_color;
         }
         SelectedObjects.Clear();
+    }
+
+
+    private void HandleDoubleClick(GameObject selected_object)
+    {
+        Player.Instance.Me.Actions.Movement.ResetPath();
+
+        Actor selected_actor = selected_object.GetComponent<Actor>();
+        Structure selected_structure = selected_object.GetComponent<Structure>();
+
+        if (selected_actor != null) {
+            StartCoroutine(Player.Instance.Me.Actions.Movement.TrackUnit(selected_actor));
+        } else if (selected_structure != null) {
+            Player.Instance.Me.Actions.Movement.SetDestination(selected_structure.NearestEntranceTo(Player.Instance.Me.transform));
+        }
     }
 }

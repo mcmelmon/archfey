@@ -99,20 +99,19 @@ public class Decider : MonoBehaviour
 
     public List<Actor> IdentifyFriends()
     {
-        Friends = Me.Senses.Actors.Where(IsFriendOrNeutral).ToList();
+        Friends = Me.Senses.Actors.Where(actor => IsFriendOrNeutral(actor, true)).ToList();
         return Friends;
     }
 
 
     public List<Actor> IdentifyEnemies()
     {
-        Enemies = Me.Senses.Actors.Where(a => !IsFriendOrNeutral(a)).ToList();
-        if (Me.gameObject.tag == "Player") Enemies.AddRange(Mouse.SelectedObjects);
+        Enemies = Me.Senses.Actors.Where(actor => !IsFriendOrNeutral(actor)).ToList();
         return Enemies;
     }
 
 
-    public bool IsFriendOrNeutral(Actor other_unit)
+    public bool IsFriendOrNeutral(Actor other_unit, bool only_friends = false)
     {
         if (other_unit == null || other_unit == Me) return true;
 
@@ -120,7 +119,7 @@ public class Decider : MonoBehaviour
 
         bool faction_hostile = Me.Faction.IsHostileTo(other_unit.Faction);
 
-        return !faction_hostile;
+        return only_friends ? other_unit.Faction == Me.Faction : !faction_hostile;
     }
 
 

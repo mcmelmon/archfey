@@ -53,29 +53,27 @@ public class Movement : MonoBehaviour
 
     public void ResetPath()
     {
-        if (Agent.isOnNavMesh) 
-            Agent.ResetPath();
+        Agent.ResetPath();
     }
 
 
     public void SetDestination(Transform target_object)
     {
         ResetPath();
-
         Collider target_collider = target_object.GetComponent<Collider>();
-
         Vector3 destination = (target_collider != null) ? target_collider.ClosestPointOnBounds(transform.position) : target_object.position;
-
-        StopCoroutine(FindThePath(destination));
-        StartCoroutine(FindThePath(destination));
+        Vector3 new_facing = Vector3.RotateTowards(transform.forward, transform.position - destination, 30f * Time.deltaTime, 0f);
+        transform.rotation = Quaternion.LookRotation(new_facing);
+        Agent.SetDestination(new Vector3(destination.x, Geography.Terrain.SampleHeight(destination), destination.z));
     }
 
 
     public void SetDestination(Vector3 destination)
     {
         ResetPath();
-        StopCoroutine(FindThePath(destination));
-        StartCoroutine(FindThePath(destination));
+        Vector3 new_facing = Vector3.RotateTowards(transform.forward, transform.position - destination, 30f * Time.deltaTime, 0f);
+        transform.rotation = Quaternion.LookRotation(new_facing);
+        Agent.SetDestination(new Vector3(destination.x, Geography.Terrain.SampleHeight(destination), destination.z));
     }
 
 
@@ -114,13 +112,11 @@ public class Movement : MonoBehaviour
 
     private IEnumerator FindThePath(Vector3 destination)
     {
+        // In case agents start getting spawned away from the navmesh...
         int attempt = 0;
         int max_attempts = 5;
 
         while (!Agent.hasPath && attempt < max_attempts) {
-            Vector3 new_facing = Vector3.RotateTowards(transform.forward, transform.position - destination, 30f * Time.deltaTime, 0f);
-            transform.rotation = Quaternion.LookRotation(new_facing);
-
             if (Agent.isOnNavMesh) {
                 Agent.SetDestination(new Vector3(destination.x, Geography.Terrain.SampleHeight(destination), destination.z));
             } else {
