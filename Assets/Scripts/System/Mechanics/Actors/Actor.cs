@@ -73,6 +73,12 @@ public class Actor : MonoBehaviour
     }
 
 
+    public void InitiateDialog(Actor other_actor)
+    {
+        Debug.Log("Hello, " + other_actor.Stats.name);
+    }
+
+
     public void InteractWith(Actor other_actor)
     {
         if (Interactors.Contains(other_actor)) return;
@@ -96,13 +102,19 @@ public class Actor : MonoBehaviour
     }
 
 
+    public bool WithinDialogRange(Actor other_actor)
+    {
+        return Interactors.Any(actor => Vector3.Distance(transform.position, actor.transform.position) < (Movement.ReachedThreshold + actor.Size) * 2);
+    }
+
+
     // private
 
 
     private IEnumerator FaceInteractor()
     {
         while (true) {
-            if (Interactors.Any(actor => Vector3.Distance(transform.position, actor.transform.position) < (Movement.ReachedThreshold + actor.Size) * 2)) {
+            if (Interactors.Any(WithinDialogRange)) {
                 Vector3 new_facing = Vector3.RotateTowards(transform.forward, Interactors.First().transform.position - transform.position, 90f, 0f);
                 transform.rotation = Quaternion.LookRotation(new_facing);
             }

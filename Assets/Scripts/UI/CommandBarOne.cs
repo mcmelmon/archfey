@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using TMPro;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -44,6 +44,17 @@ public class CommandBarOne : MonoBehaviour {
             Me.Actions.CanTakeTurn = false;
             Me.Actions.Decider.IdentifyEnemies();
             Me.Actions.Attack.AttackEnemiesInRange();
+        }
+    }
+
+
+    public void Talk()
+    {
+        if (Mouse.SelectedObjects.Count == 1) {
+            Actor interactor = Mouse.SelectedObjects.First().GetComponent<Actor>();
+            if (interactor != null && Me.WithinDialogRange(interactor)) {
+                interactor.InitiateDialog(Me);
+            }
         }
     }
 
