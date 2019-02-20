@@ -163,7 +163,6 @@ public class Commoner : MonoBehaviour
     private void AbandonLoad()
     {
         Me.Load.Clear();
-        Me.harvesting = "";
     }
 
 
@@ -275,8 +274,6 @@ public class Commoner : MonoBehaviour
 
         if (distance <= Movement.ReachedThreshold) {
             MyHarvest.HarvestResource(Me);
-            Me.harvesting = MyHarvest.material;
-            Me.harvested_amount = Me.Load.First().Value;
             return true;
         }
 

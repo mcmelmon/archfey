@@ -82,8 +82,7 @@ public class Movement : MonoBehaviour
         float separation = Vector3.Distance(transform.position, unit.transform.position);
         int count = 0;
 
-        while (unit != null && count < 6 && separation > ReachedThreshold) {
-            Vector3 new_facing = Vector3.RotateTowards(transform.forward, transform.position - unit.transform.position, 30f * Time.deltaTime, 0f);
+        while (unit != null && count < Turn.ActionThreshold && separation > ReachedThreshold + unit.Size) {
             SetDestination(unit.MoveToInteractionPoint(transform.position));
             count++;
             yield return new WaitForSeconds(1);

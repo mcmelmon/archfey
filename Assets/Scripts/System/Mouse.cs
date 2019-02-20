@@ -140,6 +140,7 @@ public class Mouse : MonoBehaviour
         Structure selected_structure = selected_object.GetComponent<Structure>();
 
         if (selected_actor != null) {
+            Player.Instance.Me.InteractWith(selected_actor);
             StartCoroutine(Player.Instance.Me.Actions.Movement.TrackUnit(selected_actor));
         } else if (selected_structure != null) {
             Player.Instance.Me.Actions.Movement.SetDestination(selected_structure.NearestEntranceTo(Player.Instance.Me.transform));

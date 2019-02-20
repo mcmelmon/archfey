@@ -169,7 +169,7 @@ public class Decider : MonoBehaviour
 
     private bool Harvesting()
     {
-        return Proficiencies.Instance.Harvester(Me) && !FullLoad() && Me.harvesting != "";
+        return Proficiencies.Instance.Harvester(Me) && !FullLoad();
     }
 
 

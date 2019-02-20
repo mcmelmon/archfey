@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -8,19 +9,16 @@ public class Actor : MonoBehaviour
 {
     public const int rested_at = 5;
 
-    // Inspector settings
-    public string harvesting = "";
-    public int harvested_amount = 0;
-    public int experience_points;
-
     // properties
 
     public Actions Actions { get; set; }
     public Conflict.Alignment Alignment { get; set; }
     public Faction Faction { get; set; }
     public Health Health { get; set; }
+    public List<Actor> Interactors { get; set; }
     public Dictionary<HarvestingNode, int> Load { get; set; }
     public Magic Magic { get; set; }
+    public Actor Me { get; set; }
     public int RestCounter { get; set; }
     public Senses Senses { get; set; }
     public float Size { get; set; }
@@ -33,6 +31,7 @@ public class Actor : MonoBehaviour
     private void Awake()
     {
         SetComponents();
+        StartCoroutine(FaceInteractor());
     }
 
 
@@ -74,6 +73,21 @@ public class Actor : MonoBehaviour
     }
 
 
+    public void InteractWith(Actor other_actor)
+    {
+        if (Interactors.Contains(other_actor)) return;
+        Interactors.Clear(); // for now; in future, interact with player first, then an npc
+        Interactors.Add(other_actor);
+        other_actor.InteractWith(Me);
+    }
+
+
+    public void InteractWith(Structure structure)
+    {
+
+    }
+
+
     public Vector3 MoveToInteractionPoint(Vector3 from_point)
     {
         Vector3 toward_approach = (from_point - transform.position).normalized * Movement.ReachedThreshold;
@@ -85,12 +99,26 @@ public class Actor : MonoBehaviour
     // private
 
 
+    private IEnumerator FaceInteractor()
+    {
+        while (true) {
+            if (Interactors.Any(actor => Vector3.Distance(transform.position, actor.transform.position) < (Movement.ReachedThreshold + actor.Size) * 2)) {
+                Vector3 new_facing = Vector3.RotateTowards(transform.forward, Interactors.First().transform.position - transform.position, 90f, 0f);
+                transform.rotation = Quaternion.LookRotation(new_facing);
+            }
+            yield return new WaitForSeconds(Turn.ActionThreshold);
+        }
+    }
+
+
     private void SetComponents()
     {
         Actions = GetComponentInChildren<Actions>();
         Alignment = Conflict.Alignment.Unaligned;
         Health = GetComponent<Health>();
+        Interactors = new List<Actor>();
         Load = new Dictionary<HarvestingNode, int>();
+        Me = this;
         RestCounter = 0;
         Senses = GetComponent<Senses>();
         Size = GetComponent<Renderer>().bounds.extents.magnitude;

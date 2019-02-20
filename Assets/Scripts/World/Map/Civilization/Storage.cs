@@ -67,9 +67,9 @@ public class Storage : MonoBehaviour
     }
 
 
-    public void StoreMaterials(Actor _unit)
+    public void StoreMaterials(Actor harvester)
     {
-        foreach (KeyValuePair<HarvestingNode, int> pair in _unit.Load)
+        foreach (KeyValuePair<HarvestingNode, int> pair in harvester.Load)
         {
             StoredMaterials inventory_row = materials.First(r => r.material == pair.Key.material);
             int new_amount = inventory_row.amount + pair.Value;
@@ -78,8 +78,7 @@ public class Storage : MonoBehaviour
             materials.Add(new StoredMaterials(pair.Key.material, new_amount, value));
         }
 
-        _unit.Load.Clear();
-        _unit.harvesting = "";
+        harvester.Load.Clear();
     }
 
 
