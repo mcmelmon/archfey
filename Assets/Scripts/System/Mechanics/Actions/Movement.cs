@@ -64,7 +64,7 @@ public class Movement : MonoBehaviour
         Vector3 destination = (target_collider != null) ? target_collider.ClosestPointOnBounds(transform.position) : target_object.position;
         Vector3 new_facing = Vector3.RotateTowards(transform.forward, transform.position - destination, 30f * Time.deltaTime, 0f);
         transform.rotation = Quaternion.LookRotation(new_facing);
-        Agent.SetDestination(new Vector3(destination.x, Geography.Terrain.SampleHeight(destination), destination.z));
+        Agent.SetDestination(destination);  // may have height issues on terrain
     }
 
 
@@ -73,7 +73,7 @@ public class Movement : MonoBehaviour
         ResetPath();
         Vector3 new_facing = Vector3.RotateTowards(transform.forward, transform.position - destination, 30f * Time.deltaTime, 0f);
         transform.rotation = Quaternion.LookRotation(new_facing);
-        Agent.SetDestination(new Vector3(destination.x, Geography.Terrain.SampleHeight(destination), destination.z));
+        Agent.SetDestination(destination);  // may have height issues on terrain
     }
 
 

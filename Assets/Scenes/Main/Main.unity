@@ -863,7 +863,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 264195861}
-  m_LocalRotation: {x: -0.06340542, y: -0.09416586, z: -0.6930629, w: 0.7118823}
+  m_LocalRotation: {x: -0.06316909, y: -0.09367816, z: -0.69677055, w: 0.70833963}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1434,7 +1434,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 465733991}
-  m_LocalRotation: {x: 0.18740624, y: -0.011349647, z: 0.0021655094, w: 0.98221457}
+  m_LocalRotation: {x: 0.18740626, y: -0.01134967, z: 0.0021655138, w: 0.98221457}
   m_LocalPosition: {x: 436.5, y: 108, z: 8.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1889,7 +1889,7 @@ GameObject:
   - component: {fileID: 657341630}
   - component: {fileID: 657341632}
   m_Layer: 0
-  m_Name: Societies
+  m_Name: Artifice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2205,7 +2205,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 829675727}
-  m_LocalRotation: {x: -0.000000014901161, y: 0.000000019557774, z: 0.13122152, w: 0.99135315}
+  m_LocalRotation: {x: -0.000000044703484, y: -0.0000000027939677, z: 0.13053986,
+    w: 0.99144316}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2396,7 +2397,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963679513}
-  m_LocalRotation: {x: -0.016649734, y: -0.015740918, z: -0.94983965, w: 0.3118971}
+  m_LocalRotation: {x: -0.016656596, y: -0.015733602, z: -0.94970334, w: 0.31231198}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

@@ -52,7 +52,7 @@ public class World : MonoBehaviour {
 
     private void CreateTheWorld()
     {
-        GetComponentInChildren<Map>().DrawMap();
+        if (GetComponentInChildren<Map>() != null) GetComponentInChildren<Map>().DrawMap();
         GetComponentInChildren<Conflict>().Hajime();
     }
 }

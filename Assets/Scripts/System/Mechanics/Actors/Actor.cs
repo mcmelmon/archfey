@@ -135,6 +135,8 @@ public class Actor : MonoBehaviour
         Senses = GetComponent<Senses>();
         Size = GetComponent<Renderer>().bounds.extents.magnitude;
         Stats = GetComponent<Stats>();
+
+        if (GetComponent<Faction>() != null) Faction = GetComponent<Faction>();
     }
 
 

@@ -41,11 +41,11 @@ public class Faction : MonoBehaviour
 
         switch (alignment) {
             case Conflict.Alignment.Evil:
-                return !allied_factions.Contains(other_faction.name);
+                return !allied_factions.Any() && !allied_factions.Contains(other_faction.name);
             case Conflict.Alignment.Good:
-                return rival_factions.Contains(other_faction.name) || other_faction.alignment == Conflict.Alignment.Evil;
+                return other_faction.alignment == Conflict.Alignment.Evil || rival_factions.Any() && rival_factions.Contains(other_faction.name);
             case Conflict.Alignment.Neutral:
-                return rival_factions.Contains(other_faction.name);
+                return rival_factions.Any() && rival_factions.Contains(other_faction.name);
             case Conflict.Alignment.Unaligned:
                 return true;
         }

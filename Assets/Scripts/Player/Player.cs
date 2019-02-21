@@ -32,7 +32,7 @@ public class Player : MonoBehaviour {
     private void Start()
     {
         SetComponents();
-        StartCoroutine(Movement());
+        StartCoroutine(AdjustCameraDistance());
     }
 
 
@@ -54,33 +54,20 @@ public class Player : MonoBehaviour {
     // private
 
 
-    private void AdjustCameraDistance()
+    private IEnumerator AdjustCameraDistance()
     {
-        float proximity = Input.GetAxis("Mouse ScrollWheel") * 20f;
-        if (!Mathf.Approximately(proximity, 0f)) {
-            CinemachineFreeLook.Orbit[] orbits = viewport.m_Orbits;
-            for (int i = 0; i < orbits.Length; i++) {
-                orbits[i].m_Radius -= Mathf.Lerp(0, proximity, Time.deltaTime * 5f);
+        while (true) {
+            float proximity = Input.GetAxis("Mouse ScrollWheel") * 30f;
+            if (!Mathf.Approximately(proximity, 0f)) {
+                CinemachineFreeLook.Orbit[] orbits = viewport.m_Orbits;
+                for (int i = 0; i < orbits.Length; i++) {
+                    float orbit = orbits[i].m_Radius;
+                    orbit += Mathf.Lerp(0, proximity, Time.deltaTime * 5f);
+                    orbits[i].m_Radius = Mathf.Clamp(orbit, 2f, 50f);
+                }
             }
-        }
-    }
 
-
-    private IEnumerator Movement()
-    {
-        while (true)
-        {
             yield return null;
-            Vector3 movement = Vector3.zero;
-
-            float forward = Input.GetAxis("Vertical") * speed * Time.deltaTime;
-            float rotation = Input.GetAxis("Horizontal") * 30 * Time.deltaTime;
-
-            if (!Mathf.Approximately(forward, 0) || !Mathf.Approximately(rotation, 0)) {
-                transform.rotation *= Quaternion.AngleAxis(rotation, Vector3.up);
-                transform.position += transform.TransformDirection(Vector3.forward) * forward;
-                AdjustCameraDistance();
-            }
         }
     }
 
