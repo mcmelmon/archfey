@@ -82,15 +82,7 @@ public class Player : MonoBehaviour {
         Me.Load = new Dictionary<HarvestingNode, int>();
         Me.RestCounter = 0;
         Me.Senses = GetComponent<Senses>();
-        Me.Size = GetComponent<Renderer>().bounds.extents.magnitude;
         Me.Stats = GetComponent<Stats>();
-
-        Me.Actions.ActionsPerRound = 1;
-        Me.Actions.Movement.Speed = speed;
-        Me.Actions.Movement.Agent.speed = speed;
-
-        Me.Health.HitDice = 20;
-        Me.Health.HitDiceType = 8;
 
         Me.Stats.ArmorClass = 18;
         Me.Stats.AttributeProficiency[Proficiencies.Attribute.Charisma] = 5;
@@ -100,9 +92,16 @@ public class Player : MonoBehaviour {
         Me.Stats.AttributeProficiency[Proficiencies.Attribute.Strength] = 1;
         Me.Stats.AttributeProficiency[Proficiencies.Attribute.Wisdom] = 5;
         Me.Stats.ProficiencyBonus = 6;
-
         Me.Stats.Family = "Humanoid";
         Me.Stats.Size = "Medium";
+
+        Me.Actions.ActionsPerRound = 1;
+        Me.Actions.Movement.ReachedThreshold = 1.5f;
+        Me.Actions.Movement.Speed = speed;
+        Me.Actions.Movement.Agent.speed = speed;
+
+        Me.Health.HitDice = 20;
+        Me.Health.HitDiceType = 8;
 
         Me.Health.SetCurrentAndMaxHitPoints();
 

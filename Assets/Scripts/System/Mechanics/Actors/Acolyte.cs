@@ -195,7 +195,7 @@ public class Acolyte : MonoBehaviour
     private bool TreatWounded()
     {
         var nearby_wounded = Me.Senses.Actors
-                               .Where(f => Me.Actions.Decider.IsFriendOrNeutral(f) && f.Health.BadlyInjured() && Vector3.Distance(transform.position, f.transform.position) < 2f + Me.Size)
+                               .Where(f => Me.Actions.Decider.IsFriendOrNeutral(f) && f.Health.BadlyInjured() && Vector3.Distance(transform.position, f.transform.position) < Me.Actions.Movement.ReachedThreshold)
                                .ToList();
 
         if (nearby_wounded.Count > 0) {

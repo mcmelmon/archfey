@@ -83,7 +83,7 @@ public class Route : MonoBehaviour
 
     public bool ReachedCurrent(Vector3 unit_position)
     {
-        return Vector3.Distance(Current, unit_position) < Movement.ReachedThreshold;
+        return Vector3.Distance(Current, unit_position) < 3f;  // TODO: make unit specific
     }
 
 

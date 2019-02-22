@@ -172,7 +172,7 @@ public class Commoner : MonoBehaviour
 
         float distance = Vector3.Distance(Me.Actions.Movement.Destinations[Movement.CommonDestination.Craft], transform.position);
 
-        return distance < Movement.ReachedThreshold && MyWorkshop.Craft(Me);
+        return distance < Me.Actions.Movement.ReachedThreshold && MyWorkshop.Craft(Me);
     }
 
 
@@ -272,7 +272,7 @@ public class Commoner : MonoBehaviour
         // MyHarvest is the node itself, not the "destination"
         float distance = Vector3.Distance(Me.Actions.Movement.Destinations[Movement.CommonDestination.Harvest], transform.position);
 
-        if (distance <= Movement.ReachedThreshold) {
+        if (distance <= Me.Actions.Movement.ReachedThreshold) {
             MyHarvest.HarvestResource(Me);
             return true;
         }
@@ -298,7 +298,7 @@ public class Commoner : MonoBehaviour
         Vector3 destination = structure.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
         float distance = Vector3.Distance(destination, transform.position);
 
-        if (distance <= Movement.ReachedThreshold) {
+        if (distance <= Me.Actions.Movement.ReachedThreshold) {
             structure.GainStructure(Me.Stats.ProficiencyBonus * 2);
             return true;
         }
@@ -350,7 +350,7 @@ public class Commoner : MonoBehaviour
 
         float distance = Vector3.Distance(Me.Actions.Movement.Destinations[Movement.CommonDestination.Warehouse], transform.position);
         
-        if (distance <= Movement.ReachedThreshold) {
+        if (distance <= Me.Actions.Movement.ReachedThreshold) {
             MyWarehouse.DeliverMaterials(Me, Random.Range(1, 12) * .1f); // TODO: base amount on resources!
             return true;
         }
