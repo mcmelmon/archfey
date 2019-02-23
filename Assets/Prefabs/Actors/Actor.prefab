@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 2362503439384013286}
   - component: {fileID: 8115153439838660898}
   - component: {fileID: 8693980580490271807}
+  - component: {fileID: 5220630214965457404}
   m_Layer: 26
   m_Name: Actor
   m_TagString: Interactable
@@ -203,6 +204,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca979bb6133b24ffcac3ecbf74f3535e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5220630214965457404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1690649058592984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83222896a6d7f44838f84d7d10e2f0a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  generic_greetings: []
 --- !u!1 &499024003587406277
 GameObject:
   m_ObjectHideFlags: 0

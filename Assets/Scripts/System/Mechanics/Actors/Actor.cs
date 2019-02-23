@@ -13,6 +13,7 @@ public class Actor : MonoBehaviour
 
     public Actions Actions { get; set; }
     public Conflict.Alignment Alignment { get; set; }
+    public Dialog Dialog { get; set; }
     public Faction Faction { get; set; }
     public Health Health { get; set; }
     public List<Actor> Interactors { get; set; }
@@ -30,7 +31,6 @@ public class Actor : MonoBehaviour
     private void Awake()
     {
         SetComponents();
-        StartCoroutine(FaceInteractor());
     }
 
 
@@ -94,12 +94,6 @@ public class Actor : MonoBehaviour
     }
 
 
-    public void InitiateDialog(Actor other_actor)
-    {
-        Debug.Log("Hello, " + other_actor.Stats.name);
-    }
-
-
     public void InteractWith(Actor other_actor)
     {
         if (Interactors.Contains(other_actor)) return;
@@ -115,6 +109,12 @@ public class Actor : MonoBehaviour
     }
 
 
+    public bool IsPlayer()
+    {
+        return Me == Player.Instance.Me;
+    }
+
+
     public Vector3 MoveToInteractionPoint(Actor other_actor)
     {
         Vector3 toward_approach = (other_actor.transform.position - transform.position).normalized * other_actor.Actions.Movement.ReachedThreshold;
@@ -123,31 +123,14 @@ public class Actor : MonoBehaviour
     }
 
 
-    public bool WithinDialogRange(Actor other_actor)
-    {
-        return Vector3.Distance(transform.position, other_actor.transform.position) < other_actor.Actions.Movement.ReachedThreshold * 3f;
-    }
-
-
     // private
-
-
-    private IEnumerator FaceInteractor()
-    {
-        while (true) {
-            if (Interactors.Any(WithinDialogRange)) {
-                Vector3 new_facing = Vector3.RotateTowards(transform.forward, Interactors.First().transform.position - transform.position, 90f, 0f);
-                transform.rotation = Quaternion.LookRotation(new_facing);
-            }
-            yield return new WaitForSeconds(Turn.ActionThreshold);
-        }
-    }
 
 
     private void SetComponents()
     {
         Actions = GetComponentInChildren<Actions>();
         Alignment = Conflict.Alignment.Unaligned;
+        Dialog = GetComponent<Dialog>();
         Health = GetComponent<Health>();
         Interactors = new List<Actor>();
         Load = new Dictionary<HarvestingNode, int>();
