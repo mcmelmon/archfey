@@ -7,11 +7,13 @@ public class Dialog : MonoBehaviour
 {
     // Inspector settings
     public List<string> chit_chat;
-    public DialogNode start_conversation;
+    public List<DialogNode> statements;
+    public List<DialogResponse> responses;
 
     // properties
 
     public DialogNode Current { get; set; }
+    public DialogPanel Panel { get; set; }
     public Actor Me { get; set; }
 
 
@@ -20,31 +22,71 @@ public class Dialog : MonoBehaviour
 
     private void Awake()
     {
-        Current = start_conversation;
+        Current = (statements.Any()) ? statements[0] : null;
         Me = GetComponent<Actor>();
     }
 
 
-    private void Start()
+    private void OnTriggerEnter(Collider other)
     {
-        StartCoroutine(ChatIfPlayerNear());
+        if (Me == null) return;
+
+        // TODO: check for stealth
+        Actor actor = other.GetComponent<Actor>();
+        if (actor == null) return;
+
+        if (actor.IsPlayer() || (Me.IsPlayer() && Me.Interactors.Contains(actor))) {
+            Vector3 new_facing = Vector3.RotateTowards(transform.forward, actor.transform.position - transform.position, 10f, 0f);
+            transform.rotation = Quaternion.LookRotation(new_facing);
+        } 
+
+        string chat = GetChitChat();
+        Debug.Log(chat);
     }
+
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (Me == null) return;
+
+        // TODO: check for stealth
+        Actor actor = other.GetComponent<Actor>();
+        if (actor == null) return;
+
+        if (actor.IsPlayer() || (Me.IsPlayer() && Me.Interactors.Contains(actor))) {
+            Vector3 new_facing = Vector3.RotateTowards(transform.forward, actor.transform.position - transform.position, 10f, 0f);
+            transform.rotation = Quaternion.LookRotation(new_facing);
+        }
+
+        // TODO: also face a combatant
+    }
+
 
     // public
 
 
-    public string GetChitChat()
+    public void Answer(string response_text)
     {
-        // Chit Chat consists of strings the actor emotes when the player passes by, but does not specifically Talk
-        return chit_chat[Random.Range(0, chit_chat.Count)];
+        DialogResponse response = responses.Where(r => r.text == response_text).ToList().First();
+        if (response != null) {
+            response.chosen = true;
+            Current = statements.First(statement => statement.id == response.destination_dialog_id);
+            DisplayCurrent();
+        }
     }
+
+
+    public string GetChitChat() =>
+        // Chit Chat consists of strings the actor emotes when the player passes by, but does not specifically Talk
+        (chit_chat.Count > 0) ? chit_chat[Random.Range(0, chit_chat.Count)] : "";
 
 
     public void InitiateDialog(DialogPanel dialog_panel)
     {
-        dialog_panel.speaker_name.GetComponent<UnityEngine.UI.Text>().text = Me.Stats.name;
-        dialog_panel.spoken_text.GetComponent<UnityEngine.UI.Text>().text = "Hello, " + Player.Instance.Me.Stats.name;
-        dialog_panel.gameObject.SetActive(true);
+        Panel = dialog_panel;
+        Panel.speaker_name.GetComponent<UnityEngine.UI.Text>().text = Me.Stats.name;
+        DisplayCurrent();
+        Panel.gameObject.SetActive(true);
     }
 
 
@@ -57,32 +99,63 @@ public class Dialog : MonoBehaviour
     // private
 
 
-    private IEnumerator ChatIfPlayerNear() {
-        // TODO: account for stealth
+    private void DisplayCurrent()
+    {
+        Current.seen = true;
+        Panel.spoken_text.GetComponent<UnityEngine.UI.Text>().text = Current.text;
+        List<DialogResponse> current_responses = responses.Where(r => r.initiating_dialog_id == Current.id).ToList();
 
-        while (!Me.IsPlayer()) {
-            List<Actor> audience = FindObjectsOfType<Actor>().Where(actor => actor != Me && WithinRange(actor)).ToList();
+        // yes, this is silly...
+        switch (current_responses.Count) {
+            case 1:
+                Panel.first_response.GetComponent<UnityEngine.UI.Text>().text = current_responses[0].text;
+                Panel.first_response.SetActive(true);
+                Panel.second_response.SetActive(false);
+                Panel.third_response.SetActive(false);
+                break;
+            case 2:
+                Panel.first_response.GetComponent<UnityEngine.UI.Text>().text = current_responses[0].text;
+                Panel.second_response.GetComponent<UnityEngine.UI.Text>().text = current_responses[1].text;
+                Panel.first_response.SetActive(true);
+                Panel.second_response.SetActive(true);
+                Panel.third_response.SetActive(false);
 
-            // TODO: make references to specific audience members, but for now...
-            if (audience.Any()) {
-                Vector3 new_facing = Vector3.RotateTowards(transform.forward, audience.First().transform.position - transform.position, 10f, 0f);
-                transform.rotation = Quaternion.LookRotation(new_facing);
-
-                string chat = GetChitChat();
-                if (chat != "") {
-                    Debug.Log(chat);
-                }
-            }
-            yield return new WaitForSeconds(Turn.ActionThreshold * Random.Range(1,3));
+                break;
+            case 3:
+                Panel.first_response.GetComponent<UnityEngine.UI.Text>().text = current_responses[0].text;
+                Panel.second_response.GetComponent<UnityEngine.UI.Text>().text = current_responses[1].text;
+                Panel.third_response.GetComponent<UnityEngine.UI.Text>().text = current_responses[2].text;
+                Panel.first_response.SetActive(true);
+                Panel.second_response.SetActive(true);
+                Panel.third_response.SetActive(true);
+                break;
+            default:
+                Panel.first_response.SetActive(false);
+                Panel.second_response.SetActive(false);
+                Panel.third_response.SetActive(false);
+                break;
         }
     }
 }
+
 
 [System.Serializable]
 public class DialogNode
 {
     // inspector settings
-    public bool is_exit;
+    public int id;
     public string text;
-    public List<DialogNode> respones;
+    public List<int> response_ids;
+    public bool seen;
+}
+
+
+[System.Serializable]
+public class DialogResponse
+{
+    // inspector settings
+    public int initiating_dialog_id;
+    public int destination_dialog_id;
+    public string text;
+    public bool chosen;
 }

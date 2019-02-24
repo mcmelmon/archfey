@@ -41,6 +41,7 @@ public class CommandBarOne : MonoBehaviour {
 
     // public
 
+
     public void Attack()
     {
         if (Me.Actions.CanTakeTurn) {

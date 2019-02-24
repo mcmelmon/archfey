@@ -62,7 +62,7 @@ public class Player : MonoBehaviour {
                 CinemachineFreeLook.Orbit[] orbits = viewport.m_Orbits;
                 for (int i = 0; i < orbits.Length; i++) {
                     float orbit = orbits[i].m_Radius;
-                    orbit += Mathf.Lerp(0, proximity, Time.deltaTime * 5f);
+                    orbit -= Mathf.Lerp(0, proximity, Time.deltaTime * 5f);
                     orbits[i].m_Radius = Mathf.Clamp(orbit, 2f, 50f);
                 }
             }

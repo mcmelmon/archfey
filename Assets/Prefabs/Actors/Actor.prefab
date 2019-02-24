@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 23087021988477818}
   - component: {fileID: 136865368129096052}
   - component: {fileID: 54176829473299802}
+  - component: {fileID: 2916268701473373182}
   - component: {fileID: 195258252824600532}
   - component: {fileID: 7394070363342518024}
   - component: {fileID: 7210647187439319263}
@@ -119,6 +120,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
+--- !u!135 &2916268701473373182
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1690649058592984}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!195 &195258252824600532
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -216,7 +230,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83222896a6d7f44838f84d7d10e2f0a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  generic_greetings: []
+  chit_chat: []
+  start_conversation:
+    is_exit: 0
+    text: 
+    respones: []
 --- !u!1 &499024003587406277
 GameObject:
   m_ObjectHideFlags: 0
