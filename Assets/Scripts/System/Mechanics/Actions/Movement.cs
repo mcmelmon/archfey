@@ -12,7 +12,7 @@ public class Movement : MonoBehaviour
     public Actor Me { get; set; }
     public NavMeshAgent Agent { get; set; }
     public Dictionary<CommonDestination, Vector3> Destinations { get; set; }
-    public static float ReachedThreshold { get; set; }
+    public float ReachedThreshold { get; set; }
     public Route Route { get; set; }
     public float Speed { get; set; }
 
@@ -64,7 +64,7 @@ public class Movement : MonoBehaviour
         Vector3 destination = (target_collider != null) ? target_collider.ClosestPointOnBounds(transform.position) : target_object.position;
         Vector3 new_facing = Vector3.RotateTowards(transform.forward, transform.position - destination, 30f * Time.deltaTime, 0f);
         transform.rotation = Quaternion.LookRotation(new_facing);
-        Agent.SetDestination(new Vector3(destination.x, Geography.Terrain.SampleHeight(destination), destination.z));
+        Agent.SetDestination(destination);  // may have height issues on terrain
     }
 
 
@@ -73,7 +73,7 @@ public class Movement : MonoBehaviour
         ResetPath();
         Vector3 new_facing = Vector3.RotateTowards(transform.forward, transform.position - destination, 30f * Time.deltaTime, 0f);
         transform.rotation = Quaternion.LookRotation(new_facing);
-        Agent.SetDestination(new Vector3(destination.x, Geography.Terrain.SampleHeight(destination), destination.z));
+        Agent.SetDestination(destination);  // may have height issues on terrain
     }
 
 
@@ -82,9 +82,8 @@ public class Movement : MonoBehaviour
         float separation = Vector3.Distance(transform.position, unit.transform.position);
         int count = 0;
 
-        while (unit != null && count < 6 && separation > ReachedThreshold) {
-            Vector3 new_facing = Vector3.RotateTowards(transform.forward, transform.position - unit.transform.position, 30f * Time.deltaTime, 0f);
-            SetDestination(unit.MoveToInteractionPoint(transform.position));
+        while (unit != null && count < Turn.ActionThreshold && separation > ReachedThreshold) {
+            SetDestination(unit.MoveToInteractionPoint(Me));
             count++;
             yield return new WaitForSeconds(1);
         }
@@ -148,6 +147,5 @@ public class Movement : MonoBehaviour
         Agent.ResetPath();
         Destinations = new Dictionary<CommonDestination, Vector3>();
         Me = GetComponentInParent<Actor>();
-        ReachedThreshold = Me.Size;
     }
 }

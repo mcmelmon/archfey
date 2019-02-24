@@ -57,8 +57,10 @@ public class Conflict : MonoBehaviour
 
     private void ChooseSides()
     {
-        Faction good_faction = FindObjectsOfType<Faction>().First(faction => faction.alignment == Alignment.Good);
-        good_faction.Reinforce();
+        if (FindObjectsOfType<Faction>().Any(faction => faction.alignment == Alignment.Good)) {
+            Faction good_faction = FindObjectsOfType<Faction>().First(faction => faction.alignment == Alignment.Good);
+            good_faction.Reinforce();
+        }
     }
 
 
@@ -80,11 +82,13 @@ public class Conflict : MonoBehaviour
         while (true) {
             yield return new WaitForSeconds(60f);
 
-            Faction good_faction = FindObjectsOfType<Faction>().First(faction => faction.alignment == Alignment.Good);
-            good_faction.Reinforce();
+            if (FindObjectsOfType<Faction>().Any(faction => faction.alignment == Alignment.Good) && FindObjectsOfType<Faction>().Any(faction => faction.alignment == Alignment.Evil)) {
+                Faction good_faction = FindObjectsOfType<Faction>().First(faction => faction.alignment == Alignment.Good);
+                good_faction.Reinforce();
 
-            Faction evil_faction = FindObjectsOfType<Faction>().First(faction => faction.alignment == Alignment.Evil);
-            evil_faction.Reinforce();
+                Faction evil_faction = FindObjectsOfType<Faction>().First(faction => faction.alignment == Alignment.Evil);
+                evil_faction.Reinforce();
+            }
         }
     }
 }

@@ -32,7 +32,7 @@ public class Player : MonoBehaviour {
     private void Start()
     {
         SetComponents();
-        StartCoroutine(Movement());
+        StartCoroutine(AdjustCameraDistance());
     }
 
 
@@ -54,33 +54,20 @@ public class Player : MonoBehaviour {
     // private
 
 
-    private void AdjustCameraDistance()
+    private IEnumerator AdjustCameraDistance()
     {
-        float proximity = Input.GetAxis("Mouse ScrollWheel") * 20f;
-        if (!Mathf.Approximately(proximity, 0f)) {
-            CinemachineFreeLook.Orbit[] orbits = viewport.m_Orbits;
-            for (int i = 0; i < orbits.Length; i++) {
-                orbits[i].m_Radius -= Mathf.Lerp(0, proximity, Time.deltaTime * 5f);
+        while (true) {
+            float proximity = Input.GetAxis("Mouse ScrollWheel") * 30f;
+            if (!Mathf.Approximately(proximity, 0f)) {
+                CinemachineFreeLook.Orbit[] orbits = viewport.m_Orbits;
+                for (int i = 0; i < orbits.Length; i++) {
+                    float orbit = orbits[i].m_Radius;
+                    orbit -= Mathf.Lerp(0, proximity, Time.deltaTime * 5f);
+                    orbits[i].m_Radius = Mathf.Clamp(orbit, 2f, 50f);
+                }
             }
-        }
-    }
 
-
-    private IEnumerator Movement()
-    {
-        while (true)
-        {
             yield return null;
-            Vector3 movement = Vector3.zero;
-
-            float forward = Input.GetAxis("Vertical") * speed * Time.deltaTime;
-            float rotation = Input.GetAxis("Horizontal") * 30 * Time.deltaTime;
-
-            if (!Mathf.Approximately(forward, 0) || !Mathf.Approximately(rotation, 0)) {
-                transform.rotation *= Quaternion.AngleAxis(rotation, Vector3.up);
-                transform.position += transform.TransformDirection(Vector3.forward) * forward;
-                AdjustCameraDistance();
-            }
         }
     }
 
@@ -95,15 +82,7 @@ public class Player : MonoBehaviour {
         Me.Load = new Dictionary<HarvestingNode, int>();
         Me.RestCounter = 0;
         Me.Senses = GetComponent<Senses>();
-        Me.Size = GetComponent<Renderer>().bounds.extents.magnitude;
         Me.Stats = GetComponent<Stats>();
-
-        Me.Actions.ActionsPerRound = 1;
-        Me.Actions.Movement.Speed = speed;
-        Me.Actions.Movement.Agent.speed = speed;
-
-        Me.Health.HitDice = 20;
-        Me.Health.HitDiceType = 8;
 
         Me.Stats.ArmorClass = 18;
         Me.Stats.AttributeProficiency[Proficiencies.Attribute.Charisma] = 5;
@@ -113,9 +92,16 @@ public class Player : MonoBehaviour {
         Me.Stats.AttributeProficiency[Proficiencies.Attribute.Strength] = 1;
         Me.Stats.AttributeProficiency[Proficiencies.Attribute.Wisdom] = 5;
         Me.Stats.ProficiencyBonus = 6;
-
         Me.Stats.Family = "Humanoid";
         Me.Stats.Size = "Medium";
+
+        Me.Actions.ActionsPerRound = 1;
+        Me.Actions.Movement.ReachedThreshold = 1.5f;
+        Me.Actions.Movement.Speed = speed;
+        Me.Actions.Movement.Agent.speed = speed;
+
+        Me.Health.HitDice = 20;
+        Me.Health.HitDiceType = 8;
 
         Me.Health.SetCurrentAndMaxHitPoints();
 

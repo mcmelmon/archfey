@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -8,22 +9,19 @@ public class Actor : MonoBehaviour
 {
     public const int rested_at = 5;
 
-    // Inspector settings
-    public string harvesting = "";
-    public int harvested_amount = 0;
-    public int experience_points;
-
     // properties
 
     public Actions Actions { get; set; }
     public Conflict.Alignment Alignment { get; set; }
+    public Dialog Dialog { get; set; }
     public Faction Faction { get; set; }
     public Health Health { get; set; }
+    public List<Actor> Interactors { get; set; }
     public Dictionary<HarvestingNode, int> Load { get; set; }
     public Magic Magic { get; set; }
+    public Actor Me { get; set; }
     public int RestCounter { get; set; }
     public Senses Senses { get; set; }
-    public float Size { get; set; }
     public Stats Stats { get; set; }
 
 
@@ -51,13 +49,6 @@ public class Actor : MonoBehaviour
             stat_block = JsonUtility.FromJson<JSON_StatBlock>(www.downloadHandler.text);
         }
 
-        Actions.ActionsPerRound = stat_block.actions_per_round;
-        Actions.Movement.Speed = stat_block.speed;
-        Actions.Movement.Agent.speed = stat_block.speed;
-
-        Health.HitDice = stat_block.hit_dice;
-        Health.HitDiceType = stat_block.hit_dice_type;
-
         Stats.ArmorClass = stat_block.armor_class;
         Stats.AttributeProficiency[Proficiencies.Attribute.Charisma] = stat_block.charisma_proficiency;
         Stats.AttributeProficiency[Proficiencies.Attribute.Constitution] = stat_block.constituion_proficiency;
@@ -66,19 +57,69 @@ public class Actor : MonoBehaviour
         Stats.AttributeProficiency[Proficiencies.Attribute.Strength] = stat_block.strength_proficiency;
         Stats.AttributeProficiency[Proficiencies.Attribute.Wisdom] = stat_block.wisdom_proficiency;
         Stats.ProficiencyBonus = stat_block.proficiency_bonus;
-
         Stats.Family = stat_block.family;
         Stats.Size = stat_block.size;
+
+        Actions.ActionsPerRound = stat_block.actions_per_round;
+        Actions.Movement.Speed = stat_block.speed;
+        Actions.Movement.Agent.speed = stat_block.speed;
+        switch (Stats.Size) {
+            case "Tiny":
+                Actions.Movement.ReachedThreshold = 0.5f;
+                break;
+            case "Small":
+                Actions.Movement.ReachedThreshold = 1f;
+                break;
+            case "Medium":
+                Actions.Movement.ReachedThreshold = 1.5f;
+                break;
+            case "Large":
+                Actions.Movement.ReachedThreshold = 3f;
+                break;
+            case "Huge":
+                Actions.Movement.ReachedThreshold = 5f;
+                break;
+            case "Gargantuan":
+                Actions.Movement.ReachedThreshold = 8f;
+                break;
+            default:
+                Actions.Movement.ReachedThreshold = 1.5f;
+                break;
+        }
+
+        Health.HitDice = stat_block.hit_dice;
+        Health.HitDiceType = stat_block.hit_dice_type;
 
         Health.SetCurrentAndMaxHitPoints();
     }
 
 
-    public Vector3 MoveToInteractionPoint(Vector3 from_point)
+    public void InteractWith(Actor other_actor)
     {
-        Vector3 toward_approach = (from_point - transform.position).normalized * Movement.ReachedThreshold;
+        if (Interactors.Contains(other_actor)) return;
+        Interactors.Clear(); // for now; in future, interact with player first, then an npc
+        Interactors.Add(other_actor);
+        other_actor.InteractWith(Me);
+    }
 
-        return GetComponent<Collider>().ClosestPointOnBounds(from_point) + toward_approach;
+
+    public void InteractWith(Structure structure)
+    {
+
+    }
+
+
+    public bool IsPlayer()
+    {
+        return Me == Player.Instance.Me;
+    }
+
+
+    public Vector3 MoveToInteractionPoint(Actor other_actor)
+    {
+        Vector3 toward_approach = (other_actor.transform.position - transform.position).normalized * (Me.Actions.Movement.ReachedThreshold + other_actor.Actions.Movement.ReachedThreshold);
+
+        return GetComponent<Collider>().ClosestPointOnBounds(other_actor.transform.position) + toward_approach;
     }
 
 
@@ -89,12 +130,16 @@ public class Actor : MonoBehaviour
     {
         Actions = GetComponentInChildren<Actions>();
         Alignment = Conflict.Alignment.Unaligned;
+        Dialog = GetComponent<Dialog>();
         Health = GetComponent<Health>();
+        Interactors = new List<Actor>();
         Load = new Dictionary<HarvestingNode, int>();
+        Me = this;
         RestCounter = 0;
         Senses = GetComponent<Senses>();
-        Size = GetComponent<Renderer>().bounds.extents.magnitude;
         Stats = GetComponent<Stats>();
+
+        if (GetComponent<Faction>() != null) Faction = GetComponent<Faction>();
     }
 
 

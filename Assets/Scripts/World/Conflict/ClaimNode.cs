@@ -115,11 +115,11 @@ public class ClaimNode : MonoBehaviour
     private void IdentifyFriendAndFoe()
     {
         Attackers = FindObjectsOfType<Actor>()
-            .Where(actor => actor.Alignment != ClaimFaction && Vector3.Distance(actor.transform.position, transform.position) < Movement.ReachedThreshold)
+            .Where(actor => actor.Alignment != ClaimFaction && Vector3.Distance(actor.transform.position, transform.position) < actor.Actions.Movement.ReachedThreshold)
             .ToList();
 
         Defenders = FindObjectsOfType<Actor>()
-            .Where(actor => actor.Alignment == ClaimFaction && Vector3.Distance(actor.transform.position, transform.position) < Movement.ReachedThreshold)
+            .Where(actor => actor.Alignment == ClaimFaction && Vector3.Distance(actor.transform.position, transform.position) < actor.Actions.Movement.ReachedThreshold)
             .ToList();
     }
 
