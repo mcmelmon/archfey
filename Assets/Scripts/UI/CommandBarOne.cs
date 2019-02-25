@@ -10,6 +10,7 @@ public class CommandBarOne : MonoBehaviour {
 
     public GameObject player;
     public GameObject attack_action;
+    public GameObject stealth_action;
     public GameObject talk_action;
     public DialogPanel dialog_panel;
 
@@ -18,6 +19,7 @@ public class CommandBarOne : MonoBehaviour {
     public Button AttackButton { get; set; }
     public static CommandBarOne Instance { get; set; }
     public Actor Me { get; set; }
+    public Button StealthButton { get; set; }
     public Button TalkButton { get; set; }
     
 
@@ -34,8 +36,7 @@ public class CommandBarOne : MonoBehaviour {
         }
         Instance = this;
         SetComponents();
-        StartCoroutine(CooldownTimer());
-        StartCoroutine(PushToTalk());
+        StartCoroutine(ManageButtons());
     }
 
 
@@ -53,6 +54,18 @@ public class CommandBarOne : MonoBehaviour {
     }
 
 
+    public void Sneak()
+    {
+        if (Me.Actions.CanTakeTurn) {
+            if (Me.Actions.Stealth.Hiding) {
+                Me.Actions.Stealth.Appear();
+            } else {
+                Me.Actions.Stealth.Hide();
+            }
+        }
+    }
+
+
     public void Talk()
     {
         if (TalkButton.interactable) {
@@ -64,26 +77,32 @@ public class CommandBarOne : MonoBehaviour {
     }
 
 
-    public IEnumerator CooldownTimer()
+    public IEnumerator ManageButtons()
     {
         while (true) {
-            if (AttackButton != null && Me.Actions != null) 
-                AttackButton.interactable = Me.Actions.CanTakeTurn;
-            yield return new WaitForSeconds(Turn.ActionThreshold);
-        }
-    }
+            if (Me.Actions != null) {
+                if (AttackButton != null) {
+                    var interactors = Mouse.SelectedObjects.Select(so => so.GetComponent<Actor>());
+                    AttackButton.interactable = interactors.Any() && Me.Actions.CanTakeTurn;
+                }
 
+                if (TalkButton != null) {
+                    TalkButton.interactable = false;
+                    Actor hovered_actor = Mouse.HoveredObject?.GetComponent<Actor>();
+                    Actor selected_actor = (Mouse.SelectedObjects.Count == 1) ? Mouse.SelectedObjects.First().GetComponent<Actor>() : null;
 
-    public IEnumerator PushToTalk()
-    {
-        while (true) {
-            if (TalkButton != null && Me.Actions != null) {
-                TalkButton.interactable = false;
-                Actor hovered_actor = Mouse.HoveredObject?.GetComponent<Actor>();
-                Actor selected_actor = (Mouse.SelectedObjects.Count == 1) ? Mouse.SelectedObjects.First().GetComponent<Actor>() : null;
-                
-                if (hovered_actor != null || selected_actor != null) {
-                    TalkButton.interactable = (hovered_actor != null) ? hovered_actor.Dialog.WithinRange(Me) : selected_actor.Dialog.WithinRange(Me);
+                    if (hovered_actor != null || selected_actor != null)
+                    {
+                        TalkButton.interactable = (hovered_actor != null) ? hovered_actor.Dialog.WithinRange(Me) : selected_actor.Dialog.WithinRange(Me);
+                    }
+                }
+
+                if (StealthButton != null) {
+                    if (Me.Actions.Stealth.Hiding) {
+                        StealthButton.GetComponent<Image>().color = Color.black;
+                    } else {
+                        StealthButton.GetComponent<Image>().color = Color.white;
+                    }
                 }
             }
             yield return null;
@@ -95,8 +114,10 @@ public class CommandBarOne : MonoBehaviour {
 
     private void SetComponents()
     {
-        AttackButton = attack_action.GetComponent<Button>();
         Me = player.GetComponent<Actor>();
+
+        AttackButton = attack_action.GetComponent<Button>();
+        StealthButton = stealth_action.GetComponent<Button>();
         TalkButton = talk_action.GetComponent<Button>();
     }
 }

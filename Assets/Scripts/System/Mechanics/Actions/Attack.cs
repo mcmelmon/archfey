@@ -172,13 +172,13 @@ public class Attack : MonoBehaviour
             .ToList();
 
         foreach (var target in protected_melee_actors) {
-            if (!Me.Actions.RollSavingThrow(Proficiencies.Attribute.Wisdom, Sanctuary.ProtectedTargets[target.GetComponent<Actor>()].ChallengeRating)) {
+            if (!Me.Actions.SavingThrow(Proficiencies.Attribute.Wisdom, Sanctuary.ProtectedTargets[target.GetComponent<Actor>()].ChallengeRating)) {
                 AvailableMeleeTargets.Remove(target);
             }
         }
 
         foreach (var target in protected_ranged_actors) {
-            if (!Me.Actions.RollSavingThrow(Proficiencies.Attribute.Wisdom, Sanctuary.ProtectedTargets[target.GetComponent<Actor>()].ChallengeRating)) {
+            if (!Me.Actions.SavingThrow(Proficiencies.Attribute.Wisdom, Sanctuary.ProtectedTargets[target.GetComponent<Actor>()].ChallengeRating)) {
                 AvailableMeleeTargets.Remove(target);
             }
         }
@@ -217,14 +217,6 @@ public class Attack : MonoBehaviour
 
         if (CurrentMeleeTarget == null && CurrentRangedTarget == null) return;
 
-        // TODO: handle in Stealth; allow stealth to be recovered, e.g. "Vanish" and even attacking from stealth for a short while, etc.
-        Stealth stealth = Me.Actions.Stealth;
-        if (stealth != null) {
-            stealth.Attacking = true;
-            stealth.Seen = true;
-        }
-
-        // TODO: add more powerful, energy based attacks
         if (CurrentMeleeTarget != null) {
             if (EquippedRangedWeapon != null) EquippedRangedWeapon.gameObject.SetActive(false);
             GetComponent<DefaultMelee>().Strike(CurrentMeleeTarget);

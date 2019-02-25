@@ -11,6 +11,7 @@ public class Senses : MonoBehaviour
     public float Darkvision { get; set; }
     public float PerceptionRange { get; set; }
     public List<Actor> Actors { get; set; }
+    //public List<Item> Items { get; set; }
     public List<Structure> Structures { get; set; }
 
 
@@ -40,11 +41,25 @@ public class Senses : MonoBehaviour
         Structures = FindObjectsOfType<Structure>()
             .Where(structure => Vector3.Distance(transform.position, structure.transform.position) < PerceptionRange)
             .Select(collider => collider.gameObject.GetComponent<Structure>()).OfType<Structure>().Distinct().ToList();
+
+        RemoveHidden();
+
         Me.Actions.Attack.SetEnemyRanges();
     }
 
 
     // private
+
+
+    private void RemoveHidden()
+    {
+        List<Actor> the_sneaking = Actors.Where(actor => actor.Actions.Stealth.Hiding).ToList();
+        foreach (var sneaker in the_sneaking) {
+            bool spotted = Me.Actions.PerceptionCheck(false, sneaker.Actions.Stealth.ChallengeRatting);  // TODO: include environmental detail for obscurity
+            if (!spotted) Actors.Remove(sneaker);
+        }
+    }
+
 
     private void SetComponents()
     {

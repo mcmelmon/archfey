@@ -6,12 +6,9 @@ public class Stealth : MonoBehaviour {
 
     // properties
 
-    public Actor Actor { get; set; }
-    public bool Attacking { get; set; }
-    public Material OriginalSkin { get; set; }
-    public bool Seen { get; set; }
-    public int StealthProficiency { get; set; }
-    public int StealthRating { get; set; }
+    public int ChallengeRatting { get; set; }
+    public Actor Me { get; set; }
+    public bool Hiding { get; set; }
 
 
     // Unity
@@ -23,75 +20,36 @@ public class Stealth : MonoBehaviour {
     }
 
 
-    private void OnValidate()
-    {
-        if (StealthProficiency > 10) StealthProficiency = 10;
-    }
-
-
-    private void Start()
-    {
-        if (Flora.Instance != null) StartCoroutine(Camouflage());
-    }
-
-
     // public
 
 
-    public void RecoverStealth()
+    public void Appear()
     {
-        // if we've been spotted, we have a shot every turn to regain our stealth
-
-        if (!Seen || Attacking) return;
-
-        if (Random.Range(1,21) < 10 + StealthProficiency + Actor.Stats.AttributeProficiency[Proficiencies.Attribute.Dexterity]) {
-            Seen = false;
-        }
+        Hiding = false;
+        ChallengeRatting = 0;
     }
 
 
-    public bool SpottedBy(Actor _spotter)
+    public void Hide()
     {
-        if (Attacking) {
-            Seen = true;
-        } else {
-            // If we were previously spotted, there is a chance to slip back into stealth if not attacking
-            RecoverStealth();
-
-            if (!Actor.Actions.Decider.IsFriendOrNeutral(_spotter)) {
-                // Units with no perception rating fail to spot us
-                // others contest their perception against our stealth, i.e. it's 50/50 if both match
-                Seen = Random.Range(1,21) < (10 + StealthRating);
-            }
-        }
-        return Seen;
+        Hiding = true;
+        ChallengeRatting = Me.Actions.RollDie(20, 1) + StealthRating();
     }
 
 
-    private IEnumerator Camouflage()
-    {
-        while (true) {
-            RecoverStealth();
-
-            if (!Seen && !Attacking) {
-                GameObject[] canopies = Flora.Instance.ForestLayers;
-                if (canopies.Length > 0)
-                    GetComponent<Renderer>().material = canopies[0].GetComponent<Renderer>().material;
-            } else {
-                GetComponent<Renderer>().material = OriginalSkin;
-            }
-
-            yield return null;
-        }
-    }
+    // private
 
 
     private void SetComponents()
     {
-        Actor = GetComponentInParent<Actor>();
-        Attacking = false;
-        OriginalSkin = GetComponent<Renderer>().material;
-        Seen = false;
-        StealthRating = StealthProficiency + Actor.Stats.AttributeProficiency[Proficiencies.Attribute.Dexterity];
+        Me = GetComponentInParent<Actor>();
+    }
+
+
+    private int StealthRating()
+    {
+        bool proficient = Me.Stats.Skills.Contains(Proficiencies.Skill.Stealth);
+        int dexterity_bonus = Me.Stats.AttributeProficiency[Proficiencies.Attribute.Dexterity];
+        return (proficient) ? Me.Stats.ProficiencyBonus + dexterity_bonus : dexterity_bonus;
     }
 }

@@ -94,6 +94,11 @@ public class Player : MonoBehaviour {
         Me.Stats.ProficiencyBonus = 6;
         Me.Stats.Family = "Humanoid";
         Me.Stats.Size = "Medium";
+        Me.Stats.Skills.Add(Proficiencies.Skill.Perception);
+        Me.Stats.Skills.Add(Proficiencies.Skill.Stealth);
+        Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Constitution);
+        Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Dexterity);
+        Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Charisma);
 
         Me.Actions.ActionsPerRound = 1;
         Me.Actions.Movement.ReachedThreshold = 1.5f;

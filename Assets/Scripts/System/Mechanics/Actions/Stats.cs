@@ -23,6 +23,7 @@ public class Stats : MonoBehaviour
     public Dictionary<Weapons.DamageType, int> Resistances { get; set; }
     public int ProficiencyBonus { get; set; }
     public List<Proficiencies.Skill> Expertise { get; set; }
+    public List<Proficiencies.Attribute> SavingThrows { get; set; }
     public List<Proficiencies.Skill> Skills { get; set; }
     public List<string> Tools { get; set; }
 
@@ -123,6 +124,7 @@ public class Stats : MonoBehaviour
 
         Expertise = new List<Proficiencies.Skill>();
         Level = 1;
+        SavingThrows = new List<Proficiencies.Attribute>();
         Skills = new List<Proficiencies.Skill>();
         Tools = new List<string>();
 
