@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityStandardAssets.CrossPlatformInput;
 
 namespace UnityStandardAssets.Utility
 {
@@ -22,7 +21,7 @@ namespace UnityStandardAssets.Utility
         public bool autoZeroHorizontalOnMobile = false;
         public bool relative = true;
         
-        
+
         private Vector3 m_TargetAngles;
         private Vector3 m_FollowAngles;
         private Vector3 m_FollowVelocity;
@@ -45,8 +44,8 @@ namespace UnityStandardAssets.Utility
             float inputV;
             if (relative)
             {
-                inputH = CrossPlatformInputManager.GetAxis("Mouse X");
-                inputV = CrossPlatformInputManager.GetAxis("Mouse Y");
+                inputH = Input.GetAxis("Mouse X");
+                inputV = Input.GetAxis("Mouse Y");
 
                 // wrap values to avoid springing quickly the wrong way from positive to negative
                 if (m_TargetAngles.y > 180)
