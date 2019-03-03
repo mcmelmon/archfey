@@ -34,7 +34,7 @@ public class Dialog : MonoBehaviour
         Actor actor = other.GetComponent<Actor>();
         if (actor == null || actor.Actions.Stealth.Hiding) return;
 
-        if (actor.IsPlayer() || (Me.IsPlayer() && Me.Interactors.Contains(actor))) {
+        if (actor.IsPlayer() || (Me.IsPlayer() && Me.Interactions.Interactors.Contains(actor))) {
             Vector3 new_facing = Vector3.RotateTowards(transform.forward, actor.transform.position - transform.position, 10f, 0f);
             transform.rotation = Quaternion.LookRotation(new_facing);
         } 
@@ -51,7 +51,7 @@ public class Dialog : MonoBehaviour
         Actor actor = other.GetComponent<Actor>();
         if (actor == null || actor.Actions.Stealth.Hiding) return;
 
-        if (actor.IsPlayer() || (Me.IsPlayer() && Me.Interactors.Contains(actor))) {
+        if (actor.IsPlayer() || (Me.IsPlayer() && Me.Interactions.Interactors.Contains(actor))) {
             Vector3 new_facing = Vector3.RotateTowards(transform.forward, actor.transform.position - transform.position, 10f, 0f);
             transform.rotation = Quaternion.LookRotation(new_facing);
         }

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -190,20 +189,6 @@ public class Actions : MonoBehaviour
         }
 
         return die_roll;
-    }
-
-
-    public bool PerceptionCheck(bool active_check, int challenge_rating, bool obscurity = false, bool advantage = false, bool disadvantage = false)
-    {
-        int proficiency_bonus = Me.Stats.Skills.Contains(Proficiencies.Skill.Perception) ? Me.Stats.ProficiencyBonus : 0;
-        if (Me.Stats.Expertise.Contains(Proficiencies.Skill.Perception)) proficiency_bonus += proficiency_bonus;
-        int attribute_bonus = Mathf.Max(Me.Stats.AttributeProficiency[Proficiencies.Attribute.Wisdom], Me.Stats.AttributeProficiency[Proficiencies.Attribute.Intelligence]);
-        int bonus = proficiency_bonus + attribute_bonus;
-        if (obscurity) bonus -= 5;
-
-        int die_roll = RollDie(20, 1, advantage, disadvantage);
-
-        return die_roll + bonus > challenge_rating;
     }
 
 

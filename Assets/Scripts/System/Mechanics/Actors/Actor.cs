@@ -16,7 +16,7 @@ public class Actor : MonoBehaviour
     public Dialog Dialog { get; set; }
     public Faction Faction { get; set; }
     public Health Health { get; set; }
-    public List<Actor> Interactors { get; set; }
+    public Interactable Interactions { get; set; }
     public Dictionary<HarvestingNode, int> Load { get; set; }
     public Magic Magic { get; set; }
     public Actor Me { get; set; }
@@ -94,21 +94,6 @@ public class Actor : MonoBehaviour
     }
 
 
-    public void InteractWith(Actor other_actor)
-    {
-        if (Interactors.Contains(other_actor)) return;
-        Interactors.Clear(); // for now; in future, interact with player first, then an npc
-        Interactors.Add(other_actor);
-        other_actor.InteractWith(Me);
-    }
-
-
-    public void InteractWith(Structure structure)
-    {
-
-    }
-
-
     public bool IsPlayer()
     {
         return Me == Player.Instance.Me;
@@ -132,7 +117,7 @@ public class Actor : MonoBehaviour
         Alignment = Conflict.Alignment.Unaligned;
         Dialog = GetComponent<Dialog>();
         Health = GetComponent<Health>();
-        Interactors = new List<Actor>();
+        Interactions = GetComponent<Interactable>();
         Load = new Dictionary<HarvestingNode, int>();
         Me = this;
         RestCounter = 0;

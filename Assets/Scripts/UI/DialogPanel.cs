@@ -17,7 +17,7 @@ public class DialogPanel : MonoBehaviour
 
     public void ResponseChosen(UnityEngine.UI.Text response_text)
     {
-        Actor interactor = Player.Instance.Me.Interactors.First();
+        Actor interactor = Player.Instance.Me.Interactions.Interactors.First();
         if (interactor != null) {
             interactor.Dialog.Answer(response_text.text);
         }
