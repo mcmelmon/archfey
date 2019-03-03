@@ -22,6 +22,7 @@ public class Characters : MonoBehaviour
     public static Dictionary<Template, List<Weapon>> available_weapons = new Dictionary<Template, List<Weapon>>();
     public static Dictionary<Template, Dictionary<Weapons.DamageType, int>> resistances = new Dictionary<Template, Dictionary<Weapons.DamageType, int>>();
 
+
     // properties
 
     public static Characters Instance { get; set; }

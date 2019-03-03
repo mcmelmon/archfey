@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -51,6 +50,7 @@ public class Actions : MonoBehaviour
     public void ActOnTurn()
     {
         CanTakeTurn |= (Me == Player.Instance.Me);
+        if (Stealth.Hiding) Stealth.Hide(); // re-up the Stealth ChallengeRating for the round; TODO: account for obscurity at the new location, etc
         Decider.ChooseState();
 
         switch (Decider.state) {
@@ -171,22 +171,38 @@ public class Actions : MonoBehaviour
     }
 
 
-    public int RollDie(int dice_type, int number_of_rolls)
+    public int RollDie(int dice_type, int number_of_rolls, bool advantage = false, bool disadvantage = false)
     {
-        int result = 0;
+        int die_roll = 0;
 
-        for (int i = 0; i < number_of_rolls; i++) {
-            int roll = UnityEngine.Random.Range(1, dice_type + 1);
-            result += roll;
+        if ((advantage && disadvantage) || (!advantage && !disadvantage)) {
+            for (int i = 0; i < number_of_rolls; i++) {
+                int this_roll = UnityEngine.Random.Range(1, dice_type + 1);
+                die_roll += this_roll;
+            }
+        } else if (advantage) {
+            // advantage only applies in situations with one roll
+            die_roll = Mathf.Max(UnityEngine.Random.Range(1, dice_type + 1), UnityEngine.Random.Range(1, dice_type + 1));
+        } else if (disadvantage) {
+            // disadvantage only applies in situations with one roll
+            die_roll = Mathf.Min(UnityEngine.Random.Range(1, dice_type + 1), UnityEngine.Random.Range(1, dice_type + 1));
         }
-        return result;
+
+        return die_roll;
     }
 
 
-    public bool RollSavingThrow(Proficiencies.Attribute attribute, int challenge_rating)
+    public bool SavingThrow(Proficiencies.Attribute attribute, int challenge_rating, bool advantage = false, bool disadvantage = false)
     {
-        return UnityEngine.Random.Range(1, 21) + Me.Stats.AttributeProficiency[attribute] > challenge_rating;
+        int proficiency_bonus = Me.Stats.SavingThrows.Contains(attribute) ? Me.Stats.ProficiencyBonus : 0;
+        int attribute_bonus = Me.Stats.AttributeProficiency[attribute];
+        int bonus = proficiency_bonus + attribute_bonus;
+
+        int die_roll = RollDie(20, 1, advantage, disadvantage);
+
+        return die_roll + bonus > challenge_rating;
     }
+
 
 
     public void SheathWeapon()
@@ -216,6 +232,7 @@ public class Actions : MonoBehaviour
         Attack = GetComponentInChildren<Attack>();
         Decider = GetComponent<Decider>();
         Stats = GetComponentInParent<Stats>();
+        Stealth = GetComponentInParent<Stealth>();
         Me = GetComponentInParent<Actor>();
         Movement = GetComponent<Movement>();
         CanTakeTurn = false; // currently only relevant for player

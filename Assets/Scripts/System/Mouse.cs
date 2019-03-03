@@ -44,7 +44,7 @@ public class Mouse : MonoBehaviour
     {
         if (Input.GetKeyDown("escape")) {
             for (int i = 0; i < SelectedObjects.Count; i++) {
-                SelectedObjects[i].GetComponent<Renderer>().material.color -= highlight_color;
+                SelectedObjects[i].GetComponent<Renderer>().material = SelectedObjects[i].GetComponent<Interactable>().OriginalMaterial;
             }
             SelectedObjects.Clear();
         }
@@ -64,15 +64,16 @@ public class Mouse : MonoBehaviour
             if (Physics.Raycast(ray, out RaycastHit hit, 150f, interactable_layer_mask, QueryTriggerInteraction.Ignore)) {
                 GameObject hover = hit.transform.gameObject;
 
-                if (HoveredObject != null)
-                    // If we hovered over something earlier, reset its color
-                    HoveredObject.GetComponent<Renderer>().material.color -= highlight_color;
+                if (HoveredObject != null && !SelectedObjects.Contains(HoveredObject))
+                    HoveredObject.GetComponent<Renderer>().material = HoveredObject.GetComponent<Interactable>().OriginalMaterial;
 
                 HoveredObject = hover;
-                if (HoveredObject != null) HoveredObject.GetComponent<Renderer>().material.color += highlight_color;
-            } else {
                 if (HoveredObject != null) {
-                    HoveredObject.GetComponent<Renderer>().material.color -= highlight_color;
+                    HoveredObject.GetComponent<Renderer>().material = HoveredObject.GetComponent<Interactable>().highlight_material;
+                }
+            } else {
+                if (HoveredObject != null && !SelectedObjects.Contains(HoveredObject)) {
+                    HoveredObject.GetComponent<Renderer>().material = HoveredObject.GetComponent<Interactable>().OriginalMaterial;
                     HoveredObject = null;
                 }
             }
@@ -99,7 +100,7 @@ public class Mouse : MonoBehaviour
                                 SelectedObjects.Add(selected_object);
                             } else {
                                 foreach (var selection in SelectedObjects.Where(so => so != null)) {
-                                    selection.GetComponent<Renderer>().material.color -= highlight_color;
+                                    selection.GetComponent<Renderer>().material = selection.GetComponent<Interactable>().highlight_material;
                                 }
                                 SelectedObjects.Clear();
                                 SelectedObjects.Add(selected_object);
@@ -126,7 +127,7 @@ public class Mouse : MonoBehaviour
     private void ClearSelection()
     {
         foreach (var selection in SelectedObjects.Where(so => so != null)) {
-            selection.GetComponent<Renderer>().material.color -= highlight_color;
+            selection.GetComponent<Renderer>().material = selection.GetComponent<Interactable>().OriginalMaterial;
         }
         SelectedObjects.Clear();
     }
@@ -140,7 +141,7 @@ public class Mouse : MonoBehaviour
         Structure selected_structure = selected_object.GetComponent<Structure>();
 
         if (selected_actor != null) {
-            Player.Instance.Me.InteractWith(selected_actor);
+            Player.Instance.Me.Interactions.InteractWith(selected_actor);
             StartCoroutine(Player.Instance.Me.Actions.Movement.TrackUnit(selected_actor));
         } else if (selected_structure != null) {
             Player.Instance.Me.Actions.Movement.SetDestination(selected_structure.NearestEntranceTo(Player.Instance.Me.transform));
