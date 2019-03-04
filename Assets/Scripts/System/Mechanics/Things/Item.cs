@@ -3,11 +3,15 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
+    public enum ItemFamily { Armor, Component, Consumable, Container, Jewelry, Ore, Weapon }
+
     public bool is_hidden;
     public int spot_challenge_rating;
 
     public bool is_locked;
     public int unlock_challenge_rating;
+
+    public int weight;
     
     // properties
 
@@ -32,7 +36,11 @@ public class Item : MonoBehaviour
 
     public bool HandleDoubleClick(Actor player)
     {
-        OnDoubleClick?.Invoke();
+        if (OnDoubleClick != null) {
+            OnDoubleClick.Invoke();
+        } else {
+            Player.Instance.Inventory.AddItem(this);
+        }
         return true;
     }
 }
