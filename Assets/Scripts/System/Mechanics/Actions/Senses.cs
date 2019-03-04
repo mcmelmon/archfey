@@ -35,7 +35,7 @@ public class Senses : MonoBehaviour
         int bonus = proficiency_bonus + attribute_bonus;
         if (obscurity) bonus -= 5;
 
-        int die_roll = Me.Actions.RollDie(20, 1, advantage, disadvantage);
+        int die_roll = active_check ? Me.Actions.RollDie(20, 1, advantage, disadvantage) : 10;
 
         return die_roll + bonus > challenge_rating;
     }

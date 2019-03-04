@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
 public class Item : MonoBehaviour
@@ -12,6 +11,28 @@ public class Item : MonoBehaviour
     
     // properties
 
+    public Interactable Interactable { get; set; }
+    public Action OnDoubleClick { get; set; }
     public bool IsSpotted { get; set; }
     public bool IsUnlocked { get; set; }
+
+
+    // Unity
+
+    private void Awake()
+    {
+        Interactable = GetComponent<Interactable>();
+        IsSpotted = !is_hidden;
+        IsUnlocked = !is_locked;
+    }
+
+
+    // public
+
+
+    public bool HandleDoubleClick(Actor player)
+    {
+        OnDoubleClick?.Invoke();
+        return true;
+    }
 }

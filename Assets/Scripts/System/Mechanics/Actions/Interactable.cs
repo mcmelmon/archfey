@@ -12,7 +12,7 @@ public class Interactable : MonoBehaviour
     // properties
 
     public List<Actor> Interactors { get; set; }
-    public Actor Me { get; set; }
+    public Actor Actor { get; set; }
     public Structure Structure {get; set; }
     public Item Item { get; set; }
     public Material OriginalMaterial { get; set; }
@@ -24,7 +24,7 @@ public class Interactable : MonoBehaviour
     private void Awake() {
         Item = GetComponent<Item>();
         Interactors = new List<Actor>();
-        Me = GetComponent<Actor>();
+        Actor = GetComponent<Actor>();
         OriginalMaterial = GetComponent<Renderer>().material;
         Structure = GetComponent<Structure>();
     }
@@ -32,15 +32,9 @@ public class Interactable : MonoBehaviour
 
     public void InteractWith(Actor other_actor)
     {
-        if (Interactors.Contains(other_actor)) return;
-        Interactors.Clear(); // for now; in future, interact with player first, then an npc
+        if (Interactors.Contains(other_actor)) return;  // this should prevent infinite recursion
+        Interactors.Clear(); // in future, interact with player first, then an npc
         Interactors.Add(other_actor);
-        other_actor.Interactions.InteractWith(Me);
-    }
-
-
-    public void InteractWith(Structure _structure)
-    {
-
+        other_actor.Interactions.InteractWith(Actor);
     }
 }
