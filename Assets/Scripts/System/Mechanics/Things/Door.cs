@@ -8,4 +8,42 @@ public class Door : MonoBehaviour
 
     public int hit_points;
     public List<GameObject> triggers;
+
+    // properties
+
+    public Item Item { get; set; }
+    public Vector3 OriginalScale { get; set; }
+
+    // Unity
+
+
+    private void Awake()
+    {
+        Item = GetComponent<Item>();
+        Item.OnDoubleClick = OpenDoor;
+        OriginalScale = transform.localScale; 
+
+        StartCoroutine(CloseDoor());
+    }
+
+
+    // public
+
+
+    public void OpenDoor()
+    {
+        gameObject.transform.localScale = new Vector3(0,0,0);
+    }
+
+
+    // private
+
+
+    private IEnumerator CloseDoor()
+    {
+        while (true) {
+            yield return new WaitForSeconds(Turn.ActionThreshold * 3);
+            gameObject.transform.localScale = OriginalScale;
+        }
+    }
 }

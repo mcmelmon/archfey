@@ -7,15 +7,21 @@ public class Resources : MonoBehaviour
 {
     public enum Raw
     {
-        Copper = 0,
-        Farm = 1,
-        Fish = 2,
-        Game = 3,
-        Gold = 4,
-        Iron = 5,
-        Skins = 6,
-        Timber = 7,
-        None = 99
+        Adamantite,
+        Copper,
+        Electrum,
+        Farm,
+        Fish,
+        Game,
+        Gold,
+        Herbs,
+        Iron,
+        Mithril,
+        Silver,
+        Skins,
+        Timber,
+        Tin,
+        None
     };
 
     [Serializable]

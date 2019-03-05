@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 5215163473278157989}
   - component: {fileID: 5215163473278157988}
   - component: {fileID: 5215163473278157995}
-  - component: {fileID: 5702118145137935256}
+  - component: {fileID: 5875569619686396245}
   m_Layer: 0
   m_Name: Door
   m_TagString: Untagged
@@ -355,16 +355,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlight_material: {fileID: 2100000, guid: 94a37fc8b02c94b369d9f8981cd09109, type: 2}
---- !u!135 &5702118145137935256
-SphereCollider:
+--- !u!208 &5875569619686396245
+NavMeshObstacle:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5215163473278157994}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 15
-  m_Center: {x: 2.9999397, y: 5, z: -0.25000006}
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 3.0000002, y: 5, z: 0.25}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 0
+  m_Center: {x: 3.0000002, y: 5, z: -0.25}
+  m_TimeToStationary: 0.5

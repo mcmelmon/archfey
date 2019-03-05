@@ -107,7 +107,7 @@ public class Mouse : MonoBehaviour
                             }
 
                             if (Time.time - LastClickTime < double_click_delay) HandleDoubleClick(selected_object);
-                            selected_object.GetComponent<Renderer>().material.color += highlight_color;
+                            selected_object.GetComponent<Renderer>().material = selected_object.GetComponent<Interactable>().highlight_material;
                         }
                     } else if (Physics.Raycast(ray, out RaycastHit ground_hit, 150f, ground_layer_mask, QueryTriggerInteraction.Ignore)) {
                         ClearSelection();
@@ -139,12 +139,15 @@ public class Mouse : MonoBehaviour
 
         Actor selected_actor = selected_object.GetComponent<Actor>();
         Structure selected_structure = selected_object.GetComponent<Structure>();
+        Item selected_item = selected_object.GetComponent<Item>();
 
         if (selected_actor != null) {
-            Player.Instance.Me.Interactions.InteractWith(selected_actor);
-            StartCoroutine(Player.Instance.Me.Actions.Movement.TrackUnit(selected_actor));
+            selected_actor.Interactions.InteractWith(Player.Instance.Me);
+            StartCoroutine(Player.Instance.Me.Actions.Movement.TrackUnit(selected_actor)); // TODO: if within interaction range, initiate dialog
         } else if (selected_structure != null) {
             Player.Instance.Me.Actions.Movement.SetDestination(selected_structure.NearestEntranceTo(Player.Instance.Me.transform));
+        } else if (selected_item != null) {
+            selected_item.HandleDoubleClick(Player.Instance.Me);
         }
     }
 }

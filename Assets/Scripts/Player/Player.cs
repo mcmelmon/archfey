@@ -13,6 +13,7 @@ public class Player : MonoBehaviour {
     // properties
 
     public static Player Instance { get; set; }
+    public Inventory Inventory { get; set; }
     public Actor Me { get; set; }
 
     // Unity
@@ -26,6 +27,7 @@ public class Player : MonoBehaviour {
             return;
         }
         Instance = this;
+        Inventory = GetComponent<Inventory>();
     }
 
 

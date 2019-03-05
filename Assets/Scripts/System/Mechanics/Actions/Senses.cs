@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -27,6 +27,32 @@ public class Senses : MonoBehaviour
     // public
 
 
+    public bool InsightCheck(bool active_check, int challenge_rating, bool obscurity = false, bool advantage = false, bool disadvantage = false)
+    {
+        int proficiency_bonus = Me.Stats.Skills.Contains(Proficiencies.Skill.Insight) ? Me.Stats.ProficiencyBonus : 0;
+        if (Me.Stats.Expertise.Contains(Proficiencies.Skill.Insight)) proficiency_bonus += proficiency_bonus;
+        int attribute_bonus = Me.Stats.AttributeProficiency[Proficiencies.Attribute.Wisdom];
+        int bonus = proficiency_bonus + attribute_bonus;
+
+        int die_roll = active_check ? Me.Actions.RollDie(20, 1, advantage, disadvantage) : 10;
+
+        return die_roll + bonus >= challenge_rating;
+    }
+
+
+    public bool InvestigateCheck(bool active_check, int challenge_rating, bool obscurity = false, bool advantage = false, bool disadvantage = false)
+    {
+        int proficiency_bonus = Me.Stats.Skills.Contains(Proficiencies.Skill.Investigation) ? Me.Stats.ProficiencyBonus : 0;
+        if (Me.Stats.Expertise.Contains(Proficiencies.Skill.Investigation)) proficiency_bonus += proficiency_bonus;
+        int attribute_bonus = Me.Stats.AttributeProficiency[Proficiencies.Attribute.Intelligence];
+        int bonus = proficiency_bonus + attribute_bonus;
+
+        int die_roll = active_check ? Me.Actions.RollDie(20, 1, advantage, disadvantage) : 10;
+
+        return die_roll + bonus >= challenge_rating;
+    }
+
+
     public bool PerceptionCheck(bool active_check, int challenge_rating, bool obscurity = false, bool advantage = false, bool disadvantage = false)
     {
         int proficiency_bonus = Me.Stats.Skills.Contains(Proficiencies.Skill.Perception) ? Me.Stats.ProficiencyBonus : 0;
@@ -35,9 +61,9 @@ public class Senses : MonoBehaviour
         int bonus = proficiency_bonus + attribute_bonus;
         if (obscurity) bonus -= 5;
 
-        int die_roll = Me.Actions.RollDie(20, 1, advantage, disadvantage);
+        int die_roll = active_check ? Me.Actions.RollDie(20, 1, advantage, disadvantage) : 10;
 
-        return die_roll + bonus > challenge_rating;
+        return die_roll + bonus >= challenge_rating;
     }
 
 
@@ -60,6 +86,7 @@ public class Senses : MonoBehaviour
             .Select(collider => collider.gameObject.GetComponent<Structure>()).OfType<Structure>().Distinct().ToList();
 
         RemoveHidden();
+        TriggerInsights();
 
         Me.Actions.Attack.SetEnemyRanges();
     }
@@ -86,6 +113,31 @@ public class Senses : MonoBehaviour
                 Items.Remove(hidden); 
             }
         }
+    }
+
+
+    private void TriggerInsights()
+    {
+        List<Actor> suspects = Actors.Where(actor => actor.Interactions.is_suspicious && actor.Interactions.relevant_skill == Proficiencies.Skill.Insight).ToList();
+        foreach (var suspect in suspects){
+            bool suspicious = Me.Senses.InsightCheck(false, suspect.Interactions.suspicion_challenge_rating);
+            if (suspicious) suspect.Interactions.DrawAttention();
+        }
+
+        //List<Item> clues = Items.Where(item => item.is_hidden).ToList();
+        //foreach (var hidden in the_hidden)
+        //{
+        //    bool spotted = Me.Senses.PerceptionCheck(false, hidden.spot_challenge_rating);  // TODO: include environmental detail for obscurity
+        //    if (spotted)
+        //    {
+        //        hidden.IsSpotted = true;
+        //        hidden.GetComponent<Renderer>().material = hidden.GetComponent<Interactable>().highlight_material;
+        //    }
+        //    else
+        //    {
+        //        Items.Remove(hidden);
+        //    }
+        //}
     }
 
 

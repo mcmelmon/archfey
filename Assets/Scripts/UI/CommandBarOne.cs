@@ -91,18 +91,13 @@ public class CommandBarOne : MonoBehaviour {
                     Actor hovered_actor = Mouse.HoveredObject?.GetComponent<Actor>();
                     Actor selected_actor = (Mouse.SelectedObjects.Count == 1) ? Mouse.SelectedObjects.First().GetComponent<Actor>() : null;
 
-                    if (hovered_actor != null || selected_actor != null)
-                    {
+                    if (hovered_actor != null || selected_actor != null) {
                         TalkButton.interactable = (hovered_actor != null) ? hovered_actor.Dialog.WithinRange(Me) : selected_actor.Dialog.WithinRange(Me);
                     }
                 }
 
                 if (StealthButton != null) {
-                    if (Me.Actions.Stealth.Hiding) {
-                        StealthButton.GetComponent<Image>().color = Color.black;
-                    } else {
-                        StealthButton.GetComponent<Image>().color = Color.white;
-                    }
+                    StealthButton.GetComponent<Image>().color = Me.Actions.Stealth.Hiding ? Color.black : Color.white;
                 }
             }
             yield return null;
