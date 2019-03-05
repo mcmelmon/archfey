@@ -107,7 +107,7 @@ public class Mouse : MonoBehaviour
                             }
 
                             if (Time.time - LastClickTime < double_click_delay) HandleDoubleClick(selected_object);
-                            selected_object.GetComponent<Renderer>().material.color += highlight_color;
+                            selected_object.GetComponent<Renderer>().material = selected_object.GetComponent<Interactable>().highlight_material;
                         }
                     } else if (Physics.Raycast(ray, out RaycastHit ground_hit, 150f, ground_layer_mask, QueryTriggerInteraction.Ignore)) {
                         ClearSelection();
