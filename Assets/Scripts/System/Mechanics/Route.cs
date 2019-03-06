@@ -1,107 +1,89 @@
-﻿using System.Collections;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
 public class Route : MonoBehaviour
 {
     // Inspector settings
-    public List<Vector3> points = new List<Vector3>();
+    public List<Transform> points = new List<Transform>();
+    public bool looping;
+    public bool retracing;
 
     // properties
 
-    public Vector3 Current { get; set; }
-    public bool Looping { get; set; }
-    public Vector3 Next { get; set; }
-    public bool Retracing { get; set; }
-    public Vector3 Start { get; set; }
+    public bool Completed { get; set; }
+    public int CurrentIndex { get; set; }
+    public List<Transform> Diversions { get; set; }
+    public int FinishIndex { get; set; }
+    public Actor Me { get; set; }
+    public int NextIndex { get; set; }
 
 
-    // static
+    // Unity
 
 
-    public static Route Circular(Vector3 _start, Circle _circle, bool _retracing = false, bool _looping = false)
+    private void Awake()
     {
-        Route route = new Route
-        {
-            Current = _start,
-            Start = _start,
-            Looping = _looping,
-            Retracing = _retracing
-        };
-
-        route.points = new List<Vector3>();
-
-        foreach (var vertex in _circle.Vertices)
-        {
-            route.points.Add(vertex);
+        if (points.Any()) {
+            CurrentIndex = 0;
+            FinishIndex = points.Count - 1;
+            NextIndex = points.Count > 1 ? 1 : 0;
         }
 
-        route.SetNext();
+        Completed = CurrentIndex == FinishIndex;
+        Diversions = new List<Transform>();
+        Me = GetComponent<Actor>();
 
-        return route;
-    }
-
-
-    public static Route Linear(Vector3 _start, Vector3 _next, bool _retracing = false, bool _looping = false)
-    {
-        Route route = new Route
-        {
-            Current = _next,
-            Start = _start,
-            Looping = _looping,
-            Retracing = _retracing
-        };
-
-        route.points = new List<Vector3> {
-            _start,
-            _next
-        };
-        
-        return route;
+        if (looping) retracing = false;
     }
 
 
     // public
 
 
-
-    public void Add(Vector3 _point)
+    public void DivertTo(Transform point)
     {
-        // This will "work" for a circle, but kind of awkward
-
-        points.Add(_point);
+        Diversions.Add(point);
     }
 
 
-    public bool Completed()
+    public void MoveToNextPosition()
     {
-        return (Next == Start) && !Looping && !Retracing;
+        Me.Actions.Movement.SetDestination(GetNextPosition());
     }
 
 
-    public bool ReachedCurrent(Vector3 unit_position)
+    // private
+
+
+    private bool CheckIfCompleted()
     {
-        return Vector3.Distance(Current, unit_position) < 3f;  // TODO: make unit specific
-    }
-
-
-    public Vector3 SetNext()
-    {
-        bool keep_going = (Looping || Retracing);
-        if (Completed() && !keep_going) return Current;
-
-        if (Start == Vector3.zero) {
-            Start = Current = points[0];
-            return Current;
-        } else {
-            int next_index;
-            int current_index = points.IndexOf(Current);
-            next_index = (Next == Start && Retracing) ? ((current_index - 1) + (points.Count)) % points.Count : (current_index + 1) % points.Count;
-            Next = points[next_index];
-            Current = Next;
-            return Current;
+        Completed = Completed || CurrentIndex == FinishIndex;
+        if ((CurrentIndex == 0) && (retracing || looping)) {
+            Completed = false;
         }
+        return Completed;
+    }
+
+
+    private Vector3 GetNextPosition()
+    {
+        if (Diversions.Any()) {
+
+        } else {
+            if (retracing) {
+                NextIndex = Completed ? ((CurrentIndex - 1) + (points.Count)) % points.Count : (CurrentIndex + 1) % points.Count;
+            } else if (looping) {
+                NextIndex = Completed ? 0 : CurrentIndex + 1;
+            } else if (!Completed) {
+                NextIndex = CurrentIndex + 1;
+            }
+        }
+
+        CurrentIndex = NextIndex;
+        CheckIfCompleted();
+
+        return points[NextIndex].position;
     }
 }

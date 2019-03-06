@@ -21,6 +21,7 @@ public class Actor : MonoBehaviour
     public Magic Magic { get; set; }
     public Actor Me { get; set; }
     public int RestCounter { get; set; }
+    public Route Route { get; set; }
     public Senses Senses { get; set; }
     public Stats Stats { get; set; }
 
@@ -121,6 +122,7 @@ public class Actor : MonoBehaviour
         Load = new Dictionary<HarvestingNode, int>();
         Me = this;
         RestCounter = 0;
+        Route = GetComponent<Route>();
         Senses = GetComponent<Senses>();
         Stats = GetComponent<Stats>();
 

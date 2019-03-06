@@ -13,7 +13,6 @@ public class Movement : MonoBehaviour
     public NavMeshAgent Agent { get; set; }
     public Dictionary<CommonDestination, Vector3> Destinations { get; set; }
     public float ReachedThreshold { get; set; }
-    public Route Route { get; set; }
     public float Speed { get; set; }
 
 
@@ -126,18 +125,6 @@ public class Movement : MonoBehaviour
             }
             yield return new WaitForSeconds(Turn.ActionThreshold);
         }
-    }
-
-
-    private bool ObjectiveComplete()
-    {
-        return Route != null && Route.Completed();
-    }
-
-
-    private bool ReachedNearObjective()
-    {
-        return Agent != null && Route != null && Route.ReachedCurrent(Agent.transform.position);
     }
 
 

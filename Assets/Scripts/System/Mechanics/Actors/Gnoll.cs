@@ -102,7 +102,6 @@ public class Gnoll : MonoBehaviour
 
     public void OnWatch()
     {
-        Me.Actions.Movement.Route = null;
         Me.Actions.Movement.ResetPath();
         Me.Actions.Attack.AttackEnemiesInRange();
     }
