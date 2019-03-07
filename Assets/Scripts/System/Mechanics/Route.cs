@@ -5,44 +5,48 @@ using UnityEngine;
 
 public class Route : MonoBehaviour
 {
+
+    public enum RouteType { Loop, Retrace, Stop };
+
     // Inspector settings
-    public List<Transform> points = new List<Transform>();
-    public bool looping;
-    public bool retracing;
+    public Vector3[] local_stops = new Vector3[1];
+    public int[] wait_times = new int[1];
+    public RouteType route_type;
 
     // properties
 
     public bool Completed { get; set; }
     public int CurrentIndex { get; set; }
-    public List<Transform> Diversions { get; set; }
+    public List<Vector3> Diversions { get; set; }
     public int FinishIndex { get; set; }
     public Actor Me { get; set; }
     public int NextIndex { get; set; }
+    public Vector3[] WorldStops { get; set; }
 
 
     // Unity
 
 
-    private void Awake()
+    private void Start()
     {
-        if (points.Any()) {
-            CurrentIndex = 0;
-            FinishIndex = points.Count - 1;
-            NextIndex = points.Count > 1 ? 1 : 0;
-        }
-
+        CurrentIndex = 0;
+        FinishIndex = local_stops.Length - 1;
+        NextIndex = local_stops.Length > 1 ? 1 : 0;
         Completed = CurrentIndex == FinishIndex;
-        Diversions = new List<Transform>();
+
+        Diversions = new List<Vector3>();
         Me = GetComponent<Actor>();
 
-        if (looping) retracing = false;
+        WorldStops = new Vector3[local_stops.Length];
+        for (int i = 0; i < WorldStops.Length; ++i)
+            WorldStops[i] = transform.TransformPoint(local_stops[i]);
     }
 
 
     // public
 
 
-    public void DivertTo(Transform point)
+    public void DivertTo(Vector3 point)
     {
         Diversions.Add(point);
     }
@@ -60,7 +64,7 @@ public class Route : MonoBehaviour
     private bool CheckIfCompleted()
     {
         Completed = Completed || CurrentIndex == FinishIndex;
-        if ((CurrentIndex == 0) && (retracing || looping)) {
+        if ((CurrentIndex == 0) && (route_type == RouteType.Retrace || route_type == RouteType.Loop)) {
             Completed = false;
         }
         return Completed;
@@ -72,18 +76,22 @@ public class Route : MonoBehaviour
         if (Diversions.Any()) {
 
         } else {
-            if (retracing) {
-                NextIndex = Completed ? ((CurrentIndex - 1) + (points.Count)) % points.Count : (CurrentIndex + 1) % points.Count;
-            } else if (looping) {
-                NextIndex = Completed ? 0 : CurrentIndex + 1;
-            } else if (!Completed) {
-                NextIndex = CurrentIndex + 1;
+            switch(route_type) {
+                case RouteType.Loop:
+                    NextIndex = Completed ? 0 : CurrentIndex + 1;
+                    break;
+                case RouteType.Retrace:
+                    NextIndex = Completed ? ((CurrentIndex - 1) + (local_stops.Length)) % local_stops.Length : (CurrentIndex + 1) % local_stops.Length;
+                    break;
+                case RouteType.Stop:
+                    NextIndex = Completed ? FinishIndex : CurrentIndex + 1;
+                    break;
             }
         }
 
         CurrentIndex = NextIndex;
         CheckIfCompleted();
 
-        return points[NextIndex].position;
+        return WorldStops[NextIndex];
     }
 }
