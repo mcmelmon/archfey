@@ -14,6 +14,7 @@ public class Player : MonoBehaviour {
 
     public static Player Instance { get; set; }
     public Inventory Inventory { get; set; }
+    public bool IsThirdPerson { get; set; }
     public Actor Me { get; set; }
 
     // Unity
@@ -28,6 +29,7 @@ public class Player : MonoBehaviour {
         }
         Instance = this;
         Inventory = GetComponent<Inventory>();
+        IsThirdPerson = false;
     }
 
 
@@ -35,6 +37,7 @@ public class Player : MonoBehaviour {
     {
         SetComponents();
         StartCoroutine(AdjustCameraDistance());
+        StartCoroutine(HandleMovement());
     }
 
 
@@ -59,15 +62,35 @@ public class Player : MonoBehaviour {
     private IEnumerator AdjustCameraDistance()
     {
         while (true) {
-            float proximity = Input.GetAxis("Mouse ScrollWheel") * 30f;
-            if (!Mathf.Approximately(proximity, 0f)) {
-                CinemachineFreeLook.Orbit[] orbits = viewport.m_Orbits;
-                for (int i = 0; i < orbits.Length; i++) {
-                    float orbit = orbits[i].m_Radius;
-                    orbit -= Mathf.Lerp(0, proximity, Time.deltaTime * 5f);
-                    orbits[i].m_Radius = Mathf.Clamp(orbit, 2f, 50f);
+            if (IsThirdPerson)
+            {
+                float proximity = Input.GetAxis("Mouse ScrollWheel") * 30f;
+                if (!Mathf.Approximately(proximity, 0f))
+                {
+                    CinemachineFreeLook.Orbit[] orbits = viewport.m_Orbits;
+                    for (int i = 0; i < orbits.Length; i++)
+                    {
+                        float orbit = orbits[i].m_Radius;
+                        orbit -= Mathf.Lerp(0, proximity, Time.deltaTime * 5f);
+                        orbits[i].m_Radius = Mathf.Clamp(orbit, 2f, 50f);
+                    }
                 }
             }
+
+            yield return null;
+        }
+    }
+
+
+    private IEnumerator HandleMovement()
+    {
+        while (true) {
+            float translation = Input.GetAxis("Vertical") * speed * Time.deltaTime;
+            float straffe = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
+
+            transform.Translate(straffe, 0, translation);
+
+            if (Input.GetKeyDown("escape")) Cursor.lockState = CursorLockMode.None;
 
             yield return null;
         }

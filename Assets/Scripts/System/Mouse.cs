@@ -9,7 +9,7 @@ public class Mouse : MonoBehaviour
     // Inspector settings
 
     public float double_click_delay;
-    public Color highlight_color;
+    public bool first_person = true;
 
     // properties
 
@@ -36,6 +36,7 @@ public class Mouse : MonoBehaviour
     void Start()
     {
         StartCoroutine(Hover());
+        if (first_person) StartCoroutine(Look());
         StartCoroutine(Select());
     }
 
@@ -78,6 +79,29 @@ public class Mouse : MonoBehaviour
                 }
             }
 
+            yield return null;
+        }
+    }
+
+
+    private IEnumerator Look()
+    {
+        Transform character = Player.Instance.Me.transform;
+        Vector2 mouse_look = Vector2.zero;
+        Vector2 smooth_v = Vector2.zero;
+        float sensitivity = 5f;
+        float smoothing = 2f;
+
+        while (true) {
+            var md = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
+
+            md = Vector2.Scale(md, new Vector2(sensitivity * smoothing, sensitivity * smoothing));
+            smooth_v.x = Mathf.Lerp(smooth_v.x, md.x, 1f / smoothing);
+            smooth_v.y = Mathf.Lerp(smooth_v.y, md.y, 1f / smoothing);
+            mouse_look += smooth_v;
+
+            Camera.main.transform.localRotation = Quaternion.AngleAxis(-mouse_look.y, Vector3.right);
+            character.localRotation = Quaternion.AngleAxis(mouse_look.x, character.up);
             yield return null;
         }
     }
