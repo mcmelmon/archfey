@@ -1,107 +1,97 @@
-﻿using System.Collections;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
 public class Route : MonoBehaviour
 {
+
+    public enum RouteType { Loop, Retrace, Stop };
+
     // Inspector settings
-    public List<Vector3> points = new List<Vector3>();
+    public Vector3[] local_stops = new Vector3[1];
+    public int[] wait_times = new int[1];
+    public RouteType route_type;
 
     // properties
 
-    public Vector3 Current { get; set; }
-    public bool Looping { get; set; }
-    public Vector3 Next { get; set; }
-    public bool Retracing { get; set; }
-    public Vector3 Start { get; set; }
+    public bool Completed { get; set; }
+    public int CurrentIndex { get; set; }
+    public List<Vector3> Diversions { get; set; }
+    public int FinishIndex { get; set; }
+    public Actor Me { get; set; }
+    public int NextIndex { get; set; }
+    public Vector3[] WorldStops { get; set; }
 
 
-    // static
+    // Unity
 
 
-    public static Route Circular(Vector3 _start, Circle _circle, bool _retracing = false, bool _looping = false)
+    private void Start()
     {
-        Route route = new Route
-        {
-            Current = _start,
-            Start = _start,
-            Looping = _looping,
-            Retracing = _retracing
-        };
+        CurrentIndex = 0;
+        FinishIndex = local_stops.Length - 1;
+        NextIndex = local_stops.Length > 1 ? 1 : 0;
+        Completed = CurrentIndex == FinishIndex;
 
-        route.points = new List<Vector3>();
+        Diversions = new List<Vector3>();
+        Me = GetComponent<Actor>();
 
-        foreach (var vertex in _circle.Vertices)
-        {
-            route.points.Add(vertex);
-        }
-
-        route.SetNext();
-
-        return route;
-    }
-
-
-    public static Route Linear(Vector3 _start, Vector3 _next, bool _retracing = false, bool _looping = false)
-    {
-        Route route = new Route
-        {
-            Current = _next,
-            Start = _start,
-            Looping = _looping,
-            Retracing = _retracing
-        };
-
-        route.points = new List<Vector3> {
-            _start,
-            _next
-        };
-        
-        return route;
+        WorldStops = new Vector3[local_stops.Length];
+        for (int i = 0; i < WorldStops.Length; ++i)
+            WorldStops[i] = transform.TransformPoint(local_stops[i]);
     }
 
 
     // public
 
 
-
-    public void Add(Vector3 _point)
+    public void DivertTo(Vector3 point)
     {
-        // This will "work" for a circle, but kind of awkward
-
-        points.Add(_point);
+        Diversions.Add(point);
     }
 
 
-    public bool Completed()
+    public void MoveToNextPosition()
     {
-        return (Next == Start) && !Looping && !Retracing;
+        Me.Actions.Movement.SetDestination(GetNextPosition());
     }
 
 
-    public bool ReachedCurrent(Vector3 unit_position)
+    // private
+
+
+    private bool CheckIfCompleted()
     {
-        return Vector3.Distance(Current, unit_position) < 3f;  // TODO: make unit specific
-    }
-
-
-    public Vector3 SetNext()
-    {
-        bool keep_going = (Looping || Retracing);
-        if (Completed() && !keep_going) return Current;
-
-        if (Start == Vector3.zero) {
-            Start = Current = points[0];
-            return Current;
-        } else {
-            int next_index;
-            int current_index = points.IndexOf(Current);
-            next_index = (Next == Start && Retracing) ? ((current_index - 1) + (points.Count)) % points.Count : (current_index + 1) % points.Count;
-            Next = points[next_index];
-            Current = Next;
-            return Current;
+        Completed = Completed || CurrentIndex == FinishIndex;
+        if ((CurrentIndex == 0) && (route_type == RouteType.Retrace || route_type == RouteType.Loop)) {
+            Completed = false;
         }
+        return Completed;
+    }
+
+
+    private Vector3 GetNextPosition()
+    {
+        if (Diversions.Any()) {
+
+        } else {
+            switch(route_type) {
+                case RouteType.Loop:
+                    NextIndex = Completed ? 0 : CurrentIndex + 1;
+                    break;
+                case RouteType.Retrace:
+                    NextIndex = Completed ? ((CurrentIndex - 1) + (local_stops.Length)) % local_stops.Length : (CurrentIndex + 1) % local_stops.Length;
+                    break;
+                case RouteType.Stop:
+                    NextIndex = Completed ? FinishIndex : CurrentIndex + 1;
+                    break;
+            }
+        }
+
+        CurrentIndex = NextIndex;
+        CheckIfCompleted();
+
+        return WorldStops[NextIndex];
     }
 }

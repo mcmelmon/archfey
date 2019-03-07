@@ -105,15 +105,18 @@ public class Commoner : MonoBehaviour
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         Me.Actions.SheathWeapon();
 
-        FindWork();
-        Me.Actions.Movement.Work();
+        if (Me.Route.local_stops.Length > 1) {
+            Me.Route.MoveToNextPosition();
+        } else {
+            FindWork();
+            Me.Actions.Movement.Work();
+        }
     }
 
 
     public void OnMovingToGoal()
     {
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
-        Me.Senses.Sense();
     }
 
 

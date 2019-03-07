@@ -13,6 +13,7 @@ public class Inventory : MonoBehaviour
     // properties
 
     public bool Displayed { get; set; }
+    public Inventory Instance { get; set; }
     public List<InventorySlot> Slots { get; set; }
 
 
@@ -21,6 +22,12 @@ public class Inventory : MonoBehaviour
 
     private void Awake()
     {
+        if (Instance != null) {
+            Debug.LogError("More than one inventory!");
+            Destroy(this);
+            return;
+        }
+        Instance = this;
         Displayed = false;
         Slots = FindObjectsOfType<InventorySlot>().ToList();
     }

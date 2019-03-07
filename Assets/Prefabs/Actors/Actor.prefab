@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 8319845979828185162}
   - component: {fileID: 5220630214965457404}
   - component: {fileID: 6141562267145278879}
+  - component: {fileID: 4948199931880677218}
   m_Layer: 26
   m_Name: Actor
   m_TagString: Interactable
@@ -233,6 +234,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlight_material: {fileID: 2100000, guid: 94a37fc8b02c94b369d9f8981cd09109, type: 2}
+  is_suspicious: 0
+  suspicion_challenge_rating: 0
+  relevant_skill: 0
 --- !u!114 &5220630214965457404
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -260,6 +264,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 937ce5fe553b94fadba75d24aa65c660, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4948199931880677218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1690649058592984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bedaa1548d094788958652a19db86f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  points: []
+  looping: 0
+  retracing: 0
 --- !u!1 &499024003587406277
 GameObject:
   m_ObjectHideFlags: 0
