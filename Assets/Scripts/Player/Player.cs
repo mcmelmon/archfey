@@ -20,7 +20,7 @@ public class Player : MonoBehaviour {
     // Unity
 
 
-    void Awake()
+    private void Awake()
     {
         if (Instance != null) {
             Debug.LogError("More than one player");
@@ -89,6 +89,11 @@ public class Player : MonoBehaviour {
             float straffe = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
 
             transform.Translate(straffe, 0, translation);
+
+            if (Me.IsGrounded() && Input.GetKeyDown(KeyCode.Space))
+            {
+                Me.Actions.Movement.Jump();
+            }
 
             if (Input.GetKeyDown("escape")) Cursor.lockState = CursorLockMode.None;
 

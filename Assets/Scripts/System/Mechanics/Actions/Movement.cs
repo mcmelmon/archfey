@@ -12,6 +12,8 @@ public class Movement : MonoBehaviour
     public Actor Me { get; set; }
     public NavMeshAgent Agent { get; set; }
     public Dictionary<CommonDestination, Vector3> Destinations { get; set; }
+    public bool IsJumping { get; set; }
+    public float JumpVelocity { get; set; }
     public float ReachedThreshold { get; set; }
     public float Speed { get; set; }
 
@@ -19,7 +21,7 @@ public class Movement : MonoBehaviour
     // Unity
 
 
-    private void Awake()
+    private void Start()
     {
         SetComponents();
     }
@@ -50,9 +52,15 @@ public class Movement : MonoBehaviour
     }
 
 
+    public void Jump()
+    {
+        StartCoroutine(Jumping());
+    }
+
+
     public void ResetPath()
     {
-        Agent.ResetPath();
+        if (!IsJumping) Agent.ResetPath();
     }
 
 
@@ -128,11 +136,30 @@ public class Movement : MonoBehaviour
     }
 
 
+    private IEnumerator Jumping()
+    {
+        while (true) {
+            Agent.enabled = false;
+            Me.GetComponent<Rigidbody>().AddForce(Vector3.up * JumpVelocity * 150f, ForceMode.Impulse);
+            if (IsJumping) break;
+            IsJumping = true;
+            yield return new WaitForSeconds(2f);
+        }
+        IsJumping = false;
+        Agent.enabled = true;
+    }
+
+
     private void SetComponents()
     {
+        Me = GetComponentInParent<Actor>(); // need Me
+
         Agent = GetComponentInParent<NavMeshAgent>();
         Agent.ResetPath();
         Destinations = new Dictionary<CommonDestination, Vector3>();
-        Me = GetComponentInParent<Actor>();
+        IsJumping = false;
+        JumpVelocity = Me.Stats.Skills.Contains(Proficiencies.Skill.Acrobatics)
+                         ? 3 + Me.Stats.AttributeProficiency[Proficiencies.Attribute.Strength] + Me.Stats.ProficiencyBonus / 2
+                         : 3 + Me.Stats.AttributeProficiency[Proficiencies.Attribute.Strength];
     }
 }

@@ -89,7 +89,7 @@ public class Mouse : MonoBehaviour
         Transform character = Player.Instance.Me.transform;
         Vector2 mouse_look = Vector2.zero;
         Vector2 smooth_v = Vector2.zero;
-        float sensitivity = 5f;
+        float sensitivity = 1f;
         float smoothing = 2f;
 
         while (true) {

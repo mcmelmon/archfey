@@ -9,6 +9,10 @@ public class Actor : MonoBehaviour
 {
     public const int rested_at = 5;
 
+    // Inspector settings
+
+    public LayerMask ground_layer;
+
     // properties
 
     public Actions Actions { get; set; }
@@ -92,6 +96,14 @@ public class Actor : MonoBehaviour
         Health.HitDiceType = stat_block.hit_dice_type;
 
         Health.SetCurrentAndMaxHitPoints();
+    }
+
+
+    public bool IsGrounded()
+    {
+        CapsuleCollider my_collider = GetComponent<CapsuleCollider>();
+        Vector3 my_base = new Vector3(my_collider.bounds.center.x, my_collider.bounds.min.y, my_collider.bounds.center.z);
+        return Physics.CheckCapsule(my_collider.bounds.center, my_base, my_collider.radius * .9f, ground_layer);
     }
 
 
