@@ -28,11 +28,11 @@ public class RouteEditor : Editor
     public override void OnInspectorGUI()
     {
         EditorGUI.BeginChangeCheck();
-        Route.RouteType route_type = (Route.RouteType)EditorGUILayout.EnumPopup("Route Type", route.route_type);
+        Route.RouteType type = (Route.RouteType)EditorGUILayout.EnumPopup("Route Type", route.route_type);
         if (EditorGUI.EndChangeCheck())
         {
             Undo.RecordObject(target, "Changed route type");
-            route.route_type = route_type;
+            route.route_type = type;
         }
 
         EditorGUILayout.Separator();

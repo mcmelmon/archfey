@@ -26,14 +26,12 @@ public class Route : MonoBehaviour
 
     // Unity
 
-
-    private void Start()
+    private void Awake()
     {
         CurrentIndex = 0;
         FinishIndex = local_stops.Length - 1;
         NextIndex = local_stops.Length > 1 ? 1 : 0;
         Completed = CurrentIndex == FinishIndex;
-
         Diversions = new List<Vector3>();
         Me = GetComponent<Actor>();
 
