@@ -54,6 +54,8 @@ public class Actor : MonoBehaviour
             stat_block = JsonUtility.FromJson<JSON_StatBlock>(www.downloadHandler.text);
         }
 
+        Senses.Darkvision = stat_block.darkvision;
+
         Stats.ArmorClass = stat_block.armor_class;
         Stats.AttributeProficiency[Proficiencies.Attribute.Charisma] = stat_block.charisma_proficiency;
         Stats.AttributeProficiency[Proficiencies.Attribute.Constitution] = stat_block.constituion_proficiency;
@@ -159,5 +161,6 @@ public class Actor : MonoBehaviour
         public float speed;
         public string family;
         public string size;
+        public bool darkvision;
     }
 }

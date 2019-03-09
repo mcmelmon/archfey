@@ -1,16 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.AI;
 
-public class Guard : MonoBehaviour
+public class Goblin : MonoBehaviour
 {
-
     // properties
 
     public Actor Me { get; set; }
-
 
     // Unity
 
@@ -26,25 +22,15 @@ public class Guard : MonoBehaviour
 
     public void OnBadlyInjured()
     {
+        Me.Actions.CloseWithEnemies();
         Me.Actions.Attack.AttackEnemiesInRange();
-        FindShrine();
     }
 
 
     public void OnFriendsInNeed()
     {
-        Me.Actions.Movement.SetDestination(Me.Actions.Decider.FriendsInNeed.First().transform);
-        Me.Actions.Attack.AttackEnemiesInRange();
-        Me.Actions.Decider.FriendsInNeed.Clear();
-    }
-
-
-    public void OnInCombat()
-    {
-        Me.Actions.CallForHelp();
         Me.Actions.CloseWithEnemies();
         Me.Actions.Attack.AttackEnemiesInRange();
-        Me.Actions.Decider.FriendsInNeed.Clear();
     }
 
 
@@ -57,7 +43,8 @@ public class Guard : MonoBehaviour
 
     public void OnHostileStructuresSighted()
     {
-        if (Me.Actions.Decider.HostileStructures.Count > 0) {
+        if (Me.Actions.Decider.HostileStructures.Count > 0)
+        {
             Collider _collider = Me.Actions.Decider.HostileStructures[Random.Range(0, Me.Actions.Decider.HostileStructures.Count)].GetComponent<Collider>();
             Vector3 destination = _collider.ClosestPointOnBounds(transform.position);
 
@@ -69,36 +56,49 @@ public class Guard : MonoBehaviour
 
     public void OnIdle()
     {
+        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         Me.Actions.SheathWeapon();
-        Me.Actions.Movement.Home();
+
+        if (Me.Route.local_stops.Length > 1) {
+            Me.Route.MoveToNextPosition();
+        } else {
+            List<Objective> objectives = FindObjectsOfType<Objective>().Where(objective => objective.Claim == Conflict.Instance.EnemyFaction(Me)).ToList();
+            if (objectives.Count > 0) {
+                Objective next_objective = objectives[Random.Range(0, objectives.Count)];
+                Me.Actions.Movement.SetDestination(next_objective.claim_nodes[0].transform);
+            }
+        }
+    }
+
+
+    public void OnInCombat()
+    {
+        Me.Actions.CloseWithEnemies();
+        Me.Actions.Attack.AttackEnemiesInRange();
     }
 
 
     public void OnMovingToGoal()
     {
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         Me.Actions.SheathWeapon();
     }
 
 
-    public void OnNeedsRest()
+    public void OnPerformingTask()
     {
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
-        Me.Actions.SheathWeapon();
-        Me.Actions.Movement.SetDestination(Me.Actions.Movement.Destinations[Movement.CommonDestination.Home]);
+
     }
 
 
     public void OnReachedGoal()
     {
         Me.Actions.Movement.ResetPath();
-        Me.Actions.Decider.FriendsInNeed.Clear();
+        OnIdle();
     }
 
 
     public void OnUnderAttack()
     {
-        Me.Actions.Decider.FriendsInNeed.Clear();
         Me.Actions.CloseWithEnemies();
         Me.Actions.Attack.AttackEnemiesInRange();
         Me.RestCounter = 0;
@@ -113,18 +113,6 @@ public class Guard : MonoBehaviour
 
 
     // private
-
-
-    private void FindShrine()
-    {
-        Structure nearest_sacred_structure = new List<Structure>(FindObjectsOfType<Structure>())
-            .Where(s => s.alignment == Me.Alignment && s.purpose == Structure.Purpose.Sacred)
-            .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
-            .ToList()
-            .First();
-
-        Me.Actions.Movement.SetDestination(nearest_sacred_structure.transform);
-    }
 
 
     private void SetStats()
@@ -143,7 +131,6 @@ public class Guard : MonoBehaviour
         Me.Actions.OnIdle = OnIdle;
         Me.Actions.OnInCombat = OnInCombat;
         Me.Actions.OnMovingToGoal = OnMovingToGoal;
-        Me.Actions.OnNeedsRest = OnNeedsRest;
         Me.Actions.OnReachedGoal = OnReachedGoal;
         Me.Actions.OnUnderAttack = OnUnderAttack;
         Me.Actions.OnWatch = OnWatch;
@@ -153,10 +140,8 @@ public class Guard : MonoBehaviour
 
     private void SetAdditionalStats()
     {
-        Me.Actions.Attack.AvailableWeapons = Characters.available_weapons[Characters.Template.Guard];
-        Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
 
-        Me.Stats.Skills.Add(Proficiencies.Skill.Perception);
-        Me.Stats.Skills.Add(Proficiencies.Skill.Intimidation);
+        Me.Actions.Attack.AvailableWeapons = Characters.available_weapons[Characters.Template.Gnoll];
+        Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
     }
 }

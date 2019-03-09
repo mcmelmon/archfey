@@ -174,8 +174,6 @@ public class Acolyte : MonoBehaviour
     private void SetAdditionalStats()
     {
         Me.Actions.Attack.AvailableWeapons = Characters.available_weapons[Characters.Template.Commoner];
-        Me.Senses.Darkvision = Characters.darkvision_range[Characters.Template.Base];
-        Me.Senses.PerceptionRange = Characters.perception_range[Characters.Template.Base];
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
 
         CureWounds = gameObject.AddComponent<CureWounds>();

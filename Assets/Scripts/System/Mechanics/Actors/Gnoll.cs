@@ -137,8 +137,6 @@ public class Gnoll : MonoBehaviour
     {
 
         Me.Actions.Attack.AvailableWeapons = Characters.available_weapons[Characters.Template.Gnoll];
-        Me.Senses.Darkvision = Characters.darkvision_range[Characters.Template.Gnoll];
-        Me.Senses.PerceptionRange = Characters.perception_range[Characters.Template.Base];
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
     }
 }

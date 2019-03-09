@@ -8,7 +8,7 @@ public class Senses : MonoBehaviour
     // properties
 
     public Actor Me { get; set; }
-    public float Darkvision { get; set; }
+    public bool Darkvision { get; set; }
     public float PerceptionRange { get; set; }
     public List<Actor> Actors { get; set; }
     public List<Item> Items { get; set; }
@@ -67,12 +67,6 @@ public class Senses : MonoBehaviour
     }
 
 
-    public void SetRange(float _range)
-    {
-        PerceptionRange = _range;
-    }
-
-
     public void Sense()
     {
         Actors = FindObjectsOfType<Actor>()
@@ -123,21 +117,6 @@ public class Senses : MonoBehaviour
             bool suspicious = Me.Senses.InsightCheck(false, suspect.Interactions.suspicion_challenge_rating);
             if (suspicious) suspect.Interactions.DrawAttention();
         }
-
-        //List<Item> clues = Items.Where(item => item.is_hidden).ToList();
-        //foreach (var hidden in the_hidden)
-        //{
-        //    bool spotted = Me.Senses.PerceptionCheck(false, hidden.spot_challenge_rating);  // TODO: include environmental detail for obscurity
-        //    if (spotted)
-        //    {
-        //        hidden.IsSpotted = true;
-        //        hidden.GetComponent<Renderer>().material = hidden.GetComponent<Interactable>().highlight_material;
-        //    }
-        //    else
-        //    {
-        //        Items.Remove(hidden);
-        //    }
-        //}
     }
 
 
@@ -145,6 +124,7 @@ public class Senses : MonoBehaviour
     {
         Actors = new List<Actor>();
         Me = GetComponent<Actor>();
+        PerceptionRange = 20f;
         Structures = new List<Structure>();
     }
 }
