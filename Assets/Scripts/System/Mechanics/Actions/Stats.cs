@@ -13,13 +13,15 @@ public class Stats : MonoBehaviour
 
     // properties
 
+    public List<string> ClassFeatures { get; set; }
     public Actor Me { get; set; }
     public string Family { get; set; }
     public string Size { get; set; }
     public int Level { get; set; }
 
-    public int ArmorClass { get; set; }
-    public Dictionary<Proficiencies.Attribute, int> AttributeProficiency { get; set; }
+    public int BaseArmorClass { get; set; } // TODO: build up AC from equipment and dex
+    public Dictionary<Proficiencies.Attribute, int> AttributeAdjustments { get; set; }
+    public Dictionary<Proficiencies.Attribute, int> BaseAttributes { get; set; }
     public Dictionary<Weapons.DamageType, int> Resistances { get; set; }
     public int ProficiencyBonus { get; set; }
     public List<Proficiencies.Skill> Expertise { get; set; }
@@ -41,17 +43,32 @@ public class Stats : MonoBehaviour
 
     private void OnValidate()
     {
-        if (ArmorClass > 30) ArmorClass = 30;
-        if (ArmorClass < 1) ArmorClass = 1;
+        if (BaseArmorClass > 30) BaseArmorClass = 30;
+        if (BaseArmorClass < 1) BaseArmorClass = 1;
     }
 
 
     // public
 
 
+    public void AdjustAttribute(Proficiencies.Attribute attribute, int adjustment)
+    {
+        if (AttributeAdjustments[attribute] < adjustment) {
+            AttributeAdjustments[attribute] = adjustment;
+            // TODO: recalculate hit points and armor class if appropriate
+        }
+    }
+
+
     public int DamageAfterDefenses(int _damage, Weapons.DamageType _type)
     {
         return DamageAfterResistance(_damage, _type);
+    }
+
+
+    public int GetAdjustedAttributeScore(Proficiencies.Attribute attribute)
+    {
+        return Mathf.Clamp(BaseAttributes[attribute] + AttributeAdjustments[attribute], -5, 10);
     }
 
 
@@ -70,15 +87,11 @@ public class Stats : MonoBehaviour
             }
         }
 
-        if (health_bar != null)
-        {
+        if (health_bar != null) {
             health_bar.value = Me.Health.CurrentHealthPercentage();
-            if (health_bar.value >= 1)
-            {
+            if (health_bar.value >= 1) {
                 health_bar.gameObject.SetActive(false);
-            }
-            else
-            {
+            } else {
                 health_bar.gameObject.SetActive(true);
             }
         }
@@ -122,13 +135,24 @@ public class Stats : MonoBehaviour
     {
         Me = GetComponentInParent<Actor>();
 
+        ClassFeatures = new List<string>();
         Expertise = new List<Proficiencies.Skill>();
         Level = 1;
         SavingThrows = new List<Proficiencies.Attribute>();
         Skills = new List<Proficiencies.Skill>();
         Tools = new List<string>();
 
-        AttributeProficiency = new Dictionary<Proficiencies.Attribute, int>
+        AttributeAdjustments = new Dictionary<Proficiencies.Attribute, int>
+        {
+            [Proficiencies.Attribute.Charisma] = 0,
+            [Proficiencies.Attribute.Constitution] = 0,
+            [Proficiencies.Attribute.Dexterity] = 0,
+            [Proficiencies.Attribute.Intelligence] = 0,
+            [Proficiencies.Attribute.Strength] = 0,
+            [Proficiencies.Attribute.Wisdom] = 0
+        };
+
+        BaseAttributes = new Dictionary<Proficiencies.Attribute, int>
         {
             [Proficiencies.Attribute.Charisma] = 0,
             [Proficiencies.Attribute.Constitution] = 0,

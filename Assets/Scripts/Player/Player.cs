@@ -7,11 +7,12 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour {
 
     // Inspector settings
-    public float speed = 15f;
+    public float speed = 5;
     public CinemachineFreeLook viewport;
 
     // properties
 
+    public bool GodOfRage { get; set; }
     public static Player Instance { get; set; }
     public Inventory Inventory { get; set; }
     public Actor Me { get; set; }
@@ -34,6 +35,8 @@ public class Player : MonoBehaviour {
     private void Start()
     {
         SetComponents();
+        SetNormalState();
+        Enrage();
         StartCoroutine(AdjustCameraDistance());
         StartCoroutine(HandleMovement());
     }
@@ -41,6 +44,15 @@ public class Player : MonoBehaviour {
 
     // public
 
+    public void Enrage()
+    {
+        GodOfRage = true;
+        SetSkills();
+        Me.Actions.Movement.SpeedAdjustment = 2;
+        Me.Actions.Movement.SpeedAdjustment += Me.Actions.Movement.SpeedAdjustment; // TODO: rework speed to use GetAdjustedSpeed
+        Me.Health.GainTemporaryHitPoints(100);
+        StartCoroutine(GodOfRageCountdown());
+    }
 
     public void OnIdle()
     {
@@ -52,6 +64,17 @@ public class Player : MonoBehaviour {
     {
         Me.Actions.Movement.ResetPath();
         Me.Actions.Decider.FriendsInNeed.Clear();
+    }
+
+
+    public void Unrage()
+    {
+        GodOfRage = false;
+        SetSkills();
+        Me.Health.TemporaryHitPoints = 0;
+        Me.Actions.Movement.SpeedAdjustment -= Me.Actions.Movement.SpeedAdjustment;
+        Me.Actions.Movement.SpeedAdjustment = 0;
+        Me.ExhaustionLevel++;
     }
 
     // private
@@ -73,6 +96,19 @@ public class Player : MonoBehaviour {
 
             yield return null;
         }
+    }
+
+
+    private IEnumerator GodOfRageCountdown()
+    {
+        int tick = 0;
+
+        while (GodOfRage && tick < 60) {
+            tick++;
+            yield return new WaitForSeconds(1);
+        }
+
+        Unrage();
     }
 
 
@@ -109,40 +145,104 @@ public class Player : MonoBehaviour {
         Me.RestCounter = 0;
         Me.Senses = GetComponent<Senses>();
         Me.Stats = GetComponent<Stats>();
+    }
 
-        Me.Stats.ArmorClass = 18;
-        Me.Stats.AttributeProficiency[Proficiencies.Attribute.Charisma] = 5;
-        Me.Stats.AttributeProficiency[Proficiencies.Attribute.Constitution] = 2;
-        Me.Stats.AttributeProficiency[Proficiencies.Attribute.Dexterity] = 4;
-        Me.Stats.AttributeProficiency[Proficiencies.Attribute.Intelligence] = 3;
-        Me.Stats.AttributeProficiency[Proficiencies.Attribute.Strength] = 1;
-        Me.Stats.AttributeProficiency[Proficiencies.Attribute.Wisdom] = 5;
-        Me.Stats.ProficiencyBonus = 6;
-        Me.Stats.Family = "Humanoid";
-        Me.Stats.Size = "Medium";
-        Me.Stats.Skills.Add(Proficiencies.Skill.Perception);
-        Me.Stats.Skills.Add(Proficiencies.Skill.Stealth);
-        Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Constitution);
-        Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Dexterity);
-        Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Charisma);
 
-        Me.Actions.ActionsPerRound = 1;
-        Me.Actions.Movement.ReachedThreshold = 1.5f;
-        Me.Actions.Movement.Speed = speed;
-        Me.Actions.Movement.Agent.speed = speed;
+    private void SetNormalState()
+    {
+        Me.Stats.BaseArmorClass = 10; // TODO: build up from equipment, dex, etc.
+        Me.Stats.BaseAttributes[Proficiencies.Attribute.Charisma] = 3;
+        Me.Stats.BaseAttributes[Proficiencies.Attribute.Constitution] = 1;
+        Me.Stats.BaseAttributes[Proficiencies.Attribute.Dexterity] = 5;
+        Me.Stats.BaseAttributes[Proficiencies.Attribute.Intelligence] = 0;
+        Me.Stats.BaseAttributes[Proficiencies.Attribute.Strength] = -1;
+        Me.Stats.BaseAttributes[Proficiencies.Attribute.Wisdom] = 0;
 
-        Me.Health.HitDice = 20;
-        Me.Health.HitDiceType = 8;
-
-        Me.Health.SetCurrentAndMaxHitPoints();
-
-        Me.Actions.Attack.AvailableWeapons = new List<Weapon>() { Weapons.Instance.GetWeaponNamed("lost_eye_axe") };
-        Me.Actions.Attack.EquipMeleeWeapon();
-        Me.Actions.Attack.EquipRangedWeapon();
         Me.Senses.Darkvision = true;
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
 
+        Me.Health.HitDice = 8;
+        Me.Health.HitDiceType = 8;
+        Me.Health.SetCurrentAndMaxHitPoints();
+        Me.Stats.ProficiencyBonus = 4;
+        Me.Stats.Family = "Humanoid (goblinoid)";
+        Me.Stats.Size = "Small";
+
+        Me.Actions.Movement.ReachedThreshold = 2f;
+        Me.Actions.Movement.BaseSpeed = speed;
+        Me.Actions.Movement.Agent.speed = speed;
+
+        Me.Actions.Attack.AttacksPerAction = 1;
+        Me.Actions.Attack.AvailableWeapons = new List<Weapon>() { Weapons.Instance.GetWeaponNamed("lost_eye_axe"), Weapons.Instance.GetWeaponNamed("shortbow") };
+        Me.Actions.Attack.EquipMeleeWeapon();
+        Me.Actions.Attack.EquipRangedWeapon();
+
         Me.Actions.OnIdle = OnIdle;
         Me.Actions.OnReachedGoal = OnReachedGoal;
+    }
+
+
+    private void SetSkills()
+    {
+        Me.Stats.ClassFeatures.Clear();
+        Me.Stats.Expertise.Clear();
+        Me.Stats.SavingThrows.Clear();
+        Me.Stats.Skills.Clear();
+        Me.Stats.Tools.Clear();
+
+        if (GodOfRage) {
+            Me.Stats.AdjustAttribute(Proficiencies.Attribute.Constitution, 5);
+            Me.Stats.AdjustAttribute(Proficiencies.Attribute.Dexterity, 2);
+            Me.Stats.AdjustAttribute(Proficiencies.Attribute.Strength, 5);
+            Me.Stats.AdjustAttribute(Proficiencies.Attribute.Wisdom, -1);
+
+            Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Constitution);
+            Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Dexterity);
+            Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Strength);
+
+            Me.Stats.ClassFeatures.Add("Battle Readiness");
+            Me.Stats.ClassFeatures.Add("Danger Sense");
+            Me.Stats.ClassFeatures.Add("Extra Attack");
+            Me.Stats.ClassFeatures.Add("Improved Critical");
+            Me.Stats.ClassFeatures.Add("Indomitable");
+            Me.Stats.ClassFeatures.Add("Secondwind");
+            Me.Stats.ClassFeatures.Add("Unarmored Defense");
+
+            Me.Stats.Skills.Add(Proficiencies.Skill.Athletics);
+            Me.Stats.Skills.Add(Proficiencies.Skill.Intimidation);
+
+            Me.Actions.Attack.AttacksPerAction = 2;
+            Me.Actions.Attack.Raging = true;
+        } else {
+            Me.Stats.AdjustAttribute(Proficiencies.Attribute.Constitution, 0);
+            Me.Stats.AdjustAttribute(Proficiencies.Attribute.Dexterity, 0);
+            Me.Stats.AdjustAttribute(Proficiencies.Attribute.Strength, 0);
+            Me.Stats.AdjustAttribute(Proficiencies.Attribute.Wisdom, 0);
+
+            Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Dexterity);
+            Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Intelligence);
+
+            Me.Stats.ClassFeatures.Add("Cunning Action");
+            Me.Stats.ClassFeatures.Add("Evasion");
+            Me.Stats.ClassFeatures.Add("Fast Hands");
+            Me.Stats.ClassFeatures.Add("Helpful");
+            Me.Stats.ClassFeatures.Add("Jack of Many Trades");
+            Me.Stats.ClassFeatures.Add("Supreme Sneak");
+            Me.Stats.ClassFeatures.Add("Inspiring Help");
+
+            Me.Stats.Expertise.Add(Proficiencies.Skill.Perception);
+            Me.Stats.Expertise.Add(Proficiencies.Skill.Performance);
+            Me.Stats.Expertise.Add(Proficiencies.Skill.SleightOfHand);
+            Me.Stats.Expertise.Add(Proficiencies.Skill.Stealth);
+
+            Me.Stats.Skills.Add(Proficiencies.Skill.Perception);
+            Me.Stats.Skills.Add(Proficiencies.Skill.Performance);
+            Me.Stats.Skills.Add(Proficiencies.Skill.SleightOfHand);
+            Me.Stats.Skills.Add(Proficiencies.Skill.Stealth);
+            Me.Stats.Tools.Add("Thieves' tools");
+
+            Me.Actions.Attack.AttacksPerAction = 1;
+            Me.Actions.Attack.Raging = false;
+        }
     }
 }

@@ -18,6 +18,7 @@ public class Actor : MonoBehaviour
     public Actions Actions { get; set; }
     public Conflict.Alignment Alignment { get; set; }
     public Dialog Dialog { get; set; }
+    public int ExhaustionLevel { get; set; } // TODO: create exhaustion class
     public Faction Faction { get; set; }
     public Health Health { get; set; }
     public Interactable Interactions { get; set; }
@@ -64,19 +65,18 @@ public class Actor : MonoBehaviour
 
         Senses.Darkvision = stat_block.darkvision;
 
-        Stats.ArmorClass = stat_block.armor_class;
-        Stats.AttributeProficiency[Proficiencies.Attribute.Charisma] = stat_block.charisma_proficiency;
-        Stats.AttributeProficiency[Proficiencies.Attribute.Constitution] = stat_block.constituion_proficiency;
-        Stats.AttributeProficiency[Proficiencies.Attribute.Dexterity] = stat_block.dexterity_proficiency;
-        Stats.AttributeProficiency[Proficiencies.Attribute.Intelligence] = stat_block.intelligence_proficiency;
-        Stats.AttributeProficiency[Proficiencies.Attribute.Strength] = stat_block.strength_proficiency;
-        Stats.AttributeProficiency[Proficiencies.Attribute.Wisdom] = stat_block.wisdom_proficiency;
+        Stats.BaseAttributes[Proficiencies.Attribute.Charisma] = stat_block.charisma_proficiency;
+        Stats.BaseAttributes[Proficiencies.Attribute.Constitution] = stat_block.constituion_proficiency;
+        Stats.BaseAttributes[Proficiencies.Attribute.Dexterity] = stat_block.dexterity_proficiency;
+        Stats.BaseAttributes[Proficiencies.Attribute.Intelligence] = stat_block.intelligence_proficiency;
+        Stats.BaseAttributes[Proficiencies.Attribute.Strength] = stat_block.strength_proficiency;
+        Stats.BaseAttributes[Proficiencies.Attribute.Wisdom] = stat_block.wisdom_proficiency;
         Stats.ProficiencyBonus = stat_block.proficiency_bonus;
         Stats.Family = stat_block.family;
         Stats.Size = stat_block.size;
 
-        Actions.ActionsPerRound = stat_block.actions_per_round;
-        Actions.Movement.Speed = stat_block.speed;
+        Actions.Attack.AttacksPerAction = stat_block.multiattack ? 2 : 1;
+        Actions.Movement.BaseSpeed = stat_block.speed;
         Actions.Movement.Agent.speed = stat_block.speed;
         switch (Stats.Size) {
             case "Tiny":
@@ -101,6 +101,8 @@ public class Actor : MonoBehaviour
                 Actions.Movement.ReachedThreshold = 2.5f;
                 break;
         }
+
+        Stats.BaseArmorClass = stat_block.armor_class; // TODO: build up AC from equipment and dex
 
         Health.HitDice = stat_block.hit_dice;
         Health.HitDiceType = stat_block.hit_dice_type;
@@ -139,6 +141,7 @@ public class Actor : MonoBehaviour
         Actions = GetComponentInChildren<Actions>();
         Alignment = Conflict.Alignment.Unaligned;
         Dialog = GetComponent<Dialog>();
+        ExhaustionLevel = 0;
         Health = GetComponent<Health>();
         Interactions = GetComponent<Interactable>();
         Load = new Dictionary<HarvestingNode, int>();
@@ -161,7 +164,6 @@ public class Actor : MonoBehaviour
         public int intelligence_proficiency;
         public int strength_proficiency;
         public int wisdom_proficiency;
-        public int actions_per_round;
         public int armor_class;
         public int hit_dice;
         public int hit_dice_type;
@@ -170,5 +172,6 @@ public class Actor : MonoBehaviour
         public string family;
         public string size;
         public bool darkvision;
+        public bool multiattack;
     }
 }

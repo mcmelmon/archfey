@@ -10,7 +10,7 @@ PrefabInstance:
     - target: {fileID: 3423672708260415315, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
         type: 3}
       propertyPath: m_Name
-      value: Scimitar
+      value: Scimitar Variant
       objectReference: {fileID: 0}
     - target: {fileID: 7470991343841006169, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
         type: 3}
@@ -95,6 +95,16 @@ PrefabInstance:
     - target: {fileID: 6644537527104147697, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
         type: 3}
       propertyPath: is_finese
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6644537527104147697, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
+        type: 3}
+      propertyPath: is_finesse
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6644537527104147697, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
+        type: 3}
+      propertyPath: is_light
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

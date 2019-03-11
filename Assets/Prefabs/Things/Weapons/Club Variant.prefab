@@ -97,5 +97,15 @@ PrefabInstance:
       propertyPath: weapon_name
       value: club
       objectReference: {fileID: 0}
+    - target: {fileID: 6644537527104147697, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
+        type: 3}
+      propertyPath: is_loaded
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6644537527104147697, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
+        type: 3}
+      propertyPath: is_light
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455, type: 3}

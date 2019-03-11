@@ -10,6 +10,7 @@ public class CommandBarOne : MonoBehaviour {
 
     public GameObject player;
     public GameObject attack_action;
+    public GameObject rage_action;
     public GameObject stealth_action;
     public GameObject talk_action;
     public DialogPanel dialog_panel;
@@ -19,6 +20,7 @@ public class CommandBarOne : MonoBehaviour {
     public Button AttackButton { get; set; }
     public static CommandBarOne Instance { get; set; }
     public Actor Me { get; set; }
+    public Button RageButton { get; set; }
     public Button StealthButton { get; set; }
     public Button TalkButton { get; set; }
     
@@ -58,6 +60,16 @@ public class CommandBarOne : MonoBehaviour {
     }
 
 
+    public void Rage()
+    {
+        if (Me.Actions.CanTakeTurn) {
+            if (!Player.Instance.GodOfRage) {
+                Player.Instance.Enrage();
+            }
+        }
+    }
+
+
     public void Sneak()
     {
         if (Me.Actions.CanTakeTurn) {
@@ -85,9 +97,25 @@ public class CommandBarOne : MonoBehaviour {
     {
         while (true) {
             if (Me.Actions != null) {
+                if (Me.Health.CurrentHitPoints == 0) {
+                    Me.Actions.CanTakeTurn = false;
+                    AttackButton.interactable = false;
+                    StealthButton.interactable = false;
+                    TalkButton.interactable = false;
+                    yield return null;
+                }
+
                 if (AttackButton != null) {
                     var interactors = Mouse.SelectedObjects.Where(so => so != null).Select(so => so.GetComponent<Actor>());
                     AttackButton.interactable = interactors.Any() && Me.Actions.CanTakeTurn;
+                }
+
+                if (StealthButton != null) {
+                    StealthButton.GetComponent<Image>().color = Me.Actions.Stealth.Hiding ? Color.black : Color.white;
+                }
+
+                if (RageButton != null) {
+                    RageButton.GetComponent<Image>().color = Player.Instance.GodOfRage ? Color.red : Color.white;
                 }
 
                 if (TalkButton != null && Mouse.HoveredObject != null) {
@@ -103,10 +131,6 @@ public class CommandBarOne : MonoBehaviour {
                         TalkButton.interactable = (hovered_actor != null) ? hovered_actor.Dialog.WithinRange(Me) : selected_actor.Dialog.WithinRange(Me);
                     }
                 }
-
-                if (StealthButton != null) {
-                    StealthButton.GetComponent<Image>().color = Me.Actions.Stealth.Hiding ? Color.black : Color.white;
-                }
             }
             yield return null;
         }
@@ -120,6 +144,7 @@ public class CommandBarOne : MonoBehaviour {
         Me = player.GetComponent<Actor>();
 
         AttackButton = attack_action.GetComponent<Button>();
+        RageButton = rage_action.GetComponent<Button>();
         StealthButton = stealth_action.GetComponent<Button>();
         TalkButton = talk_action.GetComponent<Button>();
     }

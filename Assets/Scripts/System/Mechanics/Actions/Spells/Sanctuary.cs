@@ -91,6 +91,6 @@ public class Sanctuary : MonoBehaviour
         School = Magic.School.Abjuration;
         Tick = 0;
 
-        ChallengeRating = 8 + Me.Stats.ProficiencyBonus + Me.Stats.AttributeProficiency[Proficiencies.Attribute.Wisdom];
+        ChallengeRating = 8 + Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Wisdom);
     }
 }

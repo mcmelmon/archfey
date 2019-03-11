@@ -14,7 +14,7 @@ public class Weapon : MonoBehaviour {
     public Weapons.DamageType damage_type;
     public int expected_damage;
     public bool has_reach;
-    public bool is_finese;
+    public bool is_finesse;
     public bool is_heavy;
     public bool is_light;
     public bool is_loaded;

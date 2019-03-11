@@ -7,14 +7,17 @@ public class Attack : MonoBehaviour
 {
     // properties
 
-    public Actor Me { get; set; }
+    public int AttacksPerAction { get; set; }
     public List<Weapon> AvailableWeapons { get; set; }
     public List<GameObject> AvailableMeleeTargets { get; set; }
     public List<GameObject> AvailableRangedTargets { get; set; }
+    public int CriticalRangeStart { get; set; }
     public GameObject CurrentMeleeTarget { get; set; }
     public GameObject CurrentRangedTarget { get; set; }
     public Weapon EquippedMeleeWeapon { get; set; }
     public Weapon EquippedRangedWeapon { get; set; }
+    public Actor Me { get; set; }
+    public bool Raging { get; set; }
 
 
     // Unity
@@ -33,9 +36,11 @@ public class Attack : MonoBehaviour
     {
         // TODO: attack the PrimaryThreat chosen by Decider, not just one from "available targets" (which is still important for range-finding)
 
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
-        SelectEnemy();
-        StrikeEnemy();
+        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed;
+        for (int i = 0; i < AttacksPerAction; i++) {
+            SelectEnemy();
+            StrikeEnemy();
+        }
     }
 
 
@@ -186,6 +191,7 @@ public class Attack : MonoBehaviour
 
     private void SetComponents()
     {
+        CriticalRangeStart = 20;
         Me = GetComponentInParent<Actor>();
         AvailableMeleeTargets = new List<GameObject>();
         AvailableRangedTargets = new List<GameObject>();
