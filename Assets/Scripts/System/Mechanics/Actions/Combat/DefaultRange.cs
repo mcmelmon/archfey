@@ -75,7 +75,7 @@ public class DefaultRange : MonoBehaviour
     private void CheckAdvantageAndDisadvantage()
     {
         var friends_in_melee = Me.Senses.Actors
-                                 .Where(f => Me.Actions.Decider.IsFriendOrNeutral(f) && Vector3.Distance(transform.position, f.transform.position) < 2f)
+                                 .Where(friend => friend != null && Me.Actions.Decider.IsFriendOrNeutral(friend) && Vector3.Distance(transform.position, friend.transform.position) < 2f)
                                  .ToList();
                                  
         if (Me.Actions.Attack.AvailableMeleeTargets.Count > 0) {

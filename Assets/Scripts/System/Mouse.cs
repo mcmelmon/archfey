@@ -43,6 +43,9 @@ public class Mouse : MonoBehaviour
     private void Update()
     {
         if (Input.GetKeyDown("escape")) {
+            if (HoveredObject != null) 
+                HoveredObject.GetComponent<Renderer>().material = HoveredObject.GetComponent<Interactable>().OriginalMaterial;
+
             for (int i = 0; i < SelectedObjects.Count; i++) {
                 SelectedObjects[i].GetComponent<Renderer>().material = SelectedObjects[i].GetComponent<Interactable>().OriginalMaterial;
             }
@@ -136,7 +139,7 @@ public class Mouse : MonoBehaviour
                         }
                     } else if (Physics.Raycast(ray, out RaycastHit ground_hit, 150f, ground_layer_mask, QueryTriggerInteraction.Ignore)) {
                         ClearSelection();
-                        Player.Instance.Me.Actions.Movement.SetDestination(ground_hit.point);
+                        //Player.Instance.Me.Actions.Movement.SetDestination(ground_hit.point);
                     } else {
                         ClearSelection();
                     }

@@ -39,7 +39,7 @@ public class Faction : MonoBehaviour
 
     public bool IsHostileTo(Faction other_faction)
     {
-        if (other_faction == this) return false;
+        if (other_faction.identifier == identifier) return false;
 
         switch (alignment) {
             case Conflict.Alignment.Evil:

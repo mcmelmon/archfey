@@ -48,8 +48,12 @@ public class CommandBarOne : MonoBehaviour {
         if (Me.Actions.CanTakeTurn) {
             AttackButton.interactable = false;
             Me.Actions.CanTakeTurn = false;
-            Me.Actions.Decider.IdentifyEnemies();
-            Me.Actions.Attack.AttackEnemiesInRange();
+            List<Actor> targets = Mouse.SelectedObjects.Select(so => so.GetComponent<Actor>()).ToList();
+            if (targets.Any()) {
+                Me.Actions.Decider.Enemies.Add(targets.First());
+                Me.Actions.Attack.SetEnemyRanges();
+                Me.Actions.Attack.AttackEnemiesInRange();
+            } 
         }
     }
 
@@ -82,14 +86,18 @@ public class CommandBarOne : MonoBehaviour {
         while (true) {
             if (Me.Actions != null) {
                 if (AttackButton != null) {
-                    var interactors = Mouse.SelectedObjects.Select(so => so.GetComponent<Actor>());
+                    var interactors = Mouse.SelectedObjects.Where(so => so != null).Select(so => so.GetComponent<Actor>());
                     AttackButton.interactable = interactors.Any() && Me.Actions.CanTakeTurn;
                 }
 
-                if (TalkButton != null) {
+                if (TalkButton != null && Mouse.HoveredObject != null) {
                     TalkButton.interactable = false;
                     Actor hovered_actor = Mouse.HoveredObject?.GetComponent<Actor>();
-                    Actor selected_actor = (Mouse.SelectedObjects.Count == 1) ? Mouse.SelectedObjects.First().GetComponent<Actor>() : null;
+                    Actor selected_actor = null;
+
+                    if (Mouse.SelectedObjects.Count == 1 && Mouse.SelectedObjects.First() != null) {
+                        selected_actor = Mouse.SelectedObjects.First().GetComponent<Actor>();
+                    }
 
                     if (hovered_actor != null || selected_actor != null) {
                         TalkButton.interactable = (hovered_actor != null) ? hovered_actor.Dialog.WithinRange(Me) : selected_actor.Dialog.WithinRange(Me);

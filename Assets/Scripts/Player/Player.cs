@@ -136,7 +136,7 @@ public class Player : MonoBehaviour {
 
         Me.Health.SetCurrentAndMaxHitPoints();
 
-        Me.Actions.Attack.AvailableWeapons = new List<Weapon>() {  };
+        Me.Actions.Attack.AvailableWeapons = new List<Weapon>() { Weapons.Instance.GetWeaponNamed("lost_eye_axe") };
         Me.Actions.Attack.EquipMeleeWeapon();
         Me.Actions.Attack.EquipRangedWeapon();
         Me.Senses.Darkvision = true;

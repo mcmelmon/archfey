@@ -44,11 +44,10 @@ public class Gnoll : MonoBehaviour
     public void OnHostileStructuresSighted()
     {
         if (Me.Actions.Decider.HostileStructures.Count > 0) {
-            Collider _collider = Me.Actions.Decider.HostileStructures[Random.Range(0, Me.Actions.Decider.HostileStructures.Count)].GetComponent<Collider>();
-            Vector3 destination = _collider.ClosestPointOnBounds(transform.position);
-
-            Me.Actions.Movement.SetDestination(Me.Actions.Decider.HostileStructures[Random.Range(0, Me.Actions.Decider.HostileStructures.Count)].transform);
+            Structure target = Me.Actions.Decider.HostileStructures[Random.Range(0, Me.Actions.Decider.HostileStructures.Count)];
+            Me.Actions.Movement.SetDestination(target.GetInteractionPoint(Me));
         }
+
         Me.Actions.Attack.AttackEnemiesInRange();
     }
 

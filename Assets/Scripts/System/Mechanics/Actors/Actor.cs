@@ -42,6 +42,14 @@ public class Actor : MonoBehaviour
     // public
 
 
+    public Vector3 GetInteractionPoint(Actor other_unit)
+    {
+        Vector3 toward_approach = (other_unit.transform.position - transform.position).normalized * (Me.Actions.Movement.ReachedThreshold + other_unit.Actions.Movement.ReachedThreshold);
+
+        return GetComponent<Collider>().ClosestPointOnBounds(other_unit.transform.position) + toward_approach;
+    }
+
+
     public IEnumerator GetStatsFromServer(string name)
     {
         UnityWebRequest www = UnityWebRequest.Get("http://localhost:3000/stat_blocks/" + name + ".json");
@@ -72,16 +80,16 @@ public class Actor : MonoBehaviour
         Actions.Movement.Agent.speed = stat_block.speed;
         switch (Stats.Size) {
             case "Tiny":
-                Actions.Movement.ReachedThreshold = 0.5f;
-                break;
-            case "Small":
-                Actions.Movement.ReachedThreshold = 1f;
-                break;
-            case "Medium":
                 Actions.Movement.ReachedThreshold = 1.5f;
                 break;
+            case "Small":
+                Actions.Movement.ReachedThreshold = 2f;
+                break;
+            case "Medium":
+                Actions.Movement.ReachedThreshold = 2.5f;
+                break;
             case "Large":
-                Actions.Movement.ReachedThreshold = 3f;
+                Actions.Movement.ReachedThreshold = 4f;
                 break;
             case "Huge":
                 Actions.Movement.ReachedThreshold = 5f;
@@ -90,7 +98,7 @@ public class Actor : MonoBehaviour
                 Actions.Movement.ReachedThreshold = 8f;
                 break;
             default:
-                Actions.Movement.ReachedThreshold = 1.5f;
+                Actions.Movement.ReachedThreshold = 2.5f;
                 break;
         }
 
@@ -115,11 +123,11 @@ public class Actor : MonoBehaviour
     }
 
 
-    public Vector3 MoveToInteractionPoint(Actor other_actor)
+    public float SeparationFrom(Actor other_unit)
     {
-        Vector3 toward_approach = (other_actor.transform.position - transform.position).normalized * (Me.Actions.Movement.ReachedThreshold + other_actor.Actions.Movement.ReachedThreshold);
-
-        return GetComponent<Collider>().ClosestPointOnBounds(other_actor.transform.position) + toward_approach;
+        Vector3 their_interaction_point = other_unit.GetInteractionPoint(Me);
+        float separation = Vector3.Distance(transform.position, their_interaction_point) - Me.Actions.Movement.ReachedThreshold;
+        return separation;
     }
 
 

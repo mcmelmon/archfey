@@ -86,11 +86,10 @@ public class Movement : MonoBehaviour
 
     public IEnumerator TrackUnit(Actor unit)
     {
-        float separation = Vector3.Distance(transform.position, unit.transform.position);
         int count = 0;
 
-        while (unit != null && count < Turn.ActionThreshold && separation > ReachedThreshold) {
-            SetDestination(unit.MoveToInteractionPoint(Me));
+        while (unit != null && count < Turn.ActionThreshold) {
+            SetDestination(unit.GetInteractionPoint(Me));
             count++;
             yield return new WaitForSeconds(1);
         }

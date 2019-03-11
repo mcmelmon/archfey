@@ -67,6 +67,12 @@ public class Structure : MonoBehaviour
     }
 
 
+    public Vector3 GetInteractionPoint(Actor other_unit)
+    {
+        return GetComponent<Collider>().ClosestPointOnBounds(other_unit.transform.position);
+    }
+
+
     public void LoseStructure(int amount, Weapons.DamageType type)
     {
         if (CurrentHitPoints == 0) return;
