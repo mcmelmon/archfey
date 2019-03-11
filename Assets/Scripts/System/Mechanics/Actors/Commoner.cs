@@ -340,7 +340,7 @@ public class Commoner : MonoBehaviour
 
     private void SetAdditionalStats()
     {
-        Me.Actions.Attack.AvailableWeapons = Characters.available_weapons[Characters.Template.Commoner];
+        Me.Actions.Attack.AvailableWeapons = new List<Weapon>() { Weapons.Instance.GetWeaponNamed("club") };
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
     }
 

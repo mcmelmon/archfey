@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Goblin : MonoBehaviour
+public class Bugbear : MonoBehaviour
 {
     // properties
 
@@ -59,11 +60,15 @@ public class Goblin : MonoBehaviour
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
         Me.Actions.SheathWeapon();
 
-        if (Me.Route.local_stops.Length > 1) {
+        if (Me.Route.local_stops.Length > 1)
+        {
             Me.Route.MoveToNextPosition();
-        } else {
+        }
+        else
+        {
             List<Objective> objectives = FindObjectsOfType<Objective>().Where(objective => objective.Claim == Conflict.Instance.EnemyFaction(Me)).ToList();
-            if (objectives.Count > 0) {
+            if (objectives.Count > 0)
+            {
                 Objective next_objective = objectives[Random.Range(0, objectives.Count)];
                 Me.Actions.Movement.SetDestination(next_objective.claim_nodes[0].transform);
             }
@@ -141,7 +146,7 @@ public class Goblin : MonoBehaviour
     private void SetAdditionalStats()
     {
 
-        Me.Actions.Attack.AvailableWeapons = new List<Weapon>() { Weapons.Instance.GetWeaponNamed("club") };
+        Me.Actions.Attack.AvailableWeapons = new List<Weapon>() { Weapons.Instance.GetWeaponNamed("morningstar"), Weapons.Instance.GetWeaponNamed("javelin") };
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
     }
 }

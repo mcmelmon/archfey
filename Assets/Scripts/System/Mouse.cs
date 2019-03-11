@@ -9,7 +9,6 @@ public class Mouse : MonoBehaviour
     // Inspector settings
 
     public float double_click_delay;
-    public bool first_person = true;
 
     // properties
 
@@ -36,7 +35,7 @@ public class Mouse : MonoBehaviour
     void Start()
     {
         StartCoroutine(Hover());
-        if (first_person) StartCoroutine(Look());
+        //StartCoroutine(Look()); // for first person...
         StartCoroutine(Select());
     }
 
@@ -86,6 +85,8 @@ public class Mouse : MonoBehaviour
 
     private IEnumerator Look()
     {
+        // For first person...
+
         Transform character = Player.Instance.Me.transform;
         Vector2 mouse_look = Vector2.zero;
         Vector2 smooth_v = Vector2.zero;

@@ -14,7 +14,6 @@ public class Player : MonoBehaviour {
 
     public static Player Instance { get; set; }
     public Inventory Inventory { get; set; }
-    public bool IsThirdPerson { get; set; }
     public Actor Me { get; set; }
 
     // Unity
@@ -29,7 +28,6 @@ public class Player : MonoBehaviour {
         }
         Instance = this;
         Inventory = GetComponent<Inventory>();
-        IsThirdPerson = false;
     }
 
 
@@ -62,18 +60,14 @@ public class Player : MonoBehaviour {
     private IEnumerator AdjustCameraDistance()
     {
         while (true) {
-            if (IsThirdPerson)
+            float proximity = Input.GetAxis("Mouse ScrollWheel") * 30f;
+            if (!Mathf.Approximately(proximity, 0f))
             {
-                float proximity = Input.GetAxis("Mouse ScrollWheel") * 30f;
-                if (!Mathf.Approximately(proximity, 0f))
-                {
-                    CinemachineFreeLook.Orbit[] orbits = viewport.m_Orbits;
-                    for (int i = 0; i < orbits.Length; i++)
-                    {
-                        float orbit = orbits[i].m_Radius;
-                        orbit -= Mathf.Lerp(0, proximity, Time.deltaTime * 5f);
-                        orbits[i].m_Radius = Mathf.Clamp(orbit, 2f, 50f);
-                    }
+                CinemachineFreeLook.Orbit[] orbits = viewport.m_Orbits;
+                for (int i = 0; i < orbits.Length; i++) {
+                    float orbit = orbits[i].m_Radius;
+                    orbit -= Mathf.Lerp(0, proximity, Time.deltaTime * 5f);
+                    orbits[i].m_Radius = Mathf.Clamp(orbit, 2f, 50f);
                 }
             }
 
@@ -86,9 +80,11 @@ public class Player : MonoBehaviour {
     {
         while (true) {
             float translation = Input.GetAxis("Vertical") * speed * Time.deltaTime;
-            float straffe = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
+            float straffe = Input.GetAxis("Straffe") * speed * Time.deltaTime;
+            float rotation = Input.GetAxis("Horizontal") * 60f * Time.deltaTime;
 
             transform.Translate(straffe, 0, translation);
+            transform.Rotate(0, rotation, 0);
 
             if (Me.IsGrounded() && Input.GetKeyDown(KeyCode.Space))
             {
@@ -140,7 +136,7 @@ public class Player : MonoBehaviour {
 
         Me.Health.SetCurrentAndMaxHitPoints();
 
-        Me.Actions.Attack.AvailableWeapons = Characters.available_weapons[Characters.Template.Player];
+        Me.Actions.Attack.AvailableWeapons = new List<Weapon>() {  };
         Me.Actions.Attack.EquipMeleeWeapon();
         Me.Actions.Attack.EquipRangedWeapon();
         Me.Senses.Darkvision = true;

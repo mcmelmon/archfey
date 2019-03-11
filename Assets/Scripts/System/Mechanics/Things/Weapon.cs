@@ -6,6 +6,7 @@ public class Weapon : MonoBehaviour {
 
     // Inspector settings
 
+    public string weapon_name;
     public int attack_bonus;
     public int damage_bonus;
     public int dice_type;

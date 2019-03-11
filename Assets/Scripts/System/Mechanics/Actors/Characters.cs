@@ -51,7 +51,6 @@ public class Characters : MonoBehaviour
     public void GenerateStats()
     {
         BaseCharacterTemplate();
-        CreatureTemplates();
     }
 
 
@@ -60,8 +59,6 @@ public class Characters : MonoBehaviour
 
     private static void BaseCharacterTemplate()
     {
-        darkvision_range[Template.Base] = 0f;
-        perception_range[Template.Base] = 20f;
         resistances[Template.Base] = new Dictionary<Weapons.DamageType, int>
         {
             [Weapons.DamageType.Acid] = 0,
@@ -78,23 +75,5 @@ public class Characters : MonoBehaviour
             [Weapons.DamageType.Slashing] = 0,
             [Weapons.DamageType.Thunder] = 0
         };
-    }
-
-
-    private static void CreatureTemplates()
-    {
-        // Commoner
-        available_weapons[Template.Commoner] = new List<Weapon>() { Weapons.Instance.club_prefab };
-
-        // Gnoll
-        darkvision_range[Template.Gnoll] = 10f;
-        available_weapons[Template.Gnoll] = new List<Weapon>() { Weapons.Instance.longbow_prefab, Weapons.Instance.spear_prefab };
-
-        //Guard
-        available_weapons[Template.Guard] = new List<Weapon>() { Weapons.Instance.longbow_prefab, Weapons.Instance.spear_prefab };
-
-        // Player
-        darkvision_range[Template.Player] = 10f;
-        available_weapons[Template.Player] = new List<Weapon>() { Weapons.Instance.longbow_prefab, Weapons.Instance.spear_prefab };
     }
 }

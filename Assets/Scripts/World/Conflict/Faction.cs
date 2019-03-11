@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Faction : MonoBehaviour
 {
+    public enum Identifier { Player, Cannerywogs, Tetrarch };
+
     [Serializable]
     public struct FactionUnit {
         public string name;
@@ -12,11 +14,11 @@ public class Faction : MonoBehaviour
     }
 
     // Inspector settings
-    public string faction_name;
+    public Identifier identifier;
     public Conflict.Alignment alignment;
-    public List<string> allied_factions;
-    public List<string> rival_factions;
-    public List<FactionUnit> faction_units;
+    public List<Identifier> allies;
+    public List<Identifier> rivals;
+    public List<FactionUnit> units;
 
     // properties
 
@@ -41,11 +43,11 @@ public class Faction : MonoBehaviour
 
         switch (alignment) {
             case Conflict.Alignment.Evil:
-                return !allied_factions.Any() && !allied_factions.Contains(other_faction.name);
+                return !allies.Any() && !allies.Contains(other_faction.identifier);
             case Conflict.Alignment.Good:
-                return other_faction.alignment == Conflict.Alignment.Evil || rival_factions.Any() && rival_factions.Contains(other_faction.name);
+                return other_faction.alignment == Conflict.Alignment.Evil || rivals.Any() && rivals.Contains(other_faction.identifier);
             case Conflict.Alignment.Neutral:
-                return rival_factions.Any() && rival_factions.Contains(other_faction.name);
+                return rivals.Any() && rivals.Contains(other_faction.identifier);
             case Conflict.Alignment.Unaligned:
                 return true;
         }
@@ -149,7 +151,7 @@ public class Faction : MonoBehaviour
 
     private Actor Spawn(Structure.Purpose purpose, Vector3 location)
     {
-        GameObject prefab = faction_units.First(unit => unit.name == purpose.ToString()).prefab;
+        GameObject prefab = units.First(unit => unit.name == purpose.ToString()).prefab;
         GameObject new_unit = Instantiate(prefab, location, prefab.transform.rotation);
         new_unit.transform.parent = FindObjectOfType<Characters>().gameObject.transform;
         Actor actor = new_unit.GetComponent<Actor>();

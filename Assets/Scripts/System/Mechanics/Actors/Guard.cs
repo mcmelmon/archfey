@@ -153,7 +153,7 @@ public class Guard : MonoBehaviour
 
     private void SetAdditionalStats()
     {
-        Me.Actions.Attack.AvailableWeapons = Characters.available_weapons[Characters.Template.Guard];
+        Me.Actions.Attack.AvailableWeapons = new List<Weapon>() { Weapons.Instance.GetWeaponNamed("longbow"), Weapons.Instance.GetWeaponNamed("spear") };
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
 
         Me.Stats.Skills.Add(Proficiencies.Skill.Perception);
