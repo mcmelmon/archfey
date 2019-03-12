@@ -67,16 +67,6 @@ public class Player : MonoBehaviour {
     }
 
 
-    public void Unrage()
-    {
-        GodOfRage = false;
-        SetSkills();
-        Me.Health.TemporaryHitPoints = 0;
-        Me.Actions.Movement.SpeedAdjustment -= Me.Actions.Movement.SpeedAdjustment;
-        Me.Actions.Movement.SpeedAdjustment = 0;
-        Me.ExhaustionLevel++;
-    }
-
     // private
 
 
@@ -101,10 +91,10 @@ public class Player : MonoBehaviour {
 
     private IEnumerator GodOfRageCountdown()
     {
-        int tick = 0;
+        Me.Stats.RageTick = 0;
 
-        while (GodOfRage && tick < 60) {
-            tick++;
+        while (GodOfRage && Me.Stats.RageTick < Me.Stats.RageDuration) {
+            Me.Stats.RageTick++;
             yield return new WaitForSeconds(1);
         }
 
@@ -119,15 +109,19 @@ public class Player : MonoBehaviour {
             float straffe = Input.GetAxis("Straffe") * speed * Time.deltaTime;
             float rotation = Input.GetAxis("Horizontal") * 60f * Time.deltaTime;
 
+            if (Mathf.Approximately(0, translation) && Mathf.Approximately(0, straffe) && Mathf.Approximately(0, rotation)) {
+                Me.Actions.Movement.NonAgentMovement = false;
+                yield return null;
+            }
+
+            Me.Actions.Movement.NonAgentMovement = true;
+
             transform.Translate(straffe, 0, translation);
             transform.Rotate(0, rotation, 0);
 
-            if (Me.IsGrounded() && Input.GetKeyDown(KeyCode.Space))
-            {
+            if (Me.IsGrounded() && Input.GetKeyDown(KeyCode.Space)) {
                 Me.Actions.Movement.Jump();
             }
-
-            if (Input.GetKeyDown("escape")) Cursor.lockState = CursorLockMode.None;
 
             yield return null;
         }
@@ -244,5 +238,17 @@ public class Player : MonoBehaviour {
             Me.Actions.Attack.AttacksPerAction = 1;
             Me.Actions.Attack.Raging = false;
         }
+    }
+
+
+    private void Unrage()
+    {
+        GodOfRage = false;
+        SetSkills();
+        Me.Health.ClearTemporaryHitPoints();
+        Me.Actions.Movement.SpeedAdjustment -= Me.Actions.Movement.SpeedAdjustment;
+        Me.Actions.Movement.SpeedAdjustment = 0;
+        Me.Actions.SheathWeapon();
+        Me.ExhaustionLevel++;
     }
 }

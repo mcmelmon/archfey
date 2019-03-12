@@ -125,7 +125,7 @@ public class DefaultRange : MonoBehaviour
     private void SetModifiers()
     {
         AttackModifier = Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + Weapon.attack_bonus;
-        DamageModifier = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + Weapon.damage_bonus;
+        DamageModifier = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + Weapon.damage_bonus + Me.Actions.Attack.CalculateAdditionalDamage(true);
     }
 
 

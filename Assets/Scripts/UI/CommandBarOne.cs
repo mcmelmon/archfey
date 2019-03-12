@@ -105,6 +105,20 @@ public class CommandBarOne : MonoBehaviour {
                     yield return null;
                 }
 
+                if (Player.Instance.GodOfRage) {
+                    RageButton.gameObject.SetActive(false);
+                    StealthButton.gameObject.SetActive(false);
+                    TalkButton.gameObject.SetActive(false);
+                } else {
+                    if (Me.ExhaustionLevel == 0) {
+                        RageButton.gameObject.SetActive(true);
+                    } else {
+                        RageButton.gameObject.SetActive(false);
+                    }
+                    StealthButton.gameObject.SetActive(true);
+                    TalkButton.gameObject.SetActive(true);
+                }
+
                 if (AttackButton != null) {
                     var interactors = Mouse.SelectedObjects.Where(so => so != null).Select(so => so.GetComponent<Actor>());
                     AttackButton.interactable = interactors.Any() && Me.Actions.CanTakeTurn;

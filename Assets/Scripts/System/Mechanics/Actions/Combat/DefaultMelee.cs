@@ -122,10 +122,10 @@ public class DefaultMelee : MonoBehaviour
     {
         if (Weapon.is_finesse) {
             AttackModifier = Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + Weapon.attack_bonus;
-            DamageModifier = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + Weapon.damage_bonus;
+            DamageModifier = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + Weapon.damage_bonus + Me.Actions.Attack.CalculateAdditionalDamage(false);
         } else {
             AttackModifier = Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) + Weapon.attack_bonus;
-            DamageModifier = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) + Weapon.damage_bonus;
+            DamageModifier = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) + Weapon.damage_bonus + Me.Actions.Attack.CalculateAdditionalDamage(false);
         }
     }
 }

@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Bugbear : MonoBehaviour
+public class Ogre : MonoBehaviour
 {
     // properties
 
@@ -23,8 +22,7 @@ public class Bugbear : MonoBehaviour
 
     public int AdditionalDamage(bool is_ranged)
     {
-        int additional_damage = Me.Actions.Attack.HasSurprise ? Me.Actions.RollDie(6, 2) : 0;
-        return is_ranged ? additional_damage : additional_damage + Me.Actions.RollDie(Me.Actions.Attack.EquippedMeleeWeapon.dice_type, 1);
+        return is_ranged ? Me.Actions.RollDie(Me.Actions.Attack.EquippedRangedWeapon.dice_type, 1) : Me.Actions.RollDie(Me.Actions.Attack.EquippedMeleeWeapon.dice_type, 1);
     }
 
 
@@ -152,7 +150,7 @@ public class Bugbear : MonoBehaviour
     private void SetAdditionalStats()
     {
 
-        Me.Actions.Attack.AvailableWeapons = new List<Weapon>() { Weapons.Instance.GetWeaponNamed("morningstar"), Weapons.Instance.GetWeaponNamed("javelin") };
+        Me.Actions.Attack.AvailableWeapons = new List<Weapon>() { Weapons.Instance.GetWeaponNamed("greatclub"), Weapons.Instance.GetWeaponNamed("javelin") };
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
         Me.Actions.Attack.CalculateAdditionalDamage = AdditionalDamage;
     }

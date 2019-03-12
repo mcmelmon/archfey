@@ -15,6 +15,7 @@ public class Movement : MonoBehaviour
     public Dictionary<CommonDestination, Vector3> Destinations { get; set; }
     public bool IsJumping { get; set; }
     public float JumpVelocity { get; set; }
+    public bool NonAgentMovement { get; set; }
     public float ReachedThreshold { get; set; }
     public float SpeedAdjustment { get; set; }
 
@@ -47,9 +48,7 @@ public class Movement : MonoBehaviour
 
     public bool InProgress()
     {
-        Vector3 height_adjusted_destination = new Vector3(Agent.destination.x, transform.position.y, Agent.destination.z);
-        float separation = Vector3.Distance(transform.position, height_adjusted_destination);
-        return Agent.hasPath && separation >= ReachedThreshold;
+        return Agent.hasPath && Agent.velocity != Vector3.zero && !NonAgentMovement;
     }
 
 

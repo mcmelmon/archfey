@@ -8,7 +8,8 @@ public class Stats : MonoBehaviour
     // Inspector settings
 
     public Slider health_bar;
-    public Slider mana_bar;
+    public Slider temporary_health_bar;
+    public Slider rage_bar;
     public Transform stat_bars;
 
     // properties
@@ -22,9 +23,11 @@ public class Stats : MonoBehaviour
     public int BaseArmorClass { get; set; } // TODO: build up AC from equipment and dex
     public Dictionary<Proficiencies.Attribute, int> AttributeAdjustments { get; set; }
     public Dictionary<Proficiencies.Attribute, int> BaseAttributes { get; set; }
+    public List<Proficiencies.Skill> Expertise { get; set; }
+    public float RageDuration { get; set; }
+    public float RageTick { get; set; }
     public Dictionary<Weapons.DamageType, int> Resistances { get; set; }
     public int ProficiencyBonus { get; set; }
-    public List<Proficiencies.Skill> Expertise { get; set; }
     public List<Proficiencies.Attribute> SavingThrows { get; set; }
     public List<Proficiencies.Skill> Skills { get; set; }
     public List<string> Tools { get; set; }
@@ -74,16 +77,12 @@ public class Stats : MonoBehaviour
 
     public void UpdateStatBars()
     {
-        if (mana_bar != null)
-        {
-            mana_bar.value = CurrentManaPercentage();
-            if (mana_bar.value >= 1)
-            {
-                mana_bar.gameObject.SetActive(false);
-            }
-            else
-            {
-                mana_bar.gameObject.SetActive(true);
+        if (rage_bar != null) {
+            rage_bar.value = CurrentRagePercentage();
+            if (rage_bar.value >= 1) {
+                rage_bar.gameObject.SetActive(false);
+            } else {
+                rage_bar.gameObject.SetActive(true);
             }
         }
 
@@ -95,15 +94,24 @@ public class Stats : MonoBehaviour
                 health_bar.gameObject.SetActive(true);
             }
         }
+
+        if (temporary_health_bar != null) {
+            temporary_health_bar.value = Me.Health.CurrentTemporaryHealthPercentage();
+            if (temporary_health_bar.value < 0.05f) {
+                temporary_health_bar.gameObject.SetActive(false);
+            } else {
+                temporary_health_bar.gameObject.SetActive(true);
+            }
+        }
     }
 
 
     // private
 
 
-    public float CurrentManaPercentage()
+    public float CurrentRagePercentage()
     {
-        return 1;
+        return Me.Actions.Attack.Raging ? 1 - (RageTick / RageDuration) : 0;
     }
 
 
@@ -138,6 +146,7 @@ public class Stats : MonoBehaviour
         ClassFeatures = new List<string>();
         Expertise = new List<Proficiencies.Skill>();
         Level = 1;
+        RageDuration = 60;
         SavingThrows = new List<Proficiencies.Attribute>();
         Skills = new List<Proficiencies.Skill>();
         Tools = new List<string>();

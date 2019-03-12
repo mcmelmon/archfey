@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -11,11 +11,13 @@ public class Attack : MonoBehaviour
     public List<Weapon> AvailableWeapons { get; set; }
     public List<GameObject> AvailableMeleeTargets { get; set; }
     public List<GameObject> AvailableRangedTargets { get; set; }
+    public AdditionalDamage CalculateAdditionalDamage { get; set; }
     public int CriticalRangeStart { get; set; }
     public GameObject CurrentMeleeTarget { get; set; }
     public GameObject CurrentRangedTarget { get; set; }
     public Weapon EquippedMeleeWeapon { get; set; }
     public Weapon EquippedRangedWeapon { get; set; }
+    public bool HasSurprise { get; set; }
     public Actor Me { get; set; }
     public bool Raging { get; set; }
 
@@ -32,6 +34,9 @@ public class Attack : MonoBehaviour
     // public
 
 
+    public delegate int AdditionalDamage(bool is_ranged);
+
+
     public void AttackEnemiesInRange()
     {
         // TODO: attack the PrimaryThreat chosen by Decider, not just one from "available targets" (which is still important for range-finding)
@@ -41,6 +46,12 @@ public class Attack : MonoBehaviour
             SelectEnemy();
             StrikeEnemy();
         }
+    }
+
+
+    public int DefaultAdditionalDamage(bool is_ranged)
+    {
+        return 0;
     }
 
 
@@ -191,6 +202,7 @@ public class Attack : MonoBehaviour
 
     private void SetComponents()
     {
+        CalculateAdditionalDamage = DefaultAdditionalDamage;
         CriticalRangeStart = 20;
         Me = GetComponentInParent<Actor>();
         AvailableMeleeTargets = new List<GameObject>();

@@ -42,18 +42,28 @@ public class Health : MonoBehaviour {
     }
 
 
+    public void ClearTemporaryHitPoints()
+    {
+        CurrentTemporaryHitPoints = TemporaryHitPoints = 0;
+    }
+
+
     public float CurrentHealthPercentage()
     {
-        return EffectiveHitPoints() / (float)(MaximumHitPoints + TemporaryHitPoints);
+        return Mathf.Approximately(0, MaximumHitPoints) ? 0 : (float)CurrentHitPoints / (float)MaximumHitPoints;
+    }
+
+
+    public float CurrentTemporaryHealthPercentage()
+    {
+        return Mathf.Approximately(0, TemporaryHitPoints) ? 0 : (float)CurrentTemporaryHitPoints / (float)TemporaryHitPoints;
     }
 
 
     public void GainTemporaryHitPoints(int amount)
     {
         if (CurrentTemporaryHitPoints < amount) {
-            StopCoroutine(ExpireTemporaryHitPoints());
             CurrentTemporaryHitPoints = TemporaryHitPoints = amount;
-            StartCoroutine(ExpireTemporaryHitPoints());
         }
     }
 
@@ -64,6 +74,7 @@ public class Health : MonoBehaviour {
             CurrentTemporaryHitPoints -= Mathf.RoundToInt(amount);
         } else {
             amount -= CurrentTemporaryHitPoints;
+            CurrentTemporaryHitPoints = 0;
             if (amount > 0) {
                 CurrentHitPoints -= Mathf.RoundToInt(amount);
                 if (attacker != null) {
@@ -101,26 +112,6 @@ public class Health : MonoBehaviour {
     public void SetCurrentAndMaxHitPoints()
     {
         CurrentHitPoints = MaximumHitPoints = Mathf.RoundToInt((Me.Stats.BaseAttributes[Proficiencies.Attribute.Constitution] * HitDice) + (HitDice * (HitDiceType / 2f) + 1) + HitDice/2f);
-    }
-
-
-    // private
-
-
-    private float EffectiveHitPoints()
-    {
-        return (float)(CurrentHitPoints + CurrentTemporaryHitPoints);
-    }
-
-
-    private IEnumerator ExpireTemporaryHitPoints()
-    {
-        int tick = 0;
-
-        while (TemporaryHitPoints > 0 && tick < 10) {
-            tick++;
-            yield return new WaitForSeconds(Turn.ActionThreshold);
-        }
-        TemporaryHitPoints = 0;
+        CurrentTemporaryHitPoints = TemporaryHitPoints = 0;
     }
 }
