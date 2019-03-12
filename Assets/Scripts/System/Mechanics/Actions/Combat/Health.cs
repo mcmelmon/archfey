@@ -9,9 +9,11 @@ public class Health : MonoBehaviour {
 
     public Actor Me { get; set; }
     public int CurrentHitPoints { get; set; }
+    public int CurrentTemporaryHitPoints { get; set; }
     public int HitDice { get; set; }
     public int HitDiceType { get; set; }
     public int MaximumHitPoints { get; set; }
+    public int TemporaryHitPoints { get; set; }
 
 
     // Unity
@@ -20,6 +22,7 @@ public class Health : MonoBehaviour {
     private void Awake()
     {
         Me = GetComponent<Actor>();
+        CurrentTemporaryHitPoints = TemporaryHitPoints = 0;
     }
 
 
@@ -39,12 +42,47 @@ public class Health : MonoBehaviour {
     }
 
 
-    public void LoseHealth(float amount, Actor _attacker = null)
+    public void ClearTemporaryHitPoints()
     {
-        CurrentHitPoints -= Mathf.RoundToInt(amount);
-        if (_attacker != null) {
-            Me.Actions.Decider.Threat.AddThreat(_attacker, amount);
+        CurrentTemporaryHitPoints = TemporaryHitPoints = 0;
+    }
+
+
+    public float CurrentHealthPercentage()
+    {
+        return Mathf.Approximately(0, MaximumHitPoints) ? 0 : (float)CurrentHitPoints / (float)MaximumHitPoints;
+    }
+
+
+    public float CurrentTemporaryHealthPercentage()
+    {
+        return Mathf.Approximately(0, TemporaryHitPoints) ? 0 : (float)CurrentTemporaryHitPoints / (float)TemporaryHitPoints;
+    }
+
+
+    public void GainTemporaryHitPoints(int amount)
+    {
+        if (CurrentTemporaryHitPoints < amount) {
+            CurrentTemporaryHitPoints = TemporaryHitPoints = amount;
         }
+    }
+
+
+    public void LoseHealth(float amount, Actor attacker = null)
+    {
+        if (CurrentTemporaryHitPoints > amount) {
+            CurrentTemporaryHitPoints -= Mathf.RoundToInt(amount);
+        } else {
+            amount -= CurrentTemporaryHitPoints;
+            CurrentTemporaryHitPoints = 0;
+            if (amount > 0) {
+                CurrentHitPoints -= Mathf.RoundToInt(amount);
+                if (attacker != null) {
+                    Me.Actions.Decider.Threat.AddThreat(attacker, amount);
+                }
+            }
+        }
+
         Me.Stats.UpdateStatBars();
     }
 
@@ -62,7 +100,7 @@ public class Health : MonoBehaviour {
 
     public bool Persist()
     {
-        if (CurrentHitPoints <= 0) {
+        if (CurrentHitPoints <= 0 && Me != Player.Instance.Me) {
             Destroy(gameObject);
             return false;
         }
@@ -73,15 +111,7 @@ public class Health : MonoBehaviour {
 
     public void SetCurrentAndMaxHitPoints()
     {
-        CurrentHitPoints = MaximumHitPoints = Mathf.RoundToInt((Me.Stats.AttributeProficiency[Proficiencies.Attribute.Constitution] * HitDice) + (HitDice * HitDiceType / 2f) + 1);
-    }
-
-
-    // private
-
-
-    public float CurrentHealthPercentage()
-    {
-        return (float)CurrentHitPoints / (float)MaximumHitPoints;
+        CurrentHitPoints = MaximumHitPoints = Mathf.RoundToInt((Me.Stats.BaseAttributes[Proficiencies.Attribute.Constitution] * HitDice) + (HitDice * (HitDiceType / 2f) + 1) + HitDice/2f);
+        CurrentTemporaryHitPoints = TemporaryHitPoints = 0;
     }
 }

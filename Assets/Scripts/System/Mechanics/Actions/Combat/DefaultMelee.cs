@@ -73,10 +73,12 @@ public class DefaultMelee : MonoBehaviour
     private void CheckAdvantageAndDisadvantage()
     {
         var friends_in_melee = Me.Senses.Actors
-                                 .Where(f => Me.Actions.Decider.IsFriendOrNeutral(f) && Vector3.Distance(transform.position, f.transform.position) < 2f)
+                                 .Where(friend => friend != null && Me.Actions.Decider.IsFriendOrNeutral(friend) && Vector3.Distance(transform.position, friend.transform.position) < 2f)
                                  .ToList();
 
         Advantage |= friends_in_melee.Count > Me.Actions.Attack.AvailableMeleeTargets.Count;
+
+        // TODO: calculate disadvantage (e.g. can't see, restrained, etc)
     }
 
 
@@ -93,14 +95,12 @@ public class DefaultMelee : MonoBehaviour
         Actor target_actor = Target.GetComponent<Actor>();
         Structure target_structure = Target.GetComponent<Structure>();
 
-        int roll = Advantage && !Disadvantage
-            ? Mathf.Max(Random.Range(1, 21), Random.Range(1, 21))
-            : !Advantage && Disadvantage ? Mathf.Min(Random.Range(1, 21), Random.Range(1, 21)) : Random.Range(1, 21);
+        int roll = Me.Actions.RollDie(20, 1, Advantage, Disadvantage);
 
-        if (roll == 20) Critical = true;
+        if (roll >= Me.Actions.Attack.CriticalRangeStart) Critical = true;
 
         if (target_actor != null) {
-            return roll + AttackModifier > target_actor.Actions.Stats.ArmorClass;
+            return roll + AttackModifier > target_actor.Actions.Stats.BaseArmorClass;
         } else if (target_structure != null) {
             return roll + AttackModifier > target_structure.armor_class;
         }
@@ -120,12 +120,12 @@ public class DefaultMelee : MonoBehaviour
 
     private void SetModifiers()
     {
-        if (Weapon.is_light) {
-            AttackModifier = Me.Stats.AttributeProficiency[Proficiencies.Attribute.Dexterity] + Weapon.attack_bonus;
-            DamageModifier = Me.Stats.AttributeProficiency[Proficiencies.Attribute.Dexterity] + Weapon.damage_bonus;
+        if (Weapon.is_finesse) {
+            AttackModifier = Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + Weapon.attack_bonus;
+            DamageModifier = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + Weapon.damage_bonus + Me.Actions.Attack.CalculateAdditionalDamage(false);
         } else {
-            AttackModifier = Me.Stats.AttributeProficiency[Proficiencies.Attribute.Dexterity] + Weapon.attack_bonus;
-            DamageModifier = Me.Stats.AttributeProficiency[Proficiencies.Attribute.Dexterity] + Weapon.damage_bonus;
+            AttackModifier = Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) + Weapon.attack_bonus;
+            DamageModifier = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) + Weapon.damage_bonus + Me.Actions.Attack.CalculateAdditionalDamage(false);
         }
     }
 }

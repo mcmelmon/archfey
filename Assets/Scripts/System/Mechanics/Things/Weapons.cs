@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Weapons : MonoBehaviour
@@ -23,9 +23,8 @@ public class Weapons : MonoBehaviour
 
     // Inspector settings
 
-    public Weapon club_prefab;
-    public Weapon longbow_prefab;
-    public Weapon spear_prefab;
+    public List<GameObject> weapons;
+
 
     // properties
 
@@ -44,5 +43,13 @@ public class Weapons : MonoBehaviour
             return;
         }
         Instance = this;
+    }
+
+
+    // public
+
+    public Weapon GetWeaponNamed(string name)
+    {
+        return weapons.First(weapon => weapon.GetComponent<Weapon>().weapon_name == name).GetComponent<Weapon>();
     }
 }

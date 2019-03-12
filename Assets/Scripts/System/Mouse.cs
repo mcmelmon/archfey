@@ -9,7 +9,6 @@ public class Mouse : MonoBehaviour
     // Inspector settings
 
     public float double_click_delay;
-    public bool first_person = true;
 
     // properties
 
@@ -36,7 +35,7 @@ public class Mouse : MonoBehaviour
     void Start()
     {
         StartCoroutine(Hover());
-        if (first_person) StartCoroutine(Look());
+        //StartCoroutine(Look()); // for first person...
         StartCoroutine(Select());
     }
 
@@ -44,6 +43,9 @@ public class Mouse : MonoBehaviour
     private void Update()
     {
         if (Input.GetKeyDown("escape")) {
+            if (HoveredObject != null) 
+                HoveredObject.GetComponent<Renderer>().material = HoveredObject.GetComponent<Interactable>().OriginalMaterial;
+
             for (int i = 0; i < SelectedObjects.Count; i++) {
                 SelectedObjects[i].GetComponent<Renderer>().material = SelectedObjects[i].GetComponent<Interactable>().OriginalMaterial;
             }
@@ -86,6 +88,8 @@ public class Mouse : MonoBehaviour
 
     private IEnumerator Look()
     {
+        // For first person...
+
         Transform character = Player.Instance.Me.transform;
         Vector2 mouse_look = Vector2.zero;
         Vector2 smooth_v = Vector2.zero;
@@ -135,7 +139,7 @@ public class Mouse : MonoBehaviour
                         }
                     } else if (Physics.Raycast(ray, out RaycastHit ground_hit, 150f, ground_layer_mask, QueryTriggerInteraction.Ignore)) {
                         ClearSelection();
-                        Player.Instance.Me.Actions.Movement.SetDestination(ground_hit.point);
+                        //Player.Instance.Me.Actions.Movement.SetDestination(ground_hit.point);
                     } else {
                         ClearSelection();
                     }

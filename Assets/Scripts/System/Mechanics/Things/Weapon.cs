@@ -6,6 +6,7 @@ public class Weapon : MonoBehaviour {
 
     // Inspector settings
 
+    public string weapon_name;
     public int attack_bonus;
     public int damage_bonus;
     public int dice_type;
@@ -13,7 +14,7 @@ public class Weapon : MonoBehaviour {
     public Weapons.DamageType damage_type;
     public int expected_damage;
     public bool has_reach;
-    public bool is_finese;
+    public bool is_finesse;
     public bool is_heavy;
     public bool is_light;
     public bool is_loaded;

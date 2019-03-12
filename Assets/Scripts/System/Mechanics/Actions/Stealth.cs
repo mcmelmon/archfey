@@ -49,7 +49,7 @@ public class Stealth : MonoBehaviour {
     private int StealthRating()
     {
         bool proficient = Me.Stats.Skills.Contains(Proficiencies.Skill.Stealth);
-        int dexterity_bonus = Me.Stats.AttributeProficiency[Proficiencies.Attribute.Dexterity];
+        int dexterity_bonus = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity);
         return (proficient) ? Me.Stats.ProficiencyBonus + dexterity_bonus : dexterity_bonus;
     }
 }

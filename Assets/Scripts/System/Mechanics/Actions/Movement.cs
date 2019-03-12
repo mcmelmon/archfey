@@ -9,13 +9,15 @@ public class Movement : MonoBehaviour
 
     // properties
 
+    public float BaseSpeed { get; set; }
     public Actor Me { get; set; }
     public NavMeshAgent Agent { get; set; }
     public Dictionary<CommonDestination, Vector3> Destinations { get; set; }
     public bool IsJumping { get; set; }
     public float JumpVelocity { get; set; }
+    public bool NonAgentMovement { get; set; }
     public float ReachedThreshold { get; set; }
-    public float Speed { get; set; }
+    public float SpeedAdjustment { get; set; }
 
 
     // Unity
@@ -46,9 +48,7 @@ public class Movement : MonoBehaviour
 
     public bool InProgress()
     {
-        Vector3 height_adjusted_destination = new Vector3(Agent.destination.x, transform.position.y, Agent.destination.z);
-        float separation = Vector3.Distance(transform.position, height_adjusted_destination);
-        return Agent.hasPath && separation >= ReachedThreshold;
+        return Agent.hasPath && Agent.velocity != Vector3.zero && !NonAgentMovement;
     }
 
 
@@ -86,11 +86,10 @@ public class Movement : MonoBehaviour
 
     public IEnumerator TrackUnit(Actor unit)
     {
-        float separation = Vector3.Distance(transform.position, unit.transform.position);
         int count = 0;
 
-        while (unit != null && count < Turn.ActionThreshold && separation > ReachedThreshold) {
-            SetDestination(unit.MoveToInteractionPoint(Me));
+        while (unit != null && count < Turn.ActionThreshold) {
+            SetDestination(unit.GetInteractionPoint(Me));
             count++;
             yield return new WaitForSeconds(1);
         }
@@ -159,7 +158,8 @@ public class Movement : MonoBehaviour
         Destinations = new Dictionary<CommonDestination, Vector3>();
         IsJumping = false;
         JumpVelocity = Me.Stats.Skills.Contains(Proficiencies.Skill.Acrobatics)
-                         ? 3 + Me.Stats.AttributeProficiency[Proficiencies.Attribute.Strength] + Me.Stats.ProficiencyBonus / 2
-                         : 3 + Me.Stats.AttributeProficiency[Proficiencies.Attribute.Strength];
+                         ? 3 + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) + Me.Stats.ProficiencyBonus / 2
+                         : 3 + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength);
+        SpeedAdjustment = 0;
     }
 }

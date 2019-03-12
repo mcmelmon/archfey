@@ -7,14 +7,14 @@ public class Actions : MonoBehaviour
 {
     // properties
 
-    public int ActionsPerRound { get; set; }
     public Attack Attack { get; set; }
+    public bool CanTakeTurn { get; set; }
     public Decider Decider { get; set; }
+    public bool InCombat { get; set; }
     public Actor Me { get; set; }
     public Movement Movement { get; set; }
     public Stats Stats { get; set; }
     public Stealth Stealth { get; set; }
-    public bool CanTakeTurn { get; set; }
 
     public Action OnBadlyInjured { get; set; }
     public Action OnCrafting { get; set; }
@@ -138,9 +138,9 @@ public class Actions : MonoBehaviour
         if (transform == null) return;
 
         if (Me.Actions.Attack.EquippedRangedWeapon != null) {
-            Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
+            Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed;
         } else {
-            Movement.Agent.speed = 2 * Movement.Speed;
+            Movement.Agent.speed = 2 * Movement.BaseSpeed;
         }
 
         Actor nearest_enemy = Decider.Threat.Nearest();
@@ -155,7 +155,7 @@ public class Actions : MonoBehaviour
     {
         if (Me == null) return;
 
-        Movement.Agent.speed = 2 * Movement.Speed;
+        Movement.Agent.speed = 2 * Movement.BaseSpeed;
         SheathWeapon();
 
         Vector3 run_away_from = Vector3.zero;
@@ -175,16 +175,16 @@ public class Actions : MonoBehaviour
     {
         int die_roll = 0;
 
-        if ((advantage && disadvantage) || (!advantage && !disadvantage)) {
+        if (number_of_rolls > 1 || (advantage && disadvantage) || (!advantage && !disadvantage)) {
+            // advantage only applies in situations with one roll
+
             for (int i = 0; i < number_of_rolls; i++) {
                 int this_roll = UnityEngine.Random.Range(1, dice_type + 1);
                 die_roll += this_roll;
             }
         } else if (advantage) {
-            // advantage only applies in situations with one roll
             die_roll = Mathf.Max(UnityEngine.Random.Range(1, dice_type + 1), UnityEngine.Random.Range(1, dice_type + 1));
         } else if (disadvantage) {
-            // disadvantage only applies in situations with one roll
             die_roll = Mathf.Min(UnityEngine.Random.Range(1, dice_type + 1), UnityEngine.Random.Range(1, dice_type + 1));
         }
 
@@ -195,7 +195,7 @@ public class Actions : MonoBehaviour
     public bool SavingThrow(Proficiencies.Attribute attribute, int challenge_rating, bool advantage = false, bool disadvantage = false)
     {
         int proficiency_bonus = Me.Stats.SavingThrows.Contains(attribute) ? Me.Stats.ProficiencyBonus : 0;
-        int attribute_bonus = Me.Stats.AttributeProficiency[attribute];
+        int attribute_bonus = Me.Stats.GetAdjustedAttributeScore(attribute);
         int bonus = proficiency_bonus + attribute_bonus;
 
         int die_roll = RollDie(20, 1, advantage, disadvantage);
@@ -235,6 +235,6 @@ public class Actions : MonoBehaviour
         Stealth = GetComponentInParent<Stealth>();
         Me = GetComponentInParent<Actor>();
         Movement = GetComponent<Movement>();
-        CanTakeTurn = false; // currently only relevant for player
+        CanTakeTurn = Me.Health.CurrentHitPoints != 0; // currently only relevant for player
     }
 }

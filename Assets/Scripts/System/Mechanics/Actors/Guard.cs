@@ -57,12 +57,12 @@ public class Guard : MonoBehaviour
 
     public void OnHostileStructuresSighted()
     {
-        if (Me.Actions.Decider.HostileStructures.Count > 0) {
-            Collider _collider = Me.Actions.Decider.HostileStructures[Random.Range(0, Me.Actions.Decider.HostileStructures.Count)].GetComponent<Collider>();
-            Vector3 destination = _collider.ClosestPointOnBounds(transform.position);
-
-            Me.Actions.Movement.SetDestination(Me.Actions.Decider.HostileStructures[Random.Range(0, Me.Actions.Decider.HostileStructures.Count)].transform);
+        if (Me.Actions.Decider.HostileStructures.Count > 0)
+        {
+            Structure target = Me.Actions.Decider.HostileStructures[Random.Range(0, Me.Actions.Decider.HostileStructures.Count)];
+            Me.Actions.Movement.SetDestination(target.GetInteractionPoint(Me));
         }
+
         Me.Actions.Attack.AttackEnemiesInRange();
     }
 
@@ -76,14 +76,14 @@ public class Guard : MonoBehaviour
 
     public void OnMovingToGoal()
     {
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
+        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed;
         Me.Actions.SheathWeapon();
     }
 
 
     public void OnNeedsRest()
     {
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
+        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed;
         Me.Actions.SheathWeapon();
         Me.Actions.Movement.SetDestination(Me.Actions.Movement.Destinations[Movement.CommonDestination.Home]);
     }
@@ -153,9 +153,7 @@ public class Guard : MonoBehaviour
 
     private void SetAdditionalStats()
     {
-        Me.Actions.Attack.AvailableWeapons = Characters.available_weapons[Characters.Template.Guard];
-        Me.Senses.Darkvision = Characters.darkvision_range[Characters.Template.Base];
-        Me.Senses.PerceptionRange = Characters.perception_range[Characters.Template.Base];
+        Me.Actions.Attack.AvailableWeapons = new List<Weapon>() { Weapons.Instance.GetWeaponNamed("longbow"), Weapons.Instance.GetWeaponNamed("spear") };
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
 
         Me.Stats.Skills.Add(Proficiencies.Skill.Perception);

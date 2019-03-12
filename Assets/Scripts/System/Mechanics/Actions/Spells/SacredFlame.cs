@@ -31,7 +31,7 @@ public class SacredFlame : MonoBehaviour
         if (_target == null) return;
         Target = _target;
 
-        int challenge_rating = 8 + Me.Stats.ProficiencyBonus + Me.Stats.AttributeProficiency[Proficiencies.Attribute.Wisdom];
+        int challenge_rating = 8 + Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Wisdom);
         if (!Target.Actions.SavingThrow(Proficiencies.Attribute.Dexterity, challenge_rating)) {
             ApplyDamage();
             DisplayEffects();

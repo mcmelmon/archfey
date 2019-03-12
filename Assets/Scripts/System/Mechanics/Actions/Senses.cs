@@ -8,7 +8,7 @@ public class Senses : MonoBehaviour
     // properties
 
     public Actor Me { get; set; }
-    public float Darkvision { get; set; }
+    public bool Darkvision { get; set; }
     public float PerceptionRange { get; set; }
     public List<Actor> Actors { get; set; }
     public List<Item> Items { get; set; }
@@ -31,7 +31,7 @@ public class Senses : MonoBehaviour
     {
         int proficiency_bonus = Me.Stats.Skills.Contains(Proficiencies.Skill.Insight) ? Me.Stats.ProficiencyBonus : 0;
         if (Me.Stats.Expertise.Contains(Proficiencies.Skill.Insight)) proficiency_bonus += proficiency_bonus;
-        int attribute_bonus = Me.Stats.AttributeProficiency[Proficiencies.Attribute.Wisdom];
+        int attribute_bonus = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Wisdom);
         int bonus = proficiency_bonus + attribute_bonus;
 
         int die_roll = active_check ? Me.Actions.RollDie(20, 1, advantage, disadvantage) : 10;
@@ -44,7 +44,7 @@ public class Senses : MonoBehaviour
     {
         int proficiency_bonus = Me.Stats.Skills.Contains(Proficiencies.Skill.Investigation) ? Me.Stats.ProficiencyBonus : 0;
         if (Me.Stats.Expertise.Contains(Proficiencies.Skill.Investigation)) proficiency_bonus += proficiency_bonus;
-        int attribute_bonus = Me.Stats.AttributeProficiency[Proficiencies.Attribute.Intelligence];
+        int attribute_bonus = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Intelligence);
         int bonus = proficiency_bonus + attribute_bonus;
 
         int die_roll = active_check ? Me.Actions.RollDie(20, 1, advantage, disadvantage) : 10;
@@ -57,19 +57,13 @@ public class Senses : MonoBehaviour
     {
         int proficiency_bonus = Me.Stats.Skills.Contains(Proficiencies.Skill.Perception) ? Me.Stats.ProficiencyBonus : 0;
         if (Me.Stats.Expertise.Contains(Proficiencies.Skill.Perception)) proficiency_bonus += proficiency_bonus;
-        int attribute_bonus = Mathf.Max(Me.Stats.AttributeProficiency[Proficiencies.Attribute.Wisdom], Me.Stats.AttributeProficiency[Proficiencies.Attribute.Intelligence]);
+        int attribute_bonus = Mathf.Max(Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Wisdom), Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Intelligence));
         int bonus = proficiency_bonus + attribute_bonus;
         if (obscurity) bonus -= 5;
 
         int die_roll = active_check ? Me.Actions.RollDie(20, 1, advantage, disadvantage) : 10;
 
         return die_roll + bonus >= challenge_rating;
-    }
-
-
-    public void SetRange(float _range)
-    {
-        PerceptionRange = _range;
     }
 
 
@@ -123,21 +117,6 @@ public class Senses : MonoBehaviour
             bool suspicious = Me.Senses.InsightCheck(false, suspect.Interactions.suspicion_challenge_rating);
             if (suspicious) suspect.Interactions.DrawAttention();
         }
-
-        //List<Item> clues = Items.Where(item => item.is_hidden).ToList();
-        //foreach (var hidden in the_hidden)
-        //{
-        //    bool spotted = Me.Senses.PerceptionCheck(false, hidden.spot_challenge_rating);  // TODO: include environmental detail for obscurity
-        //    if (spotted)
-        //    {
-        //        hidden.IsSpotted = true;
-        //        hidden.GetComponent<Renderer>().material = hidden.GetComponent<Interactable>().highlight_material;
-        //    }
-        //    else
-        //    {
-        //        Items.Remove(hidden);
-        //    }
-        //}
     }
 
 
@@ -145,6 +124,7 @@ public class Senses : MonoBehaviour
     {
         Actors = new List<Actor>();
         Me = GetComponent<Actor>();
+        PerceptionRange = 20f;
         Structures = new List<Structure>();
     }
 }

@@ -8,21 +8,26 @@ public class Stats : MonoBehaviour
     // Inspector settings
 
     public Slider health_bar;
-    public Slider mana_bar;
+    public Slider temporary_health_bar;
+    public Slider rage_bar;
     public Transform stat_bars;
 
     // properties
 
+    public List<string> ClassFeatures { get; set; }
     public Actor Me { get; set; }
     public string Family { get; set; }
     public string Size { get; set; }
     public int Level { get; set; }
 
-    public int ArmorClass { get; set; }
-    public Dictionary<Proficiencies.Attribute, int> AttributeProficiency { get; set; }
+    public int BaseArmorClass { get; set; } // TODO: build up AC from equipment and dex
+    public Dictionary<Proficiencies.Attribute, int> AttributeAdjustments { get; set; }
+    public Dictionary<Proficiencies.Attribute, int> BaseAttributes { get; set; }
+    public List<Proficiencies.Skill> Expertise { get; set; }
+    public float RageDuration { get; set; }
+    public float RageTick { get; set; }
     public Dictionary<Weapons.DamageType, int> Resistances { get; set; }
     public int ProficiencyBonus { get; set; }
-    public List<Proficiencies.Skill> Expertise { get; set; }
     public List<Proficiencies.Attribute> SavingThrows { get; set; }
     public List<Proficiencies.Skill> Skills { get; set; }
     public List<string> Tools { get; set; }
@@ -41,12 +46,21 @@ public class Stats : MonoBehaviour
 
     private void OnValidate()
     {
-        if (ArmorClass > 30) ArmorClass = 30;
-        if (ArmorClass < 1) ArmorClass = 1;
+        if (BaseArmorClass > 30) BaseArmorClass = 30;
+        if (BaseArmorClass < 1) BaseArmorClass = 1;
     }
 
 
     // public
+
+
+    public void AdjustAttribute(Proficiencies.Attribute attribute, int adjustment)
+    {
+        if (AttributeAdjustments[attribute] < adjustment) {
+            AttributeAdjustments[attribute] = adjustment;
+            // TODO: recalculate hit points and armor class if appropriate
+        }
+    }
 
 
     public int DamageAfterDefenses(int _damage, Weapons.DamageType _type)
@@ -55,31 +69,38 @@ public class Stats : MonoBehaviour
     }
 
 
+    public int GetAdjustedAttributeScore(Proficiencies.Attribute attribute)
+    {
+        return Mathf.Clamp(BaseAttributes[attribute] + AttributeAdjustments[attribute], -5, 10);
+    }
+
+
     public void UpdateStatBars()
     {
-        if (mana_bar != null)
-        {
-            mana_bar.value = CurrentManaPercentage();
-            if (mana_bar.value >= 1)
-            {
-                mana_bar.gameObject.SetActive(false);
-            }
-            else
-            {
-                mana_bar.gameObject.SetActive(true);
+        if (rage_bar != null) {
+            rage_bar.value = CurrentRagePercentage();
+            if (rage_bar.value >= 1) {
+                rage_bar.gameObject.SetActive(false);
+            } else {
+                rage_bar.gameObject.SetActive(true);
             }
         }
 
-        if (health_bar != null)
-        {
+        if (health_bar != null) {
             health_bar.value = Me.Health.CurrentHealthPercentage();
-            if (health_bar.value >= 1)
-            {
+            if (health_bar.value >= 1) {
                 health_bar.gameObject.SetActive(false);
-            }
-            else
-            {
+            } else {
                 health_bar.gameObject.SetActive(true);
+            }
+        }
+
+        if (temporary_health_bar != null) {
+            temporary_health_bar.value = Me.Health.CurrentTemporaryHealthPercentage();
+            if (temporary_health_bar.value < 0.05f) {
+                temporary_health_bar.gameObject.SetActive(false);
+            } else {
+                temporary_health_bar.gameObject.SetActive(true);
             }
         }
     }
@@ -88,9 +109,9 @@ public class Stats : MonoBehaviour
     // private
 
 
-    public float CurrentManaPercentage()
+    public float CurrentRagePercentage()
     {
-        return 1;
+        return Me.Actions.Attack.Raging ? 1 - (RageTick / RageDuration) : 0;
     }
 
 
@@ -122,13 +143,25 @@ public class Stats : MonoBehaviour
     {
         Me = GetComponentInParent<Actor>();
 
+        ClassFeatures = new List<string>();
         Expertise = new List<Proficiencies.Skill>();
         Level = 1;
+        RageDuration = 60;
         SavingThrows = new List<Proficiencies.Attribute>();
         Skills = new List<Proficiencies.Skill>();
         Tools = new List<string>();
 
-        AttributeProficiency = new Dictionary<Proficiencies.Attribute, int>
+        AttributeAdjustments = new Dictionary<Proficiencies.Attribute, int>
+        {
+            [Proficiencies.Attribute.Charisma] = 0,
+            [Proficiencies.Attribute.Constitution] = 0,
+            [Proficiencies.Attribute.Dexterity] = 0,
+            [Proficiencies.Attribute.Intelligence] = 0,
+            [Proficiencies.Attribute.Strength] = 0,
+            [Proficiencies.Attribute.Wisdom] = 0
+        };
+
+        BaseAttributes = new Dictionary<Proficiencies.Attribute, int>
         {
             [Proficiencies.Attribute.Charisma] = 0,
             [Proficiencies.Attribute.Constitution] = 0,

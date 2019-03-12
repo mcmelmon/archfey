@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Gnoll : MonoBehaviour
+public class Bugbear : MonoBehaviour
 {
     // properties
 
@@ -18,6 +19,13 @@ public class Gnoll : MonoBehaviour
 
 
     // public
+
+
+    public int AdditionalDamage(bool is_ranged)
+    {
+        int additional_damage = Me.Actions.Attack.HasSurprise ? Me.Actions.RollDie(6, 2) : 0;
+        return is_ranged ? additional_damage : additional_damage + Me.Actions.RollDie(Me.Actions.Attack.EquippedMeleeWeapon.dice_type, 1);
+    }
 
 
     public void OnBadlyInjured()
@@ -43,7 +51,8 @@ public class Gnoll : MonoBehaviour
 
     public void OnHostileStructuresSighted()
     {
-        if (Me.Actions.Decider.HostileStructures.Count > 0) {
+        if (Me.Actions.Decider.HostileStructures.Count > 0)
+        {
             Structure target = Me.Actions.Decider.HostileStructures[Random.Range(0, Me.Actions.Decider.HostileStructures.Count)];
             Me.Actions.Movement.SetDestination(target.GetInteractionPoint(Me));
         }
@@ -57,10 +66,18 @@ public class Gnoll : MonoBehaviour
         Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed;
         Me.Actions.SheathWeapon();
 
-        List<Objective> objectives = FindObjectsOfType<Objective>().Where(objective => objective.Claim == Conflict.Instance.EnemyFaction(Me)).ToList();
-        if (objectives.Count > 0) {
-            Objective next_objective = objectives[Random.Range(0, objectives.Count)];
-            Me.Actions.Movement.SetDestination(next_objective.claim_nodes[0].transform);
+        if (Me.Route.local_stops.Length > 1)
+        {
+            Me.Route.MoveToNextPosition();
+        }
+        else
+        {
+            List<Objective> objectives = FindObjectsOfType<Objective>().Where(objective => objective.Claim == Conflict.Instance.EnemyFaction(Me)).ToList();
+            if (objectives.Count > 0)
+            {
+                Objective next_objective = objectives[Random.Range(0, objectives.Count)];
+                Me.Actions.Movement.SetDestination(next_objective.claim_nodes[0].transform);
+            }
         }
     }
 
@@ -135,7 +152,8 @@ public class Gnoll : MonoBehaviour
     private void SetAdditionalStats()
     {
 
-        Me.Actions.Attack.AvailableWeapons = new List<Weapon>() { Weapons.Instance.GetWeaponNamed("longbow"), Weapons.Instance.GetWeaponNamed("spear") };
+        Me.Actions.Attack.AvailableWeapons = new List<Weapon>() { Weapons.Instance.GetWeaponNamed("morningstar"), Weapons.Instance.GetWeaponNamed("javelin") };
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
+        Me.Actions.Attack.CalculateAdditionalDamage = AdditionalDamage;
     }
 }

@@ -43,7 +43,7 @@ public class CureWounds : MonoBehaviour
     private void ApplyHealing()
     {
         int healing_roll = Me.Actions.RollDie(Die, NumberOfDice);
-        Target.Health.RecoverHealth(healing_roll + Me.Stats.AttributeProficiency[Proficiencies.Attribute.Wisdom]);
+        Target.Health.RecoverHealth(healing_roll + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Wisdom));
     }
 
 

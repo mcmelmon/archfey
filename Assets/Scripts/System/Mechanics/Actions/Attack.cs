@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -7,14 +7,19 @@ public class Attack : MonoBehaviour
 {
     // properties
 
-    public Actor Me { get; set; }
+    public int AttacksPerAction { get; set; }
     public List<Weapon> AvailableWeapons { get; set; }
     public List<GameObject> AvailableMeleeTargets { get; set; }
     public List<GameObject> AvailableRangedTargets { get; set; }
+    public AdditionalDamage CalculateAdditionalDamage { get; set; }
+    public int CriticalRangeStart { get; set; }
     public GameObject CurrentMeleeTarget { get; set; }
     public GameObject CurrentRangedTarget { get; set; }
     public Weapon EquippedMeleeWeapon { get; set; }
     public Weapon EquippedRangedWeapon { get; set; }
+    public bool HasSurprise { get; set; }
+    public Actor Me { get; set; }
+    public bool Raging { get; set; }
 
 
     // Unity
@@ -29,13 +34,24 @@ public class Attack : MonoBehaviour
     // public
 
 
+    public delegate int AdditionalDamage(bool is_ranged);
+
+
     public void AttackEnemiesInRange()
     {
         // TODO: attack the PrimaryThreat chosen by Decider, not just one from "available targets" (which is still important for range-finding)
 
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.Speed;
-        SelectEnemy();
-        StrikeEnemy();
+        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed;
+        for (int i = 0; i < AttacksPerAction; i++) {
+            SelectEnemy();
+            StrikeEnemy();
+        }
+    }
+
+
+    public int DefaultAdditionalDamage(bool is_ranged)
+    {
+        return 0;
     }
 
 
@@ -44,17 +60,18 @@ public class Attack : MonoBehaviour
         if (Me == null) return;
 
         ClearTargets();
+        float melee_range = MeleeRange();
 
-        if (Me.Actions.Decider.IdentifyEnemies().Any()) {
+        if (Me.Actions.Decider.Enemies.Any()) {
             AvailableMeleeTargets.AddRange(Me.Actions.Decider.Enemies
-                                           .Where(actor => actor != null && Vector3.Distance(transform.position, actor.transform.position) <= LongestMeleeRange())
+                                           .Where(actor => actor != null && Me.SeparationFrom(actor) <= melee_range)
                                            .OrderBy(actor => actor.Health.CurrentHitPoints)
                                            .Select(actor => actor.gameObject)
                                            .Distinct()
                                            .ToList());
 
             AvailableRangedTargets.AddRange(Me.Actions.Decider.Enemies
-                                            .Where(actor => actor != null && Vector3.Distance(transform.position, actor.transform.position) > LongestMeleeRange() && Vector3.Distance(transform.position, actor.transform.position) <= LongestRangedRange())
+                                            .Where(actor => actor != null && Me.SeparationFrom(actor) > melee_range && Me.SeparationFrom(actor) <= EquippedRangedWeapon.range)
                                             .OrderBy(actor => actor.Health.CurrentHitPoints)
                                             .Select(actor => actor.gameObject)
                                             .Distinct()
@@ -63,13 +80,13 @@ public class Attack : MonoBehaviour
 
         if (Me.Actions.Decider.HostileStructures.Any()) {
             AvailableMeleeTargets.AddRange(Me.Actions.Decider.HostileStructures
-                                           .Where(structure => Vector3.Distance(transform.position, structure.transform.position) <= LongestMeleeRange())
+                                           .Where(structure => Vector3.Distance(transform.position, structure.GetInteractionPoint(Me)) <= melee_range + Me.Actions.Movement.ReachedThreshold)
                                            .Select(structure => structure.gameObject)
                                            .Distinct()
                                            .ToList());
 
             AvailableRangedTargets.AddRange(Me.Actions.Decider.HostileStructures
-                                            .Where(structure => Vector3.Distance(transform.position, structure.transform.position) > LongestMeleeRange() && Vector3.Distance(transform.position, structure.transform.position) <= LongestRangedRange())
+                                            .Where(structure => Vector3.Distance(transform.position, structure.GetInteractionPoint(Me)) > melee_range && Vector3.Distance(transform.position, structure.GetInteractionPoint(Me)) <= EquippedRangedWeapon.range + Me.Actions.Movement.ReachedThreshold)
                                             .Select(structure => structure.gameObject)
                                             .Distinct()
                                             .ToList());
@@ -129,33 +146,13 @@ public class Attack : MonoBehaviour
     }
 
 
-    private float LongestMeleeRange()
+    private float MeleeRange()
     {
-        foreach (var weapon in AvailableWeapons) {
-            if (weapon.range == 0 && weapon.has_reach) {
-                return 3f;
-            } else if (weapon.range == 0) {
-                return 2f;
-            }
-        }
-
-        return 0f;
-    }
-
-
-    private float LongestRangedRange()
-    {
-        // TODO: select the weapon appropriate for the range
-
-        float longest_range = float.MinValue;
-
-        foreach (var weapon in AvailableWeapons) {
-            if (weapon.range > longest_range) {
-                longest_range = weapon.range;
-            }
-        }
-
-        return longest_range;
+        return EquippedMeleeWeapon == null
+            ? 0f
+            : EquippedMeleeWeapon.range == 0 && EquippedMeleeWeapon.has_reach
+            ? Me.Actions.Movement.ReachedThreshold + 2f
+            : Me.Actions.Movement.ReachedThreshold + 1f;
     }
 
 
@@ -195,14 +192,18 @@ public class Attack : MonoBehaviour
 
         if (AvailableMeleeTargets.Count > 0) {
             CurrentMeleeTarget = TargetMelee();
+            transform.LookAt(CurrentMeleeTarget.transform);
         } else if (AvailableRangedTargets.Count > 0) {
             CurrentRangedTarget = TargetRanged();
+            transform.LookAt(CurrentRangedTarget.transform);
         }
     }
 
 
     private void SetComponents()
     {
+        CalculateAdditionalDamage = DefaultAdditionalDamage;
+        CriticalRangeStart = 20;
         Me = GetComponentInParent<Actor>();
         AvailableMeleeTargets = new List<GameObject>();
         AvailableRangedTargets = new List<GameObject>();
