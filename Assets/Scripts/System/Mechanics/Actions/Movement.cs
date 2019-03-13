@@ -40,6 +40,22 @@ public class Movement : MonoBehaviour
     }
 
 
+    public void AdjustSpeed(float boost)
+    {
+        // boost is a percentage that will get doubled to calculate effect
+        // boost of 0.5f will result in 2x movement
+        SpeedAdjustment += boost;
+        if (SpeedAdjustment > 1f) SpeedAdjustment = 1f;
+        Agent.speed = GetAdjustedSpeed();
+    }
+
+
+    public float GetAdjustedSpeed()
+    {
+        return BaseSpeed + (SpeedAdjustment * BaseSpeed * 2); // adjustment of +0.5 results in 2x movement speed
+    }
+
+
     public void Home()
     {
         SetDestination(Destinations[CommonDestination.Home]);
@@ -61,6 +77,13 @@ public class Movement : MonoBehaviour
     public void ResetPath()
     {
         if (!IsJumping) Agent.ResetPath();
+    }
+
+
+    public void ResetSpeed()
+    {
+        SpeedAdjustment = 0;
+        Agent.speed = GetAdjustedSpeed();
     }
 
 

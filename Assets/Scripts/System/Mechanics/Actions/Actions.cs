@@ -137,12 +137,6 @@ public class Actions : MonoBehaviour
 
         if (transform == null) return;
 
-        if (Me.Actions.Attack.EquippedRangedWeapon != null) {
-            Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed;
-        } else {
-            Movement.Agent.speed = 2 * Movement.BaseSpeed;
-        }
-
         Actor nearest_enemy = Decider.Threat.Nearest();
 
         if (nearest_enemy != null) {
@@ -155,7 +149,6 @@ public class Actions : MonoBehaviour
     {
         if (Me == null) return;
 
-        Movement.Agent.speed = 2 * Movement.BaseSpeed;
         SheathWeapon();
 
         Vector3 run_away_from = Vector3.zero;
@@ -166,6 +159,7 @@ public class Actions : MonoBehaviour
             var _enemy = enemies.OrderBy(e => Vector3.Distance(transform.position, e.transform.position)).First();
             Vector3 run_away_direction = (transform.position - _enemy.transform.position).normalized;
             Vector3 run_away_to = transform.position + (run_away_direction * Movement.Agent.speed * Movement.Agent.speed);
+            Movement.AdjustSpeed(0.5f);
             Movement.SetDestination(run_away_to);
         }
     }

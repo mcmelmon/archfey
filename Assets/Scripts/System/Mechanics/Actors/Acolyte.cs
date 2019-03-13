@@ -59,14 +59,12 @@ public class Acolyte : MonoBehaviour
 
     public void OnInCombat()
     {
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed;
         AttackWithSpell();
     }
 
 
     public void OnIdle()
     {
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed;
         Me.Actions.SheathWeapon();
         Me.Actions.Movement.SetDestination(Me.Actions.Movement.Destinations[Movement.CommonDestination.Home]);
     }
@@ -88,8 +86,6 @@ public class Acolyte : MonoBehaviour
 
     public void OnMovingToGoal()
     {
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed;
-        Me.Senses.Sense();
     }
 
 
@@ -103,14 +99,12 @@ public class Acolyte : MonoBehaviour
     public void OnReachedGoal()
     {
         Me.Actions.Movement.ResetPath();
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed;
         Me.Actions.Decider.FriendsInNeed.Clear();
     }
 
 
     public void OnUnderAttack()
     {
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed;
         AttackWithSpell();
         Me.RestCounter = 0;
     }

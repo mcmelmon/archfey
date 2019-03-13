@@ -23,7 +23,9 @@ public class Bugbear : MonoBehaviour
 
     public int AdditionalDamage(bool is_ranged)
     {
-        int additional_damage = Me.Actions.Attack.HasSurprise ? Me.Actions.RollDie(6, 2) : 0;
+        Actor target = Me.Actions.Attack.CurrentMeleeTarget?.GetComponent<Actor>() ?? Me.Actions.Attack.CurrentRangedTarget?.GetComponent<Actor>();
+
+        int additional_damage = Me.Actions.Attack.HasSurprise(target) ? Me.Actions.RollDie(6, 2) : 0;
         return is_ranged ? additional_damage : additional_damage + Me.Actions.RollDie(Me.Actions.Attack.EquippedMeleeWeapon.dice_type, 1);
     }
 
@@ -63,18 +65,14 @@ public class Bugbear : MonoBehaviour
 
     public void OnIdle()
     {
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed;
         Me.Actions.SheathWeapon();
+        Me.Actions.Stealth.Hide();
 
-        if (Me.Route.local_stops.Length > 1)
-        {
+        if (Me.Route.local_stops.Length > 1) {
             Me.Route.MoveToNextPosition();
-        }
-        else
-        {
+        } else {
             List<Objective> objectives = FindObjectsOfType<Objective>().Where(objective => objective.Claim == Conflict.Instance.EnemyFaction(Me)).ToList();
-            if (objectives.Count > 0)
-            {
+            if (objectives.Count > 0) {
                 Objective next_objective = objectives[Random.Range(0, objectives.Count)];
                 Me.Actions.Movement.SetDestination(next_objective.claim_nodes[0].transform);
             }
@@ -155,5 +153,10 @@ public class Bugbear : MonoBehaviour
         Me.Actions.Attack.AvailableWeapons = new List<Weapon>() { Weapons.Instance.GetWeaponNamed("morningstar"), Weapons.Instance.GetWeaponNamed("javelin") };
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
         Me.Actions.Attack.CalculateAdditionalDamage = AdditionalDamage;
+
+        Me.Stats.Expertise.Add(Proficiencies.Skill.Stealth);
+        Me.Stats.Skills.Add(Proficiencies.Skill.Stealth);
+        Me.Stats.Skills.Add(Proficiencies.Skill.Survival);
+
     }
 }

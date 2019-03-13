@@ -34,10 +34,36 @@ public class Stealth : MonoBehaviour {
     {
         Hiding = true;
         ChallengeRatting = Me.Actions.RollDie(20, 1) + StealthRating();
+        StartCoroutine(Obscure());
+    }
+
+
+    public bool SpottedBy(Actor other_actor)
+    {
+        // TODO: account for environment; decide if being spotted should force Appear
+        if (other_actor == null) return false;
+        bool spotted = !Hiding || other_actor.Senses.PerceptionCheck(false, ChallengeRatting);
+        return spotted;
     }
 
 
     // private
+
+
+    private IEnumerator Obscure()
+    {
+        float starting_speed_adjustment = Me.Actions.Movement.SpeedAdjustment;
+        Me.Actions.Movement.AdjustSpeed(starting_speed_adjustment - 0.25f);  // if no other adjustment, move at half speed
+
+        while (Hiding) {
+            GetComponent<MeshRenderer>().enabled = false;
+            yield return null;
+        }
+
+        GetComponent<MeshRenderer>().enabled = true;
+        Me.Actions.Movement.ResetSpeed();
+        Me.Actions.Movement.AdjustSpeed(starting_speed_adjustment);
+    }
 
 
     private void SetComponents()
@@ -49,7 +75,11 @@ public class Stealth : MonoBehaviour {
     private int StealthRating()
     {
         bool proficient = Me.Stats.Skills.Contains(Proficiencies.Skill.Stealth);
+        bool expertise = Me.Stats.Expertise.Contains(Proficiencies.Skill.Stealth);
+
         int dexterity_bonus = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity);
-        return (proficient) ? Me.Stats.ProficiencyBonus + dexterity_bonus : dexterity_bonus;
+        int proficiency_bonus = (expertise) ? Me.Stats.ProficiencyBonus * 2 : Me.Stats.ProficiencyBonus;
+
+        return (proficient) ? proficiency_bonus + dexterity_bonus : dexterity_bonus;
     }
 }

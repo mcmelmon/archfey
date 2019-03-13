@@ -27,7 +27,6 @@ public class Commoner : MonoBehaviour
 
     public void OnBadlyInjured()
     {
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed * 2;
         Me.Actions.Movement.Home();
     }
 
@@ -53,17 +52,13 @@ public class Commoner : MonoBehaviour
         if (!RepairStructure()) {
             FindDamagedStructure();
             Me.Actions.Movement.ResetPath();
-            Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed * 2;
             Me.Actions.Movement.SetDestination(Me.Actions.Movement.Destinations[Movement.CommonDestination.Repair]);
-        } else {
-            Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed;
         }
     }
 
 
     public void OnFullLoad()
     {
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed;
         FindWarehouse();
         Me.Actions.Movement.Warehouse();
     }
@@ -79,7 +74,6 @@ public class Commoner : MonoBehaviour
     public void OnHostileActorsSighted()
     {
         if (Me.Actions.Decider.FriendsInNeed.Count == 0) {
-            Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed * 2;
             AbandonLoad();
             FindGuard();
         }
@@ -95,14 +89,12 @@ public class Commoner : MonoBehaviour
 
     public void OnInCombat()
     {
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed;
         Me.Actions.Attack.AttackEnemiesInRange();
     }
 
 
     public void OnIdle()
     {
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed;
         Me.Actions.SheathWeapon();
 
         if (Me.Route.local_stops.Length > 1) {
@@ -116,13 +108,11 @@ public class Commoner : MonoBehaviour
 
     public void OnMovingToGoal()
     {
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed;
     }
 
 
     public void OnNeedsRest()
     {
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed * 2;
         Me.Actions.SheathWeapon();
         Me.Actions.Movement.SetDestination(Me.Actions.Movement.Destinations[Movement.CommonDestination.Home]);
     }
@@ -131,7 +121,6 @@ public class Commoner : MonoBehaviour
     public void OnReachedGoal()
     {
         Me.Actions.Movement.ResetPath();
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed;
 
         if (!Harvest()) {
             if (!Craft()) {
@@ -147,7 +136,6 @@ public class Commoner : MonoBehaviour
 
     public void OnUnderAttack()
     {
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed;
         Me.Actions.CallForHelp();
         Me.Actions.Attack.AttackEnemiesInRange();
         Me.RestCounter = 0;

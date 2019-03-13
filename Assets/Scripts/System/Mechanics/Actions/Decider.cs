@@ -57,6 +57,8 @@ public class Decider : MonoBehaviour
 
     public void ChooseState()
     {
+        Me.Actions.Movement.ResetSpeed();
+
         if (transform == null) {
             return;
         } else if (Medic()) {

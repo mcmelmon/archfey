@@ -76,14 +76,12 @@ public class Guard : MonoBehaviour
 
     public void OnMovingToGoal()
     {
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed;
         Me.Actions.SheathWeapon();
     }
 
 
     public void OnNeedsRest()
     {
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed;
         Me.Actions.SheathWeapon();
         Me.Actions.Movement.SetDestination(Me.Actions.Movement.Destinations[Movement.CommonDestination.Home]);
     }

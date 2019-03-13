@@ -61,7 +61,6 @@ public class Ogre : MonoBehaviour
 
     public void OnIdle()
     {
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed;
         Me.Actions.SheathWeapon();
 
         if (Me.Route.local_stops.Length > 1)
