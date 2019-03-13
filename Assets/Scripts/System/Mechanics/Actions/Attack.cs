@@ -17,7 +17,6 @@ public class Attack : MonoBehaviour
     public GameObject CurrentRangedTarget { get; set; }
     public Weapon EquippedMeleeWeapon { get; set; }
     public Weapon EquippedRangedWeapon { get; set; }
-    public bool HasSurprise { get; set; }
     public Actor Me { get; set; }
     public bool Raging { get; set; }
 
@@ -41,7 +40,6 @@ public class Attack : MonoBehaviour
     {
         // TODO: attack the PrimaryThreat chosen by Decider, not just one from "available targets" (which is still important for range-finding)
 
-        Me.Actions.Movement.Agent.speed = Me.Actions.Movement.BaseSpeed;
         for (int i = 0; i < AttacksPerAction; i++) {
             SelectEnemy();
             StrikeEnemy();
@@ -52,6 +50,12 @@ public class Attack : MonoBehaviour
     public int DefaultAdditionalDamage(bool is_ranged)
     {
         return 0;
+    }
+
+
+    public bool HasSurprise(Actor other_actor)
+    {
+        return !Me.Actions.Stealth.SpottedBy(other_actor);
     }
 
 
@@ -212,8 +216,6 @@ public class Attack : MonoBehaviour
 
     private void StrikeEnemy()
     {
-        // The number of strikes is governed by haste and action_threshold in Update.
-
         // If any targets are in melee range, strike at them ahead of ranged
 
         if (CurrentMeleeTarget == null && CurrentRangedTarget == null) return;
@@ -221,9 +223,11 @@ public class Attack : MonoBehaviour
         if (CurrentMeleeTarget != null) {
             if (EquippedRangedWeapon != null) EquippedRangedWeapon.gameObject.SetActive(false);
             GetComponent<DefaultMelee>().Strike(CurrentMeleeTarget);
+            Me.Actions.Stealth.Appear(); // appear after the strike to ensure sneak attack damage, etc
         } else {
             if (EquippedMeleeWeapon != null) EquippedMeleeWeapon.gameObject.SetActive(false);
             GetComponent<DefaultRange>().Strike(CurrentRangedTarget);
+            Me.Actions.Stealth.Appear(); // appear after the strike to ensure sneak attack damage, etc
         }
     }
 

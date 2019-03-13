@@ -48,8 +48,7 @@ public class Player : MonoBehaviour {
     {
         GodOfRage = true;
         SetSkills();
-        Me.Actions.Movement.SpeedAdjustment = 2;
-        Me.Actions.Movement.SpeedAdjustment += Me.Actions.Movement.SpeedAdjustment; // TODO: rework speed to use GetAdjustedSpeed
+        Me.Actions.Movement.AdjustSpeed(0.1f); // results in 20 percent boost
         Me.Health.GainTemporaryHitPoints(100);
         StartCoroutine(GodOfRageCountdown());
     }
@@ -246,8 +245,7 @@ public class Player : MonoBehaviour {
         GodOfRage = false;
         SetSkills();
         Me.Health.ClearTemporaryHitPoints();
-        Me.Actions.Movement.SpeedAdjustment -= Me.Actions.Movement.SpeedAdjustment;
-        Me.Actions.Movement.SpeedAdjustment = 0;
+        Me.Actions.Movement.ResetSpeed();
         Me.Actions.SheathWeapon();
         Me.ExhaustionLevel++;
     }
