@@ -112,10 +112,12 @@ public class CommandBarOne : MonoBehaviour {
                 } else {
                     if (Me.ExhaustionLevel == 0) {
                         RageButton.gameObject.SetActive(true);
+                        RageButton.interactable = true;
                     } else {
                         RageButton.gameObject.SetActive(false);
                     }
                     StealthButton.gameObject.SetActive(true);
+                    StealthButton.interactable = true;
                     TalkButton.gameObject.SetActive(true);
                 }
 

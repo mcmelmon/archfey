@@ -44,6 +44,16 @@ public class Player : MonoBehaviour {
 
     // public
 
+
+    public int AdditionalDamage(bool is_ranged)
+    {
+        Actor target = Me.Actions.Attack.CurrentMeleeTarget?.GetComponent<Actor>() ?? Me.Actions.Attack.CurrentRangedTarget?.GetComponent<Actor>();
+
+        int additional_damage = Me.Actions.Attack.HasSurprise(target) ? Me.Actions.RollDie(6, 5) : 0;  // TODO: rogue only needs advantage, not surprise
+        return (GodOfRage) ? 0 : additional_damage;
+    }
+
+
     public void Enrage()
     {
         GodOfRage = true;
@@ -55,6 +65,7 @@ public class Player : MonoBehaviour {
 
     public void OnIdle()
     {
+        Me.Actions.SheathWeapon();
         Me.Actions.Movement.ResetPath();
         Me.Actions.Decider.FriendsInNeed.Clear();
     }
@@ -172,6 +183,7 @@ public class Player : MonoBehaviour {
 
         Me.Actions.OnIdle = OnIdle;
         Me.Actions.OnReachedGoal = OnReachedGoal;
+        Me.Actions.Attack.CalculateAdditionalDamage = AdditionalDamage;
     }
 
 
@@ -218,10 +230,11 @@ public class Player : MonoBehaviour {
             Me.Stats.ClassFeatures.Add("Cunning Action");
             Me.Stats.ClassFeatures.Add("Evasion");
             Me.Stats.ClassFeatures.Add("Fast Hands");
-            Me.Stats.ClassFeatures.Add("Helpful");
-            Me.Stats.ClassFeatures.Add("Jack of Many Trades");
+            Me.Stats.ClassFeatures.Add("Second Story Work");
+            Me.Stats.ClassFeatures.Add("Sneak Attack");
             Me.Stats.ClassFeatures.Add("Supreme Sneak");
-            Me.Stats.ClassFeatures.Add("Inspiring Help");
+            Me.Stats.ClassFeatures.Add("Thieves' Cant");
+            Me.Stats.ClassFeatures.Add("Uncanny Dodge");
 
             Me.Stats.Expertise.Add(Proficiencies.Skill.Perception);
             Me.Stats.Expertise.Add(Proficiencies.Skill.Performance);
