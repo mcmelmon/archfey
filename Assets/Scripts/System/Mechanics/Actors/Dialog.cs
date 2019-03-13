@@ -40,7 +40,6 @@ public class Dialog : MonoBehaviour
         } 
 
         string chat = GetChitChat();
-        Debug.Log(chat);
     }
 
 

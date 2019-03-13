@@ -234,6 +234,6 @@ public class Actions : MonoBehaviour
         Stealth = GetComponentInParent<Stealth>();
         Me = GetComponentInParent<Actor>();
         Movement = GetComponent<Movement>();
-        CanTakeTurn = Me.Health.CurrentHitPoints != 0; // currently only relevant for player
+        CanTakeTurn = true;
     }
 }

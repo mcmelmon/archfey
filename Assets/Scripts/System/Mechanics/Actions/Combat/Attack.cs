@@ -75,12 +75,14 @@ public class Attack : MonoBehaviour
                                            .Distinct()
                                            .ToList());
 
-            AvailableRangedTargets.AddRange(Me.Actions.Decider.Enemies
-                                            .Where(actor => actor != null && Me.SeparationFrom(actor) > melee_range && Me.SeparationFrom(actor) <= EquippedRangedWeapon.range)
-                                            .OrderBy(actor => actor.Health.CurrentHitPoints)
-                                            .Select(actor => actor.gameObject)
-                                            .Distinct()
-                                            .ToList());
+            if (EquippedRangedWeapon != null) {
+                AvailableRangedTargets.AddRange(Me.Actions.Decider.Enemies
+                                                .Where(actor => actor != null && Me.SeparationFrom(actor) > melee_range && Me.SeparationFrom(actor) <= EquippedRangedWeapon.range)
+                                                .OrderBy(actor => actor.Health.CurrentHitPoints)
+                                                .Select(actor => actor.gameObject)
+                                                .Distinct()
+                                                .ToList());
+            }
         }
 
         if (Me.Actions.Decider.HostileStructures.Any()) {
@@ -90,11 +92,13 @@ public class Attack : MonoBehaviour
                                            .Distinct()
                                            .ToList());
 
-            AvailableRangedTargets.AddRange(Me.Actions.Decider.HostileStructures
-                                            .Where(structure => Vector3.Distance(transform.position, structure.GetInteractionPoint(Me)) > melee_range && Vector3.Distance(transform.position, structure.GetInteractionPoint(Me)) <= EquippedRangedWeapon.range + Me.Actions.Movement.ReachedThreshold)
-                                            .Select(structure => structure.gameObject)
-                                            .Distinct()
-                                            .ToList());
+            if (EquippedRangedWeapon != null) {
+                AvailableRangedTargets.AddRange(Me.Actions.Decider.HostileStructures
+                                                .Where(structure => Vector3.Distance(transform.position, structure.GetInteractionPoint(Me)) > melee_range && Vector3.Distance(transform.position, structure.GetInteractionPoint(Me)) <= EquippedRangedWeapon.range + Me.Actions.Movement.ReachedThreshold)
+                                                .Select(structure => structure.gameObject)
+                                                .Distinct()
+                                                .ToList());
+            }
         }
     }
 
@@ -116,9 +120,8 @@ public class Attack : MonoBehaviour
 
     public void EquipMeleeWeapon(Weapon weapon)
     {    
-        EquippedMeleeWeapon = Instantiate(weapon, transform.Find("AttackOrigin").transform.position, transform.rotation);
-        EquippedMeleeWeapon.transform.position += 0.2f * Vector3.forward;
-        EquippedMeleeWeapon.transform.parent = transform;
+        EquippedMeleeWeapon = Instantiate(weapon, Me.weapon_transform.position, transform.rotation);
+        EquippedMeleeWeapon.transform.parent = Me.weapon_transform;
         EquippedMeleeWeapon.name = "Melee Weapon";
         EquippedMeleeWeapon.gameObject.SetActive(false);
     }
@@ -126,9 +129,8 @@ public class Attack : MonoBehaviour
 
     public void EquipRangedWeapon(Weapon weapon)
     {
-        EquippedRangedWeapon = Instantiate(weapon, transform.Find("AttackOrigin").transform.position, transform.rotation);
-        EquippedRangedWeapon.transform.position += 0.2f * Vector3.forward;
-        EquippedRangedWeapon.transform.parent = transform;
+        EquippedRangedWeapon = Instantiate(weapon, Me.weapon_transform.position, transform.rotation);
+        EquippedRangedWeapon.transform.parent = Me.weapon_transform;
         EquippedRangedWeapon.name = "Ranged Weapon";
         EquippedRangedWeapon.gameObject.SetActive(false);
     }
@@ -136,9 +138,8 @@ public class Attack : MonoBehaviour
 
     public void EquipShield(Armor shield)
     {
-        EquippedShield = Instantiate(shield, transform.position, transform.rotation);
-        EquippedShield.transform.position -= 0.2f * Vector3.forward;
-        EquippedShield.transform.parent = transform;
+        EquippedShield = Instantiate(shield, Me.shield_transform.position, transform.rotation);
+        EquippedShield.transform.parent = Me.shield_transform;
         EquippedShield.name = "Shield";
         EquippedShield.gameObject.SetActive(false);
     }
@@ -226,11 +227,15 @@ public class Attack : MonoBehaviour
         if (CurrentMeleeTarget == null && CurrentRangedTarget == null) return;
 
         if (CurrentMeleeTarget != null) {
+            EquippedMeleeWeapon.gameObject.SetActive(true);
+            if (EquippedShield != null) EquippedShield.gameObject.SetActive(true);
             if (EquippedRangedWeapon != null) EquippedRangedWeapon.gameObject.SetActive(false);
             GetComponent<DefaultMelee>().Strike(CurrentMeleeTarget);
             Me.Actions.Stealth.Appear(); // appear after the strike to ensure sneak attack damage, etc
         } else {
+            EquippedRangedWeapon.gameObject.SetActive(true);
             if (EquippedMeleeWeapon != null) EquippedMeleeWeapon.gameObject.SetActive(false);
+            if (EquippedShield != null) EquippedShield.gameObject.SetActive(false);
             GetComponent<DefaultRange>().Strike(CurrentRangedTarget);
             Me.Actions.Stealth.Appear(); // appear after the strike to ensure sneak attack damage, etc
         }

@@ -195,7 +195,7 @@ public class Player : MonoBehaviour {
 
         if (GodOfRage) {
             Me.Stats.AdjustAttribute(Proficiencies.Attribute.Constitution, 5);
-            Me.Stats.AdjustAttribute(Proficiencies.Attribute.Dexterity, 2);
+            Me.Stats.AdjustAttribute(Proficiencies.Attribute.Dexterity, -3);
             Me.Stats.AdjustAttribute(Proficiencies.Attribute.Strength, 5);
             Me.Stats.AdjustAttribute(Proficiencies.Attribute.Wisdom, -1);
 

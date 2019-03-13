@@ -33,7 +33,6 @@ public class DefaultMelee : MonoBehaviour
 
         Target = _target;
         Weapon = Me.Actions.Attack.EquippedMeleeWeapon;
-        Weapon.gameObject.SetActive(true);
         SetModifiers();
 
         CheckAdvantageAndDisadvantage();

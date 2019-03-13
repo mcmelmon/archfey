@@ -37,7 +37,6 @@ public class DefaultRange : MonoBehaviour
 
         Target = _target;
         Weapon = Me.Actions.Attack.EquippedRangedWeapon;
-        Weapon.gameObject.SetActive(true);
         SetModifiers();
         Projectile = Instantiate(Weapon.projectile_prefab, transform.Find("AttackOrigin").transform.position, transform.rotation);
         StartCoroutine(Seek());
