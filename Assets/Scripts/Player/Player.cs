@@ -154,7 +154,7 @@ public class Player : MonoBehaviour {
 
     private void SetNormalState()
     {
-        Me.Stats.BaseArmorClass = 10; // TODO: build up from equipment, dex, etc.
+        Me.Stats.BaseArmorClass = 10;
         Me.Stats.BaseAttributes[Proficiencies.Attribute.Charisma] = 3;
         Me.Stats.BaseAttributes[Proficiencies.Attribute.Constitution] = 1;
         Me.Stats.BaseAttributes[Proficiencies.Attribute.Dexterity] = 5;
@@ -176,10 +176,8 @@ public class Player : MonoBehaviour {
         Me.Actions.Movement.BaseSpeed = speed;
         Me.Actions.Movement.Agent.speed = speed;
 
-        Me.Actions.Attack.AttacksPerAction = 1;
-        Me.Actions.Attack.AvailableWeapons = new List<Weapon>() { Weapons.Instance.GetWeaponNamed("lost_eye_axe"), Weapons.Instance.GetWeaponNamed("shortbow") };
-        Me.Actions.Attack.EquipMeleeWeapon();
-        Me.Actions.Attack.EquipRangedWeapon();
+        Me.Actions.Attack.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.None));
+        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed("lost_eye_axe"));
 
         Me.Actions.OnIdle = OnIdle;
         Me.Actions.OnReachedGoal = OnReachedGoal;
@@ -218,7 +216,8 @@ public class Player : MonoBehaviour {
 
             Me.Actions.Attack.AttacksPerAction = 2;
             Me.Actions.Attack.Raging = true;
-        } else {
+        }
+        else {
             Me.Stats.AdjustAttribute(Proficiencies.Attribute.Constitution, 0);
             Me.Stats.AdjustAttribute(Proficiencies.Attribute.Dexterity, 0);
             Me.Stats.AdjustAttribute(Proficiencies.Attribute.Strength, 0);

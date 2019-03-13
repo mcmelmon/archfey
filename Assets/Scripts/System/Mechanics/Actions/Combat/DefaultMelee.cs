@@ -100,7 +100,7 @@ public class DefaultMelee : MonoBehaviour
         if (roll >= Me.Actions.Attack.CriticalRangeStart) Critical = true;
 
         if (target_actor != null) {
-            return roll + AttackModifier > target_actor.Actions.Stats.BaseArmorClass;
+            return roll + AttackModifier > target_actor.Actions.Stats.GetArmorClass();
         } else if (target_structure != null) {
             return roll + AttackModifier > target_structure.armor_class;
         }

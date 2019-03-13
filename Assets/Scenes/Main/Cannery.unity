@@ -2985,7 +2985,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 168323430}
-  m_LocalRotation: {x: 0.01951803, y: -0.054031633, z: 0.93896335, w: 0.33918637}
+  m_LocalRotation: {x: 0.01951807, y: -0.05403164, z: 0.9389634, w: 0.33918646}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -14955,6 +14955,7 @@ GameObject:
   - component: {fileID: 724143887}
   - component: {fileID: 724143890}
   - component: {fileID: 724143889}
+  - component: {fileID: 724143891}
   - component: {fileID: 724143888}
   m_Layer: 0
   m_Name: Conflict
@@ -15034,6 +15035,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4408801ba2ae4a628d6ebb4b4cd8d9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &724143891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 724143886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52eafdf2033140ffaf5db5f73133e9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  armors:
+  - {fileID: 6111994554071298293, guid: 8f948c90baa4742b7894fde55bcca428, type: 3}
+  - {fileID: 5690579862901756974, guid: 2c63e0aa7913245e99094c39e53fec88, type: 3}
+  - {fileID: 758404304363808989, guid: a5553528d71694cb9b310783f43991c7, type: 3}
+  - {fileID: 4946067422047223661, guid: 2613452b12fe943669e47f058a74ea3b, type: 3}
+  - {fileID: 7646412881392374246, guid: 5a2e0cc50ad214b56951f2bc0bf3f2b0, type: 3}
+  - {fileID: 4831909251008113623, guid: f5488a9e517bf4872bbbe17af6466ba1, type: 3}
+  - {fileID: 4368177845593537611, guid: 5d1c6fc2733e54e9ab0a1552e1d78931, type: 3}
+  - {fileID: 5774441443174439410, guid: 968a00813e7494ca29ce360c3eba7d79, type: 3}
+  - {fileID: 2551331486381200530, guid: 8a556237ce0064121a1222c87e972f40, type: 3}
+  - {fileID: 6350093133706426074, guid: 10f6f471de5c84c6699592fa798a4f5a, type: 3}
+  - {fileID: 4759800686265277854, guid: b6bf8a55ae7954d778f22d11a214ec0c, type: 3}
+  - {fileID: 3651253685043101198, guid: 067a6c390ef97495299e726ccbb5f6e7, type: 3}
+  - {fileID: 2752362662308095498, guid: 9a5e4fd48be6640e696293f20e4c5b32, type: 3}
+  - {fileID: 3468467912402973522, guid: 688d5eb24c97b411fabb75131082017f, type: 3}
 --- !u!43 &732759210
 Mesh:
   m_ObjectHideFlags: 0

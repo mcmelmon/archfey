@@ -128,9 +128,6 @@ public class HalfOgre : MonoBehaviour
         StartCoroutine(Me.GetStatsFromServer("Half Ogre"));
         SetAdditionalStats();
 
-        Me.Actions.Attack.EquipMeleeWeapon();
-        Me.Actions.Attack.EquipRangedWeapon();
-
         Me.Actions.OnBadlyInjured = OnBadlyInjured;
         Me.Actions.OnFriendsInNeed = OnFriendsInNeed;
         Me.Actions.OnHostileActorsSighted = OnHostileActorsSighted;
@@ -147,8 +144,9 @@ public class HalfOgre : MonoBehaviour
 
     private void SetAdditionalStats()
     {
-
-        Me.Actions.Attack.AvailableWeapons = new List<Weapon>() { Weapons.Instance.GetWeaponNamed("greatclub"), Weapons.Instance.GetWeaponNamed("javelin") };
+        Me.Actions.Attack.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.Hide));
+        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed("greatclub"));
+        Me.Actions.Attack.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed("javelin"));
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
         Me.Actions.Attack.CalculateAdditionalDamage = AdditionalDamage;
     }

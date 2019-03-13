@@ -48,6 +48,7 @@ public class Weapons : MonoBehaviour
 
     // public
 
+
     public Weapon GetWeaponNamed(string name)
     {
         return weapons.First(weapon => weapon.GetComponent<Weapon>().weapon_name == name).GetComponent<Weapon>();

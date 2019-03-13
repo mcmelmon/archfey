@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6684789078256623204}
   - component: {fileID: 6250612545332649578}
   - component: {fileID: 6644537527104147697}
+  - component: {fileID: 2880012764553174331}
   m_Layer: 31
   m_Name: Weapon
   m_TagString: Untagged
@@ -104,6 +105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 343f8faffa6de4d0687c032dacb2bb1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weapon_name: 
   attack_bonus: 0
   damage_bonus: 0
   dice_type: 0
@@ -111,7 +113,7 @@ MonoBehaviour:
   damage_type: 0
   expected_damage: 0
   has_reach: 0
-  is_finese: 0
+  is_finesse: 0
   is_heavy: 0
   is_light: 0
   is_loaded: 0
@@ -122,3 +124,21 @@ MonoBehaviour:
   is_versatile: 0
   projectile_prefab: {fileID: 0}
   range: 0
+--- !u!114 &2880012764553174331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3423672708260415315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d065ca127a86f485a82a93be563bf219, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  is_equipable: 1
+  is_hidden: 0
+  spot_challenge_rating: 0
+  is_locked: 0
+  unlock_challenge_rating: 0
+  weight: 0

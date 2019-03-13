@@ -146,9 +146,6 @@ public class Acolyte : MonoBehaviour
         StartCoroutine(Me.GetStatsFromServer(this.GetType().Name));
         SetAdditionalStats();
 
-        Me.Actions.Attack.EquipMeleeWeapon();
-        Me.Actions.Attack.EquipRangedWeapon();
-
         Me.Actions.OnBadlyInjured = OnBadlyInjured;
         Me.Actions.OnFriendsInNeed = OnFriendsInNeed;
         Me.Actions.OnHostileActorsSighted = OnHostileActorsSighted;
@@ -167,7 +164,8 @@ public class Acolyte : MonoBehaviour
 
     private void SetAdditionalStats()
     {
-        Me.Actions.Attack.AvailableWeapons = Characters.available_weapons[Characters.Template.Commoner];
+        Me.Actions.Attack.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.None));
+        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed("club"));
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
 
         CureWounds = gameObject.AddComponent<CureWounds>();

@@ -3,15 +3,15 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    public enum ItemFamily { Armor, Component, Consumable, Container, Jewelry, Ore, Weapon }
+    public enum ItemFamily { Component, Consumable, Container, Jewelry, Ore }
 
+    public bool is_equipable;
     public bool is_hidden;
     public int spot_challenge_rating;
-
     public bool is_locked;
     public int unlock_challenge_rating;
-
     public int weight;
+    public int cost;
     
     // properties
 
