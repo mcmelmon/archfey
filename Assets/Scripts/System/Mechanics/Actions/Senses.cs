@@ -94,7 +94,11 @@ public class Senses : MonoBehaviour
         List<Actor> the_sneaking = Actors.Where(actor => actor.Actions.Stealth.Hiding).ToList();
         foreach (var sneaker in the_sneaking) {
             bool spotted = Me.Senses.PerceptionCheck(false, sneaker.Actions.Stealth.ChallengeRatting);  // TODO: include environmental detail for obscurity
-            if (!spotted) Actors.Remove(sneaker);
+            if (spotted && sneaker != Me && (Me == Player.Instance.Me || sneaker == Player.Instance.Me)) {
+                sneaker.Actions.Stealth.Appear();
+            } else {
+                Actors.Remove(sneaker);
+            }
         }
 
         List<Item> the_hidden = Items.Where(item => item.is_hidden).ToList();

@@ -50,7 +50,10 @@ public class Actions : MonoBehaviour
     public void ActOnTurn()
     {
         CanTakeTurn |= (Me == Player.Instance.Me);
-        if (Stealth.Hiding) Stealth.Hide(); // re-up the Stealth ChallengeRating for the round; TODO: account for obscurity at the new location, etc
+        if (Stealth.Hiding){
+            Stealth.Hide(); // re-up the Stealth ChallengeRating for the round; TODO: account for obscurity at the new location, etc
+        }
+
         Decider.ChooseState();
 
         switch (Decider.state) {
