@@ -54,6 +54,23 @@ public class Mouse : MonoBehaviour
     }
 
 
+    // pubic
+
+
+    public void SelectObject(GameObject selected_object)
+    {
+        if (Input.GetKeyDown(KeyCode.RightShift) || Input.GetKeyDown(KeyCode.LeftShift)) {
+            SelectedObjects.Add(selected_object);
+        } else {
+            SelectedObjects.Clear();
+            SelectedObjects.Add(selected_object);
+            foreach (var selection in SelectedObjects.Where(so => so != null)) {
+                selection.GetComponent<Renderer>().material = selection.GetComponent<Interactable>().highlight_material;
+            }
+        }
+    }
+
+
     // private
 
 
@@ -124,18 +141,8 @@ public class Mouse : MonoBehaviour
                         GameObject selected_object = interactable_hit.transform.gameObject;
 
                         if (selected_object != null) {
-                            if (Input.GetKeyDown("left shift") || Input.GetKeyDown("right shift")) { // TODO: the shift keys are not being detected
-                                SelectedObjects.Add(selected_object);
-                            } else {
-                                foreach (var selection in SelectedObjects.Where(so => so != null)) {
-                                    selection.GetComponent<Renderer>().material = selection.GetComponent<Interactable>().highlight_material;
-                                }
-                                SelectedObjects.Clear();
-                                SelectedObjects.Add(selected_object);
-                            }
-
+                            SelectObject(selected_object);
                             if (Time.time - LastClickTime < double_click_delay) HandleDoubleClick(selected_object);
-                            selected_object.GetComponent<Renderer>().material = selected_object.GetComponent<Interactable>().highlight_material;
                         }
                     } else if (Physics.Raycast(ray, out RaycastHit ground_hit, 150f, ground_layer_mask, QueryTriggerInteraction.Ignore)) {
                         ClearSelection();

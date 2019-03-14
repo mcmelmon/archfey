@@ -37,13 +37,11 @@ public class Attack : MonoBehaviour
     public delegate int AdditionalDamage(bool is_ranged);
 
 
-    public void AttackEnemiesInRange()
+    public void AttackEnemiesInRange(GameObject player_target = null)
     {
-        // TODO: attack the PrimaryThreat chosen by Decider, not just one from "available targets" (which is still important for range-finding)
-
         for (int i = 0; i < AttacksPerAction; i++) {
-            SelectEnemy();
-            StrikeEnemy();
+            if (player_target == null) SelectEnemy();
+            StrikeEnemy(player_target);
         }
     }
 
@@ -145,6 +143,19 @@ public class Attack : MonoBehaviour
     }
 
 
+    public bool IsAttackable(GameObject target)
+    {
+        return target.GetComponent<Actor>() != null || target.GetComponent<Structure>() != null;
+    }
+
+
+    public bool IsWithinAttackRange(Transform target)
+    {
+        float separation = Vector3.Distance(target.transform.position, transform.position);
+        return (EquippedRangedWeapon != null) ? separation < EquippedRangedWeapon.Range : separation < MeleeRange() + 1f;
+    }
+
+
     // private
 
 
@@ -220,9 +231,12 @@ public class Attack : MonoBehaviour
     }
 
 
-    private void StrikeEnemy()
+    private void StrikeEnemy(GameObject player_target = null)
     {
-        // If any targets are in melee range, strike at them ahead of ranged
+        if (player_target != null) {
+            TargetPlayerChoice(player_target);
+            return;
+        }
 
         if (CurrentMeleeTarget == null && CurrentRangedTarget == null) return;
 
@@ -247,6 +261,23 @@ public class Attack : MonoBehaviour
         return AvailableMeleeTargets.Count > 0 ? AvailableMeleeTargets[0] : null;
     }
 
+
+    private void TargetPlayerChoice(GameObject player_target)
+    {
+        if (Vector3.Distance(player_target.transform.position, transform.position) < MeleeRange() + 1) {
+            EquippedMeleeWeapon.gameObject.SetActive(true);
+            if (EquippedShield != null) EquippedShield.gameObject.SetActive(true);
+            if (EquippedRangedWeapon != null) EquippedRangedWeapon.gameObject.SetActive(false);
+            GetComponent<DefaultMelee>().Strike(player_target);
+            Me.Actions.Stealth.Appear(); // appear after the strike to ensure sneak attack damage, etc
+        } else if (EquippedRangedWeapon != null) {
+            EquippedRangedWeapon.gameObject.SetActive(true);
+            if (EquippedMeleeWeapon != null) EquippedMeleeWeapon.gameObject.SetActive(false);
+            if (EquippedShield != null) EquippedShield.gameObject.SetActive(false);
+            GetComponent<DefaultRange>().Strike(player_target);
+            Me.Actions.Stealth.Appear(); // appear after the strike to ensure sneak attack damage, etc
+        }
+    }
 
     private GameObject TargetRanged()
     {

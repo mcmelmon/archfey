@@ -177,7 +177,6 @@ public class Player : MonoBehaviour {
         Me.Actions.Movement.Agent.speed = speed;
 
         Me.Actions.Attack.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.None));
-        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Battleaxe, "lost_eye_axe"));
 
         Me.Actions.OnIdle = OnIdle;
         Me.Actions.OnReachedGoal = OnReachedGoal;
@@ -214,6 +213,7 @@ public class Player : MonoBehaviour {
             Me.Stats.Skills.Add(Proficiencies.Skill.Athletics);
             Me.Stats.Skills.Add(Proficiencies.Skill.Intimidation);
 
+            Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Battleaxe, "lost_eye_axe"));
             Me.Actions.Attack.AttacksPerAction = 2;
             Me.Actions.Attack.Raging = true;
         }
@@ -246,6 +246,7 @@ public class Player : MonoBehaviour {
             Me.Stats.Skills.Add(Proficiencies.Skill.Stealth);
             Me.Stats.Tools.Add("Thieves' tools");
 
+            Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Dagger));
             Me.Actions.Attack.AttacksPerAction = 1;
             Me.Actions.Attack.Raging = false;
         }

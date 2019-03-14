@@ -38,7 +38,7 @@ public class DefaultRange : MonoBehaviour
         Target = _target;
         Weapon = Me.Actions.Attack.EquippedRangedWeapon;
         SetModifiers();
-        Projectile = Instantiate(Weapon.projectile_prefab, transform.Find("AttackOrigin").transform.position, transform.rotation);
+        Projectile = Instantiate(Weapon.projectile_prefab, Me.weapon_transform.position, transform.rotation);
         StartCoroutine(Seek());
         CheckAdvantageAndDisadvantage();
 
@@ -137,7 +137,7 @@ public class DefaultRange : MonoBehaviour
             } else if (Projectile != null) {
                 float separation = float.MaxValue;
                 Vector3 direction = Target.transform.position - transform.position;
-                float distance = 10f * Time.deltaTime;
+                float distance = Projectile.GetComponent<Projectile>().speed * Time.deltaTime;
 
                 Projectile.transform.position += distance * direction;
                 separation = Vector3.Distance(Target.transform.position, Projectile.transform.position);

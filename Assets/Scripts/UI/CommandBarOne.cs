@@ -38,6 +38,7 @@ public class CommandBarOne : MonoBehaviour {
         }
         Instance = this;
         SetComponents();
+        StartCoroutine(HandleActionKeys());
         StartCoroutine(ManageButtons());
     }
 
@@ -47,22 +48,37 @@ public class CommandBarOne : MonoBehaviour {
 
     public void Attack()
     {
-        if (Me.Actions.CanTakeTurn) {
-            AttackButton.interactable = false;
-            Me.Actions.CanTakeTurn = false;
-            List<Actor> targets = Mouse.SelectedObjects.Select(so => so.GetComponent<Actor>()).ToList();
+        // TODO: bonus action attack
+
+        if (Me.Actions.CanTakeAction && AttackButton.interactable) {
+            var targets = Mouse.SelectedObjects.Where(so => so != null && Me.Actions.Attack.IsAttackable(so) && Me.Actions.Attack.IsWithinAttackRange(so.transform));
             if (targets.Any()) {
-                Me.Actions.Decider.Enemies.Add(targets.First());
-                Me.Actions.Attack.SetEnemyRanges();
-                Me.Actions.Attack.AttackEnemiesInRange();
-            } 
+                Me.Actions.Attack.AttackEnemiesInRange(targets.First());
+                Me.Actions.CanTakeAction = false;
+            }
+        }
+    }
+
+
+    public void Dash()
+    {
+        if (Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction) {
+            Me.Actions.CanTakeAction = false;
+        }
+    }
+
+
+    public void Disengage()
+    {
+        if (Me.Actions.CanTakeAction) {
+
         }
     }
 
 
     public void Rage()
     {
-        if (Me.Actions.CanTakeTurn) {
+        if (Me.Actions.CanTakeAction && RageButton.interactable) {
             if (!Player.Instance.GodOfRage) {
                 Player.Instance.Enrage();
             }
@@ -72,11 +88,12 @@ public class CommandBarOne : MonoBehaviour {
 
     public void Sneak()
     {
-        if (Me.Actions.CanTakeTurn) {
+        if (Me.Actions.CanTakeAction && StealthButton.interactable) {
             if (Me.Actions.Stealth.Hiding) {
                 Me.Actions.Stealth.Appear();
             } else {
                 Me.Actions.Stealth.Hide();
+                Me.Actions.CanTakeAction = false;
             }
         }
     }
@@ -93,12 +110,52 @@ public class CommandBarOne : MonoBehaviour {
     }
 
 
-    public IEnumerator ManageButtons()
+    // private
+
+
+    private IEnumerator HandleActionKeys()
+    {
+        while (true) {
+
+            if (Input.GetKeyDown(KeyCode.Tab)) {
+                List<Actor> potential_targets = FindObjectsOfType<Actor>()
+                    .Where(actor => actor != Me && Me.Actions.Attack.IsWithinAttackRange(actor.transform) && !Mouse.SelectedObjects.Contains(actor.gameObject))
+                    .OrderBy(actor => Vector3.Distance(transform.position, actor.transform.position))
+                    .ToList();
+
+                if (potential_targets.Any()) {
+                    Mouse.Instance.SelectObject(potential_targets.First().gameObject);
+                }
+
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha1)) {
+                Attack();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha2)) {
+                Talk();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha3)) {
+                Sneak();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha4)) {
+                Rage();
+            }
+
+            yield return null;
+        }
+    }
+
+
+    private IEnumerator ManageButtons()
     {
         while (true) {
             if (Me.Actions != null) {
                 if (Me.Health.CurrentHitPoints == 0) {
-                    Me.Actions.CanTakeTurn = false;
+                    Me.Actions.CanTakeAction = false;
                     AttackButton.interactable = false;
                     StealthButton.interactable = false;
                     TalkButton.interactable = false;
@@ -122,8 +179,11 @@ public class CommandBarOne : MonoBehaviour {
                 }
 
                 if (AttackButton != null) {
-                    var interactors = Mouse.SelectedObjects.Where(so => so != null).Select(so => so.GetComponent<Actor>());
-                    AttackButton.interactable = interactors.Any() && Me.Actions.CanTakeTurn;
+                    var interactors = Mouse.SelectedObjects
+                                           .Where(so => so != null && Me.Actions.Attack.IsAttackable(so) && Me.Actions.Attack.IsWithinAttackRange(so.transform));
+                    bool not_moving = !Me.Actions.Movement.InProgress();
+                    bool have_target = interactors.Any();
+                    AttackButton.interactable = Me.Actions.CanTakeAction && not_moving && have_target;
                 }
 
                 if (StealthButton != null) {
@@ -152,8 +212,6 @@ public class CommandBarOne : MonoBehaviour {
         }
     }
 
-
-    // private
 
     private void SetComponents()
     {
