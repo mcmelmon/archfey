@@ -10,10 +10,10 @@ public class Item : MonoBehaviour
     public int spot_challenge_rating;
     public bool is_locked;
     public int unlock_challenge_rating;
-    public int base_weight;
-    public int weight_override;
-    public int base_cost;
-    public int cost_override;
+    public float base_weight;
+    public float weight_override;
+    public float base_cost;
+    public float cost_override;
     
     // properties
 

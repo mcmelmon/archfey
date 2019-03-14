@@ -140,8 +140,8 @@ public class Kobold : MonoBehaviour
     private void SetAdditionalStats()
     {
         Me.Actions.Attack.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.None));
-        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed("scimitar"));
-        Me.Actions.Attack.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed("shortbow")); 
+        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Scimitar));
+        Me.Actions.Attack.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Hand_Crossbow)); 
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
     }
 }

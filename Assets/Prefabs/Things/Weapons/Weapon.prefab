@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 3423672708260415315}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -201.5, y: 27.5, z: 74}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2861998599889356252}
   m_Father: {fileID: 0}
@@ -45,25 +45,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 343f8faffa6de4d0687c032dacb2bb1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon_name: 
-  attack_bonus: 0
-  damage_bonus: 0
-  dice_type: 0
-  number_of_dice: 0
-  damage_type: 0
-  expected_damage: 0
-  has_reach: 0
-  is_finesse: 0
-  is_heavy: 0
-  is_light: 0
-  is_loaded: 0
-  is_magic: 0
-  is_silvered: 0
-  is_thrown: 0
-  is_two_handed: 0
-  is_versatile: 0
+  weapon_name: 0
+  qualifier: 
+  magic_attack_bonus: 0
+  magic_damage_bonus: 0
   projectile_prefab: {fileID: 0}
-  range: 0
 --- !u!114 &2880012764553174331
 MonoBehaviour:
   m_ObjectHideFlags: 0

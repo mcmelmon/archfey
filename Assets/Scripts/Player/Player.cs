@@ -177,7 +177,7 @@ public class Player : MonoBehaviour {
         Me.Actions.Movement.Agent.speed = speed;
 
         Me.Actions.Attack.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.None));
-        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed("lost_eye_axe"));
+        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Battleaxe, "lost_eye_axe"));
 
         Me.Actions.OnIdle = OnIdle;
         Me.Actions.OnReachedGoal = OnReachedGoal;

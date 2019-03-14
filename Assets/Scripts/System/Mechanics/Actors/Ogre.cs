@@ -22,7 +22,7 @@ public class Ogre : MonoBehaviour
 
     public int AdditionalDamage(bool is_ranged)
     {
-        return is_ranged ? Me.Actions.RollDie(Me.Actions.Attack.EquippedRangedWeapon.dice_type, 1) : Me.Actions.RollDie(Me.Actions.Attack.EquippedMeleeWeapon.dice_type, 1);
+        return is_ranged ? Me.Actions.RollDie(Me.Actions.Attack.EquippedRangedWeapon.DiceType, 1) : Me.Actions.RollDie(Me.Actions.Attack.EquippedMeleeWeapon.DiceType, 1);
     }
 
 
@@ -146,8 +146,8 @@ public class Ogre : MonoBehaviour
     private void SetAdditionalStats()
     {
         Me.Actions.Attack.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.Hide));
-        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed("greatclub"));
-        Me.Actions.Attack.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed("javelin")); 
+        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Greataxe));
+        Me.Actions.Attack.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Javelin)); 
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
         Me.Actions.Attack.CalculateAdditionalDamage = AdditionalDamage;
     }

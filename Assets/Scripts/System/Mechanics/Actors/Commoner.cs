@@ -326,7 +326,7 @@ public class Commoner : MonoBehaviour
     private void SetAdditionalStats()
     {
         Me.Actions.Attack.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.None));
-        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed("club"));
+        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Club));
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
     }
 

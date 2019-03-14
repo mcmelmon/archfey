@@ -26,7 +26,7 @@ public class Bugbear : MonoBehaviour
         Actor target = Me.Actions.Attack.CurrentMeleeTarget?.GetComponent<Actor>() ?? Me.Actions.Attack.CurrentRangedTarget?.GetComponent<Actor>();
 
         int additional_damage = Me.Actions.Attack.HasSurprise(target) ? Me.Actions.RollDie(6, 2) : 0;
-        return is_ranged ? additional_damage : additional_damage + Me.Actions.RollDie(Me.Actions.Attack.EquippedMeleeWeapon.dice_type, 1);
+        return is_ranged ? additional_damage : additional_damage + Me.Actions.RollDie(Me.Actions.Attack.EquippedMeleeWeapon.DiceType, 1);
     }
 
 
@@ -148,8 +148,8 @@ public class Bugbear : MonoBehaviour
     {
         Me.Actions.Attack.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.Hide));
         Me.Actions.Attack.EquipShield(Armors.Instance.GetArmorNamed(Armors.ArmorName.Shield));
-        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed("morningstar"));
-        Me.Actions.Attack.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed("javelin"));
+        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Morningstar));
+        Me.Actions.Attack.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Javelin));
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
         Me.Actions.Attack.CalculateAdditionalDamage = AdditionalDamage;
 

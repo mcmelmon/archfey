@@ -4,8 +4,48 @@ using UnityEngine;
 
 public class Weapons : MonoBehaviour
 {
-    public enum DamageType
+    public enum WeaponName
     {
+        Battleaxe,
+        Blowgun,
+        Club,
+        Dagger,
+        Dart,
+        Flail,
+        Glaive,
+        Greataxe,
+        Greatclub,
+        Greatsword,
+        Halberd,
+        Hand_Crossbow,
+        Handaxe,
+        Heavy_Crossbow,
+        Javelin,
+        Lance,
+        Light_Crossbow,
+        Light_Hammer,
+        Longbow,
+        Longsword,
+        Mace,
+        Maul,
+        Morningstar,
+        Net,
+        Pike,
+        Quarterstaff,
+        Rapier,
+        Scimitar,
+        Shortbow,
+        Shortsword,
+        Sickle,
+        Sling,
+        Spear,
+        Trident,
+        War_Pick,
+        Warhammer,
+        Whip
+    };
+
+    public enum DamageType {
         Acid,
         Bludgeoning,
         Cold,
@@ -21,9 +61,11 @@ public class Weapons : MonoBehaviour
         Thunder
     };
 
+    public enum WeaponType { Simple_Melee, Simple_Ranged, Martial_Melee, Martial_Ranged };
+
     // Inspector settings
 
-    public List<GameObject> weapons;
+    public List<Weapon> weapons;
 
 
     // properties
@@ -49,8 +91,11 @@ public class Weapons : MonoBehaviour
     // public
 
 
-    public Weapon GetWeaponNamed(string name)
+    public Weapon GetWeaponNamed(WeaponName name, string qualifer = "")
     {
-        return weapons.First(weapon => weapon.GetComponent<Weapon>().weapon_name == name).GetComponent<Weapon>();
+        Weapon the_weapon = qualifer == ""
+            ? weapons.First(weapon => weapon.weapon_name == name)
+            : weapons.First(weapon => weapon.weapon_name == name && weapon.qualifier == qualifer);
+        return the_weapon;
     }
 }

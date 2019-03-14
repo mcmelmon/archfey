@@ -77,7 +77,7 @@ public class Attack : MonoBehaviour
 
             if (EquippedRangedWeapon != null) {
                 AvailableRangedTargets.AddRange(Me.Actions.Decider.Enemies
-                                                .Where(actor => actor != null && Me.SeparationFrom(actor) > melee_range && Me.SeparationFrom(actor) <= EquippedRangedWeapon.range)
+                                                .Where(actor => actor != null && Me.SeparationFrom(actor) > melee_range && Me.SeparationFrom(actor) <= EquippedRangedWeapon.Range)
                                                 .OrderBy(actor => actor.Health.CurrentHitPoints)
                                                 .Select(actor => actor.gameObject)
                                                 .Distinct()
@@ -94,7 +94,7 @@ public class Attack : MonoBehaviour
 
             if (EquippedRangedWeapon != null) {
                 AvailableRangedTargets.AddRange(Me.Actions.Decider.HostileStructures
-                                                .Where(structure => Vector3.Distance(transform.position, structure.GetInteractionPoint(Me)) > melee_range && Vector3.Distance(transform.position, structure.GetInteractionPoint(Me)) <= EquippedRangedWeapon.range + Me.Actions.Movement.ReachedThreshold)
+                                                .Where(structure => Vector3.Distance(transform.position, structure.GetInteractionPoint(Me)) > melee_range && Vector3.Distance(transform.position, structure.GetInteractionPoint(Me)) <= EquippedRangedWeapon.Range + Me.Actions.Movement.ReachedThreshold)
                                                 .Select(structure => structure.gameObject)
                                                 .Distinct()
                                                 .ToList());
@@ -161,7 +161,7 @@ public class Attack : MonoBehaviour
     {
         return EquippedMeleeWeapon == null
             ? 0f
-            : EquippedMeleeWeapon.has_reach
+            : EquippedMeleeWeapon.HasReach
                 ? Me.Actions.Movement.ReachedThreshold + 2f
                 : Me.Actions.Movement.ReachedThreshold + 1f;
     }

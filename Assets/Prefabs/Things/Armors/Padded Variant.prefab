@@ -11,6 +11,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Padded Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 217460971451096507, guid: a45ff19a0898e4604bbb967ee964e499,
+        type: 3}
+      propertyPath: armor_name
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 1031428011872832308, guid: a45ff19a0898e4604bbb967ee964e499,
         type: 3}
       propertyPath: m_LocalPosition.x

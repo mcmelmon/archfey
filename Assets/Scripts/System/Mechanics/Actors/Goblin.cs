@@ -137,8 +137,8 @@ public class Goblin : MonoBehaviour
     {
         Me.Actions.Attack.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.Leather));
         Me.Actions.Attack.EquipShield(Armors.Instance.GetArmorNamed(Armors.ArmorName.Shield));
-        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed("scimitar"));
-        Me.Actions.Attack.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed("shortbow"));
+        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Scimitar));
+        Me.Actions.Attack.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Shortbow));
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
     }
 }

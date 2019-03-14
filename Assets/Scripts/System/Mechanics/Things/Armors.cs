@@ -4,7 +4,23 @@ using UnityEngine;
 
 public class Armors : MonoBehaviour
 {
-    public enum ArmorName { Padded, Leather, Studded_Leather, Hide, Chain_Shirt, Scale_Mail, Breastplate, Half_Plate, Ring_Mail, Chain_Mail, Splint, Plate, Shield, None };
+    public enum ArmorName { 
+        Breastplate,
+        Chain_Mail,
+        Chain_Shirt,
+        Half_Plate,
+        Hide,
+        Leather,
+        None,
+        Padded,
+        Plate,
+        Ring_Mail,
+        Scale_Mail,
+        Shield,
+        Splint,
+        Studded_Leather
+    };
+
     public enum ArmorType { Light, Medium, Heavy };
 
     // Inspector settings

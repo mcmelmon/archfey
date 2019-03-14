@@ -132,8 +132,8 @@ public class Gnoll : MonoBehaviour
     {
         Me.Actions.Attack.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.Hide));
         Me.Actions.Attack.EquipShield(Armors.Instance.GetArmorNamed(Armors.ArmorName.Shield));
-        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed("spear"));
-        Me.Actions.Attack.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed("longbow"));
+        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Spear));
+        Me.Actions.Attack.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Longbow));
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
     }
 }

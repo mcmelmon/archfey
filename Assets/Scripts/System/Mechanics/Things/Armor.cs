@@ -28,6 +28,31 @@ public class Armor : MonoBehaviour
     private void Awake()
     {
         Item = GetComponent<Item>();
+        SetStats();
+    }
+
+
+    // public
+
+
+    public int ArmorClass(int dexterity_proficiency)
+    {
+        // TODO: shields
+        return BaseArmorClass + magical_bonus + Mathf.Clamp(dexterity_proficiency, MinimumDexterityBonus, MaximumDexterityBonus);
+    }
+
+
+    public string DisplayName()
+    {
+        return armor_name.ToString().Replace("_", " ").ToLower();
+    }
+
+
+    // private
+
+
+    private void SetStats()
+    {
         ArmorClassEnhancement = magical_bonus;
 
         switch (armor_name) {
@@ -152,21 +177,5 @@ public class Armor : MonoBehaviour
                 StealthDisadvantage = false;
                 break;
         }
-    }
-
-
-    // public
-
-
-    public int ArmorClass(int dexterity_proficiency)
-    {
-        // TODO: shields
-        return BaseArmorClass + magical_bonus + Mathf.Clamp(dexterity_proficiency, MinimumDexterityBonus, MaximumDexterityBonus);
-    }
-
-
-    public string DisplayName()
-    {
-        return armor_name.ToString().Replace("_", " ").ToLower();
     }
 }

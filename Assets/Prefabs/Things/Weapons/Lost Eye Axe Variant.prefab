@@ -10,67 +10,12 @@ PrefabInstance:
     - target: {fileID: 3423672708260415315, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
         type: 3}
       propertyPath: m_Name
-      value: Lost Eye Axe
-      objectReference: {fileID: 0}
-    - target: {fileID: 7470991343841006169, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -201.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7470991343841006169, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 27.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7470991343841006169, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 74
-      objectReference: {fileID: 0}
-    - target: {fileID: 7470991343841006169, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7470991343841006169, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 7470991343841006169, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7470991343841006169, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.70710677
-      objectReference: {fileID: 0}
-    - target: {fileID: 7470991343841006169, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7470991343841006169, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7470991343841006169, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 90.00001
-      objectReference: {fileID: 0}
-    - target: {fileID: 7470991343841006169, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: Lost Eye Axe Variant
       objectReference: {fileID: 0}
     - target: {fileID: 6644537527104147697, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
         type: 3}
       propertyPath: weapon_name
-      value: lost_eye_axe
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6644537527104147697, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
         type: 3}
@@ -116,6 +61,91 @@ PrefabInstance:
         type: 3}
       propertyPath: is_versatile
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6644537527104147697, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
+        type: 3}
+      propertyPath: qualifier
+      value: lost_eye_axe
+      objectReference: {fileID: 0}
+    - target: {fileID: 6644537527104147697, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
+        type: 3}
+      propertyPath: magic_attack_bonus
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6644537527104147697, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
+        type: 3}
+      propertyPath: magic_damage_bonus
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7470991343841006169, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7470991343841006169, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7470991343841006169, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7470991343841006169, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7470991343841006169, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7470991343841006169, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7470991343841006169, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7470991343841006169, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7470991343841006169, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7470991343841006169, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7470991343841006169, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7470991343841006169, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7470991343841006169, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7470991343841006169, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455, type: 3}
