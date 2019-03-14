@@ -75,6 +75,14 @@ public class Stats : MonoBehaviour
     }
 
 
+    public int GetArmorClass()
+    {
+        int armor_class = Mathf.Max(BaseArmorClass, Me.Actions.Attack.EquippedArmor.ArmorClass(GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity)));
+
+        return Me.Actions.Attack.EquippedShield != null ? armor_class + Me.Actions.Attack.EquippedShield.ArmorClassEnhancement : armor_class;
+    }
+
+
     public void UpdateStatBars()
     {
         if (rage_bar != null) {

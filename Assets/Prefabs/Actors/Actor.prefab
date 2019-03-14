@@ -173,6 +173,8 @@ MonoBehaviour:
   ground_layer:
     serializedVersion: 2
     m_Bits: 33554432
+  shield_transform: {fileID: 3553075362306555651}
+  weapon_transform: {fileID: 5059839301230664796}
 --- !u!114 &7210647187439319263
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -776,6 +778,36 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &4088424959283070637
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3553075362306555651}
+  m_Layer: 26
+  m_Name: Shield
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3553075362306555651
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4088424959283070637}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.6666667, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 675818731259904100}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5706012710180867396
 GameObject:
   m_ObjectHideFlags: 0
@@ -910,6 +942,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5059839301230664796}
+  - {fileID: 3553075362306555651}
   m_Father: {fileID: 4083075569688968}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1160,7 +1193,7 @@ GameObject:
   - component: {fileID: 2486065410115875726}
   - component: {fileID: 3036805915048324718}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Visor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1471,7 +1504,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5059839301230664796}
   m_Layer: 26
-  m_Name: AttackOrigin
+  m_Name: Weapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1485,7 +1518,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8741039536746730602}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.70800006, y: 0, z: 0}
+  m_LocalPosition: {x: 0.6666667, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 675818731259904100}

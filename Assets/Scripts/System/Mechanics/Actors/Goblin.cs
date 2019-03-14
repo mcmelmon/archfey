@@ -119,9 +119,6 @@ public class Goblin : MonoBehaviour
         StartCoroutine(Me.GetStatsFromServer(this.GetType().Name));
         SetAdditionalStats();
 
-        Me.Actions.Attack.EquipMeleeWeapon();
-        Me.Actions.Attack.EquipRangedWeapon();
-
         Me.Actions.OnBadlyInjured = OnBadlyInjured;
         Me.Actions.OnFriendsInNeed = OnFriendsInNeed;
         Me.Actions.OnHostileActorsSighted = OnHostileActorsSighted;
@@ -138,8 +135,10 @@ public class Goblin : MonoBehaviour
 
     private void SetAdditionalStats()
     {
-
-        Me.Actions.Attack.AvailableWeapons = new List<Weapon>() { Weapons.Instance.GetWeaponNamed("club") };
+        Me.Actions.Attack.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.Leather));
+        Me.Actions.Attack.EquipShield(Armors.Instance.GetArmorNamed(Armors.ArmorName.Shield));
+        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Scimitar));
+        Me.Actions.Attack.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Shortbow));
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
     }
 }

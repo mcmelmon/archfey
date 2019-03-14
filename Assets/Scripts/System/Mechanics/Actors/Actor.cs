@@ -12,6 +12,8 @@ public class Actor : MonoBehaviour
     // Inspector settings
 
     public LayerMask ground_layer;
+    public Transform shield_transform;
+    public Transform weapon_transform;
 
     // properties
 
@@ -102,7 +104,7 @@ public class Actor : MonoBehaviour
                 break;
         }
 
-        Stats.BaseArmorClass = stat_block.armor_class; // TODO: build up AC from equipment and dex
+        Stats.BaseArmorClass = stat_block.armor_class;
 
         Health.HitDice = stat_block.hit_dice;
         Health.HitDiceType = stat_block.hit_dice_type;

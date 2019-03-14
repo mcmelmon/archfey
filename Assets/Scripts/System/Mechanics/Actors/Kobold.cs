@@ -123,9 +123,6 @@ public class Kobold : MonoBehaviour
         StartCoroutine(Me.GetStatsFromServer(this.GetType().Name));
         SetAdditionalStats();
 
-        Me.Actions.Attack.EquipMeleeWeapon();
-        Me.Actions.Attack.EquipRangedWeapon();
-
         Me.Actions.OnBadlyInjured = OnBadlyInjured;
         Me.Actions.OnFriendsInNeed = OnFriendsInNeed;
         Me.Actions.OnHostileActorsSighted = OnHostileActorsSighted;
@@ -142,8 +139,9 @@ public class Kobold : MonoBehaviour
 
     private void SetAdditionalStats()
     {
-
-        Me.Actions.Attack.AvailableWeapons = Characters.available_weapons[Characters.Template.Gnoll];
+        Me.Actions.Attack.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.None));
+        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Scimitar));
+        Me.Actions.Attack.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Hand_Crossbow)); 
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
     }
 }

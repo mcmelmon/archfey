@@ -214,6 +214,8 @@ public class Actions : MonoBehaviour
 
     private void Rest()
     {
+        Me.Actions.SheathWeapon();
+
         if (Me.RestCounter == Actor.rested_at) {
             Me.Health.RecoverHealth(RollDie(Me.Health.HitDiceType, 1));
             if (Me.Magic != null) Me.Magic.RecoverSpellLevels();
@@ -232,6 +234,6 @@ public class Actions : MonoBehaviour
         Stealth = GetComponentInParent<Stealth>();
         Me = GetComponentInParent<Actor>();
         Movement = GetComponent<Movement>();
-        CanTakeTurn = Me.Health.CurrentHitPoints != 0; // currently only relevant for player
+        CanTakeTurn = true;
     }
 }

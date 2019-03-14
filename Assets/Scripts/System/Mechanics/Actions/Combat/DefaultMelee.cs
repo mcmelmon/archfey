@@ -33,7 +33,6 @@ public class DefaultMelee : MonoBehaviour
 
         Target = _target;
         Weapon = Me.Actions.Attack.EquippedMeleeWeapon;
-        Weapon.gameObject.SetActive(true);
         SetModifiers();
 
         CheckAdvantageAndDisadvantage();
@@ -55,15 +54,15 @@ public class DefaultMelee : MonoBehaviour
 
         if (target_actor != null) {
             if (target_actor.Health != null && target_actor.Actions.Stats != null && Me.Actions != null) {
-                int damage_roll = (Critical) ? (Me.Actions.RollDie(Weapon.dice_type, Weapon.number_of_dice) * 2) + 1 : Me.Actions.RollDie(Weapon.dice_type, Weapon.number_of_dice);
+                int damage_roll = (Critical) ? (Me.Actions.RollDie(Weapon.DiceType, Weapon.NumberOfDice) * 2) + 1 : Me.Actions.RollDie(Weapon.DiceType, Weapon.NumberOfDice);
                 damage_roll += DamageModifier;
-                Damage = target_actor.Actions.Stats.DamageAfterDefenses(damage_roll, Weapon.damage_type);
+                Damage = target_actor.Actions.Stats.DamageAfterDefenses(damage_roll, Weapon.DamageType);
                 target_actor.Health.LoseHealth(Damage, Me);
             }
         } else if (target_structure != null) {
-            int damage_roll = (Critical) ? Me.Actions.RollDie(Weapon.dice_type, Weapon.number_of_dice) + 1 : Random.Range(0, Weapon.dice_type) + 1;
+            int damage_roll = Me.Actions.RollDie(Weapon.DiceType, Weapon.NumberOfDice) + 1;
             damage_roll += DamageModifier;
-            target_structure.LoseStructure(damage_roll, Weapon.damage_type);
+            target_structure.LoseStructure(damage_roll, Weapon.DamageType);
         }
 
         Critical = false;
@@ -100,7 +99,7 @@ public class DefaultMelee : MonoBehaviour
         if (roll >= Me.Actions.Attack.CriticalRangeStart) Critical = true;
 
         if (target_actor != null) {
-            return roll + AttackModifier > target_actor.Actions.Stats.BaseArmorClass;
+            return roll + AttackModifier > target_actor.Actions.Stats.GetArmorClass();
         } else if (target_structure != null) {
             return roll + AttackModifier > target_structure.armor_class;
         }
@@ -120,12 +119,12 @@ public class DefaultMelee : MonoBehaviour
 
     private void SetModifiers()
     {
-        if (Weapon.is_finesse) {
-            AttackModifier = Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + Weapon.attack_bonus;
-            DamageModifier = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + Weapon.damage_bonus + Me.Actions.Attack.CalculateAdditionalDamage(false);
+        if (Weapon.IsFinesse) {
+            AttackModifier = Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + Weapon.DamageBonus;
+            DamageModifier = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + Weapon.DamageBonus + Me.Actions.Attack.CalculateAdditionalDamage(false);
         } else {
-            AttackModifier = Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) + Weapon.attack_bonus;
-            DamageModifier = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) + Weapon.damage_bonus + Me.Actions.Attack.CalculateAdditionalDamage(false);
+            AttackModifier = Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) + Weapon.DamageBonus;
+            DamageModifier = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) + Weapon.DamageBonus + Me.Actions.Attack.CalculateAdditionalDamage(false);
         }
     }
 }

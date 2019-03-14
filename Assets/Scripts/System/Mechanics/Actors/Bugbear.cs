@@ -26,7 +26,7 @@ public class Bugbear : MonoBehaviour
         Actor target = Me.Actions.Attack.CurrentMeleeTarget?.GetComponent<Actor>() ?? Me.Actions.Attack.CurrentRangedTarget?.GetComponent<Actor>();
 
         int additional_damage = Me.Actions.Attack.HasSurprise(target) ? Me.Actions.RollDie(6, 2) : 0;
-        return is_ranged ? additional_damage : additional_damage + Me.Actions.RollDie(Me.Actions.Attack.EquippedMeleeWeapon.dice_type, 1);
+        return is_ranged ? additional_damage : additional_damage + Me.Actions.RollDie(Me.Actions.Attack.EquippedMeleeWeapon.DiceType, 1);
     }
 
 
@@ -130,9 +130,6 @@ public class Bugbear : MonoBehaviour
         StartCoroutine(Me.GetStatsFromServer(this.GetType().Name));
         SetAdditionalStats();
 
-        Me.Actions.Attack.EquipMeleeWeapon();
-        Me.Actions.Attack.EquipRangedWeapon();
-
         Me.Actions.OnBadlyInjured = OnBadlyInjured;
         Me.Actions.OnFriendsInNeed = OnFriendsInNeed;
         Me.Actions.OnHostileActorsSighted = OnHostileActorsSighted;
@@ -149,14 +146,15 @@ public class Bugbear : MonoBehaviour
 
     private void SetAdditionalStats()
     {
-
-        Me.Actions.Attack.AvailableWeapons = new List<Weapon>() { Weapons.Instance.GetWeaponNamed("morningstar"), Weapons.Instance.GetWeaponNamed("javelin") };
+        Me.Actions.Attack.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.Hide));
+        Me.Actions.Attack.EquipShield(Armors.Instance.GetArmorNamed(Armors.ArmorName.Shield));
+        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Morningstar));
+        Me.Actions.Attack.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Javelin));
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
         Me.Actions.Attack.CalculateAdditionalDamage = AdditionalDamage;
 
         Me.Stats.Expertise.Add(Proficiencies.Skill.Stealth);
         Me.Stats.Skills.Add(Proficiencies.Skill.Stealth);
         Me.Stats.Skills.Add(Proficiencies.Skill.Survival);
-
     }
 }

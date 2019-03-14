@@ -22,7 +22,7 @@ public class Ogre : MonoBehaviour
 
     public int AdditionalDamage(bool is_ranged)
     {
-        return is_ranged ? Me.Actions.RollDie(Me.Actions.Attack.EquippedRangedWeapon.dice_type, 1) : Me.Actions.RollDie(Me.Actions.Attack.EquippedMeleeWeapon.dice_type, 1);
+        return is_ranged ? Me.Actions.RollDie(Me.Actions.Attack.EquippedRangedWeapon.DiceType, 1) : Me.Actions.RollDie(Me.Actions.Attack.EquippedMeleeWeapon.DiceType, 1);
     }
 
 
@@ -129,9 +129,6 @@ public class Ogre : MonoBehaviour
         StartCoroutine(Me.GetStatsFromServer(this.GetType().Name));
         SetAdditionalStats();
 
-        Me.Actions.Attack.EquipMeleeWeapon();
-        Me.Actions.Attack.EquipRangedWeapon();
-
         Me.Actions.OnBadlyInjured = OnBadlyInjured;
         Me.Actions.OnFriendsInNeed = OnFriendsInNeed;
         Me.Actions.OnHostileActorsSighted = OnHostileActorsSighted;
@@ -148,8 +145,9 @@ public class Ogre : MonoBehaviour
 
     private void SetAdditionalStats()
     {
-
-        Me.Actions.Attack.AvailableWeapons = new List<Weapon>() { Weapons.Instance.GetWeaponNamed("greatclub"), Weapons.Instance.GetWeaponNamed("javelin") };
+        Me.Actions.Attack.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.Hide));
+        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Greataxe));
+        Me.Actions.Attack.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Javelin)); 
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
         Me.Actions.Attack.CalculateAdditionalDamage = AdditionalDamage;
     }
