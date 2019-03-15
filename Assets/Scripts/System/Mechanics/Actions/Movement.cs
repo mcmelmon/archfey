@@ -153,9 +153,9 @@ public class Movement : MonoBehaviour
         AdjustSpeed(0.5f);
         IsDashing = true;
 
-        while (tick < 3) {
+        while (tick < 10) {
             tick++;
-            yield return new WaitForSeconds(Turn.ActionThreshold);
+            yield return new WaitForSeconds(1);
         }
 
         IsDashing = false;

@@ -15,6 +15,8 @@ public class Player : MonoBehaviour {
     public static Player Instance { get; set; }
     public Inventory Inventory { get; set; }
     public Actor Me { get; set; }
+    public SacredFlame SacredFlame { get; set; }
+
 
     // Unity
 
@@ -50,6 +52,14 @@ public class Player : MonoBehaviour {
 
         int additional_damage = Me.Actions.Attack.HasSurprise(target) ? Me.Actions.RollDie(6, 5) : 0;  // TODO: rogue only needs advantage, not surprise
         return (GodOfRage) ? 0 : additional_damage;
+    }
+
+
+    public void EldritchSmite(Actor target)
+    {
+        if (target != null && Vector3.Distance(target.transform.position, transform.position) < SacredFlame.Range) {
+            SacredFlame.Cast(target);
+        }
     }
 
 
@@ -159,7 +169,7 @@ public class Player : MonoBehaviour {
         Me.Stats.BaseAttributes[Proficiencies.Attribute.Dexterity] = 5;
         Me.Stats.BaseAttributes[Proficiencies.Attribute.Intelligence] = 0;
         Me.Stats.BaseAttributes[Proficiencies.Attribute.Strength] = -1;
-        Me.Stats.BaseAttributes[Proficiencies.Attribute.Wisdom] = 0;
+        Me.Stats.BaseAttributes[Proficiencies.Attribute.Wisdom] = -1;
 
         Me.Senses.Darkvision = true;
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
@@ -196,7 +206,6 @@ public class Player : MonoBehaviour {
             Me.Stats.AdjustAttribute(Proficiencies.Attribute.Constitution, 5);
             Me.Stats.AdjustAttribute(Proficiencies.Attribute.Dexterity, -3);
             Me.Stats.AdjustAttribute(Proficiencies.Attribute.Strength, 5);
-            Me.Stats.AdjustAttribute(Proficiencies.Attribute.Wisdom, -1);
 
             Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Constitution);
             Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Dexterity);
@@ -211,7 +220,9 @@ public class Player : MonoBehaviour {
             Me.Actions.Attack.AttacksPerAction = 2;
 
             CommandBarOne.Instance.ActivateButtonSet("Warlock");
-        } else {
+            if (SacredFlame == null) SacredFlame = gameObject.AddComponent<SacredFlame>();
+        }
+        else {
             Me.Stats.AdjustAttribute(Proficiencies.Attribute.Constitution, 0);
             Me.Stats.AdjustAttribute(Proficiencies.Attribute.Dexterity, 0);
             Me.Stats.AdjustAttribute(Proficiencies.Attribute.Strength, 0);
