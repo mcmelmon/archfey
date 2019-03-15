@@ -11,6 +11,7 @@ public class CommandBarOne : MonoBehaviour {
     public GameObject player;
     public GameObject attack_action;
     public GameObject dash_action;
+    public GameObject disengage_action;
     public GameObject rage_action;
     public GameObject smite_action;
     public GameObject stealth_action;
@@ -24,6 +25,7 @@ public class CommandBarOne : MonoBehaviour {
     public Button AttackButton { get; set; }
     public Dictionary<string, List<Button>> ButtonSets { get; set; }
     public Button DashButton { get; set; }
+    public Button DisengageButton { get; set; }
     public static CommandBarOne Instance { get; set; }
     public Actor Me { get; set; }
     public List<Button> OnCooldown { get; set; }
@@ -83,7 +85,7 @@ public class CommandBarOne : MonoBehaviour {
 
     public void Dash()
     {
-        if (Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction) {
+        if ((Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction) && DashButton.interactable) {
             Me.Actions.CanTakeAction = false;
             Me.Actions.Movement.Dash();
             StartCoroutine(Cooldown(DashButton, 30));
@@ -93,8 +95,10 @@ public class CommandBarOne : MonoBehaviour {
 
     public void Disengage()
     {
-        if (Me.Actions.CanTakeAction) {
-
+        if ((Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction) && DisengageButton.interactable) {
+            Me.Actions.CanTakeAction = false;
+            Me.Actions.Movement.Disengage();
+            StartCoroutine(Cooldown(DisengageButton, 15));
         }
     }
 
@@ -117,8 +121,8 @@ public class CommandBarOne : MonoBehaviour {
                 Me.Actions.Attack.AttackEnemiesInRange(targets.First());
                 Actor actor = targets.First().GetComponent<Actor>();
                 if (actor != null) {
-                    Player.Instance.EldritchSmite(actor);
-                    StartCoroutine(Cooldown(SmiteButton, 30));
+                    Player.Instance.CastEldritchSmite(actor);
+                    StartCoroutine(Cooldown(SmiteButton, 20));
                 }
                 Me.Actions.CanTakeAction = false;
             }
@@ -171,6 +175,10 @@ public class CommandBarOne : MonoBehaviour {
 
                 if (DashButton != null) {
                     DashButton.interactable = !Me.Actions.Movement.IsDashing && (Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction);
+                }
+
+                if (DisengageButton != null) {
+                    DisengageButton.interactable = !Me.Actions.Movement.IsDashing && (Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction);
                 }
 
                 if (RageButton != null) {
@@ -284,6 +292,7 @@ public class CommandBarOne : MonoBehaviour {
         AllActions = new List<GameObject> { attack_action, dash_action, rage_action, smite_action, stealth_action, talk_action };
         AttackButton = attack_action.GetComponent<Button>();
         DashButton = dash_action.GetComponent<Button>();
+        DisengageButton = disengage_action.GetComponent<Button>();
         OnCooldown = new List<Button>();
         RageButton = rage_action.GetComponent<Button>();
         SmiteButton = smite_action.GetComponent<Button>();
@@ -292,7 +301,7 @@ public class CommandBarOne : MonoBehaviour {
 
         ButtonSets = new Dictionary<string, List<Button>>
         {
-            ["Thief"] = new List<Button> { AttackButton, DashButton, StealthButton, RageButton, TalkButton },
+            ["Thief"] = new List<Button> { AttackButton, DashButton, DisengageButton, StealthButton, RageButton, TalkButton },
             ["Warlock"] = new List<Button> { AttackButton, SmiteButton }
         };
     }

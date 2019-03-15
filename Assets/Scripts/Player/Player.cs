@@ -15,7 +15,7 @@ public class Player : MonoBehaviour {
     public static Player Instance { get; set; }
     public Inventory Inventory { get; set; }
     public Actor Me { get; set; }
-    public SacredFlame SacredFlame { get; set; }
+    public EldritchSmite EldritchSmite { get; set; }
 
 
     // Unity
@@ -55,10 +55,10 @@ public class Player : MonoBehaviour {
     }
 
 
-    public void EldritchSmite(Actor target)
+    public void CastEldritchSmite(Actor target)
     {
-        if (target != null && Vector3.Distance(target.transform.position, transform.position) < SacredFlame.Range) {
-            SacredFlame.Cast(target);
+        if (target != null && Vector3.Distance(target.transform.position, transform.position) < EldritchSmite.Range) {
+            EldritchSmite.Cast(target);
         }
     }
 
@@ -220,7 +220,7 @@ public class Player : MonoBehaviour {
             Me.Actions.Attack.AttacksPerAction = 2;
 
             CommandBarOne.Instance.ActivateButtonSet("Warlock");
-            if (SacredFlame == null) SacredFlame = gameObject.AddComponent<SacredFlame>();
+            if (EldritchSmite == null) EldritchSmite = gameObject.AddComponent<EldritchSmite>();
         }
         else {
             Me.Stats.AdjustAttribute(Proficiencies.Attribute.Constitution, 0);

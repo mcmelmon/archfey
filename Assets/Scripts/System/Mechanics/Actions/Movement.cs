@@ -58,6 +58,15 @@ public class Movement : MonoBehaviour
     }
 
 
+    public void Disengage()
+    {
+        Vector3 backward = transform.forward * -1;
+        Agent.enabled = false;
+        Me.transform.position += backward * 10f;
+        Agent.enabled = true;
+    }
+
+
     public float GetAdjustedSpeed()
     {
         return Mathf.Clamp(BaseSpeed + (SpeedAdjustment * BaseSpeed * 2), 0, 20);
