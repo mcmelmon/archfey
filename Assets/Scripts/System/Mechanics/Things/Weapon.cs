@@ -419,6 +419,12 @@ public class Weapon : MonoBehaviour {
                 Range = 3;
                 WeaponType = Weapons.WeaponType.Martial_Ranged;
                 break;
+            case Weapons.WeaponName.Shield:
+                DamageType = Weapons.DamageType.Bludgeoning;
+                DiceType = 4;
+                NumberOfDice = 1;
+                WeaponType = Weapons.WeaponType.Simple_Melee;
+                break;
         }
     }
 

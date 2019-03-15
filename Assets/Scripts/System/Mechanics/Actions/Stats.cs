@@ -78,8 +78,9 @@ public class Stats : MonoBehaviour
     public int GetArmorClass()
     {
         int armor_class = Mathf.Max(BaseArmorClass, Me.Actions.Attack.EquippedArmor.ArmorClass(GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity)));
+        Armor shield = Me.Actions.Attack.EquippedOffhand?.GetComponent<Armor>();
 
-        return Me.Actions.Attack.EquippedShield != null ? armor_class + Me.Actions.Attack.EquippedShield.ArmorClassEnhancement : armor_class;
+        return shield != null ? armor_class + shield.ArmorClassEnhancement : armor_class;
     }
 
 

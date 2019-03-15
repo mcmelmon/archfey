@@ -10,20 +10,26 @@ public class CommandBarOne : MonoBehaviour {
 
     public GameObject player;
     public GameObject attack_action;
+    public GameObject dash_action;
     public GameObject rage_action;
+    public GameObject smite_action;
     public GameObject stealth_action;
     public GameObject talk_action;
     public DialogPanel dialog_panel;
 
     // properties
 
+    public List<Button> ActiveButtonSet { get; set; }
+    public List<GameObject> AllActions { get; set; }
     public Button AttackButton { get; set; }
+    public Dictionary<string, List<Button>> ButtonSets { get; set; }
+    public Button DashButton { get; set; }
     public static CommandBarOne Instance { get; set; }
     public Actor Me { get; set; }
     public Button RageButton { get; set; }
+    public Button SmiteButton { get; set; }
     public Button StealthButton { get; set; }
     public Button TalkButton { get; set; }
-    
 
     // Unity
 
@@ -39,11 +45,25 @@ public class CommandBarOne : MonoBehaviour {
         Instance = this;
         SetComponents();
         StartCoroutine(HandleActionKeys());
-        StartCoroutine(ManageButtons());
+        StartCoroutine(ButtonInteractability());
     }
 
 
     // public
+
+
+    public void ActivateButtonSet(string set)
+    {
+        foreach (var action in AllActions) {
+            action.SetActive(false);
+        }
+
+        ActiveButtonSet = ButtonSets[set];
+
+        foreach (var button in ActiveButtonSet) {
+            button.gameObject.SetActive(true);
+        }
+    }
 
 
     public void Attack()
@@ -64,6 +84,7 @@ public class CommandBarOne : MonoBehaviour {
     {
         if (Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction) {
             Me.Actions.CanTakeAction = false;
+            Me.Actions.Movement.Dash();
         }
     }
 
@@ -86,10 +107,16 @@ public class CommandBarOne : MonoBehaviour {
     }
 
 
+    public void Smite()
+    {
+
+    }
+
+
     public void Sneak()
     {
         if (Me.Actions.CanTakeAction && StealthButton.interactable) {
-            if (Me.Actions.Stealth.Hiding) {
+            if (Me.Actions.Stealth.IsHiding) {
                 Me.Actions.Stealth.Appear();
             } else {
                 Me.Actions.Stealth.Hide();
@@ -130,19 +157,43 @@ public class CommandBarOne : MonoBehaviour {
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha1)) {
-                Attack();
+                ActiveButtonSet[0]?.onClick.Invoke();
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha2)) {
-                Talk();
+                ActiveButtonSet[1]?.onClick.Invoke();
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha3)) {
-                Sneak();
+                ActiveButtonSet[2]?.onClick.Invoke();
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha4)) {
-                Rage();
+                ActiveButtonSet[3]?.onClick.Invoke();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha5)) {
+                ActiveButtonSet[4]?.onClick.Invoke();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha6)) {
+                ActiveButtonSet[5]?.onClick.Invoke();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha7)) {
+                ActiveButtonSet[6]?.onClick.Invoke();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha8)) {
+                ActiveButtonSet[7]?.onClick.Invoke();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha9)) {
+                ActiveButtonSet[8]?.onClick.Invoke();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha0)) {
+                ActiveButtonSet[9]?.onClick.Invoke();
             }
 
             yield return null;
@@ -150,34 +201,10 @@ public class CommandBarOne : MonoBehaviour {
     }
 
 
-    private IEnumerator ManageButtons()
+    private IEnumerator ButtonInteractability()
     {
         while (true) {
             if (Me.Actions != null) {
-                if (Me.Health.CurrentHitPoints == 0) {
-                    Me.Actions.CanTakeAction = false;
-                    AttackButton.interactable = false;
-                    StealthButton.interactable = false;
-                    TalkButton.interactable = false;
-                    yield return null;
-                }
-
-                if (Player.Instance.GodOfRage) {
-                    RageButton.gameObject.SetActive(false);
-                    StealthButton.gameObject.SetActive(false);
-                    TalkButton.gameObject.SetActive(false);
-                } else {
-                    if (Me.ExhaustionLevel == 0) {
-                        RageButton.gameObject.SetActive(true);
-                        RageButton.interactable = true;
-                    } else {
-                        RageButton.gameObject.SetActive(false);
-                    }
-                    StealthButton.gameObject.SetActive(true);
-                    StealthButton.interactable = true;
-                    TalkButton.gameObject.SetActive(true);
-                }
-
                 if (AttackButton != null) {
                     var interactors = Mouse.SelectedObjects
                                            .Where(so => so != null && Me.Actions.Attack.IsAttackable(so) && Me.Actions.Attack.IsWithinAttackRange(so.transform));
@@ -186,12 +213,12 @@ public class CommandBarOne : MonoBehaviour {
                     AttackButton.interactable = Me.Actions.CanTakeAction && not_moving && have_target;
                 }
 
-                if (StealthButton != null) {
-                    StealthButton.GetComponent<Image>().color = Me.Actions.Stealth.Hiding ? Color.black : Color.white;
+                if (DashButton != null) {
+                    DashButton.interactable = !Me.Actions.Movement.IsDashing && (Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction);
                 }
 
                 if (RageButton != null) {
-                    RageButton.GetComponent<Image>().color = Player.Instance.GodOfRage ? Color.red : Color.white;
+                    RageButton.interactable = Me.ExhaustionLevel == 0;
                 }
 
                 if (TalkButton != null && Mouse.HoveredObject != null) {
@@ -217,9 +244,18 @@ public class CommandBarOne : MonoBehaviour {
     {
         Me = player.GetComponent<Actor>();
 
+        AllActions = new List<GameObject> { attack_action, dash_action, rage_action, smite_action, stealth_action, talk_action };
         AttackButton = attack_action.GetComponent<Button>();
+        DashButton = dash_action.GetComponent<Button>();
         RageButton = rage_action.GetComponent<Button>();
+        SmiteButton = smite_action.GetComponent<Button>();
         StealthButton = stealth_action.GetComponent<Button>();
         TalkButton = talk_action.GetComponent<Button>();
+
+        ButtonSets = new Dictionary<string, List<Button>>
+        {
+            ["Thief"] = new List<Button> { AttackButton, DashButton, StealthButton, RageButton, TalkButton },
+            ["Warlock"] = new List<Button> { AttackButton, SmiteButton }
+        };
     }
 }

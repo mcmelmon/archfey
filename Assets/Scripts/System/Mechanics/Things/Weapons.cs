@@ -34,6 +34,7 @@ public class Weapons : MonoBehaviour
         Quarterstaff,
         Rapier,
         Scimitar,
+        Shield,
         Shortbow,
         Shortsword,
         Sickle,

@@ -12,7 +12,7 @@ public class Actor : MonoBehaviour
     // Inspector settings
 
     public LayerMask ground_layer;
-    public Transform shield_transform;
+    public Transform offhand_transform;
     public Transform weapon_transform;
 
     // properties

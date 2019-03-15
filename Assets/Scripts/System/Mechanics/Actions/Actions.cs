@@ -53,7 +53,7 @@ public class Actions : MonoBehaviour
         CanTakeAction |= (Me == Player.Instance.Me);
         CanTakeBonusAction |= (Me == Player.Instance.Me);
 
-        if (Stealth.Hiding){
+        if (Stealth.IsHiding){
             Stealth.Hide(); // re-up the Stealth ChallengeRating for the round; TODO: account for obscurity at the new location, etc
         }
 
@@ -209,6 +209,7 @@ public class Actions : MonoBehaviour
     {
         if (Attack.EquippedMeleeWeapon != null) Attack.EquippedMeleeWeapon.gameObject.SetActive(false);
         if (Attack.EquippedRangedWeapon != null) Attack.EquippedRangedWeapon.gameObject.SetActive(false);
+        if (Attack.EquippedOffhand != null) Attack.EquippedOffhand.gameObject.SetActive(false);
     }
 
 

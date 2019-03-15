@@ -32,7 +32,7 @@ public class Dialog : MonoBehaviour
         if (Me == null) return;
 
         Actor actor = other.GetComponent<Actor>();
-        if (actor == null || actor.Actions.Stealth.Hiding) return;
+        if (actor == null || actor.Actions.Stealth.IsHiding) return;
 
         if (actor.IsPlayer() || (Me.IsPlayer() && Me.Interactions.Interactors.Contains(actor))) {
             Vector3 new_facing = Vector3.RotateTowards(transform.forward, actor.transform.position - transform.position, 10f, 0f);
@@ -48,7 +48,7 @@ public class Dialog : MonoBehaviour
         if (Me == null) return;
 
         Actor actor = other.GetComponent<Actor>();
-        if (actor == null || actor.Actions.Stealth.Hiding) return;
+        if (actor == null || actor.Actions.Stealth.IsHiding) return;
 
         if (actor.IsPlayer() || (Me.IsPlayer() && Me.Interactions.Interactors.Contains(actor))) {
             Vector3 new_facing = Vector3.RotateTowards(transform.forward, actor.transform.position - transform.position, 10f, 0f);

@@ -17,7 +17,7 @@ public class Attack : MonoBehaviour
     public Armor EquippedArmor { get; set; }
     public Weapon EquippedMeleeWeapon { get; set; }
     public Weapon EquippedRangedWeapon { get; set; }
-    public Armor EquippedShield { get; set; }
+    public Weapon EquippedOffhand { get; set; }
     public Actor Me { get; set; }
     public bool Raging { get; set; }
 
@@ -116,12 +116,22 @@ public class Attack : MonoBehaviour
     }
 
 
+    // TODO: weapon sets; enforce offhand rules
     public void EquipMeleeWeapon(Weapon weapon)
     {    
         EquippedMeleeWeapon = Instantiate(weapon, Me.weapon_transform.position, transform.rotation);
         EquippedMeleeWeapon.transform.parent = Me.weapon_transform;
         EquippedMeleeWeapon.name = "Melee Weapon";
         EquippedMeleeWeapon.gameObject.SetActive(false);
+    }
+
+
+    public void EquipOffhand(Weapon weapon)
+    {
+        EquippedOffhand = Instantiate(weapon, Me.offhand_transform.position, transform.rotation);
+        EquippedOffhand.transform.parent = Me.offhand_transform;
+        EquippedOffhand.name = "Offhand";
+        EquippedOffhand.gameObject.SetActive(false);
     }
 
 
@@ -136,10 +146,10 @@ public class Attack : MonoBehaviour
 
     public void EquipShield(Armor shield)
     {
-        EquippedShield = Instantiate(shield, Me.shield_transform.position, transform.rotation);
-        EquippedShield.transform.parent = Me.shield_transform;
-        EquippedShield.name = "Shield";
-        EquippedShield.gameObject.SetActive(false);
+        EquippedOffhand = Instantiate(shield, Me.offhand_transform.position, transform.rotation).GetComponent<Weapon>();
+        EquippedOffhand.transform.parent = Me.offhand_transform;
+        EquippedOffhand.name = "Shield";
+        EquippedOffhand.gameObject.SetActive(false);
     }
 
 
@@ -242,14 +252,14 @@ public class Attack : MonoBehaviour
 
         if (CurrentMeleeTarget != null) {
             EquippedMeleeWeapon.gameObject.SetActive(true);
-            if (EquippedShield != null) EquippedShield.gameObject.SetActive(true);
+            if (EquippedOffhand != null) EquippedOffhand.gameObject.SetActive(true);
             if (EquippedRangedWeapon != null) EquippedRangedWeapon.gameObject.SetActive(false);
             GetComponent<DefaultMelee>().Strike(CurrentMeleeTarget);
             Me.Actions.Stealth.Appear(); // appear after the strike to ensure sneak attack damage, etc
         } else {
             EquippedRangedWeapon.gameObject.SetActive(true);
             if (EquippedMeleeWeapon != null) EquippedMeleeWeapon.gameObject.SetActive(false);
-            if (EquippedShield != null) EquippedShield.gameObject.SetActive(false);
+            if (EquippedOffhand != null) EquippedOffhand.gameObject.SetActive(false);
             GetComponent<DefaultRange>().Strike(CurrentRangedTarget);
             Me.Actions.Stealth.Appear(); // appear after the strike to ensure sneak attack damage, etc
         }
@@ -266,14 +276,14 @@ public class Attack : MonoBehaviour
     {
         if (Vector3.Distance(player_target.transform.position, transform.position) < MeleeRange() + 1) {
             EquippedMeleeWeapon.gameObject.SetActive(true);
-            if (EquippedShield != null) EquippedShield.gameObject.SetActive(true);
+            if (EquippedOffhand != null) EquippedOffhand.gameObject.SetActive(true);
             if (EquippedRangedWeapon != null) EquippedRangedWeapon.gameObject.SetActive(false);
             GetComponent<DefaultMelee>().Strike(player_target);
             Me.Actions.Stealth.Appear(); // appear after the strike to ensure sneak attack damage, etc
         } else if (EquippedRangedWeapon != null) {
             EquippedRangedWeapon.gameObject.SetActive(true);
             if (EquippedMeleeWeapon != null) EquippedMeleeWeapon.gameObject.SetActive(false);
-            if (EquippedShield != null) EquippedShield.gameObject.SetActive(false);
+            if (EquippedOffhand != null) EquippedOffhand.gameObject.SetActive(false);
             GetComponent<DefaultRange>().Strike(player_target);
             Me.Actions.Stealth.Appear(); // appear after the strike to ensure sneak attack damage, etc
         }

@@ -8,7 +8,7 @@ public class Stealth : MonoBehaviour {
 
     public int ChallengeRatting { get; set; }
     public Actor Me { get; set; }
-    public bool Hiding { get; set; }
+    public bool IsHiding { get; set; }
 
 
     // Unity
@@ -25,16 +25,15 @@ public class Stealth : MonoBehaviour {
 
     public void Appear()
     {
-        Hiding = false;
+        IsHiding = false;
         ChallengeRatting = 0;
     }
 
 
     public void Hide()
     {
-        Hiding = true;
         ChallengeRatting = Me.Actions.RollDie(20, 1) + StealthRating();
-        StartCoroutine(Obscure());
+        if (!IsHiding) StartCoroutine(Obscure());
     }
 
 
@@ -42,7 +41,7 @@ public class Stealth : MonoBehaviour {
     {
         // TODO: account for environment; decide if being spotted should force Appear
         if (other_actor == null) return false;
-        bool spotted = !Hiding || other_actor.Senses.PerceptionCheck(false, ChallengeRatting);
+        bool spotted = !IsHiding || other_actor.Senses.PerceptionCheck(false, ChallengeRatting);
         return spotted;
     }
 
@@ -53,9 +52,10 @@ public class Stealth : MonoBehaviour {
     private IEnumerator Obscure()
     {
         float starting_speed_adjustment = Me.Actions.Movement.SpeedAdjustment;
-        Me.Actions.Movement.AdjustSpeed(starting_speed_adjustment - 0.25f);  // if no other adjustment, move at half speed
+        Me.Actions.Movement.AdjustSpeed(starting_speed_adjustment - 0.2f);  // if no other adjustment, move at half speed
+        IsHiding = true;
 
-        while (Hiding) {
+        while (IsHiding) {
             GetComponent<MeshRenderer>().enabled = false;
             yield return null;
         }
