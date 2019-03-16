@@ -173,7 +173,7 @@ MonoBehaviour:
   ground_layer:
     serializedVersion: 2
     m_Bits: 33554432
-  shield_transform: {fileID: 3553075362306555651}
+  offhand_transform: {fileID: 3553075362306555651}
   weapon_transform: {fileID: 5059839301230664796}
 --- !u!114 &7210647187439319263
 MonoBehaviour:
@@ -788,7 +788,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3553075362306555651}
   m_Layer: 26
-  m_Name: Shield
+  m_Name: Offhand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1504,7 +1504,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5059839301230664796}
   m_Layer: 26
-  m_Name: Weapon
+  m_Name: Mainhand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

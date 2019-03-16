@@ -10,20 +10,33 @@ public class CommandBarOne : MonoBehaviour {
 
     public GameObject player;
     public GameObject attack_action;
+    public GameObject dash_action;
+    public GameObject disengage_action;
+    public GameObject pick_lock_action;
     public GameObject rage_action;
+    public GameObject sleight_action;
+    public GameObject smite_action;
     public GameObject stealth_action;
     public GameObject talk_action;
     public DialogPanel dialog_panel;
 
     // properties
 
+    public List<Button> ActiveButtonSet { get; set; }
+    public List<GameObject> AllActions { get; set; }
     public Button AttackButton { get; set; }
+    public Dictionary<string, List<Button>> ButtonSets { get; set; }
+    public Button DashButton { get; set; }
+    public Button DisengageButton { get; set; }
     public static CommandBarOne Instance { get; set; }
     public Actor Me { get; set; }
+    public List<Button> OnCooldown { get; set; }
+    public Button PickLockButton { get; set; }
     public Button RageButton { get; set; }
+    public Button SleightButton { get; set; }
+    public Button SmiteButton { get; set; }
     public Button StealthButton { get; set; }
     public Button TalkButton { get; set; }
-    
 
     // Unity
 
@@ -38,31 +51,65 @@ public class CommandBarOne : MonoBehaviour {
         }
         Instance = this;
         SetComponents();
-        StartCoroutine(ManageButtons());
+        StartCoroutine(HandleActionKeys());
+        StartCoroutine(ButtonInteractability());
     }
 
 
     // public
 
 
+    public void ActivateButtonSet(string set)
+    {
+        foreach (var action in AllActions) {
+            action.SetActive(false);
+        }
+
+        ActiveButtonSet = ButtonSets[set];
+
+        foreach (var button in ActiveButtonSet) {
+            button.gameObject.SetActive(true);
+        }
+    }
+
+
     public void Attack()
     {
-        if (Me.Actions.CanTakeTurn) {
-            AttackButton.interactable = false;
-            Me.Actions.CanTakeTurn = false;
-            List<Actor> targets = Mouse.SelectedObjects.Select(so => so.GetComponent<Actor>()).ToList();
+        // TODO: bonus action attack
+
+        if (Me.Actions.CanTakeAction && AttackButton.interactable) {
+            var targets = Mouse.SelectedObjects.Where(so => so != null && Me.Actions.Attack.IsAttackable(so) && Me.Actions.Attack.IsWithinAttackRange(so.transform));
             if (targets.Any()) {
-                Me.Actions.Decider.Enemies.Add(targets.First());
-                Me.Actions.Attack.SetEnemyRanges();
-                Me.Actions.Attack.AttackEnemiesInRange();
-            } 
+                Me.Actions.Attack.AttackEnemiesInRange(targets.First());
+                Me.Actions.CanTakeAction = false;
+            }
+        }
+    }
+
+
+    public void Dash()
+    {
+        if ((Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction) && DashButton.interactable) {
+            Me.Actions.CanTakeAction = false;
+            Me.Actions.Movement.Dash();
+            StartCoroutine(Cooldown(DashButton, 30));
+        }
+    }
+
+
+    public void Disengage()
+    {
+        if ((Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction) && DisengageButton.interactable) {
+            Me.Actions.CanTakeAction = false;
+            Me.Actions.Movement.Disengage();
+            StartCoroutine(Cooldown(DisengageButton, 15));
         }
     }
 
 
     public void Rage()
     {
-        if (Me.Actions.CanTakeTurn) {
+        if (Me.Actions.CanTakeAction && RageButton.interactable) {
             if (!Player.Instance.GodOfRage) {
                 Player.Instance.Enrage();
             }
@@ -70,13 +117,49 @@ public class CommandBarOne : MonoBehaviour {
     }
 
 
+    public void PickLock()
+    {
+        if (Me.Actions.CanTakeAction && PickLockButton.interactable) {
+            Me.Actions.CanTakeAction = false;
+            Me.Actions.Stealth.PickLock();
+        }
+    }
+
+
+    public void SleightOfHand()
+    {
+        if (Me.Actions.CanTakeAction && SleightButton.interactable) {
+            Me.Actions.CanTakeAction = false;
+            Me.Actions.Stealth.SleightOfHand();
+        }
+    }
+
+
+    public void Smite()
+    {
+        if (Me.Actions.CanTakeAction && SmiteButton.interactable) {
+            var targets = Mouse.SelectedObjects.Where(so => so != null && Me.Actions.Attack.IsAttackable(so) && Me.Actions.Attack.IsWithinAttackRange(so.transform));
+            if (targets.Any()) {
+                Me.Actions.Attack.AttackEnemiesInRange(targets.First());
+                Actor actor = targets.First().GetComponent<Actor>();
+                if (actor != null) {
+                    Player.Instance.CastEldritchSmite(actor);
+                    StartCoroutine(Cooldown(SmiteButton, 20));
+                }
+                Me.Actions.CanTakeAction = false;
+            }
+        }
+    }
+
+
     public void Sneak()
     {
-        if (Me.Actions.CanTakeTurn) {
-            if (Me.Actions.Stealth.Hiding) {
+        if (Me.Actions.CanTakeAction && StealthButton.interactable) {
+            if (Me.Actions.Stealth.IsHiding) {
                 Me.Actions.Stealth.Appear();
             } else {
                 Me.Actions.Stealth.Hide();
+                Me.Actions.CanTakeAction = false;
             }
         }
     }
@@ -93,45 +176,54 @@ public class CommandBarOne : MonoBehaviour {
     }
 
 
-    public IEnumerator ManageButtons()
+    // private
+
+
+    private IEnumerator ButtonInteractability()
     {
         while (true) {
             if (Me.Actions != null) {
-                if (Me.Health.CurrentHitPoints == 0) {
-                    Me.Actions.CanTakeTurn = false;
-                    AttackButton.interactable = false;
-                    StealthButton.interactable = false;
-                    TalkButton.interactable = false;
-                    yield return null;
-                }
 
-                if (Player.Instance.GodOfRage) {
-                    RageButton.gameObject.SetActive(false);
-                    StealthButton.gameObject.SetActive(false);
-                    TalkButton.gameObject.SetActive(false);
-                } else {
-                    if (Me.ExhaustionLevel == 0) {
-                        RageButton.gameObject.SetActive(true);
-                        RageButton.interactable = true;
-                    } else {
-                        RageButton.gameObject.SetActive(false);
-                    }
-                    StealthButton.gameObject.SetActive(true);
-                    StealthButton.interactable = true;
-                    TalkButton.gameObject.SetActive(true);
-                }
+                // deal with the buttons as if no cooldowns
 
                 if (AttackButton != null) {
-                    var interactors = Mouse.SelectedObjects.Where(so => so != null).Select(so => so.GetComponent<Actor>());
-                    AttackButton.interactable = interactors.Any() && Me.Actions.CanTakeTurn;
+                    var interactors = Mouse.SelectedObjects
+                                           .Where(so => so != null && Me.Actions.Attack.IsAttackable(so) && Me.Actions.Attack.IsWithinAttackRange(so.transform));
+                    bool not_moving = !Me.Actions.Movement.InProgress();
+                    bool have_target = interactors.Any();
+                    AttackButton.interactable = Me.Actions.CanTakeAction && not_moving && have_target;
+                    SmiteButton.interactable = AttackButton.interactable;
                 }
 
-                if (StealthButton != null) {
-                    StealthButton.GetComponent<Image>().color = Me.Actions.Stealth.Hiding ? Color.black : Color.white;
+                if (DashButton != null) {
+                    DashButton.interactable = !Me.Actions.Movement.IsDashing && (Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction);
+                }
+
+                if (DisengageButton != null) {
+                    DisengageButton.interactable = !Me.Actions.Movement.IsDashing && (Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction);
+                }
+
+                if (PickLockButton != null) {
+                    if (Mouse.SelectedObjects.Count == 1 && Mouse.SelectedObjects.First() != null) {
+                        Item target = Mouse.SelectedObjects.First().GetComponent<Item>();
+                        PickLockButton.interactable = Me.Actions.CanTakeAction && target != null && !target.IsUnlocked;
+                    } else {
+                        PickLockButton.interactable = false;
+                    }
                 }
 
                 if (RageButton != null) {
-                    RageButton.GetComponent<Image>().color = Player.Instance.GodOfRage ? Color.red : Color.white;
+                    RageButton.interactable = Me.ExhaustionLevel == 0;
+                }
+
+                if (SleightButton != null) {
+                    if (Mouse.SelectedObjects.Count == 1 && Mouse.SelectedObjects.First() != null) {
+                        Actor target_actor = Mouse.SelectedObjects.First().GetComponent<Actor>();
+                        Item target_item = Mouse.SelectedObjects.First().GetComponent<Item>();
+                        SleightButton.interactable = Me.Actions.CanTakeAction && (target_actor != null || target_item != null);
+                    } else {
+                        SleightButton.interactable = false;
+                    }
                 }
 
                 if (TalkButton != null && Mouse.HoveredObject != null) {
@@ -147,21 +239,122 @@ public class CommandBarOne : MonoBehaviour {
                         TalkButton.interactable = (hovered_actor != null) ? hovered_actor.Dialog.WithinRange(Me) : selected_actor.Dialog.WithinRange(Me);
                     }
                 }
+
+                // then deal with cooldowns
+
+                foreach (var button in OnCooldown) {
+                    button.interactable = false;
+                }
             }
             yield return null;
         }
     }
 
 
-    // private
+    private IEnumerator Cooldown(Button button, int seconds)
+    {
+        int tick = 0;
+        if (!OnCooldown.Contains(button)) OnCooldown.Add(button);
+
+        while (tick < seconds) {
+            tick++;
+            yield return new WaitForSeconds(1);
+        }
+
+        OnCooldown.Remove(button);
+    }
+
+
+    private IEnumerator HandleActionKeys()
+    {
+        while (true) {
+            if (Input.GetKeyDown(KeyCode.Tab)) {
+                List<Actor> potential_targets = FindObjectsOfType<Actor>()
+                    .Where(actor => actor != Me && Me.Actions.Attack.IsWithinAttackRange(actor.transform) && !Mouse.SelectedObjects.Contains(actor.gameObject))
+                    .OrderBy(actor => Vector3.Distance(transform.position, actor.transform.position))
+                    .ToList();
+
+                if (potential_targets.Any()) {
+                    Mouse.Instance.SelectObject(potential_targets.First().gameObject);
+                }
+
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha1)) {
+                if (ActiveButtonSet.Count >= 1 && ActiveButtonSet[0].interactable)
+                    ActiveButtonSet[0]?.onClick.Invoke();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha2)) {
+                if (ActiveButtonSet.Count >= 2 && ActiveButtonSet[1].interactable)
+                    ActiveButtonSet[1]?.onClick.Invoke();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha3)) {
+                if (ActiveButtonSet.Count >= 3 && ActiveButtonSet[2].interactable)
+                    ActiveButtonSet[2]?.onClick.Invoke();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha4)) {
+                if (ActiveButtonSet.Count >= 4 && ActiveButtonSet[3].interactable)
+                    ActiveButtonSet[3]?.onClick.Invoke();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha5)) {
+                if (ActiveButtonSet.Count >= 5 && ActiveButtonSet[4].interactable)
+                    ActiveButtonSet[4]?.onClick.Invoke();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha6)) {
+                if (ActiveButtonSet.Count >= 6 && ActiveButtonSet[5].interactable)
+                    ActiveButtonSet[5]?.onClick.Invoke();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha7)) {
+                if (ActiveButtonSet.Count >= 7 && ActiveButtonSet[6].interactable)
+                    ActiveButtonSet[6]?.onClick.Invoke();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha8)) {
+                if (ActiveButtonSet.Count >= 8 && ActiveButtonSet[7].interactable)
+                    ActiveButtonSet[7]?.onClick.Invoke();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha9)) {
+                if (ActiveButtonSet.Count >= 9 && ActiveButtonSet[8].interactable)
+                    ActiveButtonSet[8]?.onClick.Invoke();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha0)) {
+                if (ActiveButtonSet.Count >= 10 && ActiveButtonSet[9].interactable)
+                    ActiveButtonSet[9]?.onClick.Invoke();
+            }
+
+            yield return null;
+        }
+    }
+
 
     private void SetComponents()
     {
         Me = player.GetComponent<Actor>();
 
+        AllActions = new List<GameObject> { attack_action, dash_action, rage_action, smite_action, stealth_action, talk_action };
         AttackButton = attack_action.GetComponent<Button>();
+        DashButton = dash_action.GetComponent<Button>();
+        DisengageButton = disengage_action.GetComponent<Button>();
+        OnCooldown = new List<Button>();
+        PickLockButton = pick_lock_action.GetComponent<Button>();
         RageButton = rage_action.GetComponent<Button>();
+        SleightButton = sleight_action.GetComponent<Button>();
+        SmiteButton = smite_action.GetComponent<Button>();
         StealthButton = stealth_action.GetComponent<Button>();
         TalkButton = talk_action.GetComponent<Button>();
+
+        ButtonSets = new Dictionary<string, List<Button>>
+        {
+            ["Thief"] = new List<Button> { AttackButton, DashButton, DisengageButton, StealthButton, PickLockButton, SleightButton, RageButton, TalkButton },
+            ["Warlock"] = new List<Button> { AttackButton, SmiteButton }
+        };
     }
 }

@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour {
 
     // Inspector settings
-    public float speed = 5;
     public CinemachineFreeLook viewport;
 
     // properties
@@ -16,6 +15,8 @@ public class Player : MonoBehaviour {
     public static Player Instance { get; set; }
     public Inventory Inventory { get; set; }
     public Actor Me { get; set; }
+    public EldritchSmite EldritchSmite { get; set; }
+
 
     // Unity
 
@@ -51,6 +52,14 @@ public class Player : MonoBehaviour {
 
         int additional_damage = Me.Actions.Attack.HasSurprise(target) ? Me.Actions.RollDie(6, 5) : 0;  // TODO: rogue only needs advantage, not surprise
         return (GodOfRage) ? 0 : additional_damage;
+    }
+
+
+    public void CastEldritchSmite(Actor target)
+    {
+        if (target != null && Vector3.Distance(target.transform.position, transform.position) < EldritchSmite.Range) {
+            EldritchSmite.Cast(target);
+        }
     }
 
 
@@ -115,8 +124,8 @@ public class Player : MonoBehaviour {
     private IEnumerator HandleMovement()
     {
         while (true) {
-            float translation = Input.GetAxis("Vertical") * speed * Time.deltaTime;
-            float straffe = Input.GetAxis("Straffe") * speed * Time.deltaTime;
+            float translation = Input.GetAxis("Vertical") * Me.Actions.Movement.GetAdjustedSpeed() * Time.deltaTime;
+            float straffe = Input.GetAxis("Straffe") * Me.Actions.Movement.GetAdjustedSpeed() * Time.deltaTime;
             float rotation = Input.GetAxis("Horizontal") * 60f * Time.deltaTime;
 
             if (Mathf.Approximately(0, translation) && Mathf.Approximately(0, straffe) && Mathf.Approximately(0, rotation)) {
@@ -160,24 +169,24 @@ public class Player : MonoBehaviour {
         Me.Stats.BaseAttributes[Proficiencies.Attribute.Dexterity] = 5;
         Me.Stats.BaseAttributes[Proficiencies.Attribute.Intelligence] = 0;
         Me.Stats.BaseAttributes[Proficiencies.Attribute.Strength] = -1;
-        Me.Stats.BaseAttributes[Proficiencies.Attribute.Wisdom] = 0;
+        Me.Stats.BaseAttributes[Proficiencies.Attribute.Wisdom] = -1;
 
         Me.Senses.Darkvision = true;
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
 
-        Me.Health.HitDice = 8;
+        Me.Health.HitDice = 7;
         Me.Health.HitDiceType = 8;
         Me.Health.SetCurrentAndMaxHitPoints();
-        Me.Stats.ProficiencyBonus = 4;
+        Me.Stats.ProficiencyBonus = 3;
         Me.Stats.Family = "Humanoid (goblinoid)";
         Me.Stats.Size = "Small";
 
         Me.Actions.Movement.ReachedThreshold = 2f;
-        Me.Actions.Movement.BaseSpeed = speed;
-        Me.Actions.Movement.Agent.speed = speed;
+        Me.Actions.Movement.BaseSpeed = 5;
+        Me.Actions.Movement.Agent.speed = 5;
 
+        Me.Actions.Attack.Raging = true;
         Me.Actions.Attack.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.None));
-        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Battleaxe, "lost_eye_axe"));
 
         Me.Actions.OnIdle = OnIdle;
         Me.Actions.OnReachedGoal = OnReachedGoal;
@@ -188,7 +197,7 @@ public class Player : MonoBehaviour {
     private void SetSkills()
     {
         Me.Stats.ClassFeatures.Clear();
-        Me.Stats.Expertise.Clear();
+        Me.Stats.ExpertiseInSkills.Clear();
         Me.Stats.SavingThrows.Clear();
         Me.Stats.Skills.Clear();
         Me.Stats.Tools.Clear();
@@ -197,25 +206,21 @@ public class Player : MonoBehaviour {
             Me.Stats.AdjustAttribute(Proficiencies.Attribute.Constitution, 5);
             Me.Stats.AdjustAttribute(Proficiencies.Attribute.Dexterity, -3);
             Me.Stats.AdjustAttribute(Proficiencies.Attribute.Strength, 5);
-            Me.Stats.AdjustAttribute(Proficiencies.Attribute.Wisdom, -1);
 
             Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Constitution);
             Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Dexterity);
             Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Strength);
 
-            Me.Stats.ClassFeatures.Add("Battle Readiness");
-            Me.Stats.ClassFeatures.Add("Danger Sense");
-            Me.Stats.ClassFeatures.Add("Extra Attack");
-            Me.Stats.ClassFeatures.Add("Improved Critical");
-            Me.Stats.ClassFeatures.Add("Indomitable");
-            Me.Stats.ClassFeatures.Add("Secondwind");
-            Me.Stats.ClassFeatures.Add("Unarmored Defense");
+            Me.Stats.ClassFeatures.Add("Devil's Sight");
+            Me.Stats.ClassFeatures.Add("Eldritch Smite");
+            Me.Stats.ClassFeatures.Add("Ghostly Gaze");
+            Me.Stats.ClassFeatures.Add("Thirsting Blade");
 
-            Me.Stats.Skills.Add(Proficiencies.Skill.Athletics);
-            Me.Stats.Skills.Add(Proficiencies.Skill.Intimidation);
-
+            Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Battleaxe, "lost_eye_axe"));
             Me.Actions.Attack.AttacksPerAction = 2;
-            Me.Actions.Attack.Raging = true;
+
+            CommandBarOne.Instance.ActivateButtonSet("Warlock");
+            if (EldritchSmite == null) EldritchSmite = gameObject.AddComponent<EldritchSmite>();
         }
         else {
             Me.Stats.AdjustAttribute(Proficiencies.Attribute.Constitution, 0);
@@ -231,23 +236,25 @@ public class Player : MonoBehaviour {
             Me.Stats.ClassFeatures.Add("Fast Hands");
             Me.Stats.ClassFeatures.Add("Second Story Work");
             Me.Stats.ClassFeatures.Add("Sneak Attack");
-            Me.Stats.ClassFeatures.Add("Supreme Sneak");
             Me.Stats.ClassFeatures.Add("Thieves' Cant");
             Me.Stats.ClassFeatures.Add("Uncanny Dodge");
 
-            Me.Stats.Expertise.Add(Proficiencies.Skill.Perception);
-            Me.Stats.Expertise.Add(Proficiencies.Skill.Performance);
-            Me.Stats.Expertise.Add(Proficiencies.Skill.SleightOfHand);
-            Me.Stats.Expertise.Add(Proficiencies.Skill.Stealth);
+            Me.Stats.ExpertiseInSkills.Add(Proficiencies.Skill.Perception);
+            Me.Stats.ExpertiseInSkills.Add(Proficiencies.Skill.Performance);
+            Me.Stats.ExpertiseInSkills.Add(Proficiencies.Skill.SleightOfHand);
+            Me.Stats.ExpertiseInSkills.Add(Proficiencies.Skill.Stealth);
 
             Me.Stats.Skills.Add(Proficiencies.Skill.Perception);
             Me.Stats.Skills.Add(Proficiencies.Skill.Performance);
             Me.Stats.Skills.Add(Proficiencies.Skill.SleightOfHand);
             Me.Stats.Skills.Add(Proficiencies.Skill.Stealth);
-            Me.Stats.Tools.Add("Thieves' tools");
+            Me.Stats.Tools.Add(Proficiencies.Tool.Thief);
 
+            Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Dagger));
+            Me.Actions.Attack.EquipOffhand(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Dagger));
             Me.Actions.Attack.AttacksPerAction = 1;
             Me.Actions.Attack.Raging = false;
+            CommandBarOne.Instance.ActivateButtonSet("Thief");
         }
     }
 

@@ -49,8 +49,7 @@ public class HalfOgre : MonoBehaviour
 
     public void OnHostileStructuresSighted()
     {
-        if (Me.Actions.Decider.HostileStructures.Count > 0)
-        {
+        if (Me.Actions.Decider.HostileStructures.Count > 0) {
             Structure target = Me.Actions.Decider.HostileStructures[Random.Range(0, Me.Actions.Decider.HostileStructures.Count)];
             Me.Actions.Movement.SetDestination(target.GetInteractionPoint(Me));
         }
@@ -60,17 +59,14 @@ public class HalfOgre : MonoBehaviour
 
 
     public void OnIdle()
-    {        Me.Actions.SheathWeapon();
+    {        
+        Me.Actions.SheathWeapon();
 
-        if (Me.Route.local_stops.Length > 1)
-        {
+        if (Me.Route.local_stops.Length > 1) {
             Me.Route.MoveToNextPosition();
-        }
-        else
-        {
+        } else {
             List<Objective> objectives = FindObjectsOfType<Objective>().Where(objective => objective.Claim == Conflict.Instance.EnemyFaction(Me)).ToList();
-            if (objectives.Count > 0)
-            {
+            if (objectives.Count > 0) {
                 Objective next_objective = objectives[Random.Range(0, objectives.Count)];
                 Me.Actions.Movement.SetDestination(next_objective.claim_nodes[0].transform);
             }

@@ -17,7 +17,7 @@ public class Attack : MonoBehaviour
     public Armor EquippedArmor { get; set; }
     public Weapon EquippedMeleeWeapon { get; set; }
     public Weapon EquippedRangedWeapon { get; set; }
-    public Armor EquippedShield { get; set; }
+    public Weapon EquippedOffhand { get; set; }
     public Actor Me { get; set; }
     public bool Raging { get; set; }
 
@@ -37,13 +37,11 @@ public class Attack : MonoBehaviour
     public delegate int AdditionalDamage(bool is_ranged);
 
 
-    public void AttackEnemiesInRange()
+    public void AttackEnemiesInRange(GameObject player_target = null)
     {
-        // TODO: attack the PrimaryThreat chosen by Decider, not just one from "available targets" (which is still important for range-finding)
-
         for (int i = 0; i < AttacksPerAction; i++) {
-            SelectEnemy();
-            StrikeEnemy();
+            if (player_target == null) SelectEnemy();
+            StrikeEnemy(player_target);
         }
     }
 
@@ -118,12 +116,22 @@ public class Attack : MonoBehaviour
     }
 
 
+    // TODO: weapon sets; enforce offhand rules
     public void EquipMeleeWeapon(Weapon weapon)
     {    
         EquippedMeleeWeapon = Instantiate(weapon, Me.weapon_transform.position, transform.rotation);
         EquippedMeleeWeapon.transform.parent = Me.weapon_transform;
         EquippedMeleeWeapon.name = "Melee Weapon";
         EquippedMeleeWeapon.gameObject.SetActive(false);
+    }
+
+
+    public void EquipOffhand(Weapon weapon)
+    {
+        EquippedOffhand = Instantiate(weapon, Me.offhand_transform.position, transform.rotation);
+        EquippedOffhand.transform.parent = Me.offhand_transform;
+        EquippedOffhand.name = "Offhand";
+        EquippedOffhand.gameObject.SetActive(false);
     }
 
 
@@ -138,10 +146,23 @@ public class Attack : MonoBehaviour
 
     public void EquipShield(Armor shield)
     {
-        EquippedShield = Instantiate(shield, Me.shield_transform.position, transform.rotation);
-        EquippedShield.transform.parent = Me.shield_transform;
-        EquippedShield.name = "Shield";
-        EquippedShield.gameObject.SetActive(false);
+        EquippedOffhand = Instantiate(shield, Me.offhand_transform.position, transform.rotation).GetComponent<Weapon>();
+        EquippedOffhand.transform.parent = Me.offhand_transform;
+        EquippedOffhand.name = "Shield";
+        EquippedOffhand.gameObject.SetActive(false);
+    }
+
+
+    public bool IsAttackable(GameObject target)
+    {
+        return target.GetComponent<Actor>() != null || target.GetComponent<Structure>() != null;
+    }
+
+
+    public bool IsWithinAttackRange(Transform target)
+    {
+        float separation = Vector3.Distance(target.transform.position, transform.position);
+        return (EquippedRangedWeapon != null) ? separation < EquippedRangedWeapon.Range : separation < MeleeRange() + 1f;
     }
 
 
@@ -220,22 +241,25 @@ public class Attack : MonoBehaviour
     }
 
 
-    private void StrikeEnemy()
+    private void StrikeEnemy(GameObject player_target = null)
     {
-        // If any targets are in melee range, strike at them ahead of ranged
+        if (player_target != null) {
+            TargetPlayerChoice(player_target);
+            return;
+        }
 
         if (CurrentMeleeTarget == null && CurrentRangedTarget == null) return;
 
         if (CurrentMeleeTarget != null) {
             EquippedMeleeWeapon.gameObject.SetActive(true);
-            if (EquippedShield != null) EquippedShield.gameObject.SetActive(true);
+            if (EquippedOffhand != null) EquippedOffhand.gameObject.SetActive(true);
             if (EquippedRangedWeapon != null) EquippedRangedWeapon.gameObject.SetActive(false);
             GetComponent<DefaultMelee>().Strike(CurrentMeleeTarget);
             Me.Actions.Stealth.Appear(); // appear after the strike to ensure sneak attack damage, etc
         } else {
             EquippedRangedWeapon.gameObject.SetActive(true);
             if (EquippedMeleeWeapon != null) EquippedMeleeWeapon.gameObject.SetActive(false);
-            if (EquippedShield != null) EquippedShield.gameObject.SetActive(false);
+            if (EquippedOffhand != null) EquippedOffhand.gameObject.SetActive(false);
             GetComponent<DefaultRange>().Strike(CurrentRangedTarget);
             Me.Actions.Stealth.Appear(); // appear after the strike to ensure sneak attack damage, etc
         }
@@ -247,6 +271,23 @@ public class Attack : MonoBehaviour
         return AvailableMeleeTargets.Count > 0 ? AvailableMeleeTargets[0] : null;
     }
 
+
+    private void TargetPlayerChoice(GameObject player_target)
+    {
+        if (Vector3.Distance(player_target.transform.position, transform.position) < MeleeRange() + 1) {
+            EquippedMeleeWeapon.gameObject.SetActive(true);
+            if (EquippedOffhand != null) EquippedOffhand.gameObject.SetActive(true);
+            if (EquippedRangedWeapon != null) EquippedRangedWeapon.gameObject.SetActive(false);
+            GetComponent<DefaultMelee>().Strike(player_target);
+            if (Me.Actions.Stealth.IsHiding) Me.Actions.Stealth.Appear(); // appear after the strike to ensure sneak attack damage, etc
+        } else if (EquippedRangedWeapon != null) {
+            EquippedRangedWeapon.gameObject.SetActive(true);
+            if (EquippedMeleeWeapon != null) EquippedMeleeWeapon.gameObject.SetActive(false);
+            if (EquippedOffhand != null) EquippedOffhand.gameObject.SetActive(false);
+            GetComponent<DefaultRange>().Strike(player_target);
+            if (Me.Actions.Stealth.IsHiding) Me.Actions.Stealth.Appear(); // appear after the strike to ensure sneak attack damage, etc
+        }
+    }
 
     private GameObject TargetRanged()
     {

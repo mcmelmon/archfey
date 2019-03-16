@@ -10,6 +10,7 @@ public class Movement : MonoBehaviour
     // properties
 
     public float BaseSpeed { get; set; }
+    public bool IsDashing { get; set; }
     public Actor Me { get; set; }
     public NavMeshAgent Agent { get; set; }
     public Dictionary<CommonDestination, Vector3> Destinations { get; set; }
@@ -46,13 +47,29 @@ public class Movement : MonoBehaviour
         // boost of 0.5f will result in 2x movement
         SpeedAdjustment += boost;
         if (SpeedAdjustment > 1f) SpeedAdjustment = 1f;
+        if (SpeedAdjustment < -0.5f) SpeedAdjustment = -0.5f;
         Agent.speed = GetAdjustedSpeed();
+    }
+
+
+    public void Dash()
+    {
+        if (!IsDashing) StartCoroutine(Dashing());
+    }
+
+
+    public void Disengage()
+    {
+        Vector3 backward = transform.forward * -1;
+        Agent.enabled = false;
+        Me.transform.position += backward * 10f;
+        Agent.enabled = true;
     }
 
 
     public float GetAdjustedSpeed()
     {
-        return BaseSpeed + (SpeedAdjustment * BaseSpeed * 2); // adjustment of +0.5 results in 2x movement speed
+        return Mathf.Clamp(BaseSpeed + (SpeedAdjustment * BaseSpeed * 2), 0, 20);
     }
 
 
@@ -64,7 +81,7 @@ public class Movement : MonoBehaviour
 
     public bool InProgress()
     {
-        return Agent.hasPath && Agent.velocity != Vector3.zero && !NonAgentMovement;
+        return (Agent != null) && Agent.hasPath && Agent.velocity != Vector3.zero && !NonAgentMovement;
     }
 
 
@@ -138,23 +155,21 @@ public class Movement : MonoBehaviour
     // private
 
 
-    private IEnumerator FindThePath(Vector3 destination)
+    private IEnumerator Dashing()
     {
-        // In case agents start getting spawned away from the navmesh...
-        int attempt = 0;
-        int max_attempts = 5;
+        int tick = 0;
+        float previous_speed_adjustment = SpeedAdjustment;
+        AdjustSpeed(0.5f);
+        IsDashing = true;
 
-        while (!Agent.hasPath && attempt < max_attempts) {
-            if (Agent.isOnNavMesh) {
-                Agent.SetDestination(new Vector3(destination.x, Geography.Terrain.SampleHeight(destination), destination.z));
-            } else {
-                attempt++;
-                NavMesh.SamplePosition(Agent.transform.position, out NavMeshHit hit, 10.0f, NavMesh.AllAreas);
-                Agent.Warp(hit.position);
-                Debug.Log("Warp " + attempt);
-            }
-            yield return new WaitForSeconds(Turn.ActionThreshold);
+        while (tick < 10) {
+            tick++;
+            yield return new WaitForSeconds(1);
         }
+
+        IsDashing = false;
+        ResetSpeed();
+        AdjustSpeed(previous_speed_adjustment);
     }
 
 

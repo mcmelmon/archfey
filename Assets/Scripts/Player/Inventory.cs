@@ -48,13 +48,13 @@ public class Inventory : MonoBehaviour
     // public 
 
 
-    public void AddItem(Item item)
+    public void AddThing(GameObject thing)
     {
-        List<InventorySlot> available_slots = Slots.Where(slot => slot.Item == null).ToList();
+        List<InventorySlot> available_slots = Slots.Where(slot => slot.Thing == null).ToList();
 
         if (available_slots.Any()) {
-            available_slots.First().HoldItem(item);
-            item.gameObject.SetActive(false);
+            available_slots.First().HoldItem(thing);
+            thing.SetActive(false);
         }
     }
 }

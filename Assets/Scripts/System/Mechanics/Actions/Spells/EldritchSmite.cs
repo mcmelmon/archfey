@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SacredFlame : MonoBehaviour
+public class EldritchSmite : MonoBehaviour
 {
     // properties
 
@@ -30,12 +30,8 @@ public class SacredFlame : MonoBehaviour
     {
         if (_target == null) return;
         Target = _target;
-
-        int challenge_rating = 8 + Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Wisdom);
-        if (!Target.Actions.SavingThrow(Proficiencies.Attribute.Dexterity, challenge_rating)) {
-            ApplyDamage();
-            DisplayEffects();
-        }
+        ApplyDamage();
+        // TODO: knock prone
     }
 
 
@@ -53,7 +49,7 @@ public class SacredFlame : MonoBehaviour
     private void DisplayEffects()
     {
         GameObject flare = Instantiate(SpellEffects.Instance.sacred_flame_prefab, Target.transform.position, Target.transform.rotation, Target.transform);
-        flare.name = "SacredFlame";
+        flare.name = "EldritchSmite";
         flare.transform.position += new Vector3(0, 3, 0);
         Destroy(flare, 0.5f);
     }
@@ -63,23 +59,10 @@ public class SacredFlame : MonoBehaviour
     {
         DamageType = Weapons.DamageType.Radiant;
         Die = 8;
-        Level = 0;
+        Level = 4;
         Me = GetComponentInParent<Actor>();
         Range = 10f;
         School = Magic.School.Evocation;
-        switch (Me.Stats.Level) {
-            case int n when (n > 0 && n < 5):
-                NumberOfDice = 1;
-                break;
-            case int n when (n >= 5 && n < 11):
-                NumberOfDice = 2;
-                break;
-            case int n when (n >= 11 && n < 17):
-                NumberOfDice = 3;
-                break;
-            case int n when (n >= 17):
-                NumberOfDice = 4;
-                break;
-        }
+        NumberOfDice = Level;
     }
 }

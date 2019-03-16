@@ -32,6 +32,12 @@ PrefabInstance:
       propertyPath: is_loaded
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6644537527104147697, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
+        type: 3}
+      propertyPath: projectile_prefab
+      value: 
+      objectReference: {fileID: 1616139879216142, guid: 5ef6dfd2c2595457cafd0f83612f3c8a,
+        type: 3}
     - target: {fileID: 7470991343841006169, guid: 2ca3812f8a6fa47b3aa9ae235d5b4455,
         type: 3}
       propertyPath: m_LocalPosition.x

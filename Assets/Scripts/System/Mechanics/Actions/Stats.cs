@@ -23,14 +23,15 @@ public class Stats : MonoBehaviour
     public int BaseArmorClass { get; set; } // TODO: build up AC from equipment and dex
     public Dictionary<Proficiencies.Attribute, int> AttributeAdjustments { get; set; }
     public Dictionary<Proficiencies.Attribute, int> BaseAttributes { get; set; }
-    public List<Proficiencies.Skill> Expertise { get; set; }
+    public List<Proficiencies.Skill> ExpertiseInSkills { get; set; }
+    public List<Proficiencies.Tool> ExpertiseInTools { get; set; }
     public float RageDuration { get; set; }
     public float RageTick { get; set; }
     public Dictionary<Weapons.DamageType, int> Resistances { get; set; }
     public int ProficiencyBonus { get; set; }
     public List<Proficiencies.Attribute> SavingThrows { get; set; }
     public List<Proficiencies.Skill> Skills { get; set; }
-    public List<string> Tools { get; set; }
+    public List<Proficiencies.Tool> Tools { get; set; }
 
 
     // Unity
@@ -78,8 +79,9 @@ public class Stats : MonoBehaviour
     public int GetArmorClass()
     {
         int armor_class = Mathf.Max(BaseArmorClass, Me.Actions.Attack.EquippedArmor.ArmorClass(GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity)));
+        Armor shield = Me.Actions.Attack.EquippedOffhand?.GetComponent<Armor>();
 
-        return Me.Actions.Attack.EquippedShield != null ? armor_class + Me.Actions.Attack.EquippedShield.ArmorClassEnhancement : armor_class;
+        return shield != null ? armor_class + shield.ArmorClassEnhancement : armor_class;
     }
 
 
@@ -152,12 +154,13 @@ public class Stats : MonoBehaviour
         Me = GetComponentInParent<Actor>();
 
         ClassFeatures = new List<string>();
-        Expertise = new List<Proficiencies.Skill>();
+        ExpertiseInSkills = new List<Proficiencies.Skill>();
+        ExpertiseInTools = new List<Proficiencies.Tool>();
         Level = 1;
         RageDuration = 60;
         SavingThrows = new List<Proficiencies.Attribute>();
         Skills = new List<Proficiencies.Skill>();
-        Tools = new List<string>();
+        Tools = new List<Proficiencies.Tool>();
 
         AttributeAdjustments = new Dictionary<Proficiencies.Attribute, int>
         {

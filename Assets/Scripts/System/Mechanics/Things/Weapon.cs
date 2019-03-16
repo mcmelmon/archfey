@@ -56,7 +56,7 @@ public class Weapon : MonoBehaviour {
 
         switch (weapon_name) {
             case Weapons.WeaponName.Club:
-                Item.base_cost = 0.1f;
+                Item.base_cost = 0.1f; // use Industry.Coin
                 Item.base_weight = 2;
                 DamageType = Weapons.DamageType.Bludgeoning;
                 DiceType = 4;
@@ -418,6 +418,12 @@ public class Weapon : MonoBehaviour {
                 IsThrown = true;
                 Range = 3;
                 WeaponType = Weapons.WeaponType.Martial_Ranged;
+                break;
+            case Weapons.WeaponName.Shield:
+                DamageType = Weapons.DamageType.Bludgeoning;
+                DiceType = 4;
+                NumberOfDice = 1;
+                WeaponType = Weapons.WeaponType.Simple_Melee;
                 break;
         }
     }

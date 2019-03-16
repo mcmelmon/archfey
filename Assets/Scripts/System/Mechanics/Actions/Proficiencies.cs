@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -7,26 +6,56 @@ public class Proficiencies : MonoBehaviour
 {
 
     public enum Attribute { Charisma = 0, Dexterity = 1, Constitution = 2, Intelligence = 3, Strength = 4, Wisdom = 5 };
+
     public enum Skill { 
-        Acrobatics = 0,
-        AnimalHandling = 1,
-        Arcana = 2,
-        Athletics = 3,
-        Deception = 4,
-        History = 5,
-        Insight = 6,
-        Intimidation = 7,
-        Investigation = 8,
-        Medicine = 9,
-        Nature = 10,
-        Perception = 11,
-        Performance = 12,
-        Persuasion = 13,
-        Religion = 14,
-        SleightOfHand = 15,
-        Stealth = 16,
-        Survival = 17
+        Acrobatics,
+        AnimalHandling,
+        Arcana,
+        Athletics,
+        Deception,
+        History,
+        Insight,
+        Intimidation,
+        Investigation,
+        Medicine,
+        Nature,
+        Perception,
+        Performance,
+        Persuasion,
+        Religion,
+        SleightOfHand,
+        Stealth,
+        Survival
     };
+
+    public enum Tool {
+        Alchemist,
+        Brewer,
+        Calligrapher,
+        Carpenter,
+        Cartographer,
+        Cobbler,
+        Cook,
+        Disguise,
+        Farmer,
+        Forger,
+        Glassblower,
+        Herbalist,
+        Jeweler,
+        Leatherworker,
+        Lumberjack,
+        Mason,
+        Miner,
+        Painter,
+        Poisoner,
+        Potter,
+        Skinner,
+        Smith,
+        Thief,
+        Tinker,
+        Vehicle,
+        Weaver
+    }
 
     public struct SkillAttribute
     {
@@ -54,6 +83,7 @@ public class Proficiencies : MonoBehaviour
 
     // properties
 
+    public List<Tool> GatheringTools { get; set; }
     public static Proficiencies Instance { get; set; }
     public static List<SkillAttribute> SkillAttributes { get; set; }
     public static List<ToolSynergy> ToolSynergies { get; set; }
@@ -78,16 +108,22 @@ public class Proficiencies : MonoBehaviour
     // public
 
 
-    public bool Artisan(Actor _unit)
+    public Attribute GetAttributeForSkill(Skill skill)
     {
-        var my_crafting_tools = _unit.Stats.Tools.Where(t => t == "Carpenter" || t == "Cook" || t == "Smith").ToList();
+        return SkillAttributes.First(sa => sa.skill == skill).attribute;
+    }
+
+
+    public bool IsArtisan(Actor _unit)
+    {
+        List<Tool> my_crafting_tools = _unit.Stats.Tools.Where(tool => !GatheringTools.Contains(tool)).ToList();
         return my_crafting_tools.Count > 0;
     }
 
 
-    public bool Harvester(Actor _unit)
+    public bool IsHarvester(Actor _unit)
     {
-        var my_harvesting_tools = _unit.Stats.Tools.Where(t => t == "Farmer" || t == "Lumberjack" || t == "Miner").ToList();
+        List<Tool> my_harvesting_tools = _unit.Stats.Tools.Where(tool => GatheringTools.Contains(tool)).ToList();
         return my_harvesting_tools.Count > 0;
     }
 
@@ -97,8 +133,8 @@ public class Proficiencies : MonoBehaviour
 
     private void SetComponents()
     {
-        SkillAttributes = new List<SkillAttribute>()
-        {
+        GatheringTools = new List<Tool> { Tool.Herbalist, Tool.Lumberjack, Tool.Miner, Tool.Skinner };
+        SkillAttributes = new List<SkillAttribute>() {
             new SkillAttribute(Skill.Acrobatics, Attribute.Dexterity),
             new SkillAttribute(Skill.AnimalHandling, Attribute.Wisdom),
             new SkillAttribute(Skill.Arcana, Attribute.Intelligence),
@@ -119,8 +155,7 @@ public class Proficiencies : MonoBehaviour
             new SkillAttribute(Skill.Survival, Attribute.Wisdom)
         };
 
-        ToolSynergies = new List<ToolSynergy>()
-        {
+        ToolSynergies = new List<ToolSynergy>() {
             new ToolSynergy("Farmer", new List<Skill>{ Skill.AnimalHandling, Skill.Insight, Skill.Nature, Skill.Survival }),
             new ToolSynergy("Lumberjack", new List<Skill>{ Skill.Investigation, Skill.Perception, Skill.Survival }),
             new ToolSynergy("Miner", new List<Skill>{ Skill.Arcana, Skill.History, Skill.Nature }),

@@ -159,7 +159,7 @@ public class Commoner : MonoBehaviour
 
     private bool Craft()
     {
-        if (!Proficiencies.Instance.Artisan(Me) || MyWorkshop == null) return false;
+        if (!Proficiencies.Instance.IsArtisan(Me) || MyWorkshop == null) return false;
 
         float distance = Vector3.Distance(Me.Actions.Movement.Destinations[Movement.CommonDestination.Craft], transform.position);
 
@@ -228,7 +228,7 @@ public class Commoner : MonoBehaviour
     {
         if (MyHarvest != null || MyWorkshop != null) return; // work has found us
 
-        if (Proficiencies.Instance.Harvester(Me)) {
+        if (Proficiencies.Instance.IsHarvester(Me)) {
             MyHarvest = new List<HarvestingNode>(FindObjectsOfType<HarvestingNode>())
                 .Where(r => r.owner == Me.Alignment && r.AccessibleTo(Me))
                 .OrderBy(r => Vector3.Distance(transform.position, r.transform.position))
@@ -240,7 +240,7 @@ public class Commoner : MonoBehaviour
             Collider _collider = MyHarvest.GetComponent<Collider>();
             Me.Actions.Movement.AddDestination(Movement.CommonDestination.Harvest, _collider.ClosestPointOnBounds(transform.position));
 
-        } else if (Proficiencies.Instance.Artisan(Me)) {
+        } else if (Proficiencies.Instance.IsArtisan(Me)) {
             MyWorkshop = FindObjectsOfType<Workshop>().First(ws => ws.UsefulTo(Me));
             if (MyWorkshop == null) return;
 
@@ -258,7 +258,7 @@ public class Commoner : MonoBehaviour
 
     private bool Harvest()
     {
-        if (!Proficiencies.Instance.Harvester(Me) || MyHarvest == null) return false;
+        if (!Proficiencies.Instance.IsHarvester(Me) || MyHarvest == null) return false;
 
         // MyHarvest is the node itself, not the "destination"
         float distance = Vector3.Distance(Me.Actions.Movement.Destinations[Movement.CommonDestination.Harvest], transform.position);

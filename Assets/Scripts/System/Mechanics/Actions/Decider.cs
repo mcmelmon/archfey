@@ -57,8 +57,6 @@ public class Decider : MonoBehaviour
 
     public void ChooseState()
     {
-        Me.Actions.Movement.ResetSpeed();
-
         if (transform == null) {
             return;
         } else if (Medic()) {
@@ -159,7 +157,7 @@ public class Decider : MonoBehaviour
 
     private bool FullLoad()
     {
-        if (!Proficiencies.Instance.Harvester(Me)) return false;
+        if (!Proficiencies.Instance.IsHarvester(Me)) return false;
 
         foreach (var pair in Me.Load) {  // there "should" only be at most one pair at any given time
             return pair.Value >= pair.Key.full_harvest;
@@ -171,7 +169,7 @@ public class Decider : MonoBehaviour
 
     private bool Harvesting()
     {
-        return Proficiencies.Instance.Harvester(Me) && !FullLoad();
+        return Proficiencies.Instance.IsHarvester(Me) && !FullLoad();
     }
 
 

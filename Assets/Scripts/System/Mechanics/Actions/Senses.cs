@@ -30,7 +30,7 @@ public class Senses : MonoBehaviour
     public bool InsightCheck(bool active_check, int challenge_rating, bool obscurity = false, bool advantage = false, bool disadvantage = false)
     {
         int proficiency_bonus = Me.Stats.Skills.Contains(Proficiencies.Skill.Insight) ? Me.Stats.ProficiencyBonus : 0;
-        if (Me.Stats.Expertise.Contains(Proficiencies.Skill.Insight)) proficiency_bonus += proficiency_bonus;
+        if (Me.Stats.ExpertiseInSkills.Contains(Proficiencies.Skill.Insight)) proficiency_bonus += proficiency_bonus;
         int attribute_bonus = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Wisdom);
         int bonus = proficiency_bonus + attribute_bonus;
 
@@ -43,7 +43,7 @@ public class Senses : MonoBehaviour
     public bool InvestigateCheck(bool active_check, int challenge_rating, bool obscurity = false, bool advantage = false, bool disadvantage = false)
     {
         int proficiency_bonus = Me.Stats.Skills.Contains(Proficiencies.Skill.Investigation) ? Me.Stats.ProficiencyBonus : 0;
-        if (Me.Stats.Expertise.Contains(Proficiencies.Skill.Investigation)) proficiency_bonus += proficiency_bonus;
+        if (Me.Stats.ExpertiseInSkills.Contains(Proficiencies.Skill.Investigation)) proficiency_bonus += proficiency_bonus;
         int attribute_bonus = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Intelligence);
         int bonus = proficiency_bonus + attribute_bonus;
 
@@ -56,7 +56,7 @@ public class Senses : MonoBehaviour
     public bool PerceptionCheck(bool active_check, int challenge_rating, bool obscurity = false, bool advantage = false, bool disadvantage = false)
     {
         int proficiency_bonus = Me.Stats.Skills.Contains(Proficiencies.Skill.Perception) ? Me.Stats.ProficiencyBonus : 0;
-        if (Me.Stats.Expertise.Contains(Proficiencies.Skill.Perception)) proficiency_bonus += proficiency_bonus;
+        if (Me.Stats.ExpertiseInSkills.Contains(Proficiencies.Skill.Perception)) proficiency_bonus += proficiency_bonus;
         int attribute_bonus = Mathf.Max(Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Wisdom), Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Intelligence));
         int bonus = proficiency_bonus + attribute_bonus;
         if (obscurity) bonus -= 5;
@@ -91,10 +91,10 @@ public class Senses : MonoBehaviour
 
     private void RemoveHidden()
     {
-        List<Actor> the_sneaking = Actors.Where(actor => actor.Actions.Stealth.Hiding).ToList();
+        List<Actor> the_sneaking = Actors.Where(actor => actor.Actions.Stealth.IsHiding && actor != Me).ToList();
         foreach (var sneaker in the_sneaking) {
             bool spotted = Me.Senses.PerceptionCheck(false, sneaker.Actions.Stealth.ChallengeRatting);  // TODO: include environmental detail for obscurity
-            if (spotted && sneaker != Me && (Me == Player.Instance.Me || sneaker == Player.Instance.Me)) {
+            if (spotted && (Me == Player.Instance.Me || sneaker == Player.Instance.Me)) {
                 sneaker.Actions.Stealth.Appear();
             } else {
                 Actors.Remove(sneaker);
