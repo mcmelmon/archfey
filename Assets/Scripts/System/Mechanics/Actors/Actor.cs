@@ -27,6 +27,7 @@ public class Actor : MonoBehaviour
     public Dictionary<HarvestingNode, int> Load { get; set; }
     public Magic Magic { get; set; }
     public Actor Me { get; set; }
+    public List<GameObject> Pockets { get; set; }
     public int RestCounter { get; set; }
     public Route Route { get; set; }
     public Senses Senses { get; set; }
@@ -148,6 +149,7 @@ public class Actor : MonoBehaviour
         Interactions = GetComponent<Interactable>();
         Load = new Dictionary<HarvestingNode, int>();
         Me = this;
+        Pockets = new List<GameObject>();
         RestCounter = 0;
         Route = GetComponent<Route>();
         Senses = GetComponent<Senses>();

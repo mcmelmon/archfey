@@ -32,7 +32,7 @@ public class Door : MonoBehaviour
 
     public void OpenDoor()
     {
-        gameObject.transform.localScale = new Vector3(0,0,0);
+        if (Item.IsUnlocked) gameObject.transform.localScale = new Vector3(0,0,0);
     }
 
 
@@ -42,7 +42,7 @@ public class Door : MonoBehaviour
     private IEnumerator CloseDoor()
     {
         while (true) {
-            yield return new WaitForSeconds(Turn.ActionThreshold * 3);
+            yield return new WaitForSeconds(10);
             gameObject.transform.localScale = OriginalScale;
         }
     }

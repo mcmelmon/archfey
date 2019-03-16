@@ -63,15 +63,11 @@ public class Ogre : MonoBehaviour
     {
         Me.Actions.SheathWeapon();
 
-        if (Me.Route.local_stops.Length > 1)
-        {
+        if (Me.Route.local_stops.Length > 1) {
             Me.Route.MoveToNextPosition();
-        }
-        else
-        {
+        } else {
             List<Objective> objectives = FindObjectsOfType<Objective>().Where(objective => objective.Claim == Conflict.Instance.EnemyFaction(Me)).ToList();
-            if (objectives.Count > 0)
-            {
+            if (objectives.Count > 0) {
                 Objective next_objective = objectives[Random.Range(0, objectives.Count)];
                 Me.Actions.Movement.SetDestination(next_objective.claim_nodes[0].transform);
             }
@@ -150,5 +146,8 @@ public class Ogre : MonoBehaviour
         Me.Actions.Attack.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Javelin)); 
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
         Me.Actions.Attack.CalculateAdditionalDamage = AdditionalDamage;
+
+        GameObject pocket_lint = new GameObject("Pocket Lint");
+        Me.Pockets.Add(pocket_lint);
     }
 }

@@ -39,7 +39,7 @@ public class Item : MonoBehaviour
         if (OnDoubleClick != null) {
             OnDoubleClick.Invoke();
         } else {
-            Player.Instance.Inventory.AddItem(this);
+            Player.Instance.Inventory.AddThing(this.gameObject);
         }
         return true;
     }

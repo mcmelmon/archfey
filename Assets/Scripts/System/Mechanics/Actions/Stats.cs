@@ -155,6 +155,7 @@ public class Stats : MonoBehaviour
 
         ClassFeatures = new List<string>();
         ExpertiseInSkills = new List<Proficiencies.Skill>();
+        ExpertiseInTools = new List<Proficiencies.Tool>();
         Level = 1;
         RageDuration = 60;
         SavingThrows = new List<Proficiencies.Attribute>();

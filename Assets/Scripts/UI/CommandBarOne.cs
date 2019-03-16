@@ -14,6 +14,7 @@ public class CommandBarOne : MonoBehaviour {
     public GameObject disengage_action;
     public GameObject pick_lock_action;
     public GameObject rage_action;
+    public GameObject sleight_action;
     public GameObject smite_action;
     public GameObject stealth_action;
     public GameObject talk_action;
@@ -32,6 +33,7 @@ public class CommandBarOne : MonoBehaviour {
     public List<Button> OnCooldown { get; set; }
     public Button PickLockButton { get; set; }
     public Button RageButton { get; set; }
+    public Button SleightButton { get; set; }
     public Button SmiteButton { get; set; }
     public Button StealthButton { get; set; }
     public Button TalkButton { get; set; }
@@ -117,10 +119,18 @@ public class CommandBarOne : MonoBehaviour {
 
     public void PickLock()
     {
-        if (Me.Actions.CanTakeAction && RageButton.interactable) {
-            if (!Player.Instance.GodOfRage) {
-                Me.Actions.Stealth.PickLock();
-            }
+        if (Me.Actions.CanTakeAction && PickLockButton.interactable) {
+            Me.Actions.CanTakeAction = false;
+            Me.Actions.Stealth.PickLock();
+        }
+    }
+
+
+    public void SleightOfHand()
+    {
+        if (Me.Actions.CanTakeAction && SleightButton.interactable) {
+            Me.Actions.CanTakeAction = false;
+            Me.Actions.Stealth.SleightOfHand();
         }
     }
 
@@ -196,7 +206,7 @@ public class CommandBarOne : MonoBehaviour {
                 if (PickLockButton != null) {
                     if (Mouse.SelectedObjects.Count == 1 && Mouse.SelectedObjects.First() != null) {
                         Item target = Mouse.SelectedObjects.First().GetComponent<Item>();
-                        PickLockButton.interactable = Me.Actions.CanTakeAction && target != null && target.is_locked;
+                        PickLockButton.interactable = Me.Actions.CanTakeAction && target != null && !target.IsUnlocked;
                     } else {
                         PickLockButton.interactable = false;
                     }
@@ -204,6 +214,16 @@ public class CommandBarOne : MonoBehaviour {
 
                 if (RageButton != null) {
                     RageButton.interactable = Me.ExhaustionLevel == 0;
+                }
+
+                if (SleightButton != null) {
+                    if (Mouse.SelectedObjects.Count == 1 && Mouse.SelectedObjects.First() != null) {
+                        Actor target_actor = Mouse.SelectedObjects.First().GetComponent<Actor>();
+                        Item target_item = Mouse.SelectedObjects.First().GetComponent<Item>();
+                        SleightButton.interactable = Me.Actions.CanTakeAction && (target_actor != null || target_item != null);
+                    } else {
+                        SleightButton.interactable = false;
+                    }
                 }
 
                 if (TalkButton != null && Mouse.HoveredObject != null) {
@@ -248,7 +268,6 @@ public class CommandBarOne : MonoBehaviour {
     private IEnumerator HandleActionKeys()
     {
         while (true) {
-
             if (Input.GetKeyDown(KeyCode.Tab)) {
                 List<Actor> potential_targets = FindObjectsOfType<Actor>()
                     .Where(actor => actor != Me && Me.Actions.Attack.IsWithinAttackRange(actor.transform) && !Mouse.SelectedObjects.Contains(actor.gameObject))
@@ -262,43 +281,53 @@ public class CommandBarOne : MonoBehaviour {
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha1)) {
-                ActiveButtonSet[0]?.onClick.Invoke();
+                if (ActiveButtonSet.Count >= 1 && ActiveButtonSet[0].interactable)
+                    ActiveButtonSet[0]?.onClick.Invoke();
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha2)) {
-                ActiveButtonSet[1]?.onClick.Invoke();
+                if (ActiveButtonSet.Count >= 2 && ActiveButtonSet[1].interactable)
+                    ActiveButtonSet[1]?.onClick.Invoke();
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha3)) {
-                ActiveButtonSet[2]?.onClick.Invoke();
+                if (ActiveButtonSet.Count >= 3 && ActiveButtonSet[2].interactable)
+                    ActiveButtonSet[2]?.onClick.Invoke();
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha4)) {
-                ActiveButtonSet[3]?.onClick.Invoke();
+                if (ActiveButtonSet.Count >= 4 && ActiveButtonSet[3].interactable)
+                    ActiveButtonSet[3]?.onClick.Invoke();
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha5)) {
-                ActiveButtonSet[4]?.onClick.Invoke();
+                if (ActiveButtonSet.Count >= 5 && ActiveButtonSet[4].interactable)
+                    ActiveButtonSet[4]?.onClick.Invoke();
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha6)) {
-                ActiveButtonSet[5]?.onClick.Invoke();
+                if (ActiveButtonSet.Count >= 6 && ActiveButtonSet[5].interactable)
+                    ActiveButtonSet[5]?.onClick.Invoke();
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha7)) {
-                ActiveButtonSet[6]?.onClick.Invoke();
+                if (ActiveButtonSet.Count >= 7 && ActiveButtonSet[6].interactable)
+                    ActiveButtonSet[6]?.onClick.Invoke();
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha8)) {
-                ActiveButtonSet[7]?.onClick.Invoke();
+                if (ActiveButtonSet.Count >= 8 && ActiveButtonSet[7].interactable)
+                    ActiveButtonSet[7]?.onClick.Invoke();
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha9)) {
-                ActiveButtonSet[8]?.onClick.Invoke();
+                if (ActiveButtonSet.Count >= 9 && ActiveButtonSet[8].interactable)
+                    ActiveButtonSet[8]?.onClick.Invoke();
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha0)) {
-                ActiveButtonSet[9]?.onClick.Invoke();
+                if (ActiveButtonSet.Count >= 10 && ActiveButtonSet[9].interactable)
+                    ActiveButtonSet[9]?.onClick.Invoke();
             }
 
             yield return null;
@@ -317,13 +346,14 @@ public class CommandBarOne : MonoBehaviour {
         OnCooldown = new List<Button>();
         PickLockButton = pick_lock_action.GetComponent<Button>();
         RageButton = rage_action.GetComponent<Button>();
+        SleightButton = sleight_action.GetComponent<Button>();
         SmiteButton = smite_action.GetComponent<Button>();
         StealthButton = stealth_action.GetComponent<Button>();
         TalkButton = talk_action.GetComponent<Button>();
 
         ButtonSets = new Dictionary<string, List<Button>>
         {
-            ["Thief"] = new List<Button> { AttackButton, DashButton, DisengageButton, StealthButton, PickLockButton, RageButton, TalkButton },
+            ["Thief"] = new List<Button> { AttackButton, DashButton, DisengageButton, StealthButton, PickLockButton, SleightButton, RageButton, TalkButton },
             ["Warlock"] = new List<Button> { AttackButton, SmiteButton }
         };
     }

@@ -91,10 +91,10 @@ public class Senses : MonoBehaviour
 
     private void RemoveHidden()
     {
-        List<Actor> the_sneaking = Actors.Where(actor => actor.Actions.Stealth.IsHiding).ToList();
+        List<Actor> the_sneaking = Actors.Where(actor => actor.Actions.Stealth.IsHiding && actor != Me).ToList();
         foreach (var sneaker in the_sneaking) {
             bool spotted = Me.Senses.PerceptionCheck(false, sneaker.Actions.Stealth.ChallengeRatting);  // TODO: include environmental detail for obscurity
-            if (spotted && sneaker != Me && (Me == Player.Instance.Me || sneaker == Player.Instance.Me)) {
+            if (spotted && (Me == Player.Instance.Me || sneaker == Player.Instance.Me)) {
                 sneaker.Actions.Stealth.Appear();
             } else {
                 Actors.Remove(sneaker);

@@ -7,7 +7,7 @@ public class InventorySlot : MonoBehaviour
 {
     // properties
 
-    public Item Item { get; set; }
+    public GameObject Thing { get; set; }
 
 
     // Unity
@@ -15,16 +15,18 @@ public class InventorySlot : MonoBehaviour
 
     private void Awake()
     {
-        Item = null;
+        Thing = null;
     }
 
 
     // public
 
 
-    public void HoldItem(Item item)
+    public void HoldItem(GameObject thing)
     {
-        Item = item;
-        GetComponent<Button>().GetComponent<Image>().color = Color.black;
+        if (thing != null) {
+            Thing = thing;
+            GetComponent<Button>().GetComponent<Image>().color = Color.black;
+        }
     }
 }
