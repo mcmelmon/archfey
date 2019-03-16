@@ -197,7 +197,7 @@ public class Player : MonoBehaviour {
     private void SetSkills()
     {
         Me.Stats.ClassFeatures.Clear();
-        Me.Stats.Expertise.Clear();
+        Me.Stats.ExpertiseInSkills.Clear();
         Me.Stats.SavingThrows.Clear();
         Me.Stats.Skills.Clear();
         Me.Stats.Tools.Clear();
@@ -239,16 +239,16 @@ public class Player : MonoBehaviour {
             Me.Stats.ClassFeatures.Add("Thieves' Cant");
             Me.Stats.ClassFeatures.Add("Uncanny Dodge");
 
-            Me.Stats.Expertise.Add(Proficiencies.Skill.Perception);
-            Me.Stats.Expertise.Add(Proficiencies.Skill.Performance);
-            Me.Stats.Expertise.Add(Proficiencies.Skill.SleightOfHand);
-            Me.Stats.Expertise.Add(Proficiencies.Skill.Stealth);
+            Me.Stats.ExpertiseInSkills.Add(Proficiencies.Skill.Perception);
+            Me.Stats.ExpertiseInSkills.Add(Proficiencies.Skill.Performance);
+            Me.Stats.ExpertiseInSkills.Add(Proficiencies.Skill.SleightOfHand);
+            Me.Stats.ExpertiseInSkills.Add(Proficiencies.Skill.Stealth);
 
             Me.Stats.Skills.Add(Proficiencies.Skill.Perception);
             Me.Stats.Skills.Add(Proficiencies.Skill.Performance);
             Me.Stats.Skills.Add(Proficiencies.Skill.SleightOfHand);
             Me.Stats.Skills.Add(Proficiencies.Skill.Stealth);
-            Me.Stats.Tools.Add("Thieves' tools");
+            Me.Stats.Tools.Add(Proficiencies.Tool.Thief);
 
             Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Dagger));
             Me.Actions.Attack.EquipOffhand(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Dagger));

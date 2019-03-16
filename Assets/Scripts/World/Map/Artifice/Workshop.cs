@@ -8,7 +8,7 @@ using UnityEngine.Networking;
 public class Workshop : MonoBehaviour
 {
     // Inspector settings
-    public List<string> shop_tools = new List<string>();
+    public List<Proficiencies.Tool> shop_tools = new List<Proficiencies.Tool>();
 
 
     // properties
@@ -92,7 +92,7 @@ public class Workshop : MonoBehaviour
     }
 
 
-    public IEnumerator GetProductsMadeWith(string tool)
+    public IEnumerator GetProductsMadeWith(Proficiencies.Tool tool)
     {
         // It "may" make sense to grab all of the products at once (in Industry), but when there
         // are a lot of them, we will only need a small subset workshop by workshop as the settlements
@@ -113,8 +113,8 @@ public class Workshop : MonoBehaviour
                     Name = split[0],
                     Material = split[1],
                     MaterialAmount = int.Parse(split[2]),
-                    Tool = split[3],
-                    Value_CP = int.Parse(split[4])
+                    Tool = (Proficiencies.Tool)Enum.Parse(typeof(Proficiencies.Tool), split[3]),
+                Value_CP = int.Parse(split[4])
                 };
 
                 Craftworks.Add(new_product);
@@ -161,8 +161,7 @@ public class Workshop : MonoBehaviour
             .First();
 
         var primary_artisans = Storage.Structure.AttachedUnits.Where(a => a.Stats.Tools.Contains(_product.Tool)).ToList();
-        if (primary_artisans.Count == 0)
-        {
+        if (primary_artisans.Count == 0) {
             primary_artistan = GetComponentInParent<Faction>().SpawnToolUser(_product.Tool, random_residence.RandomEntrance().transform);
             Storage.Structure.AttachedUnits.Add(primary_artistan);
         }

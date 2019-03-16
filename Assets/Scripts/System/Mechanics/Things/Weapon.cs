@@ -56,7 +56,7 @@ public class Weapon : MonoBehaviour {
 
         switch (weapon_name) {
             case Weapons.WeaponName.Club:
-                Item.base_cost = 0.1f;
+                Item.base_cost = 0.1f; // use Industry.Coin
                 Item.base_weight = 2;
                 DamageType = Weapons.DamageType.Bludgeoning;
                 DiceType = 4;

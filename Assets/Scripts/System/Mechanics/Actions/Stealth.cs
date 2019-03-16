@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Stealth : MonoBehaviour {
@@ -34,6 +34,30 @@ public class Stealth : MonoBehaviour {
     {
         ChallengeRatting = Me.Actions.RollDie(20, 1) + StealthRating();
         if (!IsHiding) StartCoroutine(Obscure());
+    }
+
+
+    public void PickLock()
+    {
+        if (Mouse.SelectedObjects.Count == 1) {
+            Item target = Mouse.SelectedObjects.First().GetComponent<Item>();
+
+            if (target != null && target.is_locked) {
+                bool proficient = Me.Stats.Tools.Contains(Proficiencies.Tool.Thief);
+                bool expertise = Me.Stats.ExpertiseInTools.Contains(Proficiencies.Tool.Thief);
+                int proficiency_bonus = expertise ? Me.Stats.ProficiencyBonus * 2 : Me.Stats.ProficiencyBonus;
+                int dexterity_bonus = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity);
+
+                int bonus = proficient ? proficiency_bonus + dexterity_bonus : dexterity_bonus;
+                int roll = Me.Actions.RollDie(20, 1);
+                if (roll + bonus > target.unlock_challenge_rating) {
+                    target.is_locked = false;
+                } else {
+                    if (target.unlock_challenge_rating < 30) target.unlock_challenge_rating += 5;
+                    if (target.unlock_challenge_rating > 30) target.unlock_challenge_rating = 30;
+                }
+            }
+        }
     }
 
 
@@ -75,11 +99,10 @@ public class Stealth : MonoBehaviour {
     private int StealthRating()
     {
         bool proficient = Me.Stats.Skills.Contains(Proficiencies.Skill.Stealth);
-        bool expertise = Me.Stats.Expertise.Contains(Proficiencies.Skill.Stealth);
+        bool expertise =  Me.Stats.ExpertiseInSkills.Contains(Proficiencies.Skill.Stealth);
+        int proficiency_bonus = expertise ? Me.Stats.ProficiencyBonus * 2 : Me.Stats.ProficiencyBonus;
+        int skill_bonus = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Instance.GetAttributeForSkill(Proficiencies.Skill.Stealth));
 
-        int dexterity_bonus = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity);
-        int proficiency_bonus = (expertise) ? Me.Stats.ProficiencyBonus * 2 : Me.Stats.ProficiencyBonus;
-
-        return (proficient) ? proficiency_bonus + dexterity_bonus : dexterity_bonus;
+        return proficient ? proficiency_bonus + skill_bonus : skill_bonus;
     }
 }

@@ -70,15 +70,19 @@ public class Faction : MonoBehaviour
                 // TODO: commoners really only make sense for "human-type" objectives
                 switch (roll) {
                     case 0:
-                        commoner = SpawnToolUser("Farmer", entrance);
+                        commoner = SpawnToolUser(Proficiencies.Tool.Farmer, entrance);
                         structure.AttachedUnits.Add(commoner);
                         break;
                     case 1:
-                        commoner = SpawnToolUser("Lumberjack", entrance);
+                        commoner = SpawnToolUser(Proficiencies.Tool.Lumberjack, entrance);
                         structure.AttachedUnits.Add(commoner);
                         break;
                     case 2:
-                        commoner = SpawnToolUser("Miner", entrance);
+                        commoner = SpawnToolUser(Proficiencies.Tool.Miner, entrance);
+                        structure.AttachedUnits.Add(commoner);
+                        break;
+                    case 3:
+                        commoner = SpawnToolUser(Proficiencies.Tool.Skinner, entrance);
                         structure.AttachedUnits.Add(commoner);
                         break;
                     default:
@@ -107,7 +111,7 @@ public class Faction : MonoBehaviour
     }
 
 
-    public Actor SpawnToolUser(string tool, Transform location)
+    public Actor SpawnToolUser(Proficiencies.Tool tool, Transform location)
     {
         Actor residential_unit = Spawn(Structure.Purpose.Residential, new Vector3(location.position.x, Geography.Terrain.SampleHeight(location.position), location.position.z));
         residential_unit.gameObject.AddComponent<Commoner>();

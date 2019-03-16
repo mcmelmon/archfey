@@ -12,6 +12,7 @@ public class CommandBarOne : MonoBehaviour {
     public GameObject attack_action;
     public GameObject dash_action;
     public GameObject disengage_action;
+    public GameObject pick_lock_action;
     public GameObject rage_action;
     public GameObject smite_action;
     public GameObject stealth_action;
@@ -29,6 +30,7 @@ public class CommandBarOne : MonoBehaviour {
     public static CommandBarOne Instance { get; set; }
     public Actor Me { get; set; }
     public List<Button> OnCooldown { get; set; }
+    public Button PickLockButton { get; set; }
     public Button RageButton { get; set; }
     public Button SmiteButton { get; set; }
     public Button StealthButton { get; set; }
@@ -113,6 +115,16 @@ public class CommandBarOne : MonoBehaviour {
     }
 
 
+    public void PickLock()
+    {
+        if (Me.Actions.CanTakeAction && RageButton.interactable) {
+            if (!Player.Instance.GodOfRage) {
+                Me.Actions.Stealth.PickLock();
+            }
+        }
+    }
+
+
     public void Smite()
     {
         if (Me.Actions.CanTakeAction && SmiteButton.interactable) {
@@ -179,6 +191,15 @@ public class CommandBarOne : MonoBehaviour {
 
                 if (DisengageButton != null) {
                     DisengageButton.interactable = !Me.Actions.Movement.IsDashing && (Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction);
+                }
+
+                if (PickLockButton != null) {
+                    if (Mouse.SelectedObjects.Count == 1 && Mouse.SelectedObjects.First() != null) {
+                        Item target = Mouse.SelectedObjects.First().GetComponent<Item>();
+                        PickLockButton.interactable = Me.Actions.CanTakeAction && target != null && target.is_locked;
+                    } else {
+                        PickLockButton.interactable = false;
+                    }
                 }
 
                 if (RageButton != null) {
@@ -294,6 +315,7 @@ public class CommandBarOne : MonoBehaviour {
         DashButton = dash_action.GetComponent<Button>();
         DisengageButton = disengage_action.GetComponent<Button>();
         OnCooldown = new List<Button>();
+        PickLockButton = pick_lock_action.GetComponent<Button>();
         RageButton = rage_action.GetComponent<Button>();
         SmiteButton = smite_action.GetComponent<Button>();
         StealthButton = stealth_action.GetComponent<Button>();
@@ -301,7 +323,7 @@ public class CommandBarOne : MonoBehaviour {
 
         ButtonSets = new Dictionary<string, List<Button>>
         {
-            ["Thief"] = new List<Button> { AttackButton, DashButton, DisengageButton, StealthButton, RageButton, TalkButton },
+            ["Thief"] = new List<Button> { AttackButton, DashButton, DisengageButton, StealthButton, PickLockButton, RageButton, TalkButton },
             ["Warlock"] = new List<Button> { AttackButton, SmiteButton }
         };
     }

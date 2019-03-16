@@ -11,7 +11,7 @@ public class HarvestingNode : MonoBehaviour
     public int initial_quantity;
     public int harvest_increment;
     public int full_harvest;
-    public List<string> required_tools;
+    public List<Proficiencies.Tool> required_tools;
 
     // properties
 
@@ -45,7 +45,7 @@ public class HarvestingNode : MonoBehaviour
 
     public void HarvestResource(Actor _harvestor)
     {
-        if (!Proficiencies.Instance.Harvester(_harvestor)) return;
+        if (!Proficiencies.Instance.IsHarvester(_harvestor)) return;
 
         int optimal_harvest = harvest_increment * _harvestor.Stats.ProficiencyBonus;
         int harvested = optimal_harvest;

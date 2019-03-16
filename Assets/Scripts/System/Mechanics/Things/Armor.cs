@@ -57,7 +57,7 @@ public class Armor : MonoBehaviour
 
         switch (armor_name) {
             case Armors.ArmorName.Padded:
-                Item.base_cost = 5;
+                Item.base_cost = 5;  // TODO: use Industry.Coin
                 Item.base_weight = 8;
                 ArmorWeightClass = Armors.ArmorType.Light;
                 BaseArmorClass = 11;

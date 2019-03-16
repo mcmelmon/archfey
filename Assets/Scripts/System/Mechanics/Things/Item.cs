@@ -27,9 +27,7 @@ public class Item : MonoBehaviour
 
     private void Awake()
     {
-        Interactable = GetComponent<Interactable>();
-        IsSpotted = !is_hidden;
-        IsUnlocked = !is_locked;
+        SetComponents();
     }
 
 
@@ -44,5 +42,16 @@ public class Item : MonoBehaviour
             Player.Instance.Inventory.AddItem(this);
         }
         return true;
+    }
+
+
+    // private
+
+
+    private void SetComponents()
+    {
+        Interactable = GetComponent<Interactable>();
+        IsSpotted = !is_hidden;
+        IsUnlocked = !is_locked;
     }
 }

@@ -90,7 +90,7 @@ public class Mouse : MonoBehaviour
                 HoveredObject = hover;
                 if (HoveredObject != null) {
                     Item hover_item = HoveredObject.GetComponent<Item>();
-                    HoveredObject.GetComponent<Renderer>().material = hover_item != null && hover_item.is_hidden
+                    HoveredObject.GetComponent<Renderer>().material = hover_item != null && !hover_item.IsSpotted
                         ? HoveredObject.GetComponent<Interactable>().OriginalMaterial
                         : HoveredObject.GetComponent<Interactable>().highlight_material;
                 }

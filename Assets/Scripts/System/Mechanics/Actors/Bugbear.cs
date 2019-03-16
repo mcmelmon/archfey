@@ -153,7 +153,7 @@ public class Bugbear : MonoBehaviour
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
         Me.Actions.Attack.CalculateAdditionalDamage = AdditionalDamage;
 
-        Me.Stats.Expertise.Add(Proficiencies.Skill.Stealth);
+        Me.Stats.ExpertiseInSkills.Add(Proficiencies.Skill.Stealth);
         Me.Stats.Skills.Add(Proficiencies.Skill.Stealth);
         Me.Stats.Skills.Add(Proficiencies.Skill.Survival);
     }

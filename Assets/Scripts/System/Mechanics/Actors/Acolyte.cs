@@ -177,7 +177,7 @@ public class Acolyte : MonoBehaviour
         Me.Magic.SpellsLeft[Magic.Level.First] = 3;
 
         Me.Stats.Skills.Add(Proficiencies.Skill.Medicine);
-        Me.Stats.Expertise.Add(Proficiencies.Skill.Medicine);
+        Me.Stats.ExpertiseInSkills.Add(Proficiencies.Skill.Medicine);
         Me.Stats.Skills.Add(Proficiencies.Skill.Religion);
     }
 
