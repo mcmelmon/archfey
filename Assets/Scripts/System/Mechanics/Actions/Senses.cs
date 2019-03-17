@@ -29,41 +29,19 @@ public class Senses : MonoBehaviour
 
     public bool InsightCheck(bool active_check, int challenge_rating, bool obscurity = false, bool advantage = false, bool disadvantage = false)
     {
-        int proficiency_bonus = Me.Stats.Skills.Contains(Proficiencies.Skill.Insight) ? Me.Stats.ProficiencyBonus : 0;
-        if (Me.Stats.ExpertiseInSkills.Contains(Proficiencies.Skill.Insight)) proficiency_bonus += proficiency_bonus;
-        int attribute_bonus = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Wisdom);
-        int bonus = proficiency_bonus + attribute_bonus;
-
-        int die_roll = active_check ? Me.Actions.RollDie(20, 1, advantage, disadvantage) : 10;
-
-        return die_roll + bonus >= challenge_rating;
+        return Me.Actions.SkillCheck(active_check, Proficiencies.Skill.Insight) >= challenge_rating;
     }
 
 
-    public bool InvestigateCheck(bool active_check, int challenge_rating, bool obscurity = false, bool advantage = false, bool disadvantage = false)
+    public bool InvestigationCheck(bool active_check, int challenge_rating, bool obscurity = false, bool advantage = false, bool disadvantage = false)
     {
-        int proficiency_bonus = Me.Stats.Skills.Contains(Proficiencies.Skill.Investigation) ? Me.Stats.ProficiencyBonus : 0;
-        if (Me.Stats.ExpertiseInSkills.Contains(Proficiencies.Skill.Investigation)) proficiency_bonus += proficiency_bonus;
-        int attribute_bonus = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Intelligence);
-        int bonus = proficiency_bonus + attribute_bonus;
-
-        int die_roll = active_check ? Me.Actions.RollDie(20, 1, advantage, disadvantage) : 10;
-
-        return die_roll + bonus >= challenge_rating;
+        return Me.Actions.SkillCheck(active_check, Proficiencies.Skill.Investigation) >= challenge_rating;
     }
 
 
     public bool PerceptionCheck(bool active_check, int challenge_rating, bool obscurity = false, bool advantage = false, bool disadvantage = false)
     {
-        int proficiency_bonus = Me.Stats.Skills.Contains(Proficiencies.Skill.Perception) ? Me.Stats.ProficiencyBonus : 0;
-        if (Me.Stats.ExpertiseInSkills.Contains(Proficiencies.Skill.Perception)) proficiency_bonus += proficiency_bonus;
-        int attribute_bonus = Mathf.Max(Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Wisdom), Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Intelligence));
-        int bonus = proficiency_bonus + attribute_bonus;
-        if (obscurity) bonus -= 5;
-
-        int die_roll = active_check ? Me.Actions.RollDie(20, 1, advantage, disadvantage) : 10;
-
-        return die_roll + bonus >= challenge_rating;
+        return Me.Actions.SkillCheck(active_check, Proficiencies.Skill.Perception) >= challenge_rating;
     }
 
 
@@ -93,7 +71,7 @@ public class Senses : MonoBehaviour
     {
         List<Actor> the_sneaking = Actors.Where(actor => actor.Actions.Stealth.IsHiding && actor != Me).ToList();
         foreach (var sneaker in the_sneaking) {
-            bool spotted = Me.Senses.PerceptionCheck(false, sneaker.Actions.Stealth.ChallengeRatting);  // TODO: include environmental detail for obscurity
+            bool spotted = PerceptionCheck(false, sneaker.Actions.Stealth.ChallengeRatting) || InvestigationCheck(false, sneaker.Actions.Stealth.ChallengeRatting);
             if (spotted && (Me == Player.Instance.Me || sneaker == Player.Instance.Me)) {
                 sneaker.Actions.Stealth.Appear();
             } else {
@@ -103,7 +81,7 @@ public class Senses : MonoBehaviour
 
         List<Item> the_hidden = Items.Where(item => item.is_hidden).ToList();
         foreach (var hidden in the_hidden) {
-            bool spotted = Me.Senses.PerceptionCheck(false, hidden.spot_challenge_rating);  // TODO: include environmental detail for obscurity
+            bool spotted = PerceptionCheck(false, hidden.spot_challenge_rating) || InvestigationCheck(false, hidden.spot_challenge_rating);
             if (spotted) {
                 hidden.IsSpotted = true;
                 hidden.GetComponent<Renderer>().material = hidden.GetComponent<Interactable>().highlight_material;
@@ -118,7 +96,7 @@ public class Senses : MonoBehaviour
     {
         List<Actor> suspects = Actors.Where(actor => actor.Interactions.is_suspicious && actor.Interactions.relevant_skill == Proficiencies.Skill.Insight).ToList();
         foreach (var suspect in suspects){
-            bool suspicious = Me.Senses.InsightCheck(false, suspect.Interactions.suspicion_challenge_rating);
+            bool suspicious = InsightCheck(false, suspect.Interactions.suspicion_challenge_rating) || InvestigationCheck(false, suspect.Interactions.suspicion_challenge_rating);
             if (suspicious) suspect.Interactions.DrawAttention();
         }
     }

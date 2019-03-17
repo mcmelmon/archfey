@@ -204,12 +204,37 @@ public class Actions : MonoBehaviour
     }
 
 
-
     public void SheathWeapon()
     {
         if (Attack.EquippedMeleeWeapon != null) Attack.EquippedMeleeWeapon.gameObject.SetActive(false);
         if (Attack.EquippedRangedWeapon != null) Attack.EquippedRangedWeapon.gameObject.SetActive(false);
         if (Attack.EquippedOffhand != null) Attack.EquippedOffhand.gameObject.SetActive(false);
+    }
+
+
+    public int SkillCheck(bool active, Proficiencies.Skill skill, bool advantage = false, bool disadvatnage = false)
+    {
+        bool proficient = Me.Stats.Skills.Contains(skill);
+        bool expertise = Me.Stats.ExpertiseInSkills.Contains(skill);
+        int proficiency_bonus = expertise ? Me.Stats.ProficiencyBonus * 2 : Me.Stats.ProficiencyBonus;
+        int attribute_bonus = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Instance.GetAttributeForSkill(skill));
+        int bonus = expertise ? proficiency_bonus + attribute_bonus : attribute_bonus;
+
+        int roll = active ? RollDie(20, 1, advantage, disadvatnage) : 10;
+
+        return roll + bonus;
+    }
+
+
+    public int ToolCheck(Proficiencies.Tool tool, bool advantage = false, bool disadvatnage = false)
+    {
+        bool proficient = Me.Stats.Tools.Contains(tool);
+        bool expertise = Me.Stats.ExpertiseInTools.Contains(tool);
+        int proficiency_bonus = expertise ? Me.Stats.ProficiencyBonus * 2 : Me.Stats.ProficiencyBonus;
+
+        int roll = RollDie(20, 1, advantage, disadvatnage);
+
+        return roll + proficiency_bonus;
     }
 
 
