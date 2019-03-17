@@ -24,10 +24,10 @@ public class Actor : MonoBehaviour
     public Faction Faction { get; set; }
     public Health Health { get; set; }
     public Interactable Interactions { get; set; }
+    public Inventory Inventory { get; set; }
     public Dictionary<HarvestingNode, int> Load { get; set; }
     public Magic Magic { get; set; }
     public Actor Me { get; set; }
-    public List<GameObject> Pockets { get; set; }
     public int RestCounter { get; set; }
     public Route Route { get; set; }
     public Senses Senses { get; set; }
@@ -147,9 +147,9 @@ public class Actor : MonoBehaviour
         ExhaustionLevel = 0;
         Health = GetComponent<Health>();
         Interactions = GetComponent<Interactable>();
+        Inventory = GetComponent<Inventory>();
         Load = new Dictionary<HarvestingNode, int>();
         Me = this;
-        Pockets = new List<GameObject>();
         RestCounter = 0;
         Route = GetComponent<Route>();
         Senses = GetComponent<Senses>();

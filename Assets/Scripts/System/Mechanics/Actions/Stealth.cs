@@ -88,10 +88,10 @@ public class Stealth : MonoBehaviour {
             if (target_actor != null) {
                 bool target_perception_check = target_actor.Senses.PerceptionCheck(false, challenge_rating); // TODO: advantage/disadvantage
                 if (!target_perception_check) {
-                    GameObject thing = target_actor.Pockets.FirstOrDefault();
+                    GameObject thing = target_actor.Inventory.Pockets.FirstOrDefault();
                     if (thing != null) {
-                        Player.Instance.Inventory.AddThing(thing);
-                        target_actor.Pockets.Remove(thing);
+                        Player.Instance.Me.Inventory.AddToPockets(thing);
+                        target_actor.Inventory.Pockets.Remove(thing);
                     }
                 } else {
                     //Appear();

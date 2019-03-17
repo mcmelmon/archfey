@@ -148,6 +148,7 @@ public class Ogre : MonoBehaviour
         Me.Actions.Attack.CalculateAdditionalDamage = AdditionalDamage;
 
         GameObject pocket_lint = new GameObject("Pocket Lint");
-        Me.Pockets.Add(pocket_lint);
+        pocket_lint.transform.parent = transform;
+        Me.Inventory.Pockets.Add(pocket_lint);
     }
 }

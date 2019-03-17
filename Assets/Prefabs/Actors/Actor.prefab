@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 5220630214965457404}
   - component: {fileID: 6141562267145278879}
   - component: {fileID: 4948199931880677218}
+  - component: {fileID: 3071977873313737984}
   m_Layer: 26
   m_Name: Actor
   m_TagString: Interactable
@@ -286,6 +287,18 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   wait_times: 00000000
   route_type: 0
+--- !u!114 &3071977873313737984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1690649058592984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c01d76f0be1a44ae8851af9c1a0e5355, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &499024003587406277
 GameObject:
   m_ObjectHideFlags: 0

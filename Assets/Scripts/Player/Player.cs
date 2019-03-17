@@ -13,7 +13,7 @@ public class Player : MonoBehaviour {
 
     public bool GodOfRage { get; set; }
     public static Player Instance { get; set; }
-    public Inventory Inventory { get; set; }
+    public PlayerInventory Inventory { get; set; }
     public Actor Me { get; set; }
     public EldritchSmite EldritchSmite { get; set; }
 
@@ -29,7 +29,7 @@ public class Player : MonoBehaviour {
             return;
         }
         Instance = this;
-        Inventory = GetComponent<Inventory>();
+        Inventory = GetComponent<PlayerInventory>();
     }
 
 
