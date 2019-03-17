@@ -6,6 +6,7 @@ public class Item : MonoBehaviour
     public enum ItemFamily { Component, Consumable, Container, Jewelry, Ore }
 
     public bool is_equipable;
+    public bool is_pocketable;
     public bool is_hidden;
     public int spot_challenge_rating;
     public bool is_locked;
@@ -39,7 +40,11 @@ public class Item : MonoBehaviour
         if (OnDoubleClick != null) {
             OnDoubleClick.Invoke();
         } else {
-            Player.Instance.Inventory.AddThing(this.gameObject);
+            if (is_pocketable) {
+                Player.Instance.Me.Inventory.AddToPockets(this.gameObject);
+            } else {
+                Player.Instance.Me.Inventory.AddToInventory(this.gameObject);
+            }
         }
         return true;
     }

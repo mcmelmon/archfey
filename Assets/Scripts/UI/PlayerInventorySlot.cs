@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InventorySlot : MonoBehaviour
+public class PlayerInventorySlot : MonoBehaviour
 {
     // properties
 
-    public GameObject Thing { get; set; }
+    public GameObject Contents { get; set; }
 
 
     // Unity
@@ -15,7 +15,7 @@ public class InventorySlot : MonoBehaviour
 
     private void Awake()
     {
-        Thing = null;
+        Contents = null;
     }
 
 
@@ -25,8 +25,15 @@ public class InventorySlot : MonoBehaviour
     public void HoldItem(GameObject thing)
     {
         if (thing != null) {
-            Thing = thing;
+            Contents = thing;
             GetComponent<Button>().GetComponent<Image>().color = Color.black;
         }
+    }
+
+
+    public void RemoveItem()
+    {
+        Contents = null;
+        GetComponent<Button>().GetComponent<Image>().color = Color.white;
     }
 }
