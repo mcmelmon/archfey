@@ -71,9 +71,9 @@ public class Senses : MonoBehaviour
     {
         List<Actor> the_sneaking = Actors.Where(actor => actor.Actions.Stealth.IsHiding && actor != Me).ToList();
         foreach (var sneaker in the_sneaking) {
-            bool spotted = PerceptionCheck(false, sneaker.Actions.Stealth.ChallengeRatting) || InvestigationCheck(false, sneaker.Actions.Stealth.ChallengeRatting);
+            bool spotted = PerceptionCheck(false, sneaker.Actions.Stealth.StealthChallengeRating) || InvestigationCheck(false, sneaker.Actions.Stealth.StealthChallengeRating);
             if (spotted && (Me == Player.Instance.Me || sneaker == Player.Instance.Me)) {
-                sneaker.Actions.Stealth.Appear();
+                sneaker.Actions.Stealth.StopHiding();
             } else {
                 Actors.Remove(sneaker);
             }

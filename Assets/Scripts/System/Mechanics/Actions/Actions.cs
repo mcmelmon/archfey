@@ -53,8 +53,12 @@ public class Actions : MonoBehaviour
         CanTakeAction |= (Me == Player.Instance.Me);
         CanTakeBonusAction |= (Me == Player.Instance.Me);
 
-        if (Stealth.IsHiding){
-            Stealth.Hide(); // re-up the Stealth ChallengeRating for the round; TODO: account for obscurity at the new location, etc
+        if (Stealth.IsHiding) {
+            Stealth.Hide(); // re-up the Stealth CR for the round; TODO: account for obscurity at the new location, etc
+        }
+
+        if (Stealth.IsPerforming) {
+            Stealth.Performance(); // re-up the Performance CR
         }
 
         Decider.ChooseState();
@@ -145,7 +149,7 @@ public class Actions : MonoBehaviour
 
         Actor nearest_enemy = Decider.Threat.Nearest();
 
-        if (nearest_enemy != null) {
+        if (nearest_enemy != null && Vector3.Distance(transform.position, nearest_enemy.transform.position) > Me.Actions.Movement.ReachedThreshold) {
             StartCoroutine(Movement.TrackUnit(nearest_enemy));
         }
     }

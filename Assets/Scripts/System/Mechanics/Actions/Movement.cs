@@ -128,10 +128,10 @@ public class Movement : MonoBehaviour
     {
         int count = 0;
 
-        while (unit != null && count < Turn.ActionThreshold) {
+        while (unit != null && count < Turn.ActionThreshold && !Me.Actions.Attack.IsWithinAttackRange(unit.transform)) {
             SetDestination(unit.GetInteractionPoint(Me));
             count++;
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(Turn.ActionThreshold);
         }
     }
 

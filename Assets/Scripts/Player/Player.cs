@@ -130,13 +130,13 @@ public class Player : MonoBehaviour {
 
             if (Mathf.Approximately(0, translation) && Mathf.Approximately(0, straffe) && Mathf.Approximately(0, rotation)) {
                 Me.Actions.Movement.NonAgentMovement = false;
-                yield return null;
+            } else {
+                Me.Actions.Movement.NonAgentMovement = true;
+                Me.Actions.CanTakeAction = false;
+
+                transform.Translate(straffe, 0, translation);
+                transform.Rotate(0, rotation, 0);
             }
-
-            Me.Actions.Movement.NonAgentMovement = true;
-
-            transform.Translate(straffe, 0, translation);
-            transform.Rotate(0, rotation, 0);
 
             if (Me.IsGrounded() && Input.GetKeyDown(KeyCode.Space)) {
                 Me.Actions.Movement.Jump();
@@ -262,10 +262,11 @@ public class Player : MonoBehaviour {
     private void Unrage()
     {
         GodOfRage = false;
-        SetSkills();
+        Me.Actions.SheathWeapon();
         Me.Health.ClearTemporaryHitPoints();
         Me.Actions.Movement.ResetSpeed();
-        Me.Actions.SheathWeapon();
         Me.ExhaustionLevel++;
+
+        SetSkills();
     }
 }
