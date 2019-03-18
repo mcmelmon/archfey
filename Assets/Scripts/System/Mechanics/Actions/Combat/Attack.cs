@@ -14,12 +14,14 @@ public class Attack : MonoBehaviour
     public int CriticalRangeStart { get; set; }
     public GameObject CurrentMeleeTarget { get; set; }
     public GameObject CurrentRangedTarget { get; set; }
+    public DefaultMelee MeleeAttack { get; set; }
     public Armor EquippedArmor { get; set; }
     public Weapon EquippedMeleeWeapon { get; set; }
     public Weapon EquippedRangedWeapon { get; set; }
     public Weapon EquippedOffhand { get; set; }
     public Actor Me { get; set; }
     public bool Raging { get; set; }
+    public DefaultRange RangedAttack { get; set; }
 
 
     // Unity
@@ -34,27 +36,21 @@ public class Attack : MonoBehaviour
     // public
 
 
-    public delegate int AdditionalDamage(bool is_ranged);
+    public delegate int AdditionalDamage(GameObject target, bool is_ranged);
 
 
-    public void AttackEnemiesInRange(GameObject player_target = null)
+    public void AttackEnemiesInRange(bool offhand = false, GameObject player_target = null)
     {
         for (int i = 0; i < AttacksPerAction; i++) {
             if (player_target == null) SelectEnemy();
-            StrikeEnemy(player_target);
+            StrikeEnemy(offhand, player_target);
         }
     }
 
 
-    public int DefaultAdditionalDamage(bool is_ranged)
+    public int DefaultAdditionalDamage(GameObject target, bool is_ranged)
     {
         return 0;
-    }
-
-
-    public bool HasSurprise(Actor other_actor)
-    {
-        return !Me.Actions.Stealth.SpottedBy(other_actor);
     }
 
 
@@ -153,6 +149,12 @@ public class Attack : MonoBehaviour
     }
 
 
+    public bool HasSurprise(Actor other_actor)
+    {
+        return !Me.Actions.Stealth.SpottedBy(other_actor);
+    }
+
+
     public bool IsAttackable(GameObject target)
     {
         return target.GetComponent<Actor>() != null || target.GetComponent<Structure>() != null;
@@ -236,15 +238,18 @@ public class Attack : MonoBehaviour
         CalculateAdditionalDamage = DefaultAdditionalDamage;
         CriticalRangeStart = 20;
         Me = GetComponentInParent<Actor>();
+        MeleeAttack = GetComponent<DefaultMelee>();
+        RangedAttack = GetComponent<DefaultRange>();
+
         AvailableMeleeTargets = new List<GameObject>();
         AvailableRangedTargets = new List<GameObject>();
     }
 
 
-    private void StrikeEnemy(GameObject player_target = null)
+    private void StrikeEnemy(bool offhand = false, GameObject player_target = null)
     {
         if (player_target != null) {
-            TargetPlayerChoice(player_target);
+            TargetPlayerChoice(player_target, offhand);
             return;
         }
 
@@ -254,13 +259,13 @@ public class Attack : MonoBehaviour
             EquippedMeleeWeapon.gameObject.SetActive(true);
             if (EquippedOffhand != null) EquippedOffhand.gameObject.SetActive(true);
             if (EquippedRangedWeapon != null) EquippedRangedWeapon.gameObject.SetActive(false);
-            GetComponent<DefaultMelee>().Strike(CurrentMeleeTarget);
+            MeleeAttack.Strike(CurrentMeleeTarget, offhand);
             Me.Actions.Stealth.StopHiding(); // appear after the strike to ensure sneak attack damage, etc
         } else {
             EquippedRangedWeapon.gameObject.SetActive(true);
             if (EquippedMeleeWeapon != null) EquippedMeleeWeapon.gameObject.SetActive(false);
             if (EquippedOffhand != null) EquippedOffhand.gameObject.SetActive(false);
-            GetComponent<DefaultRange>().Strike(CurrentRangedTarget);
+            RangedAttack.Strike(CurrentRangedTarget);
             Me.Actions.Stealth.StopHiding(); // appear after the strike to ensure sneak attack damage, etc
         }
     }
@@ -272,19 +277,19 @@ public class Attack : MonoBehaviour
     }
 
 
-    private void TargetPlayerChoice(GameObject player_target)
+    private void TargetPlayerChoice(GameObject player_target, bool offhand = false)
     {
         if (Vector3.Distance(player_target.transform.position, transform.position) < MeleeRange() + 1) {
             EquippedMeleeWeapon.gameObject.SetActive(true);
             if (EquippedOffhand != null) EquippedOffhand.gameObject.SetActive(true);
             if (EquippedRangedWeapon != null) EquippedRangedWeapon.gameObject.SetActive(false);
-            GetComponent<DefaultMelee>().Strike(player_target);
+            MeleeAttack.Strike(player_target, offhand);
             if (Me.Actions.Stealth.IsHiding) Me.Actions.Stealth.StopHiding(); // appear after the strike to ensure sneak attack damage, etc
         } else if (EquippedRangedWeapon != null) {
             EquippedRangedWeapon.gameObject.SetActive(true);
             if (EquippedMeleeWeapon != null) EquippedMeleeWeapon.gameObject.SetActive(false);
             if (EquippedOffhand != null) EquippedOffhand.gameObject.SetActive(false);
-            GetComponent<DefaultRange>().Strike(player_target);
+            RangedAttack.Strike(player_target);
             if (Me.Actions.Stealth.IsHiding) Me.Actions.Stealth.StopHiding(); // appear after the strike to ensure sneak attack damage, etc
         }
     }

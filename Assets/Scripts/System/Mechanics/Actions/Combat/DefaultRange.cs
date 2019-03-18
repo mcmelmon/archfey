@@ -97,8 +97,11 @@ public class DefaultRange : MonoBehaviour
     {
         Actor target_actor = Target.GetComponent<Actor>();
         Structure target_structure = Target.GetComponent<Structure>();
+        Critical = false;
 
         int roll = Me.Actions.RollDie(20, 1, Advantage, Disadvantage);
+
+        Debug.Log(Me.name + " ranged attack rolled: " + roll);
 
         if (roll >= Me.Actions.Attack.CriticalRangeStart) Critical = true;
 
@@ -124,7 +127,7 @@ public class DefaultRange : MonoBehaviour
     private void SetModifiers()
     {
         AttackModifier = Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + Weapon.DamageBonus;
-        DamageModifier = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + Weapon.DamageBonus + Me.Actions.Attack.CalculateAdditionalDamage(true);
+        DamageModifier = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + Weapon.DamageBonus + Me.Actions.Attack.CalculateAdditionalDamage(Target, true);
     }
 
 

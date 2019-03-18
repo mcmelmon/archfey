@@ -21,11 +21,11 @@ public class Bugbear : MonoBehaviour
     // public
 
 
-    public int AdditionalDamage(bool is_ranged)
+    public int AdditionalDamage(GameObject target, bool is_ranged)
     {
-        Actor target = Me.Actions.Attack.CurrentMeleeTarget?.GetComponent<Actor>() ?? Me.Actions.Attack.CurrentRangedTarget?.GetComponent<Actor>();
+        Actor victim = target.GetComponent<Actor>();
 
-        int additional_damage = Me.Actions.Attack.HasSurprise(target) ? Me.Actions.RollDie(6, 2) : 0;
+        int additional_damage = Me.Actions.Attack.HasSurprise(victim) ? Me.Actions.RollDie(6, 2) : 0;
         return is_ranged ? additional_damage : additional_damage + Me.Actions.RollDie(Me.Actions.Attack.EquippedMeleeWeapon.DiceType, 1);
     }
 

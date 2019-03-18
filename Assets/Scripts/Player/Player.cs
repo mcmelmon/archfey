@@ -46,12 +46,12 @@ public class Player : MonoBehaviour {
     // public
 
 
-    public int AdditionalDamage(bool is_ranged)
+    public int AdditionalDamage(GameObject target, bool is_ranged)
     {
-        Actor target = Me.Actions.Attack.CurrentMeleeTarget?.GetComponent<Actor>() ?? Me.Actions.Attack.CurrentRangedTarget?.GetComponent<Actor>();
+        Actor victim = target.GetComponent<Actor>();
 
-        int additional_damage = Me.Actions.Attack.HasSurprise(target) ? Me.Actions.RollDie(6, 5) : 0;  // TODO: rogue only needs advantage, not surprise
-        return (GodOfRage) ? 0 : additional_damage;
+        int additional_damage = Me.Actions.Attack.HasSurprise(victim) ? Me.Actions.RollDie(6, 5) : 0;  // TODO: rogue only needs advantage, not surprise
+        return additional_damage;
     }
 
 
@@ -128,15 +128,15 @@ public class Player : MonoBehaviour {
             float straffe = Input.GetAxis("Straffe") * Me.Actions.Movement.GetAdjustedSpeed() * Time.deltaTime;
             float rotation = Input.GetAxis("Horizontal") * 60f * Time.deltaTime;
 
-            if (Mathf.Approximately(0, translation) && Mathf.Approximately(0, straffe) && Mathf.Approximately(0, rotation)) {
-                Me.Actions.Movement.NonAgentMovement = false;
-            } else {
+            Me.Actions.Movement.NonAgentMovement = false;
+
+            if (!Mathf.Approximately(0, translation) && !Mathf.Approximately(0, straffe)) {
                 Me.Actions.Movement.NonAgentMovement = true;
                 Me.Actions.CanTakeAction = false;
-
-                transform.Translate(straffe, 0, translation);
-                transform.Rotate(0, rotation, 0);
             }
+
+            transform.Translate(straffe, 0, translation);
+            transform.Rotate(0, rotation, 0);
 
             if (Me.IsGrounded() && Input.GetKeyDown(KeyCode.Space)) {
                 Me.Actions.Movement.Jump();
