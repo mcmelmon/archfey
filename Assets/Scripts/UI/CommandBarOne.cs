@@ -12,12 +12,13 @@ public class CommandBarOne : MonoBehaviour {
     public GameObject attack_action;
     public GameObject dash_action;
     public GameObject disengage_action;
+    public GameObject hide_action;
+    public GameObject offhand_action;
     public GameObject performance_action;
     public GameObject pick_lock_action;
     public GameObject rage_action;
     public GameObject sleight_action;
     public GameObject smite_action;
-    public GameObject stealth_action;
     public GameObject talk_action;
     public DialogPanel dialog_panel;
 
@@ -29,15 +30,16 @@ public class CommandBarOne : MonoBehaviour {
     public Dictionary<string, List<Button>> ButtonSets { get; set; }
     public Button DashButton { get; set; }
     public Button DisengageButton { get; set; }
+    public Button HideButton { get; set; }
     public static CommandBarOne Instance { get; set; }
     public Actor Me { get; set; }
     public List<Button> OnCooldown { get; set; }
+    public Button OffhandButton { get; set; }
     public Button PerformanceButton { get; set; }
     public Button PickLockButton { get; set; }
     public Button RageButton { get; set; }
     public Button SleightButton { get; set; }
     public Button SmiteButton { get; set; }
-    public Button StealthButton { get; set; }
     public Button TalkButton { get; set; }
 
     // Unity
@@ -77,12 +79,10 @@ public class CommandBarOne : MonoBehaviour {
 
     public void Attack()
     {
-        // TODO: bonus action attack
-
         if (Me.Actions.CanTakeAction && AttackButton.interactable) {
             var targets = Mouse.SelectedObjects.Where(so => so != null && Me.Actions.Attack.IsAttackable(so) && Me.Actions.Attack.IsWithinAttackRange(so.transform));
             if (targets.Any()) {
-                Me.Actions.Attack.AttackEnemiesInRange(targets.First());
+                Me.Actions.Attack.AttackEnemiesInRange(false, targets.First()); // offhand = false
                 Me.Actions.CanTakeAction = false;
             }
         }
@@ -111,7 +111,7 @@ public class CommandBarOne : MonoBehaviour {
 
     public void Hide()
     {
-        if (Me.Actions.CanTakeAction && StealthButton.interactable) {
+        if ((Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction) && HideButton.interactable) {
             if (Me.Actions.Stealth.IsHiding){
                 Me.Actions.Stealth.StopHiding();
             } else {
@@ -127,6 +127,19 @@ public class CommandBarOne : MonoBehaviour {
         if (Me.Actions.CanTakeAction && RageButton.interactable) {
             if (!Player.Instance.GodOfRage) {
                 Player.Instance.Enrage();
+            }
+        }
+    }
+
+
+    public void Offhand()
+    {
+        if (Me.Actions.CanTakeBonusAction && OffhandButton.interactable)
+        {
+            var targets = Mouse.SelectedObjects.Where(so => so != null && Me.Actions.Attack.IsAttackable(so) && Me.Actions.Attack.IsWithinAttackRange(so.transform));
+            if (targets.Any()) {
+                Me.Actions.Attack.AttackEnemiesInRange(true, targets.First()); // offhand = true
+                Me.Actions.CanTakeBonusAction = false;
             }
         }
     }
@@ -204,9 +217,8 @@ public class CommandBarOne : MonoBehaviour {
                 if (AttackButton != null) {
                     var interactors = Mouse.SelectedObjects
                                            .Where(so => so != null && Me.Actions.Attack.IsAttackable(so) && Me.Actions.Attack.IsWithinAttackRange(so.transform));
-                    bool not_moving = !Me.Actions.Movement.InProgress();
                     bool have_target = interactors.Any();
-                    AttackButton.interactable = Me.Actions.CanTakeAction && not_moving && have_target;
+                    AttackButton.interactable = Me.Actions.CanTakeAction && have_target;
                     SmiteButton.interactable = AttackButton.interactable;
                 }
 
@@ -216,6 +228,21 @@ public class CommandBarOne : MonoBehaviour {
 
                 if (DisengageButton != null) {
                     DisengageButton.interactable = !Me.Actions.Movement.IsDashing && (Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction);
+                }
+
+                if (HideButton != null) {
+                    HideButton.interactable = Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction;
+                }
+
+                if (OffhandButton != null) {
+                    var interactors = Mouse.SelectedObjects
+                                           .Where(so => so != null && Me.Actions.Attack.IsAttackable(so) && Me.Actions.Attack.IsWithinAttackRange(so.transform));
+                    bool have_target = interactors.Any();
+                    OffhandButton.interactable = Me.Actions.CanTakeBonusAction && have_target;
+                }
+
+                if (PerformanceButton != null) {
+                    PerformanceButton.interactable = Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction;
                 }
 
                 if (PickLockButton != null) {
@@ -357,22 +384,23 @@ public class CommandBarOne : MonoBehaviour {
     {
         Me = player.GetComponent<Actor>();
 
-        AllActions = new List<GameObject> { attack_action, dash_action, rage_action, smite_action, stealth_action, talk_action };
+        AllActions = new List<GameObject> { attack_action, dash_action, rage_action, smite_action, hide_action, talk_action };
         AttackButton = attack_action.GetComponent<Button>();
         DashButton = dash_action.GetComponent<Button>();
         DisengageButton = disengage_action.GetComponent<Button>();
         OnCooldown = new List<Button>();
+        OffhandButton = offhand_action.GetComponent<Button>();
         PerformanceButton = performance_action.GetComponent<Button>();
         PickLockButton = pick_lock_action.GetComponent<Button>();
         RageButton = rage_action.GetComponent<Button>();
         SleightButton = sleight_action.GetComponent<Button>();
         SmiteButton = smite_action.GetComponent<Button>();
-        StealthButton = stealth_action.GetComponent<Button>();
+        HideButton = hide_action.GetComponent<Button>();
         TalkButton = talk_action.GetComponent<Button>();
 
         ButtonSets = new Dictionary<string, List<Button>>
         {
-            ["Thief"] = new List<Button> { AttackButton, DashButton, DisengageButton, StealthButton, PickLockButton, SleightButton, PerformanceButton, TalkButton, RageButton },
+            ["Thief"] = new List<Button> { AttackButton, OffhandButton, DashButton, DisengageButton, HideButton, PickLockButton, SleightButton, PerformanceButton, TalkButton, RageButton },
             ["Warlock"] = new List<Button> { AttackButton, SmiteButton, TalkButton }
         };
     }

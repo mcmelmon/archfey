@@ -20,7 +20,7 @@ public class HalfOgre : MonoBehaviour
     // public
 
 
-    public int AdditionalDamage(bool is_ranged)
+    public int AdditionalDamage(GameObject target, bool is_ranged)
     {
         return is_ranged ? Me.Actions.RollDie(Me.Actions.Attack.EquippedRangedWeapon.DiceType, 1) : Me.Actions.RollDie(Me.Actions.Attack.EquippedMeleeWeapon.DiceType, 1);
     }

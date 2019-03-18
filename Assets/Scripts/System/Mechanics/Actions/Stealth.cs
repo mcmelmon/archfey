@@ -31,10 +31,10 @@ public class Stealth : MonoBehaviour {
         if (IsHiding) return;
 
         IsHiding = true;
+        GetComponent<MeshRenderer>().enabled = false;
         StealthChallengeRating = Me.Actions.SkillCheck(true, Proficiencies.Skill.Stealth); // TODO: advantage/disadvantage
         StartingSpeedAdjustment = Me.Actions.Movement.SpeedAdjustment;
         Me.Actions.Movement.AdjustSpeed(-.2f);
-        StartCoroutine(Obscure());
     }
 
 
@@ -43,11 +43,11 @@ public class Stealth : MonoBehaviour {
         StopHiding();
         if (IsPerforming) return;
 
+        GetComponent<Renderer>().material = GetComponent<Interactable>().highlight_material;
         IsPerforming = true;
         PerformanceChallengeRating = Me.Actions.SkillCheck(true, Proficiencies.Skill.Performance); // TODO: advantage/disadvantage
         StartingSpeedAdjustment = Me.Actions.Movement.SpeedAdjustment;
         Me.Actions.Movement.AdjustSpeed(-.1f);
-        StartCoroutine(Distract());
     }
 
 
@@ -106,6 +106,7 @@ public class Stealth : MonoBehaviour {
     {
         if (!IsHiding) return;
 
+        GetComponent<MeshRenderer>().enabled = true;
         IsHiding = false;
         StealthChallengeRating = 0;
         Me.Actions.Movement.ResetSpeed();
@@ -117,6 +118,7 @@ public class Stealth : MonoBehaviour {
     {
         if (!IsPerforming) return;
 
+        GetComponent<Renderer>().material = GetComponent<Interactable>().OriginalMaterial;
         IsPerforming = false;
         PerformanceChallengeRating = 0;
         Me.Actions.Movement.ResetSpeed();
@@ -143,7 +145,6 @@ public class Stealth : MonoBehaviour {
             GetComponent<MeshRenderer>().enabled = false;
             yield return null;
         }
-        GetComponent<MeshRenderer>().enabled = true;
     }
 
 

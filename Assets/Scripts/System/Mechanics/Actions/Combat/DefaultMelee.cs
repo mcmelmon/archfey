@@ -12,10 +12,13 @@ public class DefaultMelee : MonoBehaviour
     public int AttackModifier { get; set; }
     public bool Critical { get; set; }
     public float Damage { get; set; }
-    public int DamageModifier { get; set; }
+    public int DamageModifierMain { get; set; }
+    public int DamageModifierOff { get; set; }
     public bool Disadvantage { get; set; }
+    public bool IsOffhandAttack { get; set; }
+    public Weapon MainHand { get; set; }
+    public Weapon OffHand { get; set; }
     public GameObject Target { get; set; }
-    public Weapon Weapon { get; set; }
 
 
     // Unity
@@ -27,12 +30,14 @@ public class DefaultMelee : MonoBehaviour
     }
 
 
-    public void Strike(GameObject _target)
+    public void Strike(GameObject _target, bool offhand = false)
     {
         if (_target == null) return;
 
         Target = _target;
-        Weapon = Me.Actions.Attack.EquippedMeleeWeapon;
+        MainHand = Me.Actions.Attack.EquippedMeleeWeapon;
+        OffHand = Me.Actions.Attack.EquippedOffhand;
+        IsOffhandAttack = offhand;
         SetModifiers();
 
         CheckAdvantageAndDisadvantage();
@@ -54,18 +59,26 @@ public class DefaultMelee : MonoBehaviour
 
         if (target_actor != null) {
             if (target_actor.Health != null && target_actor.Actions.Stats != null && Me.Actions != null) {
-                int damage_roll = (Critical) ? (Me.Actions.RollDie(Weapon.DiceType, Weapon.NumberOfDice) * 2) + 1 : Me.Actions.RollDie(Weapon.DiceType, Weapon.NumberOfDice);
-                damage_roll += DamageModifier;
-                Damage = target_actor.Actions.Stats.DamageAfterDefenses(damage_roll, Weapon.DamageType);
+                int damage_roll = 0;
+
+                if (OffHand != null && IsOffhandAttack) {
+                    damage_roll = (Critical) ? (Me.Actions.RollDie(OffHand.DiceType, OffHand.NumberOfDice) * 2) + 1 : Me.Actions.RollDie(OffHand.DiceType, OffHand.NumberOfDice);
+                    damage_roll += DamageModifierOff;
+                    Damage = target_actor.Actions.Stats.DamageAfterDefenses(damage_roll, OffHand.DamageType);
+                }
+                else {
+                    damage_roll = (Critical) ? (Me.Actions.RollDie(MainHand.DiceType, MainHand.NumberOfDice) * 2) + 1 : Me.Actions.RollDie(MainHand.DiceType, MainHand.NumberOfDice);
+                    damage_roll += DamageModifierMain;
+                    Damage = target_actor.Actions.Stats.DamageAfterDefenses(damage_roll, MainHand.DamageType);
+                }
+
                 target_actor.Health.LoseHealth(Damage, Me);
             }
         } else if (target_structure != null) {
-            int damage_roll = Me.Actions.RollDie(Weapon.DiceType, Weapon.NumberOfDice) + 1;
-            damage_roll += DamageModifier;
-            target_structure.LoseStructure(damage_roll, Weapon.DamageType);
+            int damage_roll = Me.Actions.RollDie(MainHand.DiceType, MainHand.NumberOfDice) + 1;
+            damage_roll += DamageModifierMain;
+            target_structure.LoseStructure(damage_roll, MainHand.DamageType);
         }
-
-        Critical = false;
     }
 
 
@@ -91,14 +104,17 @@ public class DefaultMelee : MonoBehaviour
 
     private bool Hit()
     {
+        if (IsOffhandAttack && OffHand == null) return false;
+
         Actor target_actor = Target.GetComponent<Actor>();
         Structure target_structure = Target.GetComponent<Structure>();
+        Critical = false;
 
         int roll = Me.Actions.RollDie(20, 1, Advantage, Disadvantage);
 
         if (roll >= Me.Actions.Attack.CriticalRangeStart) Critical = true;
 
-        Debug.Log(Me.name + " rolled: " + roll);
+        Debug.Log(Me.name + " melee attack rolled: " + roll);
 
         if (target_actor != null) {
             return roll + AttackModifier > target_actor.Actions.Stats.GetArmorClass();
@@ -121,12 +137,14 @@ public class DefaultMelee : MonoBehaviour
 
     private void SetModifiers()
     {
-        if (Weapon.IsFinesse) {
-            AttackModifier = Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + Weapon.DamageBonus;
-            DamageModifier = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + Weapon.DamageBonus + Me.Actions.Attack.CalculateAdditionalDamage(false);
-        } else {
-            AttackModifier = Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) + Weapon.DamageBonus;
-            DamageModifier = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) + Weapon.DamageBonus + Me.Actions.Attack.CalculateAdditionalDamage(false);
+        if (MainHand.IsFinesse) {
+            AttackModifier = Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + MainHand.DamageBonus;
+            DamageModifierMain = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + MainHand.DamageBonus + Me.Actions.Attack.CalculateAdditionalDamage(Target, false);
         }
+        else {
+            AttackModifier = Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) + MainHand.DamageBonus;
+            DamageModifierMain = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) + MainHand.DamageBonus + Me.Actions.Attack.CalculateAdditionalDamage(Target, false);
+        }
+        DamageModifierOff = OffHand != null ? OffHand.DamageBonus : 0;
     }
 }
