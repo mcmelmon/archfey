@@ -6,10 +6,12 @@ public class Stealth : MonoBehaviour {
 
     // properties
 
-    public int ChallengeRatting { get; set; }
     public Actor Me { get; set; }
     public bool IsHiding { get; set; }
+    public bool IsPerforming { get; set; }
+    public int PerformanceChallengeRating { get; set; }
     public float StartingSpeedAdjustment { get; set; }
+    public int StealthChallengeRating { get; set; }
 
 
     // Unity
@@ -24,26 +26,28 @@ public class Stealth : MonoBehaviour {
     // public
 
 
-    public void Appear()
-    {
-        if (!IsHiding) return;
-
-        IsHiding = false;
-        ChallengeRatting = 0;
-        Me.Actions.Movement.ResetSpeed();
-        Me.Actions.Movement.AdjustSpeed(StartingSpeedAdjustment);
-    }
-
-
     public void Hide()
     {
         if (IsHiding) return;
 
         IsHiding = true;
-        ChallengeRatting = Me.Actions.SkillCheck(true, Proficiencies.Skill.Stealth); // TODO: advantage/disadvantage
+        StealthChallengeRating = Me.Actions.SkillCheck(true, Proficiencies.Skill.Stealth); // TODO: advantage/disadvantage
         StartingSpeedAdjustment = Me.Actions.Movement.SpeedAdjustment;
         Me.Actions.Movement.AdjustSpeed(-.2f);
         StartCoroutine(Obscure());
+    }
+
+
+    public void Performance()
+    {
+        StopHiding();
+        if (IsPerforming) return;
+
+        IsPerforming = true;
+        PerformanceChallengeRating = Me.Actions.SkillCheck(true, Proficiencies.Skill.Performance); // TODO: advantage/disadvantage
+        StartingSpeedAdjustment = Me.Actions.Movement.SpeedAdjustment;
+        Me.Actions.Movement.AdjustSpeed(-.1f);
+        StartCoroutine(Distract());
     }
 
 
@@ -93,12 +97,44 @@ public class Stealth : MonoBehaviour {
     {
         // TODO: account for environment; decide if being spotted should force Appear
         if (other_actor == null) return false;
-        bool spotted = !IsHiding || other_actor.Senses.PerceptionCheck(false, ChallengeRatting);
+        bool spotted = !IsHiding || other_actor.Senses.PerceptionCheck(false, StealthChallengeRating);
         return spotted;
     }
 
 
+    public void StopHiding()
+    {
+        if (!IsHiding) return;
+
+        IsHiding = false;
+        StealthChallengeRating = 0;
+        Me.Actions.Movement.ResetSpeed();
+        Me.Actions.Movement.AdjustSpeed(StartingSpeedAdjustment);
+    }
+
+
+    public void StopPerforming()
+    {
+        if (!IsPerforming) return;
+
+        IsPerforming = false;
+        PerformanceChallengeRating = 0;
+        Me.Actions.Movement.ResetSpeed();
+        Me.Actions.Movement.AdjustSpeed(StartingSpeedAdjustment);
+    }
+
+
     // private
+
+
+    private IEnumerator Distract()
+    {
+        while (IsPerforming) {
+            GetComponent<Renderer>().material = GetComponent<Interactable>().highlight_material;
+            yield return null;
+        }
+        GetComponent<Renderer>().material = GetComponent<Interactable>().OriginalMaterial;
+    }
 
 
     private IEnumerator Obscure()

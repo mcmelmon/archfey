@@ -255,13 +255,13 @@ public class Attack : MonoBehaviour
             if (EquippedOffhand != null) EquippedOffhand.gameObject.SetActive(true);
             if (EquippedRangedWeapon != null) EquippedRangedWeapon.gameObject.SetActive(false);
             GetComponent<DefaultMelee>().Strike(CurrentMeleeTarget);
-            Me.Actions.Stealth.Appear(); // appear after the strike to ensure sneak attack damage, etc
+            Me.Actions.Stealth.StopHiding(); // appear after the strike to ensure sneak attack damage, etc
         } else {
             EquippedRangedWeapon.gameObject.SetActive(true);
             if (EquippedMeleeWeapon != null) EquippedMeleeWeapon.gameObject.SetActive(false);
             if (EquippedOffhand != null) EquippedOffhand.gameObject.SetActive(false);
             GetComponent<DefaultRange>().Strike(CurrentRangedTarget);
-            Me.Actions.Stealth.Appear(); // appear after the strike to ensure sneak attack damage, etc
+            Me.Actions.Stealth.StopHiding(); // appear after the strike to ensure sneak attack damage, etc
         }
     }
 
@@ -279,13 +279,13 @@ public class Attack : MonoBehaviour
             if (EquippedOffhand != null) EquippedOffhand.gameObject.SetActive(true);
             if (EquippedRangedWeapon != null) EquippedRangedWeapon.gameObject.SetActive(false);
             GetComponent<DefaultMelee>().Strike(player_target);
-            if (Me.Actions.Stealth.IsHiding) Me.Actions.Stealth.Appear(); // appear after the strike to ensure sneak attack damage, etc
+            if (Me.Actions.Stealth.IsHiding) Me.Actions.Stealth.StopHiding(); // appear after the strike to ensure sneak attack damage, etc
         } else if (EquippedRangedWeapon != null) {
             EquippedRangedWeapon.gameObject.SetActive(true);
             if (EquippedMeleeWeapon != null) EquippedMeleeWeapon.gameObject.SetActive(false);
             if (EquippedOffhand != null) EquippedOffhand.gameObject.SetActive(false);
             GetComponent<DefaultRange>().Strike(player_target);
-            if (Me.Actions.Stealth.IsHiding) Me.Actions.Stealth.Appear(); // appear after the strike to ensure sneak attack damage, etc
+            if (Me.Actions.Stealth.IsHiding) Me.Actions.Stealth.StopHiding(); // appear after the strike to ensure sneak attack damage, etc
         }
     }
 

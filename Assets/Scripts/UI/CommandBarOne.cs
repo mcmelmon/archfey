@@ -12,6 +12,7 @@ public class CommandBarOne : MonoBehaviour {
     public GameObject attack_action;
     public GameObject dash_action;
     public GameObject disengage_action;
+    public GameObject performance_action;
     public GameObject pick_lock_action;
     public GameObject rage_action;
     public GameObject sleight_action;
@@ -31,6 +32,7 @@ public class CommandBarOne : MonoBehaviour {
     public static CommandBarOne Instance { get; set; }
     public Actor Me { get; set; }
     public List<Button> OnCooldown { get; set; }
+    public Button PerformanceButton { get; set; }
     public Button PickLockButton { get; set; }
     public Button RageButton { get; set; }
     public Button SleightButton { get; set; }
@@ -107,6 +109,19 @@ public class CommandBarOne : MonoBehaviour {
     }
 
 
+    public void Hide()
+    {
+        if (Me.Actions.CanTakeAction && StealthButton.interactable) {
+            if (Me.Actions.Stealth.IsHiding){
+                Me.Actions.Stealth.StopHiding();
+            } else {
+                Me.Actions.Stealth.Hide();
+                Me.Actions.CanTakeAction = false;
+            }
+        }
+    }
+
+
     public void Rage()
     {
         if (Me.Actions.CanTakeAction && RageButton.interactable) {
@@ -117,9 +132,22 @@ public class CommandBarOne : MonoBehaviour {
     }
 
 
+    public void Performance()
+    {
+        if (Me.Actions.CanTakeAction && PerformanceButton.interactable) {
+            if (Me.Actions.Stealth.IsPerforming) {
+                Me.Actions.Stealth.StopPerforming();
+            } else {
+                Me.Actions.Stealth.Performance();
+                Me.Actions.CanTakeAction = false;
+            }
+        }
+    }
+
+
     public void PickLock()
     {
-        if (Me.Actions.CanTakeAction && PickLockButton.interactable) {
+        if ((Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction) && PickLockButton.interactable) {
             Me.Actions.CanTakeAction = false;
             Me.Actions.Stealth.PickLock();
         }
@@ -128,7 +156,7 @@ public class CommandBarOne : MonoBehaviour {
 
     public void SleightOfHand()
     {
-        if (Me.Actions.CanTakeAction && SleightButton.interactable) {
+        if ((Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction) && SleightButton.interactable) {
             Me.Actions.CanTakeAction = false;
             Me.Actions.Stealth.SleightOfHand();
         }
@@ -146,19 +174,6 @@ public class CommandBarOne : MonoBehaviour {
                     Player.Instance.CastEldritchSmite(actor);
                     StartCoroutine(Cooldown(SmiteButton, 20));
                 }
-                Me.Actions.CanTakeAction = false;
-            }
-        }
-    }
-
-
-    public void Sneak()
-    {
-        if (Me.Actions.CanTakeAction && StealthButton.interactable) {
-            if (Me.Actions.Stealth.IsHiding) {
-                Me.Actions.Stealth.Appear();
-            } else {
-                Me.Actions.Stealth.Hide();
                 Me.Actions.CanTakeAction = false;
             }
         }
@@ -217,7 +232,10 @@ public class CommandBarOne : MonoBehaviour {
                 }
 
                 if (SleightButton != null) {
-                    if (Mouse.SelectedObjects.Count == 1 && Mouse.SelectedObjects.First() != null) {
+                    if (Mouse.SelectedObjects.Count == 1 
+                        && Mouse.SelectedObjects.First() != null 
+                        && Vector3.Distance(transform.position, Mouse.SelectedObjects.First().transform.position) < Me.Actions.Movement.ReachedThreshold) 
+                    {
                         Actor target_actor = Mouse.SelectedObjects.First().GetComponent<Actor>();
                         Item target_item = Mouse.SelectedObjects.First().GetComponent<Item>();
                         SleightButton.interactable = Me.Actions.CanTakeAction && (target_actor != null || target_item != null);
@@ -344,6 +362,7 @@ public class CommandBarOne : MonoBehaviour {
         DashButton = dash_action.GetComponent<Button>();
         DisengageButton = disengage_action.GetComponent<Button>();
         OnCooldown = new List<Button>();
+        PerformanceButton = performance_action.GetComponent<Button>();
         PickLockButton = pick_lock_action.GetComponent<Button>();
         RageButton = rage_action.GetComponent<Button>();
         SleightButton = sleight_action.GetComponent<Button>();
@@ -353,8 +372,8 @@ public class CommandBarOne : MonoBehaviour {
 
         ButtonSets = new Dictionary<string, List<Button>>
         {
-            ["Thief"] = new List<Button> { AttackButton, DashButton, DisengageButton, StealthButton, PickLockButton, SleightButton, RageButton, TalkButton },
-            ["Warlock"] = new List<Button> { AttackButton, SmiteButton }
+            ["Thief"] = new List<Button> { AttackButton, DashButton, DisengageButton, StealthButton, PickLockButton, SleightButton, PerformanceButton, TalkButton, RageButton },
+            ["Warlock"] = new List<Button> { AttackButton, SmiteButton, TalkButton }
         };
     }
 }

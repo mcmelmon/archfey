@@ -107,6 +107,20 @@ public class Decider : MonoBehaviour
     public List<Actor> IdentifyEnemies()
     {
         Enemies = Me.Senses.Actors.Where(actor => !IsFriendOrNeutral(actor)).ToList();
+
+        for (int i = 0; i < Enemies.Count; i++) {
+            if (Enemies[i].Actions.Stealth.IsPerforming) {
+                int performance_challenge_rating = Enemies[i].Actions.SkillCheck(true, Proficiencies.Skill.Performance);
+                int my_insight_check = Me.Actions.SkillCheck(true, Proficiencies.Skill.Insight);
+                if (my_insight_check < performance_challenge_rating) {
+                    Debug.Log(Me.name + " failed an insight check with " + my_insight_check + " vs " + performance_challenge_rating);
+                    Enemies.Remove(Enemies[i]);
+                } else {
+                    Debug.Log(Me.name + " succeeded an insight check with " + my_insight_check + " vs " + performance_challenge_rating);
+                }
+            }
+        }
+
         return Enemies;
     }
 
