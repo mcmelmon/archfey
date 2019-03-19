@@ -35,12 +35,16 @@ public class Decider : MonoBehaviour
 
     // properties
 
+    public bool AttackAtRange { get; set; }
+    public List<GameObject> AvailableMeleeTargets { get; set; }
+    public List<GameObject> AvailableRangedTargets { get; set; }
     public List<Actor> Enemies { get; set; }
     public List<Actor> Friends { get; set; }
     public List<Actor> FriendsInNeed { get; set; }
     public List<Structure> FriendlyStructures { get; set; }
     public List<Structure> HostileStructures { get; set; }
     public Actor Me { get; set; }
+    public GameObject Target { get; set; }
     public Threat Threat { get; set; }
 
 
@@ -121,6 +125,7 @@ public class Decider : MonoBehaviour
             }
         }
 
+        if (Enemies.Any()) SetEnemyRanges();
         return Enemies;
     }
 
@@ -137,6 +142,48 @@ public class Decider : MonoBehaviour
     }
 
 
+    public GameObject TargetEnemy()
+    {
+        RemoveSanctuaryTargets();
+
+            if (AvailableMeleeTargets.Any() && AvailableMeleeTargets.Contains(Threat.PrimaryThreat()?.gameObject)) {
+            TargetMelee();
+        } else if (AvailableRangedTargets.Any() && AvailableRangedTargets.Contains(Threat.PrimaryThreat()?.gameObject)) {
+            TargetRanged();
+        } else {
+            Target = null;
+        }
+
+        return Target;
+    }
+
+
+    public GameObject TargetMelee(GameObject player_target = null)
+    {
+        Target = player_target ?? Threat.PrimaryThreat().gameObject ?? AvailableMeleeTargets[0];
+
+        if (Target != null) {
+            transform.LookAt(Target.transform);
+            AttackAtRange = false;
+        }
+
+        return Target;
+    }
+
+
+    public GameObject TargetRanged(GameObject player_target = null)
+    {
+        Target = player_target ?? Threat.PrimaryThreat().gameObject ?? AvailableRangedTargets[0];
+
+        if (Target != null) {
+            transform.LookAt(Target.transform);
+            AttackAtRange = true;
+        }
+
+        return Target;
+    }
+
+
     // private
 
 
@@ -148,6 +195,13 @@ public class Decider : MonoBehaviour
     private bool CallsForHelp()
     {
         return FriendsInNeed.Count > 0;
+    }
+
+
+    private void ClearTargets()
+    {
+        AvailableMeleeTargets.Clear();
+        AvailableRangedTargets.Clear();
     }
 
 
@@ -205,12 +259,7 @@ public class Decider : MonoBehaviour
 
     private bool InCombat()
     {
-        // TODO: actually attack the chosen foe; currently, Attack just chooses an available target
-
-        Actor foe = null;
-
-        if (Me.Actions.Attack.Engaged()) foe = Threat.PrimaryThreat();
-        return foe != null;
+        return TargetEnemy() != null && Me.Actions.Combat.Engaged;
     }
 
 
@@ -241,7 +290,7 @@ public class Decider : MonoBehaviour
     private bool NeedsRest()
     {
         bool spent_spell_slots = Me.Magic != null && Me.Magic.UsedSlot;
-        return !Me.Actions.Attack.Engaged() && !HostileActorsSighted() && (Me.Health.CurrentHitPoints < Me.Health.MaximumHitPoints || spent_spell_slots );
+        return !Me.Actions.Combat.Engaged && !HostileActorsSighted() && (Me.Health.CurrentHitPoints < Me.Health.MaximumHitPoints || spent_spell_slots );
     }
 
 
@@ -250,21 +299,97 @@ public class Decider : MonoBehaviour
         return (previous_state == State.MovingToGoal || previous_state == State.FullLoad || previous_state == State.Idle) && !Me.Actions.Movement.InProgress();
     }
 
+
     private bool Resting()
     {
         return (previous_state == State.NeedsRest || previous_state == State.Resting) && NeedsRest() && !Me.Actions.Movement.InProgress();
     }
 
 
+    private void RemoveSanctuaryTargets()
+    {
+        if (Sanctuary.ProtectedTargets == null) return;
+
+        List<GameObject> protected_melee_actors = AvailableMeleeTargets
+            .Where(target => target.GetComponent<Actor>() != null && Sanctuary.ProtectedTargets.ContainsKey(target.GetComponent<Actor>()) && !Me.Actions.Decider.Threat.Threats.ContainsKey(target.GetComponent<Actor>()))
+            .ToList();
+
+        List<GameObject> protected_ranged_actors = AvailableRangedTargets
+            .Where(target => target.GetComponent<Actor>() != null && Sanctuary.ProtectedTargets.ContainsKey(target.GetComponent<Actor>()) && !Me.Actions.Decider.Threat.Threats.ContainsKey(target.GetComponent<Actor>()))
+            .ToList();
+
+        foreach (var target in protected_melee_actors) {
+            if (!Me.Actions.SavingThrow(Proficiencies.Attribute.Wisdom, Sanctuary.ProtectedTargets[target.GetComponent<Actor>()].ChallengeRating)) {
+                AvailableMeleeTargets.Remove(target);
+            }
+        }
+
+        foreach (var target in protected_ranged_actors) {
+            if (!Me.Actions.SavingThrow(Proficiencies.Attribute.Wisdom, Sanctuary.ProtectedTargets[target.GetComponent<Actor>()].ChallengeRating)) {
+                AvailableMeleeTargets.Remove(target);
+            }
+        }
+    }
+
+
     private void SetComponents()
     {
+        AttackAtRange = false;
+        AvailableMeleeTargets = new List<GameObject>();
+        AvailableRangedTargets = new List<GameObject>();
         Enemies = new List<Actor>();
         Friends = new List<Actor>();
         FriendsInNeed = new List<Actor>();
         Me = GetComponentInParent<Actor>();
         HostileStructures = new List<Structure>();
+        Target = null;
         Threat = GetComponent<Threat>();
         state = State.Idle;
+    }
+
+
+    private void SetEnemyRanges()
+    {
+        if (Me == null) return;
+
+        ClearTargets();
+        float melee_range = Me.Actions.Combat.MeleeRange();
+        Weapon ranged_weapon = Me.Actions.Combat.EquippedRangedWeapon;
+
+        if (Enemies.Any()) {
+            AvailableMeleeTargets.AddRange(Enemies
+                                           .Where(actor => actor != null && Me.SeparationFrom(actor) <= melee_range)
+                                           .OrderBy(actor => actor.Health.CurrentHitPoints)
+                                           .Select(actor => actor.gameObject)
+                                           .Distinct()
+                                           .ToList());
+
+            if (ranged_weapon != null) {
+                AvailableRangedTargets.AddRange(Enemies
+                                                .Where(actor => actor != null && Me.SeparationFrom(actor) > melee_range && Me.SeparationFrom(actor) <= ranged_weapon.Range)
+                                                .OrderBy(actor => actor.Health.CurrentHitPoints)
+                                                .Select(actor => actor.gameObject)
+                                                .Distinct()
+                                                .ToList());
+            }
+        }
+
+        if (Me.Actions.Decider.HostileStructures.Any())
+        {
+            AvailableMeleeTargets.AddRange(Me.Actions.Decider.HostileStructures
+                                           .Where(structure => Vector3.Distance(transform.position, structure.GetInteractionPoint(Me)) <= melee_range + Me.Actions.Movement.ReachedThreshold)
+                                           .Select(structure => structure.gameObject)
+                                           .Distinct()
+                                           .ToList());
+
+            if (ranged_weapon != null) {
+                AvailableRangedTargets.AddRange(Me.Actions.Decider.HostileStructures
+                                                .Where(structure => Vector3.Distance(transform.position, structure.GetInteractionPoint(Me)) > melee_range && Vector3.Distance(transform.position, structure.GetInteractionPoint(Me)) <= ranged_weapon.Range + Me.Actions.Movement.ReachedThreshold)
+                                                .Select(structure => structure.gameObject)
+                                                .Distinct()
+                                                .ToList());
+            }
+        }
     }
 
 

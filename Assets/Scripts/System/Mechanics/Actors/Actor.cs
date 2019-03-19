@@ -78,7 +78,7 @@ public class Actor : MonoBehaviour
         Stats.Family = stat_block.family;
         Stats.Size = stat_block.size;
 
-        Actions.Attack.AttacksPerAction = stat_block.multiattack ? 2 : 1;
+        Actions.Combat.AttacksPerAction = stat_block.multiattack ? 2 : 1;
         Actions.Movement.BaseSpeed = stat_block.speed;
         Actions.Movement.Agent.speed = stat_block.speed;
         switch (Stats.Size) {

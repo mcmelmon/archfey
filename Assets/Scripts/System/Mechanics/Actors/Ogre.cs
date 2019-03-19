@@ -22,28 +22,28 @@ public class Ogre : MonoBehaviour
 
     public int AdditionalDamage(GameObject target, bool is_ranged)
     {
-        return is_ranged ? Me.Actions.RollDie(Me.Actions.Attack.EquippedRangedWeapon.DiceType, 1) : Me.Actions.RollDie(Me.Actions.Attack.EquippedMeleeWeapon.DiceType, 1);
+        return is_ranged ? Me.Actions.RollDie(Me.Actions.Combat.EquippedRangedWeapon.DiceType, 1) : Me.Actions.RollDie(Me.Actions.Combat.EquippedMeleeWeapon.DiceType, 1);
     }
 
 
     public void OnBadlyInjured()
     {
         Me.Actions.CloseWithEnemies();
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
     }
 
 
     public void OnFriendsInNeed()
     {
         Me.Actions.CloseWithEnemies();
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
     }
 
 
     public void OnHostileActorsSighted()
     {
         Me.Actions.CloseWithEnemies();
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
     }
 
 
@@ -55,7 +55,7 @@ public class Ogre : MonoBehaviour
             Me.Actions.Movement.SetDestination(target.GetInteractionPoint(Me));
         }
 
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
     }
 
 
@@ -78,7 +78,7 @@ public class Ogre : MonoBehaviour
     public void OnInCombat()
     {
         Me.Actions.CloseWithEnemies();
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
     }
 
 
@@ -104,7 +104,7 @@ public class Ogre : MonoBehaviour
     public void OnUnderAttack()
     {
         Me.Actions.CloseWithEnemies();
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
         Me.RestCounter = 0;
     }
 
@@ -112,7 +112,7 @@ public class Ogre : MonoBehaviour
     public void OnWatch()
     {
         Me.Actions.Movement.ResetPath();
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
     }
 
 
@@ -141,11 +141,11 @@ public class Ogre : MonoBehaviour
 
     private void SetAdditionalStats()
     {
-        Me.Actions.Attack.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.Hide));
-        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Greataxe));
-        Me.Actions.Attack.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Javelin)); 
+        Me.Actions.Combat.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.Hide));
+        Me.Actions.Combat.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Greataxe));
+        Me.Actions.Combat.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Javelin)); 
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
-        Me.Actions.Attack.CalculateAdditionalDamage = AdditionalDamage;
+        Me.Actions.Combat.CalculateAdditionalDamage = AdditionalDamage;
 
         GameObject pocket_lint = new GameObject("Pocket Lint");
         pocket_lint.transform.parent = transform;

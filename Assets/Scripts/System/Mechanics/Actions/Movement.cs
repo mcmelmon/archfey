@@ -64,6 +64,8 @@ public class Movement : MonoBehaviour
         Agent.enabled = false;
         Me.transform.position += backward * 10f;
         Agent.enabled = true;
+
+        Me.Actions.SheathWeapon();
     }
 
 
@@ -128,7 +130,7 @@ public class Movement : MonoBehaviour
     {
         int count = 0;
 
-        while (unit != null && count < Turn.ActionThreshold && !Me.Actions.Attack.IsWithinAttackRange(unit.transform)) {
+        while (unit != null && count < Turn.ActionThreshold && !Me.Actions.Combat.IsWithinAttackRange(unit.transform)) {
             SetDestination(unit.GetInteractionPoint(Me));
             count++;
             yield return new WaitForSeconds(Turn.ActionThreshold);

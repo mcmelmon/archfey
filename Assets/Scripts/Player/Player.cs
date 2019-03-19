@@ -50,7 +50,7 @@ public class Player : MonoBehaviour {
     {
         Actor victim = target.GetComponent<Actor>();
 
-        int additional_damage = Me.Actions.Attack.HasSurprise(victim) ? Me.Actions.RollDie(6, 5) : 0;  // TODO: rogue only needs advantage, not surprise
+        int additional_damage = Me.Actions.Combat.HasSurprise(victim) ? Me.Actions.RollDie(6, 5) : 0;  // TODO: rogue only needs advantage, not surprise
         return additional_damage;
     }
 
@@ -185,12 +185,12 @@ public class Player : MonoBehaviour {
         Me.Actions.Movement.BaseSpeed = 5;
         Me.Actions.Movement.Agent.speed = 5;
 
-        Me.Actions.Attack.Raging = true;
-        Me.Actions.Attack.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.None));
+        Me.Actions.Combat.Raging = true;
+        Me.Actions.Combat.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.None));
 
         Me.Actions.OnIdle = OnIdle;
         Me.Actions.OnReachedGoal = OnReachedGoal;
-        Me.Actions.Attack.CalculateAdditionalDamage = AdditionalDamage;
+        Me.Actions.Combat.CalculateAdditionalDamage = AdditionalDamage;
     }
 
 
@@ -216,8 +216,8 @@ public class Player : MonoBehaviour {
             Me.Stats.ClassFeatures.Add("Ghostly Gaze");
             Me.Stats.ClassFeatures.Add("Thirsting Blade");
 
-            Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Battleaxe, "lost_eye_axe"));
-            Me.Actions.Attack.AttacksPerAction = 2;
+            Me.Actions.Combat.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Battleaxe, "lost_eye_axe"));
+            Me.Actions.Combat.AttacksPerAction = 2;
 
             CommandBarOne.Instance.ActivateButtonSet("Warlock");
             if (EldritchSmite == null) EldritchSmite = gameObject.AddComponent<EldritchSmite>();
@@ -250,10 +250,10 @@ public class Player : MonoBehaviour {
             Me.Stats.Skills.Add(Proficiencies.Skill.Stealth);
             Me.Stats.Tools.Add(Proficiencies.Tool.Thief);
 
-            Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Dagger));
-            Me.Actions.Attack.EquipOffhand(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Dagger));
-            Me.Actions.Attack.AttacksPerAction = 1;
-            Me.Actions.Attack.Raging = false;
+            Me.Actions.Combat.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Dagger));
+            Me.Actions.Combat.EquipOffhand(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Dagger));
+            Me.Actions.Combat.AttacksPerAction = 1;
+            Me.Actions.Combat.Raging = false;
             CommandBarOne.Instance.ActivateButtonSet("Thief");
         }
     }

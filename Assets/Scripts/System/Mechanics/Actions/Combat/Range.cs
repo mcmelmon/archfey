@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class DefaultRange : MonoBehaviour
+public class Range : MonoBehaviour
 {
     // properties
 
@@ -36,7 +36,7 @@ public class DefaultRange : MonoBehaviour
         if (_target == null) return;
 
         Target = _target;
-        Weapon = Me.Actions.Attack.EquippedRangedWeapon;
+        Weapon = Me.Actions.Combat.EquippedRangedWeapon;
         SetModifiers();
         Projectile = Instantiate(Weapon.projectile_prefab, Me.weapon_transform.position, transform.rotation);
         StartCoroutine(Seek());
@@ -77,11 +77,11 @@ public class DefaultRange : MonoBehaviour
                                  .Where(friend => friend != null && Me.Actions.Decider.IsFriendOrNeutral(friend) && Vector3.Distance(transform.position, friend.transform.position) < 2f)
                                  .ToList();
                                  
-        if (Me.Actions.Attack.AvailableMeleeTargets.Count > 0) {
+        if (Me.Actions.Decider.AvailableMeleeTargets.Count > 0) {
             Disadvantage = true;
         } 
 
-        Advantage |= friends_in_melee.Count > Me.Actions.Attack.AvailableMeleeTargets.Count;
+        Advantage |= friends_in_melee.Count > Me.Actions.Decider.AvailableMeleeTargets.Count;
     }
 
 
@@ -103,7 +103,7 @@ public class DefaultRange : MonoBehaviour
 
         Debug.Log(Me.name + " ranged attack rolled: " + roll);
 
-        if (roll >= Me.Actions.Attack.CriticalRangeStart) Critical = true;
+        if (roll >= Me.Actions.Combat.CriticalRangeStart) Critical = true;
 
         if (target_actor != null) {
             return  roll + AttackModifier > target_actor.Actions.Stats.GetArmorClass();
@@ -127,7 +127,7 @@ public class DefaultRange : MonoBehaviour
     private void SetModifiers()
     {
         AttackModifier = Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + Weapon.DamageBonus;
-        DamageModifier = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + Weapon.DamageBonus + Me.Actions.Attack.CalculateAdditionalDamage(Target, true);
+        DamageModifier = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + Weapon.DamageBonus + Me.Actions.Combat.CalculateAdditionalDamage(Target, true);
     }
 
 

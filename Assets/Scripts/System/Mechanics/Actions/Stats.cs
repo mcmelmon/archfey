@@ -78,8 +78,8 @@ public class Stats : MonoBehaviour
 
     public int GetArmorClass()
     {
-        int armor_class = Mathf.Max(BaseArmorClass, Me.Actions.Attack.EquippedArmor.ArmorClass(GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity)));
-        Armor shield = Me.Actions.Attack.EquippedOffhand?.GetComponent<Armor>();
+        int armor_class = Mathf.Max(BaseArmorClass, Me.Actions.Combat.EquippedArmor.ArmorClass(GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity)));
+        Armor shield = Me.Actions.Combat.EquippedOffhand?.GetComponent<Armor>();
 
         return shield != null ? armor_class + shield.ArmorClassEnhancement : armor_class;
     }
@@ -121,7 +121,7 @@ public class Stats : MonoBehaviour
 
     public float CurrentRagePercentage()
     {
-        return Me.Actions.Attack.Raging ? 1 - (RageTick / RageDuration) : 0;
+        return Me.Actions.Combat.Raging ? 1 - (RageTick / RageDuration) : 0;
     }
 
 

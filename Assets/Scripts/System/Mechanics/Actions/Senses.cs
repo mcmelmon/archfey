@@ -59,8 +59,6 @@ public class Senses : MonoBehaviour
 
         RemoveHidden();
         TriggerInsights();
-
-        Me.Actions.Attack.SetEnemyRanges();
     }
 
 

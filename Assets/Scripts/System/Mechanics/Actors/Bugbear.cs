@@ -25,41 +25,39 @@ public class Bugbear : MonoBehaviour
     {
         Actor victim = target.GetComponent<Actor>();
 
-        int additional_damage = Me.Actions.Attack.HasSurprise(victim) ? Me.Actions.RollDie(6, 2) : 0;
-        return is_ranged ? additional_damage : additional_damage + Me.Actions.RollDie(Me.Actions.Attack.EquippedMeleeWeapon.DiceType, 1);
+        int additional_damage = Me.Actions.Combat.HasSurprise(victim) ? Me.Actions.RollDie(6, 2) : 0;
+        return is_ranged ? additional_damage : additional_damage + Me.Actions.RollDie(Me.Actions.Combat.EquippedMeleeWeapon.DiceType, 1);
     }
 
 
     public void OnBadlyInjured()
     {
-        Me.Actions.CloseWithEnemies();
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.FleeFromEnemies();
     }
 
 
     public void OnFriendsInNeed()
     {
         Me.Actions.CloseWithEnemies();
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
     }
 
 
     public void OnHostileActorsSighted()
     {
         Me.Actions.CloseWithEnemies();
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
     }
 
 
     public void OnHostileStructuresSighted()
     {
-        if (Me.Actions.Decider.HostileStructures.Count > 0)
-        {
+        if (Me.Actions.Decider.HostileStructures.Count > 0) {
             Structure target = Me.Actions.Decider.HostileStructures[Random.Range(0, Me.Actions.Decider.HostileStructures.Count)];
             Me.Actions.Movement.SetDestination(target.GetInteractionPoint(Me));
         }
 
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
     }
 
 
@@ -83,7 +81,7 @@ public class Bugbear : MonoBehaviour
     public void OnInCombat()
     {
         Me.Actions.CloseWithEnemies();
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
     }
 
 
@@ -109,7 +107,7 @@ public class Bugbear : MonoBehaviour
     public void OnUnderAttack()
     {
         Me.Actions.CloseWithEnemies();
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
         Me.RestCounter = 0;
     }
 
@@ -117,7 +115,8 @@ public class Bugbear : MonoBehaviour
     public void OnWatch()
     {
         Me.Actions.Movement.ResetPath();
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.CloseWithEnemies();
+        Me.Actions.Attack();
     }
 
 
@@ -146,12 +145,12 @@ public class Bugbear : MonoBehaviour
 
     private void SetAdditionalStats()
     {
-        Me.Actions.Attack.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.Hide));
-        Me.Actions.Attack.EquipShield(Armors.Instance.GetArmorNamed(Armors.ArmorName.Shield));
-        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Morningstar));
-        Me.Actions.Attack.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Javelin));
+        Me.Actions.Combat.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.Hide));
+        Me.Actions.Combat.EquipShield(Armors.Instance.GetArmorNamed(Armors.ArmorName.Shield));
+        Me.Actions.Combat.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Morningstar));
+        Me.Actions.Combat.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Javelin));
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
-        Me.Actions.Attack.CalculateAdditionalDamage = AdditionalDamage;
+        Me.Actions.Combat.CalculateAdditionalDamage = AdditionalDamage;
 
         Me.Stats.ExpertiseInSkills.Add(Proficiencies.Skill.Stealth);
         Me.Stats.Skills.Add(Proficiencies.Skill.Stealth);

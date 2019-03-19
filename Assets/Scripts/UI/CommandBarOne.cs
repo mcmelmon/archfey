@@ -80,9 +80,15 @@ public class CommandBarOne : MonoBehaviour {
     public void Attack()
     {
         if (Me.Actions.CanTakeAction && AttackButton.interactable) {
-            var targets = Mouse.SelectedObjects.Where(so => so != null && Me.Actions.Attack.IsAttackable(so) && Me.Actions.Attack.IsWithinAttackRange(so.transform));
+            var targets = Mouse.SelectedObjects.Where(so => so != null && Me.Actions.Combat.IsAttackable(so) && Me.Actions.Combat.IsWithinAttackRange(so.transform));
             if (targets.Any()) {
-                Me.Actions.Attack.AttackEnemiesInRange(false, targets.First()); // offhand = false
+                GameObject target = targets.First();
+                if (Me.Actions.Combat.IsWithinMeleeRange(target.transform)) {
+                    Me.Actions.Decider.TargetMelee(target);
+                } else {
+                    Me.Actions.Decider.TargetRanged(target);
+                }
+                Me.Actions.Attack(false, true); // offhand = false, player target = true
                 Me.Actions.CanTakeAction = false;
             }
         }
@@ -134,11 +140,16 @@ public class CommandBarOne : MonoBehaviour {
 
     public void Offhand()
     {
-        if (Me.Actions.CanTakeBonusAction && OffhandButton.interactable)
-        {
-            var targets = Mouse.SelectedObjects.Where(so => so != null && Me.Actions.Attack.IsAttackable(so) && Me.Actions.Attack.IsWithinAttackRange(so.transform));
+        if (Me.Actions.CanTakeBonusAction && OffhandButton.interactable) {
+            var targets = Mouse.SelectedObjects.Where(so => so != null && Me.Actions.Combat.IsAttackable(so) && Me.Actions.Combat.IsWithinAttackRange(so.transform));
             if (targets.Any()) {
-                Me.Actions.Attack.AttackEnemiesInRange(true, targets.First()); // offhand = true
+                GameObject target = targets.First();
+                if (Me.Actions.Combat.IsWithinMeleeRange(target.transform)) {
+                    Me.Actions.Decider.TargetMelee(target);
+                } else {
+                    Me.Actions.Decider.TargetRanged(target); // e.g. offhand thrown dagger
+                }
+                Me.Actions.Attack(true, true); // offhand = true, player target = true
                 Me.Actions.CanTakeBonusAction = false;
             }
         }
@@ -179,15 +190,16 @@ public class CommandBarOne : MonoBehaviour {
     public void Smite()
     {
         if (Me.Actions.CanTakeAction && SmiteButton.interactable) {
-            var targets = Mouse.SelectedObjects.Where(so => so != null && Me.Actions.Attack.IsAttackable(so) && Me.Actions.Attack.IsWithinAttackRange(so.transform));
+            var targets = Mouse.SelectedObjects.Where(so => so != null && Me.Actions.Combat.IsAttackable(so) && Me.Actions.Combat.IsWithinAttackRange(so.transform));
             if (targets.Any()) {
-                Me.Actions.Attack.AttackEnemiesInRange(targets.First());
                 Actor actor = targets.First().GetComponent<Actor>();
-                if (actor != null) {
+                if (actor != null && Me.Actions.Combat.IsWithinMeleeRange(actor.transform)) {
+                    Me.Actions.Decider.TargetMelee(actor.gameObject);
+                    Me.Actions.Attack(false, true); // offhand = false, player target = true
                     Player.Instance.CastEldritchSmite(actor);
                     StartCoroutine(Cooldown(SmiteButton, 20));
+                    Me.Actions.CanTakeAction = false;
                 }
-                Me.Actions.CanTakeAction = false;
             }
         }
     }
@@ -216,7 +228,7 @@ public class CommandBarOne : MonoBehaviour {
 
                 if (AttackButton != null) {
                     var interactors = Mouse.SelectedObjects
-                                           .Where(so => so != null && Me.Actions.Attack.IsAttackable(so) && Me.Actions.Attack.IsWithinAttackRange(so.transform));
+                                           .Where(so => so != null && Me.Actions.Combat.IsAttackable(so) && Me.Actions.Combat.IsWithinAttackRange(so.transform));
                     bool have_target = interactors.Any();
                     AttackButton.interactable = Me.Actions.CanTakeAction && have_target;
                     SmiteButton.interactable = AttackButton.interactable;
@@ -231,12 +243,12 @@ public class CommandBarOne : MonoBehaviour {
                 }
 
                 if (HideButton != null) {
-                    HideButton.interactable = Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction;
+                    HideButton.interactable = !Me.Actions.Combat.Engaged && (Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction);
                 }
 
                 if (OffhandButton != null) {
                     var interactors = Mouse.SelectedObjects
-                                           .Where(so => so != null && Me.Actions.Attack.IsAttackable(so) && Me.Actions.Attack.IsWithinAttackRange(so.transform));
+                                           .Where(so => so != null && Me.Actions.Combat.IsAttackable(so) && Me.Actions.Combat.IsWithinAttackRange(so.transform));
                     bool have_target = interactors.Any();
                     OffhandButton.interactable = Me.Actions.CanTakeBonusAction && have_target;
                 }
@@ -315,7 +327,7 @@ public class CommandBarOne : MonoBehaviour {
         while (true) {
             if (Input.GetKeyDown(KeyCode.Tab)) {
                 List<Actor> potential_targets = FindObjectsOfType<Actor>()
-                    .Where(actor => actor != Me && Me.Actions.Attack.IsWithinAttackRange(actor.transform) && !Mouse.SelectedObjects.Contains(actor.gameObject))
+                    .Where(actor => actor != Me && Me.Actions.Combat.IsWithinAttackRange(actor.transform) && !Mouse.SelectedObjects.Contains(actor.gameObject))
                     .OrderBy(actor => Vector3.Distance(transform.position, actor.transform.position))
                     .ToList();
 

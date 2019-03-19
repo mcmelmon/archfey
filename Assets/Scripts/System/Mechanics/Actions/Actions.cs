@@ -7,9 +7,9 @@ public class Actions : MonoBehaviour
 {
     // properties
 
-    public Attack Attack { get; set; }
     public bool CanTakeAction { get; set; }
     public bool CanTakeBonusAction { get; set; }
+    public Combat Combat { get; set; }
     public Decider Decider { get; set; }
     public bool InCombat { get; set; }
     public Actor Me { get; set; }
@@ -125,6 +125,16 @@ public class Actions : MonoBehaviour
     }
 
 
+    public void Attack(bool offhand = false, bool player_target = false)
+    {
+        if (Decider.Target == null) return;
+
+        for (int i = 0; i < Combat.AttacksPerAction; i++) {
+            Combat.StrikeEnemy(Decider.Target, Decider.AttackAtRange, offhand, player_target);
+        }
+    }
+
+
     public void CallForHelp()
     {
         List<Actor> friends = Decider.IdentifyFriends();
@@ -147,9 +157,9 @@ public class Actions : MonoBehaviour
 
         if (transform == null) return;
 
-        Actor nearest_enemy = Decider.Threat.Nearest();
+        Actor nearest_enemy = Decider.TargetEnemy()?.GetComponent<Actor>();
 
-        if (nearest_enemy != null && Vector3.Distance(transform.position, nearest_enemy.transform.position) > Me.Actions.Movement.ReachedThreshold) {
+        if (nearest_enemy != null && !Me.Actions.Combat.IsWithinAttackRange(nearest_enemy.transform)) {
             StartCoroutine(Movement.TrackUnit(nearest_enemy));
         }
     }
@@ -169,7 +179,6 @@ public class Actions : MonoBehaviour
             var _enemy = enemies.OrderBy(e => Vector3.Distance(transform.position, e.transform.position)).First();
             Vector3 run_away_direction = (transform.position - _enemy.transform.position).normalized;
             Vector3 run_away_to = transform.position + (run_away_direction * Movement.Agent.speed * Movement.Agent.speed);
-            Movement.AdjustSpeed(0.5f);
             Movement.SetDestination(run_away_to);
         }
     }
@@ -210,9 +219,10 @@ public class Actions : MonoBehaviour
 
     public void SheathWeapon()
     {
-        if (Attack.EquippedMeleeWeapon != null) Attack.EquippedMeleeWeapon.gameObject.SetActive(false);
-        if (Attack.EquippedRangedWeapon != null) Attack.EquippedRangedWeapon.gameObject.SetActive(false);
-        if (Attack.EquippedOffhand != null) Attack.EquippedOffhand.gameObject.SetActive(false);
+        Combat.Engaged = false;
+        if (Combat.EquippedMeleeWeapon != null) Combat.EquippedMeleeWeapon.gameObject.SetActive(false);
+        if (Combat.EquippedRangedWeapon != null) Combat.EquippedRangedWeapon.gameObject.SetActive(false);
+        if (Combat.EquippedOffhand != null) Combat.EquippedOffhand.gameObject.SetActive(false);
     }
 
 
@@ -261,7 +271,7 @@ public class Actions : MonoBehaviour
 
     private void SetComponents()
     {
-        Attack = GetComponentInChildren<Attack>();
+        Combat = GetComponentInChildren<Combat>();
         Decider = GetComponent<Decider>();
         Stats = GetComponentInParent<Stats>();
         Stealth = GetComponentInParent<Stealth>();

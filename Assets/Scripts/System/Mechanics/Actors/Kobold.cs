@@ -23,21 +23,21 @@ public class Kobold : MonoBehaviour
     public void OnBadlyInjured()
     {
         Me.Actions.CloseWithEnemies();
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
     }
 
 
     public void OnFriendsInNeed()
     {
         Me.Actions.CloseWithEnemies();
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
     }
 
 
     public void OnHostileActorsSighted()
     {
         Me.Actions.CloseWithEnemies();
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
     }
 
 
@@ -49,7 +49,7 @@ public class Kobold : MonoBehaviour
             Me.Actions.Movement.SetDestination(target.GetInteractionPoint(Me));
         }
 
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
     }
 
 
@@ -76,7 +76,7 @@ public class Kobold : MonoBehaviour
     public void OnInCombat()
     {
         Me.Actions.CloseWithEnemies();
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
     }
 
 
@@ -102,7 +102,7 @@ public class Kobold : MonoBehaviour
     public void OnUnderAttack()
     {
         Me.Actions.CloseWithEnemies();
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
         Me.RestCounter = 0;
     }
 
@@ -110,7 +110,7 @@ public class Kobold : MonoBehaviour
     public void OnWatch()
     {
         Me.Actions.Movement.ResetPath();
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
     }
 
 
@@ -139,9 +139,9 @@ public class Kobold : MonoBehaviour
 
     private void SetAdditionalStats()
     {
-        Me.Actions.Attack.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.None));
-        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Scimitar));
-        Me.Actions.Attack.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Hand_Crossbow)); 
+        Me.Actions.Combat.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.None));
+        Me.Actions.Combat.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Scimitar));
+        Me.Actions.Combat.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Hand_Crossbow)); 
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
     }
 }

@@ -26,7 +26,7 @@ public class Guard : MonoBehaviour
 
     public void OnBadlyInjured()
     {
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
         FindShrine();
     }
 
@@ -34,7 +34,7 @@ public class Guard : MonoBehaviour
     public void OnFriendsInNeed()
     {
         Me.Actions.Movement.SetDestination(Me.Actions.Decider.FriendsInNeed.First().transform);
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
         Me.Actions.Decider.FriendsInNeed.Clear();
     }
 
@@ -43,7 +43,7 @@ public class Guard : MonoBehaviour
     {
         Me.Actions.CallForHelp();
         Me.Actions.CloseWithEnemies();
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
         Me.Actions.Decider.FriendsInNeed.Clear();
     }
 
@@ -51,19 +51,18 @@ public class Guard : MonoBehaviour
     public void OnHostileActorsSighted()
     {
         Me.Actions.CloseWithEnemies();
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
     }
 
 
     public void OnHostileStructuresSighted()
     {
-        if (Me.Actions.Decider.HostileStructures.Count > 0)
-        {
+        if (Me.Actions.Decider.HostileStructures.Count > 0) {
             Structure target = Me.Actions.Decider.HostileStructures[Random.Range(0, Me.Actions.Decider.HostileStructures.Count)];
             Me.Actions.Movement.SetDestination(target.GetInteractionPoint(Me));
         }
 
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
     }
 
 
@@ -98,7 +97,7 @@ public class Guard : MonoBehaviour
     {
         Me.Actions.Decider.FriendsInNeed.Clear();
         Me.Actions.CloseWithEnemies();
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
         Me.RestCounter = 0;
     }
 
@@ -106,7 +105,7 @@ public class Guard : MonoBehaviour
     public void OnWatch()
     {
         Me.Actions.Movement.ResetPath();
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
     }
 
 
@@ -148,10 +147,10 @@ public class Guard : MonoBehaviour
 
     private void SetAdditionalStats()
     {
-        Me.Actions.Attack.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.Chain_Shirt));
-        Me.Actions.Attack.EquipShield(Armors.Instance.GetArmorNamed(Armors.ArmorName.Shield));
-        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Spear));
-        Me.Actions.Attack.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Longbow)); 
+        Me.Actions.Combat.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.Chain_Shirt));
+        Me.Actions.Combat.EquipShield(Armors.Instance.GetArmorNamed(Armors.ArmorName.Shield));
+        Me.Actions.Combat.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Spear));
+        Me.Actions.Combat.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Longbow)); 
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
 
         Me.Stats.Skills.Add(Proficiencies.Skill.Perception);
