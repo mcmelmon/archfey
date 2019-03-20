@@ -17,24 +17,6 @@ public class Actions : MonoBehaviour
     public Stats Stats { get; set; }
     public Stealth Stealth { get; set; }
 
-    public Action OnBadlyInjured { get; set; }
-    public Action OnCrafting { get; set; }
-    public Action OnFriendsInNeed { get; set; }
-    public Action OnFriendlyActorsSighted { get; set; }
-    public Action OnFullLoad { get; set; }
-    public Action OnDamagedFriendlyStructuresSighted { get; set; }
-    public Action OnHarvetsing { get; set; }
-    public Action OnHostileActorsSighted { get; set; }
-    public Action OnHostileStructuresSighted { get; set; }
-    public Action OnIdle { get; set; }
-    public Action OnInCombat { get; set; }
-    public Action OnMedic { get; set; }
-    public Action OnMovingToGoal { get; set; }
-    public Action OnNeedsRest { get; set; }
-    public Action OnReachedGoal { get; set; }
-    public Action OnUnderAttack { get; set; }
-    public Action OnWatch { get; set; }
-    
 
     // Unity
 
@@ -65,61 +47,61 @@ public class Actions : MonoBehaviour
 
         switch (Decider.state) {
             case Decider.State.BadlyInjured:
-                OnBadlyInjured?.Invoke();
+                GetComponentInParent<IAct>().OnBadlyInjured();
                 break;
             case Decider.State.Crafting:
-                OnCrafting?.Invoke();
+                GetComponentInParent<IAct>().OnCrafting();
                 break;
             case Decider.State.FriendsInNeed:
-                OnFriendsInNeed?.Invoke();
+                GetComponentInParent<IAct>().OnFriendsInNeed();
                 break;
             case Decider.State.FriendlyActorsSighted:
-                OnFriendlyActorsSighted?.Invoke();
+                GetComponentInParent<IAct>().OnFriendlyActorsSighted();
                 break;
             case Decider.State.DamagedFriendlyStructuresSighted:
-                OnDamagedFriendlyStructuresSighted?.Invoke();
+                GetComponentInParent<IAct>().OnDamagedFriendlyStructuresSighted();
                 break;
             case Decider.State.FullLoad:
-                OnFullLoad?.Invoke();
+                GetComponentInParent<IAct>().OnFullLoad();
                 break;
             case Decider.State.Harvesting:
-                OnHarvetsing?.Invoke();
+                GetComponentInParent<IAct>().OnHarvesting();
                 break;
             case Decider.State.HostileActorsSighted:
-                OnHostileActorsSighted?.Invoke();
+                GetComponentInParent<IAct>().OnHostileActorsSighted();
                 break;
             case Decider.State.HostileStructuresSighted:
-                OnHostileStructuresSighted?.Invoke();
+                GetComponentInParent<IAct>().OnHostileStructuresSighted();
                 break;
             case Decider.State.Idle:
-                OnIdle?.Invoke();
+                GetComponentInParent<IAct>().OnIdle();
                 break;
             case Decider.State.InCombat:
-                OnInCombat?.Invoke();
+                GetComponentInParent<IAct>().OnInCombat();
                 break;
             case Decider.State.Medic:
-                OnMedic?.Invoke();
+                GetComponentInParent<IAct>().OnMedic();
                 break;
             case Decider.State.MovingToGoal:
-                OnMovingToGoal?.Invoke();
+                GetComponentInParent<IAct>().OnMovingToGoal();
                 break;
             case Decider.State.NeedsRest:
-                OnNeedsRest?.Invoke();
+                GetComponentInParent<IAct>().OnNeedsRest();
                 break;
             case Decider.State.ReachedGoal:
-                OnReachedGoal?.Invoke();
+                GetComponentInParent<IAct>().OnReachedGoal();
                 break;
             case Decider.State.Resting:
                 Rest();
                 break;
             case Decider.State.UnderAttack:
-                OnUnderAttack?.Invoke();
+                GetComponentInParent<IAct>().OnUnderAttack();
                 break;
             case Decider.State.Watch:
-                OnWatch?.Invoke();
+                GetComponentInParent<IAct>().OnWatch();
                 break;
             default:
-                OnIdle?.Invoke();
+                GetComponentInParent<IAct>().OnIdle();
                 break;
         }
     }

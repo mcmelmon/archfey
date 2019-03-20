@@ -4,7 +4,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Player : MonoBehaviour {
+public class Player : MonoBehaviour, IAct {
 
     // Inspector settings
     public CinemachineFreeLook viewport;
@@ -57,7 +57,8 @@ public class Player : MonoBehaviour {
 
     public void CastEldritchSmite(Actor target)
     {
-        if (target != null && Vector3.Distance(target.transform.position, transform.position) < EldritchSmite.Range) {
+        if (target != null && Vector3.Distance(target.transform.position, transform.position) < EldritchSmite.Range)
+        {
             EldritchSmite.Cast(target);
         }
     }
@@ -72,6 +73,18 @@ public class Player : MonoBehaviour {
         StartCoroutine(GodOfRageCountdown());
     }
 
+
+    public void OnBadlyInjured() { }
+    public void OnCrafting() { }
+    public void OnFriendsInNeed() { }
+    public void OnFriendlyActorsSighted() { }
+    public void OnFullLoad() { }
+    public void OnDamagedFriendlyStructuresSighted() { }
+    public void OnHarvesting() { }
+    public void OnHostileActorsSighted() { }
+    public void OnHostileStructuresSighted() { }
+
+
     public void OnIdle()
     {
         Me.Actions.SheathWeapon();
@@ -79,12 +92,22 @@ public class Player : MonoBehaviour {
         Me.Actions.Decider.FriendsInNeed.Clear();
     }
 
+
+    public void OnInCombat() { }
+    public void OnMedic() { }
+    public void OnMovingToGoal() { }
+    public void OnNeedsRest() { }
+
+
     public void OnReachedGoal()
     {
         Me.Actions.Movement.ResetPath();
         Me.Actions.Decider.FriendsInNeed.Clear();
     }
 
+
+    public void OnUnderAttack() { }
+    public void OnWatch() { }
 
     // private
 
@@ -188,8 +211,6 @@ public class Player : MonoBehaviour {
         Me.Actions.Combat.Raging = true;
         Me.Actions.Combat.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.None));
 
-        Me.Actions.OnIdle = OnIdle;
-        Me.Actions.OnReachedGoal = OnReachedGoal;
         Me.Actions.Combat.CalculateAdditionalDamage = AdditionalDamage;
     }
 

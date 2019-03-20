@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.AI;
 
-public class Guard : MonoBehaviour
+public class Guard : MonoBehaviour, IAct
 {
 
     // properties
@@ -31,12 +29,26 @@ public class Guard : MonoBehaviour
     }
 
 
+    public void OnCrafting() { }
+
+
+    public void OnFriendlyActorsSighted() { }
+
+    public void OnDamagedFriendlyStructuresSighted() { }
+
+
     public void OnFriendsInNeed()
     {
         Me.Actions.Movement.SetDestination(Me.Actions.Decider.FriendsInNeed.First().transform);
         Me.Actions.Attack();
         Me.Actions.Decider.FriendsInNeed.Clear();
     }
+
+
+    public void OnFullLoad() { }
+
+
+    public void OnHarvesting() { }
 
 
     public void OnInCombat()
@@ -70,6 +82,12 @@ public class Guard : MonoBehaviour
     {
         Me.Actions.SheathWeapon();
         Me.Actions.Movement.Home();
+    }
+
+
+    public void OnMedic()
+    {
+
     }
 
 
@@ -129,18 +147,6 @@ public class Guard : MonoBehaviour
         Me = GetComponent<Actor>();
         StartCoroutine(Me.GetStatsFromServer(this.GetType().Name));
         SetAdditionalStats();
-
-        Me.Actions.OnBadlyInjured = OnBadlyInjured;
-        Me.Actions.OnFriendsInNeed = OnFriendsInNeed;
-        Me.Actions.OnHostileActorsSighted = OnHostileActorsSighted;
-        Me.Actions.OnHostileStructuresSighted = OnHostileStructuresSighted;
-        Me.Actions.OnIdle = OnIdle;
-        Me.Actions.OnInCombat = OnInCombat;
-        Me.Actions.OnMovingToGoal = OnMovingToGoal;
-        Me.Actions.OnNeedsRest = OnNeedsRest;
-        Me.Actions.OnReachedGoal = OnReachedGoal;
-        Me.Actions.OnUnderAttack = OnUnderAttack;
-        Me.Actions.OnWatch = OnWatch;
         Me.Actions.Movement.AddDestination(Movement.CommonDestination.Home, transform.position);
     }
 

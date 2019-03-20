@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Commoner : MonoBehaviour 
+public class Commoner : MonoBehaviour, IAct
 {
     // properties
 
@@ -31,10 +31,7 @@ public class Commoner : MonoBehaviour
     }
 
 
-    public void OnCrafting()
-    {
-
-    }
+    public void OnCrafting() { }
 
 
     public void OnFriendsInNeed()
@@ -56,6 +53,8 @@ public class Commoner : MonoBehaviour
         }
     }
 
+
+    public void OnFriendlyActorsSighted() {  }
 
     public void OnFullLoad()
     {
@@ -106,9 +105,10 @@ public class Commoner : MonoBehaviour
     }
 
 
-    public void OnMovingToGoal()
-    {
-    }
+    public void OnMedic() { }
+
+
+    public void OnMovingToGoal()  { }
 
 
     public void OnNeedsRest()
@@ -142,10 +142,7 @@ public class Commoner : MonoBehaviour
     }
 
 
-    public void OnWatch()
-    {
-        // call for help after running away
-    }
+    public void OnWatch() { }
 
 
     // private
@@ -303,22 +300,6 @@ public class Commoner : MonoBehaviour
         Me = GetComponent<Actor>();
         StartCoroutine(Me.GetStatsFromServer(this.GetType().Name));
         SetAdditionalStats();
-
-        Me.Actions.OnBadlyInjured = OnBadlyInjured;
-        Me.Actions.OnCrafting = OnCrafting;
-        Me.Actions.OnFriendsInNeed = OnFriendsInNeed;
-        Me.Actions.OnFullLoad = OnFullLoad;
-        Me.Actions.OnDamagedFriendlyStructuresSighted = OnDamagedFriendlyStructuresSighted;
-        Me.Actions.OnHarvetsing = OnHarvesting;
-        Me.Actions.OnHostileActorsSighted = OnHostileActorsSighted;
-        Me.Actions.OnHostileStructuresSighted = OnHostileStructuresSighted;
-        Me.Actions.OnIdle = OnIdle;
-        Me.Actions.OnInCombat = OnInCombat;
-        Me.Actions.OnMovingToGoal = OnMovingToGoal;
-        Me.Actions.OnNeedsRest = OnNeedsRest;
-        Me.Actions.OnReachedGoal = OnReachedGoal;
-        Me.Actions.OnUnderAttack = OnUnderAttack;
-        Me.Actions.OnWatch = OnWatch;
         Me.Actions.Movement.AddDestination(Movement.CommonDestination.Home, transform.position);
     }
 

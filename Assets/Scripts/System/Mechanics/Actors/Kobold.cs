@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-public class Kobold : MonoBehaviour
+public class Kobold : MonoBehaviour, IAct
 {
     // properties
 
@@ -27,11 +27,26 @@ public class Kobold : MonoBehaviour
     }
 
 
+    public void OnCrafting() { }
+
+
+    public void OnFriendlyActorsSighted() { }
+
+
+    public void OnDamagedFriendlyStructuresSighted() { }
+
+
     public void OnFriendsInNeed()
     {
         Me.Actions.CloseWithEnemies();
         Me.Actions.Attack();
     }
+
+
+    public void OnFullLoad() { }
+
+
+    public void OnHarvesting() { }
 
 
     public void OnHostileActorsSighted()
@@ -56,6 +71,7 @@ public class Kobold : MonoBehaviour
     public void OnIdle()
     {
         Me.Actions.SheathWeapon();
+        Me.Actions.Stealth.Hide();
 
         if (Me.Route.local_stops.Length > 1)
         {
@@ -80,16 +96,19 @@ public class Kobold : MonoBehaviour
     }
 
 
+    public void OnMedic() { }
+
+
     public void OnMovingToGoal()
     {
         Me.Actions.SheathWeapon();
     }
 
 
-    public void OnPerformingTask()
-    {
+    public void OnNeedsRest() { }
 
-    }
+
+    public void OnPerformingTask() { }
 
 
     public void OnReachedGoal()
@@ -110,6 +129,7 @@ public class Kobold : MonoBehaviour
     public void OnWatch()
     {
         Me.Actions.Movement.ResetPath();
+        Me.Actions.CloseWithEnemies();
         Me.Actions.Attack();
     }
 
@@ -122,17 +142,6 @@ public class Kobold : MonoBehaviour
         Me = GetComponent<Actor>();
         StartCoroutine(Me.GetStatsFromServer(this.GetType().Name));
         SetAdditionalStats();
-
-        Me.Actions.OnBadlyInjured = OnBadlyInjured;
-        Me.Actions.OnFriendsInNeed = OnFriendsInNeed;
-        Me.Actions.OnHostileActorsSighted = OnHostileActorsSighted;
-        Me.Actions.OnHostileStructuresSighted = OnHostileStructuresSighted;
-        Me.Actions.OnIdle = OnIdle;
-        Me.Actions.OnInCombat = OnInCombat;
-        Me.Actions.OnMovingToGoal = OnMovingToGoal;
-        Me.Actions.OnReachedGoal = OnReachedGoal;
-        Me.Actions.OnUnderAttack = OnUnderAttack;
-        Me.Actions.OnWatch = OnWatch;
         Me.Actions.Movement.AddDestination(Movement.CommonDestination.Home, transform.position);
     }
 

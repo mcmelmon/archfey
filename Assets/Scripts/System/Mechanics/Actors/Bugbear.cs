@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Bugbear : MonoBehaviour
+public class Bugbear : MonoBehaviour, IAct
 {
     // properties
 
@@ -36,11 +36,25 @@ public class Bugbear : MonoBehaviour
     }
 
 
+    public void OnCrafting() { }
+
+
+    public void OnFriendlyActorsSighted() { }
+
+    public void OnDamagedFriendlyStructuresSighted() { }
+
+
     public void OnFriendsInNeed()
     {
         Me.Actions.CloseWithEnemies();
         Me.Actions.Attack();
     }
+
+
+    public void OnFullLoad() {  }
+
+
+    public void OnHarvesting() { }
 
 
     public void OnHostileActorsSighted()
@@ -85,16 +99,22 @@ public class Bugbear : MonoBehaviour
     }
 
 
+    public void OnMedic()
+    {
+
+    }
+
+
     public void OnMovingToGoal()
     {
         Me.Actions.SheathWeapon();
     }
 
 
-    public void OnPerformingTask()
-    {
+    public void OnNeedsRest() { }
 
-    }
+
+    public void OnPerformingTask() { }
 
 
     public void OnReachedGoal()
@@ -128,17 +148,6 @@ public class Bugbear : MonoBehaviour
         Me = GetComponent<Actor>();
         StartCoroutine(Me.GetStatsFromServer(this.GetType().Name));
         SetAdditionalStats();
-
-        Me.Actions.OnBadlyInjured = OnBadlyInjured;
-        Me.Actions.OnFriendsInNeed = OnFriendsInNeed;
-        Me.Actions.OnHostileActorsSighted = OnHostileActorsSighted;
-        Me.Actions.OnHostileStructuresSighted = OnHostileStructuresSighted;
-        Me.Actions.OnIdle = OnIdle;
-        Me.Actions.OnInCombat = OnInCombat;
-        Me.Actions.OnMovingToGoal = OnMovingToGoal;
-        Me.Actions.OnReachedGoal = OnReachedGoal;
-        Me.Actions.OnUnderAttack = OnUnderAttack;
-        Me.Actions.OnWatch = OnWatch;
         Me.Actions.Movement.AddDestination(Movement.CommonDestination.Home, transform.position);
     }
 

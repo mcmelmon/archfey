@@ -213,8 +213,6 @@ public class Decider : MonoBehaviour
 
     private bool DamagedFriendlyStructures()
     {
-        if (Me.Actions.OnDamagedFriendlyStructuresSighted == null) return false;
-
         FriendlyStructures = Me.Senses.Structures
                                .Where(structure => structure.Faction == Me.Faction && structure.CurrentHitPoints < structure.maximum_hit_points)
                                .ToList();
