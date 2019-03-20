@@ -2,14 +2,8 @@
 using System.Linq;
 using UnityEngine;
 
-public class Guard : MonoBehaviour, IAct
+public class Guard : TemplateMelee
 {
-
-    // properties
-
-    public Actor Me { get; set; }
-
-
     // Unity
 
 
@@ -22,22 +16,14 @@ public class Guard : MonoBehaviour, IAct
     // public
 
 
-    public void OnBadlyInjured()
+    public override void OnBadlyInjured()
     {
         Me.Actions.Attack();
         FindShrine();
     }
 
 
-    public void OnCrafting() { }
-
-
-    public void OnFriendlyActorsSighted() { }
-
-    public void OnDamagedFriendlyStructuresSighted() { }
-
-
-    public void OnFriendsInNeed()
+    public override void OnFriendsInNeed()
     {
         Me.Actions.Movement.SetDestination(Me.Actions.Decider.FriendsInNeed.First().transform);
         Me.Actions.Attack();
@@ -45,85 +31,18 @@ public class Guard : MonoBehaviour, IAct
     }
 
 
-    public void OnFullLoad() { }
-
-
-    public void OnHarvesting() { }
-
-
-    public void OnInCombat()
+    public override void OnInCombat()
     {
         Me.Actions.CallForHelp();
-        Me.Actions.CloseWithEnemies();
-        Me.Actions.Attack();
-        Me.Actions.Decider.FriendsInNeed.Clear();
+        base.OnInCombat();
     }
 
-
-    public void OnHostileActorsSighted()
-    {
-        Me.Actions.CloseWithEnemies();
-        Me.Actions.Attack();
-    }
-
-
-    public void OnHostileStructuresSighted()
-    {
-        if (Me.Actions.Decider.HostileStructures.Count > 0) {
-            Structure target = Me.Actions.Decider.HostileStructures[Random.Range(0, Me.Actions.Decider.HostileStructures.Count)];
-            Me.Actions.Movement.SetDestination(target.GetInteractionPoint(Me));
-        }
-
-        Me.Actions.Attack();
-    }
 
 
     public void OnIdle()
     {
         Me.Actions.SheathWeapon();
         Me.Actions.Movement.Home();
-    }
-
-
-    public void OnMedic()
-    {
-
-    }
-
-
-    public void OnMovingToGoal()
-    {
-        Me.Actions.SheathWeapon();
-    }
-
-
-    public void OnNeedsRest()
-    {
-        Me.Actions.SheathWeapon();
-        Me.Actions.Movement.SetDestination(Me.Actions.Movement.Destinations[Movement.CommonDestination.Home]);
-    }
-
-
-    public void OnReachedGoal()
-    {
-        Me.Actions.Movement.ResetPath();
-        Me.Actions.Decider.FriendsInNeed.Clear();
-    }
-
-
-    public void OnUnderAttack()
-    {
-        Me.Actions.Decider.FriendsInNeed.Clear();
-        Me.Actions.CloseWithEnemies();
-        Me.Actions.Attack();
-        Me.RestCounter = 0;
-    }
-
-
-    public void OnWatch()
-    {
-        Me.Actions.Movement.ResetPath();
-        Me.Actions.Attack();
     }
 
 

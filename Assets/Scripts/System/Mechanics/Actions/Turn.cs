@@ -15,7 +15,7 @@ public class Turn : MonoBehaviour {
 
 
     private void Awake () {
-        ActionThreshold = 3f;
+        ActionThreshold = 4f;
         Me = GetComponent<Actor>();
         HasteDelta = 1f;
     }

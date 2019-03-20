@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Commoner : MonoBehaviour, IAct
+public class Commoner : TemplateMelee
 {
     // properties
 
@@ -25,16 +25,16 @@ public class Commoner : MonoBehaviour, IAct
     // public
 
 
-    public void OnBadlyInjured()
+    public override void OnBadlyInjured()
     {
         Me.Actions.Movement.Home();
     }
 
 
-    public void OnCrafting() { }
+    public override void OnCrafting() { }
 
 
-    public void OnFriendsInNeed()
+    public override void OnFriendsInNeed()
     {
         if (Me.Actions.Decider.FriendsInNeed.First() != null) {
             Me.Actions.Movement.SetDestination(Me.Actions.Decider.FriendsInNeed.First().transform);
@@ -44,7 +44,7 @@ public class Commoner : MonoBehaviour, IAct
     }
 
 
-    public void OnDamagedFriendlyStructuresSighted()
+    public override void OnDamagedFriendlyStructuresSighted()
     {
         if (!RepairStructure()) {
             FindDamagedStructure();
@@ -54,23 +54,21 @@ public class Commoner : MonoBehaviour, IAct
     }
 
 
-    public void OnFriendlyActorsSighted() {  }
-
-    public void OnFullLoad()
+    public override void OnFullLoad()
     {
         FindWarehouse();
         Me.Actions.Movement.Warehouse();
     }
 
 
-    public void OnHarvesting()
+    public override void OnHarvesting()
     {
         Me.Actions.Movement.ResetPath();
         Harvest();
     }
 
 
-    public void OnHostileActorsSighted()
+    public override void OnHostileActorsSighted()
     {
         if (Me.Actions.Decider.FriendsInNeed.Count == 0) {
             AbandonLoad();
@@ -79,20 +77,14 @@ public class Commoner : MonoBehaviour, IAct
     }
 
 
-    public void OnHostileStructuresSighted()
+    public override void OnHostileStructuresSighted()
     {
         Me.Actions.CallForHelp();
         Me.Actions.FleeFromEnemies();
     }
 
 
-    public void OnInCombat()
-    {
-        Me.Actions.Attack();
-    }
-
-
-    public void OnIdle()
+    public override void OnIdle()
     {
         Me.Actions.SheathWeapon();
 
@@ -105,20 +97,14 @@ public class Commoner : MonoBehaviour, IAct
     }
 
 
-    public void OnMedic() { }
-
-
-    public void OnMovingToGoal()  { }
-
-
-    public void OnNeedsRest()
+    public override void OnNeedsRest()
     {
         Me.Actions.SheathWeapon();
         Me.Actions.Movement.SetDestination(Me.Actions.Movement.Destinations[Movement.CommonDestination.Home]);
     }
 
 
-    public void OnReachedGoal()
+    public override void OnReachedGoal()
     {
         Me.Actions.Movement.ResetPath();
 
@@ -132,17 +118,6 @@ public class Commoner : MonoBehaviour, IAct
             }
         }
     }
-
-
-    public void OnUnderAttack()
-    {
-        Me.Actions.CallForHelp();
-        Me.Actions.Attack();
-        Me.RestCounter = 0;
-    }
-
-
-    public void OnWatch() { }
 
 
     // private

@@ -135,8 +135,6 @@ public class Actions : MonoBehaviour
 
     public void CloseWithEnemies()
     {
-        // TODO: we may want to stay at range
-
         if (transform == null) return;
 
         Actor nearest_enemy = Decider.TargetEnemy()?.GetComponent<Actor>();
@@ -162,6 +160,18 @@ public class Actions : MonoBehaviour
             Vector3 run_away_direction = (transform.position - _enemy.transform.position).normalized;
             Vector3 run_away_to = transform.position + (run_away_direction * Movement.Agent.speed * Movement.Agent.speed);
             Movement.SetDestination(run_away_to);
+        }
+    }
+
+
+    public void KeepEnemiesAtRange()
+    {
+        if (transform == null) return;
+
+        Actor nearest_enemy = Decider.TargetEnemy()?.GetComponent<Actor>();
+
+        if (nearest_enemy != null && !Me.Actions.Combat.IsWithinAttackRange(nearest_enemy.transform)) {
+            StartCoroutine(Movement.HarassUnit(nearest_enemy));
         }
     }
 

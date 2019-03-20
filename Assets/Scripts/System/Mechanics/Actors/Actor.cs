@@ -45,6 +45,14 @@ public class Actor : MonoBehaviour
     // public
 
 
+    public Vector3 GetHarassPoint(Actor other_unit)
+    {
+        float range = Me.Actions.Combat.EquippedRangedWeapon != null ? Me.Actions.Combat.EquippedRangedWeapon.Range : 0;
+
+        return (other_unit.transform.position - transform.position).normalized * range;
+    }
+
+
     public Vector3 GetInteractionPoint(Actor other_unit)
     {
         Vector3 toward_approach = (other_unit.transform.position - transform.position).normalized * (Me.Actions.Movement.ReachedThreshold + other_unit.Actions.Movement.ReachedThreshold);

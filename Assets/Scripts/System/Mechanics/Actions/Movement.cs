@@ -75,6 +75,18 @@ public class Movement : MonoBehaviour
     }
 
 
+    public IEnumerator HarassUnit(Actor unit)
+    {
+        int count = 0;
+
+        while (unit != null && count < Turn.ActionThreshold && Me.Actions.Combat.IsWithinAttackRange(unit.transform)) {
+            SetDestination(unit.GetHarassPoint(Me));
+            count++;
+            yield return new WaitForSeconds(Turn.ActionThreshold);
+        }
+    }
+
+
     public void Home()
     {
         SetDestination(Destinations[CommonDestination.Home]);

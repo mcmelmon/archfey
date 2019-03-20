@@ -83,6 +83,12 @@ public class Player : MonoBehaviour, IAct {
     public void OnHarvesting() { }
     public void OnHostileActorsSighted() { }
     public void OnHostileStructuresSighted() { }
+    public void OnInCombat() { }
+    public void OnMedic() { }
+    public void OnMovingToGoal() { }
+    public void OnNeedsRest() { }
+    public void OnUnderAttack() { }
+    public void OnWatch() { }
 
 
     public void OnIdle()
@@ -93,21 +99,12 @@ public class Player : MonoBehaviour, IAct {
     }
 
 
-    public void OnInCombat() { }
-    public void OnMedic() { }
-    public void OnMovingToGoal() { }
-    public void OnNeedsRest() { }
-
-
     public void OnReachedGoal()
     {
         Me.Actions.Movement.ResetPath();
         Me.Actions.Decider.FriendsInNeed.Clear();
     }
 
-
-    public void OnUnderAttack() { }
-    public void OnWatch() { }
 
     // private
 
@@ -153,7 +150,7 @@ public class Player : MonoBehaviour, IAct {
 
             Me.Actions.Movement.NonAgentMovement = false;
 
-            if (!Mathf.Approximately(0, translation) && !Mathf.Approximately(0, straffe)) {
+            if (!Mathf.Approximately(0, translation) || !Mathf.Approximately(0, straffe)) {
                 Me.Actions.Movement.NonAgentMovement = true;
                 Me.Actions.CanTakeAction = false;
             }
