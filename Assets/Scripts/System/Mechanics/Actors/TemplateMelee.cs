@@ -11,12 +11,6 @@ public class TemplateMelee : MonoBehaviour, IAct
 
     // public
 
-    public virtual void OnCrafting() { }
-    public virtual void OnDamagedFriendlyStructuresSighted() { }
-    public virtual void OnFriendlyActorsSighted() { }
-    public virtual void OnFullLoad() { }
-    public virtual void OnHarvesting() { }
-
 
     public virtual void OnBadlyInjured()
     {
@@ -25,10 +19,40 @@ public class TemplateMelee : MonoBehaviour, IAct
     }
 
 
+    public virtual void OnCrafting() 
+    { 
+        OnIdle(); 
+    }
+
+
+    public virtual void OnDamagedFriendlyStructuresSighted()
+    { 
+        OnIdle(); 
+    }
+
+
+    public virtual void OnFriendlyActorsSighted()
+    { 
+        OnIdle(); 
+    }
+
+
     public virtual void OnFriendsInNeed()
     {
         Me.Actions.CloseWithEnemies();
         Me.Actions.Attack();
+    }
+
+
+    public virtual void OnFullLoad() 
+    { 
+        OnIdle(); 
+    }
+
+
+    public virtual void OnHarvesting()
+    { 
+        OnIdle();
     }
 
 

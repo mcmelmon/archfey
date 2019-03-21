@@ -110,6 +110,7 @@ public class Decider : MonoBehaviour
 
     public List<Actor> IdentifyEnemies()
     {
+        ClearTargets();
         Enemies = Me.Senses.Actors.Where(actor => !IsFriendOrNeutral(actor)).ToList();
 
         for (int i = 0; i < Enemies.Count; i++) {
@@ -146,7 +147,7 @@ public class Decider : MonoBehaviour
     {
         RemoveSanctuaryTargets();
 
-            if (AvailableMeleeTargets.Any() && AvailableMeleeTargets.Contains(Threat.PrimaryThreat()?.gameObject)) {
+        if (AvailableMeleeTargets.Any() && AvailableMeleeTargets.Contains(Threat.PrimaryThreat()?.gameObject)) {
             TargetMelee();
         } else if (AvailableRangedTargets.Any() && AvailableRangedTargets.Contains(Threat.PrimaryThreat()?.gameObject)) {
             TargetRanged();
@@ -202,6 +203,7 @@ public class Decider : MonoBehaviour
     {
         AvailableMeleeTargets.Clear();
         AvailableRangedTargets.Clear();
+        Target = null;
     }
 
 
@@ -241,7 +243,7 @@ public class Decider : MonoBehaviour
 
     private bool HostileActorsSighted()
     {
-        return IdentifyEnemies().Count > 0;
+        return Enemies.Count > 0;  // InCombat comes earlier and calls IdentifyEnemy
     }
 
 
@@ -257,7 +259,8 @@ public class Decider : MonoBehaviour
 
     private bool InCombat()
     {
-        return TargetEnemy() != null && Me.Actions.Combat.Engaged;
+        IdentifyEnemies();
+        return Enemies.Any() && Me.Actions.Combat.Engaged;
     }
 
 
@@ -350,7 +353,6 @@ public class Decider : MonoBehaviour
     {
         if (Me == null) return;
 
-        ClearTargets();
         float melee_range = Me.Actions.Combat.MeleeRange();
         Weapon ranged_weapon = Me.Actions.Combat.EquippedRangedWeapon;
 
@@ -364,7 +366,7 @@ public class Decider : MonoBehaviour
 
             if (ranged_weapon != null) {
                 AvailableRangedTargets.AddRange(Enemies
-                                                .Where(actor => actor != null && Me.SeparationFrom(actor) > melee_range && Me.SeparationFrom(actor) <= ranged_weapon.Range)
+                                                .Where(actor => actor != null && Me.SeparationFrom(actor) <= ranged_weapon.Range)
                                                 .OrderBy(actor => actor.Health.CurrentHitPoints)
                                                 .Select(actor => actor.gameObject)
                                                 .Distinct()
@@ -382,7 +384,7 @@ public class Decider : MonoBehaviour
 
             if (ranged_weapon != null) {
                 AvailableRangedTargets.AddRange(Me.Actions.Decider.HostileStructures
-                                                .Where(structure => Vector3.Distance(transform.position, structure.GetInteractionPoint(Me)) > melee_range && Vector3.Distance(transform.position, structure.GetInteractionPoint(Me)) <= ranged_weapon.Range + Me.Actions.Movement.ReachedThreshold)
+                                                .Where(structure => Vector3.Distance(transform.position, structure.GetInteractionPoint(Me)) <= ranged_weapon.Range + Me.Actions.Movement.ReachedThreshold)
                                                 .Select(structure => structure.gameObject)
                                                 .Distinct()
                                                 .ToList());

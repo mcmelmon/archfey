@@ -139,7 +139,7 @@ public class Actions : MonoBehaviour
 
         Actor nearest_enemy = Decider.TargetEnemy()?.GetComponent<Actor>();
 
-        if (nearest_enemy != null && !Me.Actions.Combat.IsWithinAttackRange(nearest_enemy.transform)) {
+        if (nearest_enemy != null && !Me.Actions.Combat.IsWithinMeleeRange(nearest_enemy.transform)) {
             StartCoroutine(Movement.TrackUnit(nearest_enemy));
         }
     }
@@ -170,7 +170,7 @@ public class Actions : MonoBehaviour
 
         Actor nearest_enemy = Decider.TargetEnemy()?.GetComponent<Actor>();
 
-        if (nearest_enemy != null && !Me.Actions.Combat.IsWithinAttackRange(nearest_enemy.transform)) {
+        if (nearest_enemy != null && (!Me.Actions.Combat.IsWithinAttackRange(nearest_enemy.transform) || Me.Actions.Combat.IsWithinMeleeRange(nearest_enemy.transform))) {
             StartCoroutine(Movement.HarassUnit(nearest_enemy));
         }
     }

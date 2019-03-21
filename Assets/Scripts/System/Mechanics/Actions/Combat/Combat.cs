@@ -119,8 +119,8 @@ public class Combat : MonoBehaviour
         return EquippedMeleeWeapon == null
             ? 0f
             : EquippedMeleeWeapon.HasReach
-                ? Me.Actions.Movement.ReachedThreshold + 2f
-                : Me.Actions.Movement.ReachedThreshold + 1f;
+                ? 3.5f
+                : 2.5f;
     }
 
 

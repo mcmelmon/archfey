@@ -79,7 +79,7 @@ public class Movement : MonoBehaviour
     {
         int count = 0;
 
-        while (unit != null && count < Turn.ActionThreshold && Me.Actions.Combat.IsWithinAttackRange(unit.transform)) {
+        while (unit != null && count < Turn.ActionThreshold && (!Me.Actions.Combat.IsWithinAttackRange(unit.transform) || Me.Actions.Combat.IsWithinMeleeRange(unit.transform))) {
             SetDestination(unit.GetHarassPoint(Me));
             count++;
             yield return new WaitForSeconds(Turn.ActionThreshold);
@@ -142,7 +142,7 @@ public class Movement : MonoBehaviour
     {
         int count = 0;
 
-        while (unit != null && count < Turn.ActionThreshold && !Me.Actions.Combat.IsWithinAttackRange(unit.transform)) {
+        while (unit != null && count < Turn.ActionThreshold && !Me.Actions.Combat.IsWithinMeleeRange(unit.transform)) {
             SetDestination(unit.GetInteractionPoint(Me));
             count++;
             yield return new WaitForSeconds(Turn.ActionThreshold);

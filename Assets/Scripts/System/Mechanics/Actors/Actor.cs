@@ -47,9 +47,11 @@ public class Actor : MonoBehaviour
 
     public Vector3 GetHarassPoint(Actor other_unit)
     {
-        float range = Me.Actions.Combat.EquippedRangedWeapon != null ? Me.Actions.Combat.EquippedRangedWeapon.Range : 0;
-
-        return (other_unit.transform.position - transform.position).normalized * range;
+        if (other_unit.Actions.Combat.EquippedRangedWeapon != null) {
+            float range = Me.Actions.Combat.EquippedRangedWeapon.Range - 1f;
+            return (other_unit.transform.position - transform.position).normalized * range;
+        }
+        return GetInteractionPoint(other_unit);
     }
 
 
@@ -99,13 +101,13 @@ public class Actor : MonoBehaviour
                 Actions.Movement.ReachedThreshold = 2.5f;
                 break;
             case "Large":
-                Actions.Movement.ReachedThreshold = 4f;
+                Actions.Movement.ReachedThreshold = 3f;
                 break;
             case "Huge":
-                Actions.Movement.ReachedThreshold = 5f;
+                Actions.Movement.ReachedThreshold = 3.5f;
                 break;
             case "Gargantuan":
-                Actions.Movement.ReachedThreshold = 8f;
+                Actions.Movement.ReachedThreshold = 4f;
                 break;
             default:
                 Actions.Movement.ReachedThreshold = 2.5f;
