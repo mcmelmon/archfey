@@ -51,7 +51,7 @@ public class EldritchSmite : MonoBehaviour
         GameObject flare = Instantiate(SpellEffects.Instance.sacred_flame_prefab, Target.transform.position, Target.transform.rotation, Target.transform);
         flare.name = "EldritchSmite";
         flare.transform.position += new Vector3(0, 3, 0);
-        Destroy(flare, 0.5f);
+        Destroy(flare, 1.5f);
     }
 
 

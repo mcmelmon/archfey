@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class DefaultMelee : MonoBehaviour
+public class Melee : MonoBehaviour
 {
     // properties
 
@@ -35,8 +35,8 @@ public class DefaultMelee : MonoBehaviour
         if (_target == null) return;
 
         Target = _target;
-        MainHand = Me.Actions.Attack.EquippedMeleeWeapon;
-        OffHand = Me.Actions.Attack.EquippedOffhand;
+        MainHand = Me.Actions.Combat.EquippedMeleeWeapon;
+        OffHand = Me.Actions.Combat.EquippedOffhand;
         IsOffhandAttack = offhand;
         SetModifiers();
 
@@ -88,7 +88,7 @@ public class DefaultMelee : MonoBehaviour
                                  .Where(friend => friend != null && Me.Actions.Decider.IsFriendOrNeutral(friend) && Vector3.Distance(transform.position, friend.transform.position) < 2f)
                                  .ToList();
 
-        Advantage |= friends_in_melee.Count > Me.Actions.Attack.AvailableMeleeTargets.Count;
+        Advantage |= friends_in_melee.Count > Me.Actions.Decider.AvailableMeleeTargets.Count;
 
         // TODO: calculate disadvantage (e.g. can't see, restrained, etc)
     }
@@ -112,7 +112,7 @@ public class DefaultMelee : MonoBehaviour
 
         int roll = Me.Actions.RollDie(20, 1, Advantage, Disadvantage);
 
-        if (roll >= Me.Actions.Attack.CriticalRangeStart) Critical = true;
+        if (roll >= Me.Actions.Combat.CriticalRangeStart) Critical = true;
 
         Debug.Log(Me.name + " melee attack rolled: " + roll);
 
@@ -139,11 +139,11 @@ public class DefaultMelee : MonoBehaviour
     {
         if (MainHand.IsFinesse) {
             AttackModifier = Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + MainHand.DamageBonus;
-            DamageModifierMain = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + MainHand.DamageBonus + Me.Actions.Attack.CalculateAdditionalDamage(Target, false);
+            DamageModifierMain = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + MainHand.DamageBonus + Me.Actions.Combat.CalculateAdditionalDamage(Target, false);
         }
         else {
             AttackModifier = Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) + MainHand.DamageBonus;
-            DamageModifierMain = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) + MainHand.DamageBonus + Me.Actions.Attack.CalculateAdditionalDamage(Target, false);
+            DamageModifierMain = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) + MainHand.DamageBonus + Me.Actions.Combat.CalculateAdditionalDamage(Target, false);
         }
         DamageModifierOff = OffHand != null ? OffHand.DamageBonus : 0;
     }

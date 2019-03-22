@@ -64,12 +64,23 @@ public class Movement : MonoBehaviour
         Agent.enabled = false;
         Me.transform.position += backward * 10f;
         Agent.enabled = true;
+
+        Me.Actions.SheathWeapon();
     }
 
 
     public float GetAdjustedSpeed()
     {
         return Mathf.Clamp(BaseSpeed + (SpeedAdjustment * BaseSpeed * 2), 0, 20);
+    }
+
+
+    public IEnumerator HarassUnit(Actor unit)
+    {
+        while (unit != null && (Me.Actions.Combat.IsWithinMeleeRange(unit.transform) || !Me.Actions.Combat.IsWithinAttackRange(unit.transform))) {
+            yield return new WaitForSeconds(Turn.ActionThreshold * 2);
+            SetDestination(unit.GetHarassPoint(Me));
+        }
     }
 
 
@@ -126,11 +137,8 @@ public class Movement : MonoBehaviour
 
     public IEnumerator TrackUnit(Actor unit)
     {
-        int count = 0;
-
-        while (unit != null && count < Turn.ActionThreshold && !Me.Actions.Attack.IsWithinAttackRange(unit.transform)) {
+        while (unit != null && !Me.Actions.Combat.IsWithinMeleeRange(unit.transform)) {
             SetDestination(unit.GetInteractionPoint(Me));
-            count++;
             yield return new WaitForSeconds(Turn.ActionThreshold);
         }
     }
@@ -199,5 +207,7 @@ public class Movement : MonoBehaviour
                          ? 3 + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) + Me.Stats.ProficiencyBonus / 2
                          : 3 + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength);
         SpeedAdjustment = 0;
+
+        AddDestination(CommonDestination.Home, transform.position);
     }
 }

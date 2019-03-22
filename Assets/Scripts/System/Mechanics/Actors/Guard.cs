@@ -1,17 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.AI;
 
-public class Guard : MonoBehaviour
+public class Guard : TemplateMelee
 {
-
-    // properties
-
-    public Actor Me { get; set; }
-
-
     // Unity
 
 
@@ -24,89 +16,33 @@ public class Guard : MonoBehaviour
     // public
 
 
-    public void OnBadlyInjured()
+    public override void OnBadlyInjured()
     {
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
         FindShrine();
     }
 
 
-    public void OnFriendsInNeed()
+    public override void OnFriendsInNeed()
     {
         Me.Actions.Movement.SetDestination(Me.Actions.Decider.FriendsInNeed.First().transform);
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
         Me.Actions.Decider.FriendsInNeed.Clear();
     }
 
 
-    public void OnInCombat()
+    public override void OnInCombat()
     {
         Me.Actions.CallForHelp();
-        Me.Actions.CloseWithEnemies();
-        Me.Actions.Attack.AttackEnemiesInRange();
-        Me.Actions.Decider.FriendsInNeed.Clear();
+        base.OnInCombat();
     }
 
-
-    public void OnHostileActorsSighted()
-    {
-        Me.Actions.CloseWithEnemies();
-        Me.Actions.Attack.AttackEnemiesInRange();
-    }
-
-
-    public void OnHostileStructuresSighted()
-    {
-        if (Me.Actions.Decider.HostileStructures.Count > 0)
-        {
-            Structure target = Me.Actions.Decider.HostileStructures[Random.Range(0, Me.Actions.Decider.HostileStructures.Count)];
-            Me.Actions.Movement.SetDestination(target.GetInteractionPoint(Me));
-        }
-
-        Me.Actions.Attack.AttackEnemiesInRange();
-    }
 
 
     public void OnIdle()
     {
         Me.Actions.SheathWeapon();
         Me.Actions.Movement.Home();
-    }
-
-
-    public void OnMovingToGoal()
-    {
-        Me.Actions.SheathWeapon();
-    }
-
-
-    public void OnNeedsRest()
-    {
-        Me.Actions.SheathWeapon();
-        Me.Actions.Movement.SetDestination(Me.Actions.Movement.Destinations[Movement.CommonDestination.Home]);
-    }
-
-
-    public void OnReachedGoal()
-    {
-        Me.Actions.Movement.ResetPath();
-        Me.Actions.Decider.FriendsInNeed.Clear();
-    }
-
-
-    public void OnUnderAttack()
-    {
-        Me.Actions.Decider.FriendsInNeed.Clear();
-        Me.Actions.CloseWithEnemies();
-        Me.Actions.Attack.AttackEnemiesInRange();
-        Me.RestCounter = 0;
-    }
-
-
-    public void OnWatch()
-    {
-        Me.Actions.Movement.ResetPath();
-        Me.Actions.Attack.AttackEnemiesInRange();
     }
 
 
@@ -130,28 +66,16 @@ public class Guard : MonoBehaviour
         Me = GetComponent<Actor>();
         StartCoroutine(Me.GetStatsFromServer(this.GetType().Name));
         SetAdditionalStats();
-
-        Me.Actions.OnBadlyInjured = OnBadlyInjured;
-        Me.Actions.OnFriendsInNeed = OnFriendsInNeed;
-        Me.Actions.OnHostileActorsSighted = OnHostileActorsSighted;
-        Me.Actions.OnHostileStructuresSighted = OnHostileStructuresSighted;
-        Me.Actions.OnIdle = OnIdle;
-        Me.Actions.OnInCombat = OnInCombat;
-        Me.Actions.OnMovingToGoal = OnMovingToGoal;
-        Me.Actions.OnNeedsRest = OnNeedsRest;
-        Me.Actions.OnReachedGoal = OnReachedGoal;
-        Me.Actions.OnUnderAttack = OnUnderAttack;
-        Me.Actions.OnWatch = OnWatch;
         Me.Actions.Movement.AddDestination(Movement.CommonDestination.Home, transform.position);
     }
 
 
     private void SetAdditionalStats()
     {
-        Me.Actions.Attack.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.Chain_Shirt));
-        Me.Actions.Attack.EquipShield(Armors.Instance.GetArmorNamed(Armors.ArmorName.Shield));
-        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Spear));
-        Me.Actions.Attack.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Longbow)); 
+        Me.Actions.Combat.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.Chain_Shirt));
+        Me.Actions.Combat.EquipShield(Armors.Instance.GetArmorNamed(Armors.ArmorName.Shield));
+        Me.Actions.Combat.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Spear));
+        Me.Actions.Combat.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Longbow)); 
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
 
         Me.Stats.Skills.Add(Proficiencies.Skill.Perception);

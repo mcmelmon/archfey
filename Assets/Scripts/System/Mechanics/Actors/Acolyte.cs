@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Acolyte : MonoBehaviour
+public class Acolyte : MonoBehaviour, IAct
 {
     // properties
 
@@ -34,6 +34,15 @@ public class Acolyte : MonoBehaviour
     }
 
 
+    public void OnCrafting() { }
+
+
+    public void OnDamagedFriendlyStructuresSighted() { }
+
+
+    public void OnFriendlyActorsSighted() { }
+
+
     public void OnFriendsInNeed()
     {
         if (Me.Actions.Decider.FriendsInNeed.First() != null) {
@@ -44,6 +53,12 @@ public class Acolyte : MonoBehaviour
     }
 
 
+    public void OnFullLoad() { }
+
+
+    public void OnHarvesting() { }
+
+
     public void OnHostileActorsSighted()
     {
         Me.Actions.Decider.FriendsInNeed.Clear();
@@ -52,9 +67,7 @@ public class Acolyte : MonoBehaviour
     }
 
 
-    public void OnHostileStructuresSighted()
-    {
-    }
+    public void OnHostileStructuresSighted() { }
 
 
     public void OnInCombat()
@@ -84,9 +97,7 @@ public class Acolyte : MonoBehaviour
     }
 
 
-    public void OnMovingToGoal()
-    {
-    }
+    public void OnMovingToGoal() { }
 
 
     public void OnNeedsRest()
@@ -145,27 +156,14 @@ public class Acolyte : MonoBehaviour
         Me = GetComponent<Actor>();
         StartCoroutine(Me.GetStatsFromServer(this.GetType().Name));
         SetAdditionalStats();
-
-        Me.Actions.OnBadlyInjured = OnBadlyInjured;
-        Me.Actions.OnFriendsInNeed = OnFriendsInNeed;
-        Me.Actions.OnHostileActorsSighted = OnHostileActorsSighted;
-        Me.Actions.OnHostileStructuresSighted = OnHostileStructuresSighted;
-        Me.Actions.OnIdle = OnIdle;
-        Me.Actions.OnInCombat = OnInCombat;
-        Me.Actions.OnMedic = OnMedic;
-        Me.Actions.OnMovingToGoal = OnMovingToGoal;
-        Me.Actions.OnNeedsRest = OnNeedsRest;
-        Me.Actions.OnReachedGoal = OnReachedGoal;
-        Me.Actions.OnUnderAttack = OnUnderAttack;
-        Me.Actions.OnWatch = OnWatch;
         Me.Actions.Movement.AddDestination(Movement.CommonDestination.Home, transform.position);
     }
 
 
     private void SetAdditionalStats()
     {
-        Me.Actions.Attack.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.None));
-        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Club));
+        Me.Actions.Combat.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.None));
+        Me.Actions.Combat.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Club));
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
 
         CureWounds = gameObject.AddComponent<CureWounds>();

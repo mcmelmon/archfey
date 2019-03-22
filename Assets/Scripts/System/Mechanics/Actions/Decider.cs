@@ -35,12 +35,16 @@ public class Decider : MonoBehaviour
 
     // properties
 
+    public bool AttackAtRange { get; set; }
+    public List<GameObject> AvailableMeleeTargets { get; set; }
+    public List<GameObject> AvailableRangedTargets { get; set; }
     public List<Actor> Enemies { get; set; }
     public List<Actor> Friends { get; set; }
     public List<Actor> FriendsInNeed { get; set; }
     public List<Structure> FriendlyStructures { get; set; }
     public List<Structure> HostileStructures { get; set; }
     public Actor Me { get; set; }
+    public GameObject Target { get; set; }
     public Threat Threat { get; set; }
 
 
@@ -106,6 +110,7 @@ public class Decider : MonoBehaviour
 
     public List<Actor> IdentifyEnemies()
     {
+        ClearTargets();
         Enemies = Me.Senses.Actors.Where(actor => !IsFriendOrNeutral(actor)).ToList();
 
         for (int i = 0; i < Enemies.Count; i++) {
@@ -121,6 +126,7 @@ public class Decider : MonoBehaviour
             }
         }
 
+        if (Enemies.Any()) SetEnemyRanges();
         return Enemies;
     }
 
@@ -134,6 +140,48 @@ public class Decider : MonoBehaviour
         bool faction_hostile = Me.Faction.IsHostileTo(other_unit.Faction);
 
         return only_friends ? other_unit.Faction == Me.Faction : !faction_hostile;
+    }
+
+
+    public GameObject TargetEnemy()
+    {
+        RemoveSanctuaryTargets();
+
+        if (AvailableMeleeTargets.Any() && AvailableMeleeTargets.Contains(Threat.PrimaryThreat()?.gameObject)) {
+            TargetMelee();
+        } else if (AvailableRangedTargets.Any() && AvailableRangedTargets.Contains(Threat.PrimaryThreat()?.gameObject)) {
+            TargetRanged();
+        } else {
+            Target = null;
+        }
+
+        return Target;
+    }
+
+
+    public GameObject TargetMelee(GameObject player_target = null)
+    {
+        Target = player_target ?? Threat.PrimaryThreat().gameObject ?? AvailableMeleeTargets[0];
+
+        if (Target != null) {
+            transform.LookAt(Target.transform);
+            AttackAtRange = false;
+        }
+
+        return Target;
+    }
+
+
+    public GameObject TargetRanged(GameObject player_target = null)
+    {
+        Target = player_target ?? Threat.PrimaryThreat().gameObject ?? AvailableRangedTargets[0];
+
+        if (Target != null) {
+            transform.LookAt(Target.transform);
+            AttackAtRange = true;
+        }
+
+        return Target;
     }
 
 
@@ -151,6 +199,14 @@ public class Decider : MonoBehaviour
     }
 
 
+    private void ClearTargets()
+    {
+        AvailableMeleeTargets.Clear();
+        AvailableRangedTargets.Clear();
+        Target = null;
+    }
+
+
     private bool Crafting()
     {
         return Industry.CurrentlyCrafting.Contains(Me);
@@ -159,7 +215,7 @@ public class Decider : MonoBehaviour
 
     private bool DamagedFriendlyStructures()
     {
-        if (Me.Actions.OnDamagedFriendlyStructuresSighted == null) return false;
+        // TODO: we only want units that repair to see this
 
         FriendlyStructures = Me.Senses.Structures
                                .Where(structure => structure.Faction == Me.Faction && structure.CurrentHitPoints < structure.maximum_hit_points)
@@ -181,6 +237,16 @@ public class Decider : MonoBehaviour
     }
 
 
+    private bool GiveUpChase()
+    {
+        Vector3 home = Me.Actions.Movement.Destinations.ContainsKey(Movement.CommonDestination.Home) ? Me.Actions.Movement.Destinations[Movement.CommonDestination.Home] : Vector3.zero;
+        Vector3 closest_stop = Me.Route.WorldStops.Any() ? Me.Route.WorldStops.OrderBy(stop => Vector3.Distance(transform.position, stop)).First() : Vector3.zero;
+        float smaller_separation = Mathf.Min(Vector3.Distance(home, transform.position), Vector3.Distance(closest_stop, transform.position));
+
+        return smaller_separation > 20f; // if we've strayed too far, forget about them
+    }
+
+
     private bool Harvesting()
     {
         return Proficiencies.Instance.IsHarvester(Me) && !FullLoad();
@@ -189,7 +255,7 @@ public class Decider : MonoBehaviour
 
     private bool HostileActorsSighted()
     {
-        return IdentifyEnemies().Count > 0;
+        return !GiveUpChase() && Enemies.Count > 0;  // InCombat comes earlier and calls IdentifyEnemy
     }
 
 
@@ -205,12 +271,8 @@ public class Decider : MonoBehaviour
 
     private bool InCombat()
     {
-        // TODO: actually attack the chosen foe; currently, Attack just chooses an available target
-
-        Actor foe = null;
-
-        if (Me.Actions.Attack.Engaged()) foe = Threat.PrimaryThreat();
-        return foe != null;
+        IdentifyEnemies();
+        return !GiveUpChase() && Enemies.Any() && Me.Actions.Combat.Engaged;
     }
 
 
@@ -241,7 +303,7 @@ public class Decider : MonoBehaviour
     private bool NeedsRest()
     {
         bool spent_spell_slots = Me.Magic != null && Me.Magic.UsedSlot;
-        return !Me.Actions.Attack.Engaged() && !HostileActorsSighted() && (Me.Health.CurrentHitPoints < Me.Health.MaximumHitPoints || spent_spell_slots );
+        return !Me.Actions.Combat.Engaged && !HostileActorsSighted() && (Me.Health.CurrentHitPoints < Me.Health.MaximumHitPoints || spent_spell_slots );
     }
 
 
@@ -250,21 +312,96 @@ public class Decider : MonoBehaviour
         return (previous_state == State.MovingToGoal || previous_state == State.FullLoad || previous_state == State.Idle) && !Me.Actions.Movement.InProgress();
     }
 
+
     private bool Resting()
     {
         return (previous_state == State.NeedsRest || previous_state == State.Resting) && NeedsRest() && !Me.Actions.Movement.InProgress();
     }
 
 
+    private void RemoveSanctuaryTargets()
+    {
+        if (Sanctuary.ProtectedTargets == null) return;
+
+        List<GameObject> protected_melee_actors = AvailableMeleeTargets
+            .Where(target => target.GetComponent<Actor>() != null && Sanctuary.ProtectedTargets.ContainsKey(target.GetComponent<Actor>()) && !Me.Actions.Decider.Threat.Threats.ContainsKey(target.GetComponent<Actor>()))
+            .ToList();
+
+        List<GameObject> protected_ranged_actors = AvailableRangedTargets
+            .Where(target => target.GetComponent<Actor>() != null && Sanctuary.ProtectedTargets.ContainsKey(target.GetComponent<Actor>()) && !Me.Actions.Decider.Threat.Threats.ContainsKey(target.GetComponent<Actor>()))
+            .ToList();
+
+        foreach (var target in protected_melee_actors) {
+            if (!Me.Actions.SavingThrow(Proficiencies.Attribute.Wisdom, Sanctuary.ProtectedTargets[target.GetComponent<Actor>()].ChallengeRating)) {
+                AvailableMeleeTargets.Remove(target);
+            }
+        }
+
+        foreach (var target in protected_ranged_actors) {
+            if (!Me.Actions.SavingThrow(Proficiencies.Attribute.Wisdom, Sanctuary.ProtectedTargets[target.GetComponent<Actor>()].ChallengeRating)) {
+                AvailableMeleeTargets.Remove(target);
+            }
+        }
+    }
+
+
     private void SetComponents()
     {
+        AttackAtRange = false;
+        AvailableMeleeTargets = new List<GameObject>();
+        AvailableRangedTargets = new List<GameObject>();
         Enemies = new List<Actor>();
         Friends = new List<Actor>();
         FriendsInNeed = new List<Actor>();
         Me = GetComponentInParent<Actor>();
         HostileStructures = new List<Structure>();
+        Target = null;
         Threat = GetComponent<Threat>();
         state = State.Idle;
+    }
+
+
+    private void SetEnemyRanges()
+    {
+        if (Me == null) return;
+
+        float melee_range = Me.Actions.Combat.MeleeRange();
+        Weapon ranged_weapon = Me.Actions.Combat.EquippedRangedWeapon;
+
+        if (Enemies.Any()) {
+            AvailableMeleeTargets.AddRange(Enemies
+                                           .Where(actor => actor != null && Me.SeparationFrom(actor.transform) <= melee_range)
+                                           .OrderBy(actor => actor.Health.CurrentHitPoints)
+                                           .Select(actor => actor.gameObject)
+                                           .Distinct()
+                                           .ToList());
+
+            if (ranged_weapon != null) {
+                AvailableRangedTargets.AddRange(Enemies
+                                                .Where(actor => actor != null && Me.SeparationFrom(actor.transform) <= ranged_weapon.Range)
+                                                .OrderBy(actor => actor.Health.CurrentHitPoints)
+                                                .Select(actor => actor.gameObject)
+                                                .Distinct()
+                                                .ToList());
+            }
+        }
+
+        if (Me.Actions.Decider.HostileStructures.Any())
+        {
+            AvailableMeleeTargets.AddRange(Me.Actions.Decider.HostileStructures
+                                           .Where(structure => Me.SeparationFrom(structure.transform) <= melee_range + Me.Actions.Movement.ReachedThreshold)
+                                           .Select(structure => structure.gameObject)
+                                           .Distinct()
+                                           .ToList());
+
+            if (ranged_weapon != null) {
+                AvailableRangedTargets.AddRange(Me.Actions.Decider.HostileStructures
+                                                .Where(structure => Me.SeparationFrom(structure.transform) <= ranged_weapon.Range + Me.Actions.Movement.ReachedThreshold)
+                                                .Select(structure => structure.gameObject)
+                                                .Distinct()
+                                                .ToList());
+            }
+        }
     }
 
 
@@ -277,7 +414,7 @@ public class Decider : MonoBehaviour
 
     private bool UnderAttack()
     {
-        return Threat.Threats.Count > 0;
+        return !GiveUpChase() && Threat.Threats.Count > 0;
     }
 
 

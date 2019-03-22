@@ -62,16 +62,23 @@ public class Mouse : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.RightShift) || Input.GetKeyDown(KeyCode.LeftShift)) {
             SelectedObjects.Add(selected_object);
         } else {
-            SelectedObjects.Clear();
-            SelectedObjects.Add(selected_object);
-            foreach (var selection in SelectedObjects.Where(so => so != null)) {
-                selection.GetComponent<Renderer>().material = selection.GetComponent<Interactable>().highlight_material;
-            }
+            AddSelection(selected_object);
         }
     }
 
 
     // private
+
+    
+    private void AddSelection(GameObject selected_object, bool clear = true)
+    {
+        if (clear) ClearSelection();
+
+        SelectedObjects.Add(selected_object);
+        foreach (var selection in SelectedObjects.Where(so => so != null)) {
+            selection.GetComponent<Renderer>().material = selection.GetComponent<Interactable>().highlight_material;
+        }
+    }
 
 
     private IEnumerator Hover()

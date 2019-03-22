@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Commoner : MonoBehaviour 
+public class Commoner : TemplateMelee
 {
     // properties
 
@@ -25,29 +25,26 @@ public class Commoner : MonoBehaviour
     // public
 
 
-    public void OnBadlyInjured()
+    public override void OnBadlyInjured()
     {
         Me.Actions.Movement.Home();
     }
 
 
-    public void OnCrafting()
-    {
-
-    }
+    public override void OnCrafting() { }
 
 
-    public void OnFriendsInNeed()
+    public override void OnFriendsInNeed()
     {
         if (Me.Actions.Decider.FriendsInNeed.First() != null) {
             Me.Actions.Movement.SetDestination(Me.Actions.Decider.FriendsInNeed.First().transform);
         }
-        Me.Actions.Attack.AttackEnemiesInRange();
+        Me.Actions.Attack();
         Me.Actions.Decider.FriendsInNeed.Clear();
     }
 
 
-    public void OnDamagedFriendlyStructuresSighted()
+    public override void OnDamagedFriendlyStructuresSighted()
     {
         if (!RepairStructure()) {
             FindDamagedStructure();
@@ -57,21 +54,21 @@ public class Commoner : MonoBehaviour
     }
 
 
-    public void OnFullLoad()
+    public override void OnFullLoad()
     {
         FindWarehouse();
         Me.Actions.Movement.Warehouse();
     }
 
 
-    public void OnHarvesting()
+    public override void OnHarvesting()
     {
         Me.Actions.Movement.ResetPath();
         Harvest();
     }
 
 
-    public void OnHostileActorsSighted()
+    public override void OnHostileActorsSighted()
     {
         if (Me.Actions.Decider.FriendsInNeed.Count == 0) {
             AbandonLoad();
@@ -80,20 +77,14 @@ public class Commoner : MonoBehaviour
     }
 
 
-    public void OnHostileStructuresSighted()
+    public override void OnHostileStructuresSighted()
     {
         Me.Actions.CallForHelp();
         Me.Actions.FleeFromEnemies();
     }
 
 
-    public void OnInCombat()
-    {
-        Me.Actions.Attack.AttackEnemiesInRange();
-    }
-
-
-    public void OnIdle()
+    public override void OnIdle()
     {
         Me.Actions.SheathWeapon();
 
@@ -106,19 +97,14 @@ public class Commoner : MonoBehaviour
     }
 
 
-    public void OnMovingToGoal()
-    {
-    }
-
-
-    public void OnNeedsRest()
+    public override void OnNeedsRest()
     {
         Me.Actions.SheathWeapon();
         Me.Actions.Movement.SetDestination(Me.Actions.Movement.Destinations[Movement.CommonDestination.Home]);
     }
 
 
-    public void OnReachedGoal()
+    public override void OnReachedGoal()
     {
         Me.Actions.Movement.ResetPath();
 
@@ -131,20 +117,6 @@ public class Commoner : MonoBehaviour
                 }
             }
         }
-    }
-
-
-    public void OnUnderAttack()
-    {
-        Me.Actions.CallForHelp();
-        Me.Actions.Attack.AttackEnemiesInRange();
-        Me.RestCounter = 0;
-    }
-
-
-    public void OnWatch()
-    {
-        // call for help after running away
     }
 
 
@@ -303,30 +275,14 @@ public class Commoner : MonoBehaviour
         Me = GetComponent<Actor>();
         StartCoroutine(Me.GetStatsFromServer(this.GetType().Name));
         SetAdditionalStats();
-
-        Me.Actions.OnBadlyInjured = OnBadlyInjured;
-        Me.Actions.OnCrafting = OnCrafting;
-        Me.Actions.OnFriendsInNeed = OnFriendsInNeed;
-        Me.Actions.OnFullLoad = OnFullLoad;
-        Me.Actions.OnDamagedFriendlyStructuresSighted = OnDamagedFriendlyStructuresSighted;
-        Me.Actions.OnHarvetsing = OnHarvesting;
-        Me.Actions.OnHostileActorsSighted = OnHostileActorsSighted;
-        Me.Actions.OnHostileStructuresSighted = OnHostileStructuresSighted;
-        Me.Actions.OnIdle = OnIdle;
-        Me.Actions.OnInCombat = OnInCombat;
-        Me.Actions.OnMovingToGoal = OnMovingToGoal;
-        Me.Actions.OnNeedsRest = OnNeedsRest;
-        Me.Actions.OnReachedGoal = OnReachedGoal;
-        Me.Actions.OnUnderAttack = OnUnderAttack;
-        Me.Actions.OnWatch = OnWatch;
         Me.Actions.Movement.AddDestination(Movement.CommonDestination.Home, transform.position);
     }
 
 
     private void SetAdditionalStats()
     {
-        Me.Actions.Attack.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.None));
-        Me.Actions.Attack.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Club));
+        Me.Actions.Combat.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.None));
+        Me.Actions.Combat.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Club));
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
     }
 

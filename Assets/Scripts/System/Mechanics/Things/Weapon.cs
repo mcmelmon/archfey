@@ -73,7 +73,7 @@ public class Weapon : MonoBehaviour {
                 IsFinesse = true;
                 IsLight = true;
                 IsThrown = true;
-                Range = 5;
+                Range = 8;
                 WeaponType = Weapons.WeaponType.Simple_Melee;
                 break;
             case Weapons.WeaponName.Greatclub:
@@ -93,7 +93,7 @@ public class Weapon : MonoBehaviour {
                 NumberOfDice = 1;
                 IsLight = true;
                 IsThrown = true;
-                Range = 5;
+                Range = 8;
                 WeaponType = Weapons.WeaponType.Simple_Melee;
                 break;
             case Weapons.WeaponName.Javelin:
@@ -103,7 +103,7 @@ public class Weapon : MonoBehaviour {
                 DiceType = 6;
                 NumberOfDice = 1;
                 IsThrown = true;
-                Range = 7;
+                Range = 10;
                 WeaponType = Weapons.WeaponType.Simple_Melee;
                 break;
             case Weapons.WeaponName.Light_Hammer:
@@ -151,7 +151,7 @@ public class Weapon : MonoBehaviour {
                 NumberOfDice = 1;
                 IsThrown = true;
                 IsVersatile = true;
-                Range = 5;
+                Range = 8;
                 WeaponType = Weapons.WeaponType.Simple_Melee;
                 break;
             case Weapons.WeaponName.Light_Crossbow:
@@ -174,7 +174,7 @@ public class Weapon : MonoBehaviour {
                 NumberOfDice = 1;
                 IsFinesse = true;
                 IsThrown = true;
-                Range = 5;
+                Range = 6;
                 WeaponType = Weapons.WeaponType.Simple_Ranged;
                 break;
             case Weapons.WeaponName.Shortbow:
@@ -185,7 +185,7 @@ public class Weapon : MonoBehaviour {
                 NumberOfDice = 1;
                 HasAmmunition = true;
                 IsTwoHanded = true;
-                Range = 15;
+                Range = 17;
                 WeaponType = Weapons.WeaponType.Simple_Ranged;
                 break;
             case Weapons.WeaponName.Sling:
@@ -195,7 +195,7 @@ public class Weapon : MonoBehaviour {
                 DiceType = 4;
                 NumberOfDice = 1;
                 HasAmmunition = true;
-                Range = 7;
+                Range = 8;
                 WeaponType = Weapons.WeaponType.Simple_Ranged;
                 break;
             case Weapons.WeaponName.Battleaxe:
@@ -369,7 +369,7 @@ public class Weapon : MonoBehaviour {
                 NumberOfDice = 1;
                 HasAmmunition = true;
                 IsLoaded = true;
-                Range = 4;
+                Range = 5;
                 WeaponType = Weapons.WeaponType.Martial_Ranged;
                 break;
             case Weapons.WeaponName.Hand_Crossbow:
@@ -394,7 +394,7 @@ public class Weapon : MonoBehaviour {
                 IsHeavy = true;
                 IsLoaded = true;
                 IsTwoHanded = true;
-                Range = 15;
+                Range = 20;
                 WeaponType = Weapons.WeaponType.Martial_Ranged;
                 break;
             case Weapons.WeaponName.Longbow:
@@ -406,7 +406,7 @@ public class Weapon : MonoBehaviour {
                 HasAmmunition = true;
                 IsHeavy = true;
                 IsTwoHanded = true;
-                Range = 18;
+                Range = 20;
                 WeaponType = Weapons.WeaponType.Martial_Ranged;
                 break;
             case Weapons.WeaponName.Net:
