@@ -237,6 +237,16 @@ public class Decider : MonoBehaviour
     }
 
 
+    private bool GiveUpChase()
+    {
+        Vector3 home = Me.Actions.Movement.Destinations.ContainsKey(Movement.CommonDestination.Home) ? Me.Actions.Movement.Destinations[Movement.CommonDestination.Home] : Vector3.zero;
+        Vector3 closest_stop = Me.Route.WorldStops.Any() ? Me.Route.WorldStops.OrderBy(stop => Vector3.Distance(transform.position, stop)).First() : Vector3.zero;
+        float smaller_separation = Mathf.Min(Vector3.Distance(home, transform.position), Vector3.Distance(closest_stop, transform.position));
+
+        return smaller_separation > 20f; // if we've strayed too far, forget about them
+    }
+
+
     private bool Harvesting()
     {
         return Proficiencies.Instance.IsHarvester(Me) && !FullLoad();
@@ -245,7 +255,7 @@ public class Decider : MonoBehaviour
 
     private bool HostileActorsSighted()
     {
-        return Enemies.Count > 0;  // InCombat comes earlier and calls IdentifyEnemy
+        return !GiveUpChase() && Enemies.Count > 0;  // InCombat comes earlier and calls IdentifyEnemy
     }
 
 
@@ -262,7 +272,7 @@ public class Decider : MonoBehaviour
     private bool InCombat()
     {
         IdentifyEnemies();
-        return Enemies.Any() && Me.Actions.Combat.Engaged;
+        return !GiveUpChase() && Enemies.Any() && Me.Actions.Combat.Engaged;
     }
 
 
@@ -404,7 +414,7 @@ public class Decider : MonoBehaviour
 
     private bool UnderAttack()
     {
-        return Threat.Threats.Count > 0;
+        return !GiveUpChase() && Threat.Threats.Count > 0;
     }
 
 

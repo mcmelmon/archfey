@@ -207,5 +207,7 @@ public class Movement : MonoBehaviour
                          ? 3 + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) + Me.Stats.ProficiencyBonus / 2
                          : 3 + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength);
         SpeedAdjustment = 0;
+
+        AddDestination(CommonDestination.Home, transform.position);
     }
 }

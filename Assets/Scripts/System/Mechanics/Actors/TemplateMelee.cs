@@ -80,6 +80,8 @@ public class TemplateMelee : MonoBehaviour, IAct
 
         if (Me.Route.local_stops.Length > 1){
             Me.Route.MoveToNextPosition();
+        } else if (Me.Actions.Movement.Destinations.ContainsKey(Movement.CommonDestination.Home)) {
+            Me.Actions.Movement.Home(); 
         } else {
             List<Objective> objectives = FindObjectsOfType<Objective>().Where(objective => objective.Claim == Conflict.Instance.EnemyFaction(Me)).ToList();
             if (objectives.Count > 0) {
