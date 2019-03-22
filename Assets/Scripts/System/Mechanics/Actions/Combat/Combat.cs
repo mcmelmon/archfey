@@ -102,15 +102,15 @@ public class Combat : MonoBehaviour
 
     public bool IsWithinAttackRange(Transform target)
     {
-        float separation = Vector3.Distance(target.transform.position, transform.position);
+        float separation = Me.SeparationFrom(target);
         return (EquippedRangedWeapon != null) ? separation < EquippedRangedWeapon.Range : IsWithinMeleeRange(target.transform);
     }
 
 
     public bool IsWithinMeleeRange(Transform target)
     {
-        float separation = Vector3.Distance(target.transform.position, transform.position);
-        return separation < MeleeRange() + 1f;
+        float separation = Me.SeparationFrom(target) - Me.Actions.Movement.ReachedThreshold;
+        return separation < MeleeRange();
     }
 
 
@@ -119,8 +119,8 @@ public class Combat : MonoBehaviour
         return EquippedMeleeWeapon == null
             ? 0f
             : EquippedMeleeWeapon.HasReach
-                ? 3.5f
-                : 2.5f;
+                ? 1f
+                : 0.5f;
     }
 
 
@@ -137,12 +137,12 @@ public class Combat : MonoBehaviour
             EquippedMeleeWeapon.gameObject.SetActive(true);
             if (EquippedOffhand != null) EquippedOffhand.gameObject.SetActive(true);
             if (EquippedRangedWeapon != null) EquippedRangedWeapon.gameObject.SetActive(false);
-            AttackInMelee.Strike(target, offhand);
+            if (IsWithinMeleeRange(target.transform)) AttackInMelee.Strike(target, offhand);
         } else {
             EquippedRangedWeapon.gameObject.SetActive(true);
             if (EquippedMeleeWeapon != null) EquippedMeleeWeapon.gameObject.SetActive(false);
             if (EquippedOffhand != null) EquippedOffhand.gameObject.SetActive(false);
-            AttackFromRange.Strike(target);
+            if (IsWithinAttackRange(target.transform)) AttackFromRange.Strike(target);
         }
         if (Me.Actions.Stealth.IsHiding) Me.Actions.Stealth.StopHiding(); // appear after the strike to ensure sneak attack damage, etc
         Engaged = true;

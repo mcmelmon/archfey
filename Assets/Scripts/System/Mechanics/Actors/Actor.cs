@@ -48,8 +48,12 @@ public class Actor : MonoBehaviour
     public Vector3 GetHarassPoint(Actor other_unit)
     {
         if (other_unit.Actions.Combat.EquippedRangedWeapon != null) {
-            float range = Me.Actions.Combat.EquippedRangedWeapon.Range - 1f;
-            return (other_unit.transform.position - transform.position).normalized * range;
+            float melee_range = other_unit.Actions.Combat.MeleeRange();
+            float long_range = other_unit.Actions.Combat.EquippedRangedWeapon.Range;
+            float target_range = (long_range - melee_range) + (melee_range * 0.66f); // the edge of long range is too far, but within melee is too close
+            Vector3 harass_point = (other_unit.transform.position - transform.position).normalized * target_range;
+            Vector3 their_bottom = other_unit.GetComponent<Collider>().bounds.min;
+            return new Vector3((transform.position + harass_point).x, their_bottom.y, (transform.position + harass_point).z);
         }
         return GetInteractionPoint(other_unit);
     }
@@ -57,9 +61,12 @@ public class Actor : MonoBehaviour
 
     public Vector3 GetInteractionPoint(Actor other_unit)
     {
-        Vector3 toward_approach = (other_unit.transform.position - transform.position).normalized * (Me.Actions.Movement.ReachedThreshold + other_unit.Actions.Movement.ReachedThreshold);
+        // The point on Me that other_unit will move to so that I am in their range
+        Vector3 toward_approach = (other_unit.transform.position - transform.position).normalized * other_unit.Actions.Movement.ReachedThreshold;
+        Vector3 interaction_point = GetComponent<Collider>().ClosestPointOnBounds(other_unit.transform.position) + toward_approach;
+        Vector3 their_bottom = other_unit.GetComponent<Collider>().bounds.min;
 
-        return GetComponent<Collider>().ClosestPointOnBounds(other_unit.transform.position) + toward_approach;
+        return new Vector3(interaction_point.x, their_bottom.y, interaction_point.z);
     }
 
 
@@ -137,10 +144,30 @@ public class Actor : MonoBehaviour
     }
 
 
-    public float SeparationFrom(Actor other_unit)
+    public float SeparationFrom(Transform target)
     {
-        Vector3 their_interaction_point = other_unit.GetInteractionPoint(Me);
-        float separation = Vector3.Distance(transform.position, their_interaction_point) - Me.Actions.Movement.ReachedThreshold;
+        Actor actor = target.GetComponent<Actor>();
+        Structure structure = target.GetComponent<Structure>();
+        Vector3 their_closest_point_to_me = Vector3.zero;
+        Vector3 their_bottom = Vector3.zero;
+        Vector3 my_closest_point_to_them = Vector3.zero;
+        Vector3 my_bottom = Vector3.zero;
+        Vector3 structure_interaction_point = Vector3.zero;
+        float separation = float.MaxValue;
+
+        if (actor != null) {
+            their_closest_point_to_me = actor.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
+            their_bottom = actor.GetComponent<Collider>().bounds.min;
+            my_closest_point_to_them = GetComponent<Collider>().ClosestPointOnBounds(actor.transform.position);
+            my_bottom = GetComponent<Collider>().bounds.min;
+            separation = Vector3.Distance(new Vector3(my_closest_point_to_them.x, my_bottom.y, my_closest_point_to_them.z), new Vector3(their_closest_point_to_me.x, their_bottom.y, their_closest_point_to_me.z));
+        }
+        else if (structure != null)
+        {
+            structure_interaction_point = structure.GetInteractionPoint(Me);
+            separation = Vector3.Distance(structure_interaction_point, transform.position);
+        }
+
         return separation;
     }
 

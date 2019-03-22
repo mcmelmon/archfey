@@ -77,12 +77,9 @@ public class Movement : MonoBehaviour
 
     public IEnumerator HarassUnit(Actor unit)
     {
-        int count = 0;
-
-        while (unit != null && count < Turn.ActionThreshold && (!Me.Actions.Combat.IsWithinAttackRange(unit.transform) || Me.Actions.Combat.IsWithinMeleeRange(unit.transform))) {
+        while (unit != null && (Me.Actions.Combat.IsWithinMeleeRange(unit.transform) || !Me.Actions.Combat.IsWithinAttackRange(unit.transform))) {
+            yield return new WaitForSeconds(Turn.ActionThreshold * 2);
             SetDestination(unit.GetHarassPoint(Me));
-            count++;
-            yield return new WaitForSeconds(Turn.ActionThreshold);
         }
     }
 
@@ -140,11 +137,8 @@ public class Movement : MonoBehaviour
 
     public IEnumerator TrackUnit(Actor unit)
     {
-        int count = 0;
-
-        while (unit != null && count < Turn.ActionThreshold && !Me.Actions.Combat.IsWithinMeleeRange(unit.transform)) {
+        while (unit != null && !Me.Actions.Combat.IsWithinMeleeRange(unit.transform)) {
             SetDestination(unit.GetInteractionPoint(Me));
-            count++;
             yield return new WaitForSeconds(Turn.ActionThreshold);
         }
     }

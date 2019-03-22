@@ -215,6 +215,8 @@ public class Decider : MonoBehaviour
 
     private bool DamagedFriendlyStructures()
     {
+        // TODO: we only want units that repair to see this
+
         FriendlyStructures = Me.Senses.Structures
                                .Where(structure => structure.Faction == Me.Faction && structure.CurrentHitPoints < structure.maximum_hit_points)
                                .ToList();
@@ -358,7 +360,7 @@ public class Decider : MonoBehaviour
 
         if (Enemies.Any()) {
             AvailableMeleeTargets.AddRange(Enemies
-                                           .Where(actor => actor != null && Me.SeparationFrom(actor) <= melee_range)
+                                           .Where(actor => actor != null && Me.SeparationFrom(actor.transform) <= melee_range)
                                            .OrderBy(actor => actor.Health.CurrentHitPoints)
                                            .Select(actor => actor.gameObject)
                                            .Distinct()
@@ -366,7 +368,7 @@ public class Decider : MonoBehaviour
 
             if (ranged_weapon != null) {
                 AvailableRangedTargets.AddRange(Enemies
-                                                .Where(actor => actor != null && Me.SeparationFrom(actor) <= ranged_weapon.Range)
+                                                .Where(actor => actor != null && Me.SeparationFrom(actor.transform) <= ranged_weapon.Range)
                                                 .OrderBy(actor => actor.Health.CurrentHitPoints)
                                                 .Select(actor => actor.gameObject)
                                                 .Distinct()
@@ -377,14 +379,14 @@ public class Decider : MonoBehaviour
         if (Me.Actions.Decider.HostileStructures.Any())
         {
             AvailableMeleeTargets.AddRange(Me.Actions.Decider.HostileStructures
-                                           .Where(structure => Vector3.Distance(transform.position, structure.GetInteractionPoint(Me)) <= melee_range + Me.Actions.Movement.ReachedThreshold)
+                                           .Where(structure => Me.SeparationFrom(structure.transform) <= melee_range + Me.Actions.Movement.ReachedThreshold)
                                            .Select(structure => structure.gameObject)
                                            .Distinct()
                                            .ToList());
 
             if (ranged_weapon != null) {
                 AvailableRangedTargets.AddRange(Me.Actions.Decider.HostileStructures
-                                                .Where(structure => Vector3.Distance(transform.position, structure.GetInteractionPoint(Me)) <= ranged_weapon.Range + Me.Actions.Movement.ReachedThreshold)
+                                                .Where(structure => Me.SeparationFrom(structure.transform) <= ranged_weapon.Range + Me.Actions.Movement.ReachedThreshold)
                                                 .Select(structure => structure.gameObject)
                                                 .Distinct()
                                                 .ToList());
