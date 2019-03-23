@@ -112,6 +112,7 @@ public class TemplateMelee : MonoBehaviour, IAct
     public virtual void OnNeedsRest()
     {
         Me.Actions.SheathWeapon();
+        Me.Actions.Movement.Home();
     }
 
 

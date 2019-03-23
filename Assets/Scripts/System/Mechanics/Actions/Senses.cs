@@ -27,6 +27,19 @@ public class Senses : MonoBehaviour
     // public
 
 
+    public bool HasLineOfSightOn(GameObject target)
+    {
+        bool line_of_sight = false;
+        var rayDirection = target.transform.position - transform.position;
+
+        if (Physics.Raycast(transform.position, rayDirection, out RaycastHit hit)) {
+            line_of_sight = hit.transform == target.transform;
+        }
+
+        return line_of_sight;
+    }
+
+
     public bool InsightCheck(bool active_check, int challenge_rating, bool obscurity = false, bool advantage = false, bool disadvantage = false)
     {
         return Me.Actions.SkillCheck(active_check, Proficiencies.Skill.Insight) >= challenge_rating;
@@ -48,13 +61,13 @@ public class Senses : MonoBehaviour
     public void Sense()
     {
         Actors = FindObjectsOfType<Actor>()
-            .Where(actor => Vector3.Distance(transform.position, actor.transform.position) < PerceptionRange)
+            .Where(actor => Vector3.Distance(transform.position, actor.transform.position) < PerceptionRange && HasLineOfSightOn(actor.gameObject))
             .Select(collider => collider.gameObject.GetComponent<Actor>()).OfType<Actor>().Distinct().ToList();
         Items = FindObjectsOfType<Item>()
-            .Where(item => Vector3.Distance(transform.position, item.transform.position) < PerceptionRange)
+            .Where(item => Vector3.Distance(transform.position, item.transform.position) < PerceptionRange && HasLineOfSightOn(item.gameObject))
             .Select(collider => collider.gameObject.GetComponent<Item>()).OfType<Item>().Distinct().ToList();
         Structures = FindObjectsOfType<Structure>()
-            .Where(structure => Vector3.Distance(transform.position, structure.transform.position) < PerceptionRange)
+            .Where(structure => Vector3.Distance(transform.position, structure.transform.position) < PerceptionRange && HasLineOfSightOn(structure.gameObject))
             .Select(collider => collider.gameObject.GetComponent<Structure>()).OfType<Structure>().Distinct().ToList();
 
         RemoveHidden();

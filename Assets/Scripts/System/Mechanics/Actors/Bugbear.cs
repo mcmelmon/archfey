@@ -38,6 +38,7 @@ public class Bugbear : TemplateVersatile
         base.OnIdle();
     }
 
+
     // private
 
 
