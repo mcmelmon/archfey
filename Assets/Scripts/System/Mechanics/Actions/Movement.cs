@@ -16,7 +16,6 @@ public class Movement : MonoBehaviour
     public Dictionary<CommonDestination, Vector3> Destinations { get; set; }
     public bool IsJumping { get; set; }
     public float JumpVelocity { get; set; }
-    public bool NonAgentMovement { get; set; }
     public float ReachedThreshold { get; set; }
     public float SpeedAdjustment { get; set; }
 
@@ -92,7 +91,7 @@ public class Movement : MonoBehaviour
 
     public bool InProgress()
     {
-        return (Agent != null) && Agent.hasPath && Agent.velocity != Vector3.zero && !NonAgentMovement;
+        return (Agent != null) && Agent.hasPath && Agent.velocity != Vector3.zero;
     }
 
 

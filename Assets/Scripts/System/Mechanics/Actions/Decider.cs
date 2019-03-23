@@ -110,6 +110,7 @@ public class Decider : MonoBehaviour
 
     public List<Actor> IdentifyEnemies()
     {
+        // needs rest checks for enemies, triggering this very early in decision tree
         ClearTargets();
         Enemies = Me.Senses.Actors.Where(actor => !IsFriendOrNeutral(actor)).ToList();
 
@@ -126,7 +127,11 @@ public class Decider : MonoBehaviour
             }
         }
 
-        if (Enemies.Any()) SetEnemyRanges();
+        if (Enemies.Any()) {
+            SetEnemyRanges();
+        } else {
+            Me.Actions.Combat.Engaged = false;
+        }
         return Enemies;
     }
 
@@ -255,7 +260,8 @@ public class Decider : MonoBehaviour
 
     private bool HostileActorsSighted()
     {
-        return !GiveUpChase() && Enemies.Count > 0;  // InCombat comes earlier and calls IdentifyEnemy
+        IdentifyEnemies(); 
+        return !GiveUpChase() && Enemies.Count > 0;
     }
 
 
@@ -271,7 +277,6 @@ public class Decider : MonoBehaviour
 
     private bool InCombat()
     {
-        IdentifyEnemies();
         return !GiveUpChase() && Enemies.Any() && Me.Actions.Combat.Engaged;
     }
 
@@ -303,7 +308,7 @@ public class Decider : MonoBehaviour
     private bool NeedsRest()
     {
         bool spent_spell_slots = Me.Magic != null && Me.Magic.UsedSlot;
-        return !Me.Actions.Combat.Engaged && !HostileActorsSighted() && (Me.Health.CurrentHitPoints < Me.Health.MaximumHitPoints || spent_spell_slots );
+        return !Me.Actions.Combat.Engaged && !HostileActorsSighted() && (Me.Health.CurrentHitPoints < Me.Health.MaximumHitPoints || spent_spell_slots);
     }
 
 
@@ -315,7 +320,7 @@ public class Decider : MonoBehaviour
 
     private bool Resting()
     {
-        return (previous_state == State.NeedsRest || previous_state == State.Resting) && NeedsRest() && !Me.Actions.Movement.InProgress();
+        return (previous_state == State.NeedsRest || previous_state == State.Resting) && NeedsRest() && !Moving();
     }
 
 

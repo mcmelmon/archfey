@@ -147,11 +147,8 @@ public class Player : MonoBehaviour, IAct {
             float translation = Input.GetAxis("Vertical") * Me.Actions.Movement.GetAdjustedSpeed() * Time.deltaTime;
             float straffe = Input.GetAxis("Straffe") * Me.Actions.Movement.GetAdjustedSpeed() * Time.deltaTime;
             float rotation = Input.GetAxis("Horizontal") * 60f * Time.deltaTime;
-
-            Me.Actions.Movement.NonAgentMovement = false;
-
+            
             if (!Mathf.Approximately(0, translation) || !Mathf.Approximately(0, straffe)) {
-                Me.Actions.Movement.NonAgentMovement = true;
                 Me.Actions.CanTakeAction = false;
             }
 
