@@ -79,7 +79,7 @@ public class Acolyte : MonoBehaviour, IAct
     public void OnIdle()
     {
         Me.Actions.SheathWeapon();
-        Me.Actions.Movement.SetDestination(Me.Actions.Movement.Destinations[Movement.CommonDestination.Home]);
+        Me.Actions.Movement.Home();
     }
 
 
@@ -156,7 +156,6 @@ public class Acolyte : MonoBehaviour, IAct
         Me = GetComponent<Actor>();
         StartCoroutine(Me.GetStatsFromServer(this.GetType().Name));
         SetAdditionalStats();
-        Me.Actions.Movement.AddDestination(Movement.CommonDestination.Home, transform.position);
     }
 
 

@@ -41,17 +41,9 @@ public class Faction : MonoBehaviour
     {
         if (other_faction.identifier == identifier) return false;
 
-        switch (alignment) {
-            case Conflict.Alignment.Evil:
-                return !allies.Any() && !allies.Contains(other_faction.identifier);
-            case Conflict.Alignment.Good:
-                return other_faction.alignment == Conflict.Alignment.Evil || rivals.Any() && rivals.Contains(other_faction.identifier);
-            case Conflict.Alignment.Neutral:
-                return rivals.Any() && rivals.Contains(other_faction.identifier);
-            case Conflict.Alignment.Unaligned:
-                return true;
-        }
-        return true; // in case of doubt, shoot
+        bool alignment_hostility = Conflict.Instance.AlignmentAntagonisms(alignment).Contains(other_faction.alignment);
+
+        return alignment_hostility || (rivals.Any() && rivals.Contains(other_faction.identifier));
     }
 
 

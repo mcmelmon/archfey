@@ -32,27 +32,11 @@ public class World : MonoBehaviour {
     }
 
 
-    private void Start()
-    {
-        CreateTheWorld();
-    }
-
-
     // public
 
 
     public Light Sun()
     {
         return the_sun;
-    }
-
-
-    // private
-
-
-    private void CreateTheWorld()
-    {
-        if (GetComponentInChildren<Map>() != null) GetComponentInChildren<Map>().DrawMap();
-        GetComponentInChildren<Conflict>().Hajime();
     }
 }

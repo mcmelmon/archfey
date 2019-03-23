@@ -30,7 +30,6 @@ public class HalfOgre : TemplateMelee
         Me = GetComponent<Actor>();
         StartCoroutine(Me.GetStatsFromServer("Half Ogre"));
         SetAdditionalStats();
-        Me.Actions.Movement.AddDestination(Movement.CommonDestination.Home, transform.position);
     }
 
 
