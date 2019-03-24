@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -54,7 +53,8 @@ public class Circle {
         Vector2 _center = new Vector2(Center.x, Center.z);
 
         point_2 = _center + UnityEngine.Random.insideUnitCircle * Radius;
-        point_3 = new Vector3(point_2.x, Geography.Terrain.SampleHeight(new Vector3(point_2.x, 0, point_2.y)), point_2.y);
+        point_3 = new Vector3(point_2.x, Center.y, point_2.y);
+        //point_3 = new Vector3(point_2.x, Geography.Terrain.SampleHeight(new Vector3(point_2.x, 0, point_2.y)), point_2.y);
         return point_3;
     }
 

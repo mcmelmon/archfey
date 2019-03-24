@@ -160,10 +160,12 @@ public class Workshop : MonoBehaviour
             .ToList()
             .First();
 
-        var primary_artisans = Storage.Structure.AttachedUnits.Where(a => a.Stats.Tools.Contains(_product.Tool)).ToList();
-        if (primary_artisans.Count == 0) {
-            primary_artistan = GetComponentInParent<Faction>().SpawnToolUser(_product.Tool, random_residence.RandomEntrance().transform);
-            Storage.Structure.AttachedUnits.Add(primary_artistan);
-        }
+        // TODO: this needs to be handled by Spawners now
+
+        //var primary_artisans = Storage.Structure.AttachedUnits.Where(a => a.Stats.Tools.Contains(_product.Tool)).ToList();
+        //if (primary_artisans.Count == 0) {
+        //    primary_artistan = GetComponentInParent<Faction>().SpawnToolUser(_product.Tool, random_residence.RandomEntrance().transform);
+        //    Storage.Structure.AttachedUnits.Add(primary_artistan);
+        //}
     }
 }

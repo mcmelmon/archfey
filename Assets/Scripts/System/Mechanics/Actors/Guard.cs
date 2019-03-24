@@ -39,7 +39,7 @@ public class Guard : TemplateMelee
 
 
 
-    public void OnIdle()
+    public override void OnIdle()
     {
         Me.Actions.SheathWeapon();
         Me.Actions.Movement.Home();
@@ -66,7 +66,6 @@ public class Guard : TemplateMelee
         Me = GetComponent<Actor>();
         StartCoroutine(Me.GetStatsFromServer(this.GetType().Name));
         SetAdditionalStats();
-        Me.Actions.Movement.AddDestination(Movement.CommonDestination.Home, transform.position);
     }
 
 

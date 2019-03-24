@@ -31,7 +31,6 @@ public class Ogre : TemplateMelee
         Me = GetComponent<Actor>();
         StartCoroutine(Me.GetStatsFromServer(this.GetType().Name));
         SetAdditionalStats();
-        Me.Actions.Movement.AddDestination(Movement.CommonDestination.Home, transform.position);
     }
 
 

@@ -15,7 +15,6 @@ public class Movement : MonoBehaviour
     public NavMeshAgent Agent { get; set; }
     public Dictionary<CommonDestination, Vector3> Destinations { get; set; }
     public bool IsJumping { get; set; }
-    public float JumpVelocity { get; set; }
     public float ReachedThreshold { get; set; }
     public float SpeedAdjustment { get; set; }
 
@@ -23,7 +22,7 @@ public class Movement : MonoBehaviour
     // Unity
 
 
-    private void Start()
+    private void Awake()
     {
         SetComponents();
     }
@@ -98,6 +97,14 @@ public class Movement : MonoBehaviour
     public void Jump()
     {
         StartCoroutine(Jumping());
+    }
+
+
+    public float JumpVelocity()
+    {
+        return Me.Stats.Skills.Contains(Proficiencies.Skill.Acrobatics)
+                         ? 3 + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) + Me.Stats.ProficiencyBonus / 2
+                         : 3 + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength);
     }
 
 
@@ -184,7 +191,7 @@ public class Movement : MonoBehaviour
     {
         while (true) {
             Agent.enabled = false;
-            Me.GetComponent<Rigidbody>().AddForce(Vector3.up * JumpVelocity * 150f, ForceMode.Impulse);
+            Me.GetComponent<Rigidbody>().AddForce(Vector3.up * JumpVelocity() * 150f, ForceMode.Impulse);
             if (IsJumping) break;
             IsJumping = true;
             yield return new WaitForSeconds(2f);
@@ -202,9 +209,6 @@ public class Movement : MonoBehaviour
         Agent.ResetPath();
         Destinations = new Dictionary<CommonDestination, Vector3>();
         IsJumping = false;
-        JumpVelocity = Me.Stats.Skills.Contains(Proficiencies.Skill.Acrobatics)
-                         ? 3 + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) + Me.Stats.ProficiencyBonus / 2
-                         : 3 + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength);
         SpeedAdjustment = 0;
 
         AddDestination(CommonDestination.Home, transform.position);

@@ -10,7 +10,6 @@ public class Commoner : TemplateMelee
     public HarvestingNode MyHarvest { get; set; }
     public Structure MyWarehouse { get; set; }
     public Workshop MyWorkshop { get; set; }
-    public Actor Me { get; set; }
 
 
     // Unity
@@ -100,7 +99,7 @@ public class Commoner : TemplateMelee
     public override void OnNeedsRest()
     {
         Me.Actions.SheathWeapon();
-        Me.Actions.Movement.SetDestination(Me.Actions.Movement.Destinations[Movement.CommonDestination.Home]);
+        Me.Actions.Movement.Home();
     }
 
 
@@ -275,7 +274,6 @@ public class Commoner : TemplateMelee
         Me = GetComponent<Actor>();
         StartCoroutine(Me.GetStatsFromServer(this.GetType().Name));
         SetAdditionalStats();
-        Me.Actions.Movement.AddDestination(Movement.CommonDestination.Home, transform.position);
     }
 
 

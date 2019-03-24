@@ -82,12 +82,6 @@ public class TemplateMelee : MonoBehaviour, IAct
             Me.Route.MoveToNextPosition();
         } else if (Me.Actions.Movement.Destinations.ContainsKey(Movement.CommonDestination.Home)) {
             Me.Actions.Movement.Home(); 
-        } else {
-            List<Objective> objectives = FindObjectsOfType<Objective>().Where(objective => objective.Claim == Conflict.Instance.EnemyFaction(Me)).ToList();
-            if (objectives.Count > 0) {
-                Objective next_objective = objectives[Random.Range(0, objectives.Count)];
-                Me.Actions.Movement.SetDestination(next_objective.claim_nodes[0].transform);
-            }
         }
     }
 
