@@ -8,6 +8,7 @@ public class Player : MonoBehaviour, IAct {
 
     // Inspector settings
     public CinemachineFreeLook viewport;
+    public Faction faction;
 
     // properties
 
@@ -169,7 +170,7 @@ public class Player : MonoBehaviour, IAct {
         Me = GetComponent<Actor>();
         Me.Actions = GetComponentInChildren<Actions>();
         Me.Alignment = Conflict.Alignment.Neutral;
-        Me.Faction = GetComponent<Faction>();
+        Me.Faction = faction;
         Me.Health = GetComponent<Health>();
         Me.Load = new Dictionary<HarvestingNode, int>();
         Me.RestCounter = 0;

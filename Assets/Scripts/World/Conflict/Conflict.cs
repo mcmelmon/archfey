@@ -9,6 +9,10 @@ public class Conflict : MonoBehaviour
 
     public enum Alignment { LawfulGood, NeutralGood, ChaoticGood, LawfulNeutral, Neutral, ChaoticNeutral, LawfulEvil, NeutralEvil, ChaoticEvil, Unaligned };
 
+    // Inspector properties
+
+    public List<Faction> factions;
+
     // properties
 
     public static Conflict Instance { get; set; }
