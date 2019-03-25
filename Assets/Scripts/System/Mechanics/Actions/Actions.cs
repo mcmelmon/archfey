@@ -67,6 +67,9 @@ public class Actions : MonoBehaviour
             case Decider.State.Harvesting:
                 GetComponentInParent<IAct>().OnHarvesting();
                 break;
+            case Decider.State.HasObjective:
+                GetComponentInParent<IAct>().OnHasObjective();
+                break;
             case Decider.State.HostileActorsSighted:
                 GetComponentInParent<IAct>().OnHostileActorsSighted();
                 break;

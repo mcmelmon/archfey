@@ -15,6 +15,7 @@ public class Spawner : MonoBehaviour
     public int respawn_delay;
     public float spawn_circle_radius;
     public Faction faction;
+    public Objective objective;
 
     [Serializable]
     public struct SpawnEntry
@@ -70,6 +71,10 @@ public class Spawner : MonoBehaviour
                     Spawned[spawn.spawn_name] = new List<Actor>() { actor };
                 }
                 faction.Units.Add(actor);
+
+                if (objective != null) {
+                    actor.Actions.Decider.Objectives.Add(objective);
+                }
             }
         }
     }

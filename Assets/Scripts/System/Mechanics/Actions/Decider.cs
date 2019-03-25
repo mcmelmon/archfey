@@ -14,6 +14,7 @@ public class Decider : MonoBehaviour
         FriendlyActorsSighted,
         FullLoad,
         Harvesting,
+        HasObjective,
         HostileActorsSighted,
         HostileStructuresSighted,
         Idle,
@@ -35,6 +36,7 @@ public class Decider : MonoBehaviour
 
     // properties
 
+    public bool AchievedAllObjectives { get; set; }
     public bool AttackAtRange { get; set; }
     public List<GameObject> AvailableMeleeTargets { get; set; }
     public List<GameObject> AvailableRangedTargets { get; set; }
@@ -44,6 +46,7 @@ public class Decider : MonoBehaviour
     public List<Structure> FriendlyStructures { get; set; }
     public List<Structure> HostileStructures { get; set; }
     public Actor Me { get; set; }
+    public List<Objective> Objectives { get; set; }
     public GameObject Target { get; set; }
     public Threat Threat { get; set; }
 
@@ -77,6 +80,8 @@ public class Decider : MonoBehaviour
             SetState(State.UnderAttack);
         } else if (HostileActorsSighted()) {
             SetState(State.HostileActorsSighted);
+        } else if (HasObjective()) {
+            SetState(State.HasObjective);
         } else if (CallsForHelp()) {
             SetState(State.FriendsInNeed);
         } else if (HostileStructuresSighted()) {
@@ -252,6 +257,12 @@ public class Decider : MonoBehaviour
     }
 
 
+    private bool HasObjective()
+    {
+        return !AchievedAllObjectives && Objectives.Any();
+    }
+
+
     private bool Harvesting()
     {
         return Proficiencies.Instance.IsHarvester(Me) && !FullLoad();
@@ -260,7 +271,6 @@ public class Decider : MonoBehaviour
 
     private bool HostileActorsSighted()
     {
-        IdentifyEnemies(); 
         return !GiveUpChase() && Enemies.Count > 0;
     }
 
@@ -307,6 +317,7 @@ public class Decider : MonoBehaviour
 
     private bool NeedsRest()
     {
+        IdentifyEnemies();
         bool spent_spell_slots = Me.Magic != null && Me.Magic.UsedSlot;
         return !Me.Actions.Combat.Engaged && !HostileActorsSighted() && (Me.Health.CurrentHitPoints < Me.Health.MaximumHitPoints || spent_spell_slots);
     }
@@ -358,8 +369,9 @@ public class Decider : MonoBehaviour
         Enemies = new List<Actor>();
         Friends = new List<Actor>();
         FriendsInNeed = new List<Actor>();
-        Me = GetComponentInParent<Actor>();
         HostileStructures = new List<Structure>();
+        Me = GetComponentInParent<Actor>();
+        Objectives = new List<Objective>();
         Target = null;
         Threat = GetComponent<Threat>();
         state = State.Idle;

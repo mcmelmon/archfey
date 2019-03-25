@@ -15,10 +15,10 @@ public class ClaimNode : MonoBehaviour
 
     public List<Actor> Attackers { get; set; }
     public bool Claimed { get; set; }
-    public Conflict.Alignment ClaimFaction { get; set; }
+    public Faction ClaimFaction { get; set; }
     public float CurrentClaimPoints { get; set; }
     public List<Actor> Defenders { get; set; }
-    public Conflict.Alignment OccupyingFaction { get; set; }
+    public Faction OccupyingFaction { get; set; }
     public Objective Objective { get; set; }
 
     // Unity
@@ -39,7 +39,7 @@ public class ClaimNode : MonoBehaviour
     public void ClearAllClaim()
     {
         CurrentClaimPoints = 0;
-        OccupyingFaction = ClaimFaction = Conflict.Alignment.Unaligned;
+        OccupyingFaction = ClaimFaction = null;
         Claimed = false;
     }
 
@@ -93,7 +93,7 @@ public class ClaimNode : MonoBehaviour
         CurrentClaimPoints += defender.Stats.ProficiencyBonus;
         if (CurrentClaimPoints >= maximum_claim_points) {
             CurrentClaimPoints = maximum_claim_points;
-            ClaimFaction = OccupyingFaction = defender.Alignment;
+            ClaimFaction = OccupyingFaction = null;
             Claimed = true;
         }
     }
@@ -115,11 +115,11 @@ public class ClaimNode : MonoBehaviour
     private void IdentifyFriendAndFoe()
     {
         Attackers = FindObjectsOfType<Actor>()
-            .Where(actor => actor.Alignment != ClaimFaction && Vector3.Distance(actor.transform.position, transform.position) < actor.Actions.Movement.ReachedThreshold)
+            .Where(actor => actor.Faction != ClaimFaction && Vector3.Distance(actor.transform.position, transform.position) < actor.Actions.Movement.ReachedThreshold)
             .ToList();
 
         Defenders = FindObjectsOfType<Actor>()
-            .Where(actor => actor.Alignment == ClaimFaction && Vector3.Distance(actor.transform.position, transform.position) < actor.Actions.Movement.ReachedThreshold)
+            .Where(actor => actor.Faction == ClaimFaction && Vector3.Distance(actor.transform.position, transform.position) < actor.Actions.Movement.ReachedThreshold)
             .ToList();
     }
 
@@ -130,7 +130,7 @@ public class ClaimNode : MonoBehaviour
 
         if (CurrentClaimPoints <= 0) {
             ClearAllClaim();
-            OccupyingFaction = attacker.Alignment;
+            OccupyingFaction = attacker.Faction;
             BoostClaim(attacker);
         } else {
             CurrentClaimPoints -= attacker.Stats.ProficiencyBonus;
@@ -144,9 +144,9 @@ public class ClaimNode : MonoBehaviour
         Objective = GetComponentInParent<Objective>();  // define before referencing!
 
         Attackers = new List<Actor>();
-        Claimed = Objective.initial_claim != Conflict.Alignment.Unaligned;
+        Claimed = Objective.initial_claim != null;
         ClaimFaction = Objective.initial_claim;
-        CurrentClaimPoints = (ClaimFaction == Conflict.Alignment.Unaligned) ? 0 : maximum_claim_points;
+        CurrentClaimPoints = (ClaimFaction == null) ? 0 : maximum_claim_points;
         Defenders = new List<Actor>();
         OccupyingFaction = ClaimFaction;
     }
