@@ -10,6 +10,7 @@ public class ClaimNode : MonoBehaviour
 
     public int maximum_claim_points = 50;
     public Slider claim_indicator;
+    public float influence_zone_radius = 10f;
 
     // properties
 
@@ -18,10 +19,54 @@ public class ClaimNode : MonoBehaviour
     public Faction ClaimFaction { get; set; }
     public float CurrentClaimPoints { get; set; }
     public List<Actor> Defenders { get; set; }
+    public SphereCollider InfluenceZone { get; set; }
     public Faction OccupyingFaction { get; set; }
     public Objective Objective { get; set; }
 
     // Unity
+
+    private void OnTriggerExit(Collider other)
+    {
+        Actor actor = other.gameObject.GetComponent<Actor>();
+        if (actor != null) {
+            if (ClaimFaction != null) {
+                if (actor.Faction.IsHostileTo(ClaimFaction)) {
+                    if (Attackers.Contains(actor)) Attackers.Remove(actor);
+                } else {
+                    if (Defenders.Contains(actor)) Defenders.Remove(actor);
+                }
+            } else if (OccupyingFaction != null) {
+                if (actor.Faction.IsHostileTo(OccupyingFaction)) {
+                    if (Attackers.Contains(actor)) Attackers.Remove(actor);
+                } else {
+                    if (Defenders.Contains(actor)) Defenders.Remove(actor);
+                }
+            }
+        } 
+    }
+
+
+    private void OnTriggerStay(Collider other)
+    {
+        Actor actor = other.gameObject.GetComponent<Actor>();
+        if (actor != null) {
+            if (ClaimFaction != null) {
+                if (actor.Faction.IsHostileTo(ClaimFaction)) {
+                    if (!Attackers.Contains(actor)) Attackers.Add(actor);
+                } else {
+                    if (!Defenders.Contains(actor)) Defenders.Add(actor);
+                }
+            }
+            else if (OccupyingFaction != null)
+            {
+                if (actor.Faction.IsHostileTo(OccupyingFaction)) {
+                    if (!Attackers.Contains(actor)) Attackers.Add(actor);
+                } else {
+                    if (!Defenders.Contains(actor)) Defenders.Add(actor);
+                }
+            }
+        }
+    }
 
 
     private void Start()
@@ -44,18 +89,6 @@ public class ClaimNode : MonoBehaviour
     }
 
 
-    public void ClearAttackers()
-    {
-        Attackers.Clear();
-    }
-
-
-    public void ClearDefenders()
-    {
-        Defenders.Clear();
-    }
-
-
     public float CurrentClaimPercentage() {
         return (float)CurrentClaimPoints / (float)maximum_claim_points;
     }
@@ -66,16 +99,28 @@ public class ClaimNode : MonoBehaviour
 
     private IEnumerator CheckClaim()
     {
+        // Attackers and Defenders lists are managed by trigger stay/exit
+
+        // TODO: we may want to alter the amount units boost or reduce the claim
+
         while (true) {
-            IdentifyFriendAndFoe();
+            int net_offense = Attackers.Count - Defenders.Count;
 
-            // don't use foreach because the units will get destroyed in flight
-            for (int i = 0; i < Defenders.Count; i++) {
-                BoostClaim(Defenders[i]);
-            }
-
-            for (int i = 0; i < Attackers.Count; i++) {
-                ReduceClaim(Attackers[i]);
+            if (net_offense > 0) {
+                if (Claimed) {
+                    ReduceClaim(net_offense);
+                } else {
+                    OccupyingFaction = Attackers.First().Faction;
+                    SwapRoles();
+                    BoostClaim(net_offense);
+                }
+            } else if (net_offense < 0) {
+                if (Claimed) {
+                    BoostClaim(Mathf.Abs(net_offense));
+                } else { // if claim was lost, then the defenders "probably" won't end up here, but would instead become attackers...
+                    OccupyingFaction = Defenders.First().Faction;
+                    BoostClaim(Mathf.Abs(net_offense));
+                }
             }
 
             UpdateClaimBar();
@@ -84,16 +129,14 @@ public class ClaimNode : MonoBehaviour
     }
 
 
-    private void BoostClaim(Actor defender)
+    private void BoostClaim(int boost)
     {
-        if (defender == null) return;
-
         if (CurrentClaimPoints >= maximum_claim_points) return;
 
-        CurrentClaimPoints += defender.Stats.ProficiencyBonus;
+        CurrentClaimPoints += boost;
         if (CurrentClaimPoints >= maximum_claim_points) {
             CurrentClaimPoints = maximum_claim_points;
-            ClaimFaction = OccupyingFaction = null;
+            ClaimFaction = OccupyingFaction;
             Claimed = true;
         }
     }
@@ -112,30 +155,10 @@ public class ClaimNode : MonoBehaviour
     }
 
 
-    private void IdentifyFriendAndFoe()
+    private void ReduceClaim(int reduction)
     {
-        Attackers = FindObjectsOfType<Actor>()
-            .Where(actor => actor.Faction != ClaimFaction && Vector3.Distance(actor.transform.position, transform.position) < actor.Actions.Movement.ReachedThreshold)
-            .ToList();
-
-        Defenders = FindObjectsOfType<Actor>()
-            .Where(actor => actor.Faction == ClaimFaction && Vector3.Distance(actor.transform.position, transform.position) < actor.Actions.Movement.ReachedThreshold)
-            .ToList();
-    }
-
-
-    private void ReduceClaim(Actor attacker)
-    {
-        if (attacker == null) return;
-
-        if (CurrentClaimPoints <= 0) {
-            ClearAllClaim();
-            OccupyingFaction = attacker.Faction;
-            BoostClaim(attacker);
-        } else {
-            CurrentClaimPoints -= attacker.Stats.ProficiencyBonus;
-            if (CurrentClaimPoints <= 0) ClearAllClaim();
-        }
+        CurrentClaimPoints -= reduction;
+        if (CurrentClaimPoints <= 0) ClearAllClaim();
     }
 
 
@@ -148,11 +171,20 @@ public class ClaimNode : MonoBehaviour
         ClaimFaction = Objective.initial_claim;
         CurrentClaimPoints = (ClaimFaction == null) ? 0 : maximum_claim_points;
         Defenders = new List<Actor>();
+        InfluenceZone = GetComponent<SphereCollider>();
+        InfluenceZone.radius = influence_zone_radius;
         OccupyingFaction = ClaimFaction;
     }
 
 
-    public void UpdateClaimBar()
+    private void SwapRoles()
+    {
+        Attackers.Clear();
+        Defenders.Clear();
+    }
+
+
+    private void UpdateClaimBar()
     {
         claim_indicator.value = CurrentClaimPercentage();
         if (Mathf.Approximately(claim_indicator.value, 0) || Mathf.Approximately(claim_indicator.value, 1)) {

@@ -47,6 +47,8 @@ public class Actor : MonoBehaviour
 
     public Vector3 GetHarassPoint(Actor other_unit)
     {
+        if (other_unit == null || Me == null) return Vector3.zero;
+
         if (other_unit.Actions.Combat.EquippedRangedWeapon != null) {
             float melee_range = other_unit.Actions.Combat.MeleeRange();
             float long_range = other_unit.Actions.Combat.EquippedRangedWeapon.Range;

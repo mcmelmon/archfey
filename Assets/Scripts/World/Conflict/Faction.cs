@@ -38,7 +38,7 @@ public class Faction : MonoBehaviour
 
     public bool IsHostileTo(Faction other_faction)
     {
-        if (other_faction.identifier == identifier) return false;
+        if (other_faction == null || other_faction.identifier == identifier) return false;
 
         List<Faction> rival_factions = rivals.Select(rival => rival.GetComponent<Faction>()).ToList();
         bool alignment_hostility = Conflict.Instance.AlignmentAntagonisms(alignment).Contains(other_faction.alignment);
