@@ -61,7 +61,7 @@ public class TemplateMelee : MonoBehaviour, IAct
         ClaimNode target_node = null;
 
         List<ClaimNode> target_nodes = FindObjectsOfType<ClaimNode>()
-            .Where(claim_node => Me.Actions.Decider.Objectives.Contains(claim_node.Objective) && (claim_node.CurrentClaimPercentage() < 1f) || claim_node.ClaimFaction != Me.Faction)
+            .Where(claim_node => Me.Actions.Decider.Objectives.Contains(claim_node.Objective) && (claim_node.CurrentClaimPercentage() < 1f) || claim_node.NodeFaction != Me.Faction)
             .OrderBy(claim_node => Vector3.Distance(transform.position, claim_node.transform.position))
             .ToList();
 

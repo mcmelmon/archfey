@@ -63,7 +63,7 @@ public class Objective : MonoBehaviour
             Faction previous_faction = ClaimingFaction;
 
             foreach (var node in claim_nodes) {
-                Faction node_faction = node.ClaimFaction;
+                Faction node_faction = node.NodeFaction;
 
                 if (new_faction == null)
                     // We have just entered the loop
