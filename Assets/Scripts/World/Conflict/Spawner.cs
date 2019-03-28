@@ -15,6 +15,7 @@ public class Spawner : MonoBehaviour
     public int respawn_delay;
     public float spawn_circle_radius;
     public Faction faction;
+    public ClaimNode claim_node;
 
     [Serializable]
     public struct SpawnEntry
@@ -61,6 +62,10 @@ public class Spawner : MonoBehaviour
             for (int i = 0; i < spawn.units_to_spawn - already_spawned; i++) {
                 GameObject new_spawn = Instantiate(prefab, SpawnCircle.RandomContainedPoint(), prefab.transform.rotation);
                 new_spawn.transform.parent = FindObjectOfType<Characters>().gameObject.transform;
+
+                Renderer rend = new_spawn.GetComponent<Renderer>();
+                rend.sharedMaterial.SetColor("_BaseColor", faction.colors);
+
                 Actor actor = new_spawn.GetComponent<Actor>();
                 actor.Faction = faction;
                 actor.Alignment = faction.alignment;
@@ -69,7 +74,10 @@ public class Spawner : MonoBehaviour
                 } else {
                     Spawned[spawn.spawn_name] = new List<Actor>() { actor };
                 }
-                faction.Units.Add(actor);
+
+                if (claim_node != null) {
+                    actor.Actions.Decider.Objectives.Add(claim_node.Objective);
+                }
             }
         }
     }
@@ -80,7 +88,7 @@ public class Spawner : MonoBehaviour
     private void PruneSpawned()
     {
         foreach (KeyValuePair<string, List<Actor>> pair in Spawned) {
-            for (int i = 0; i < pair.Value.Count; i++) {
+            for (int i = pair.Value.Count - 1; i > -1; i--) {
                 if (pair.Value[i] == null) pair.Value.Remove(pair.Value[i]);
             }
         }

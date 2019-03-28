@@ -59,6 +59,9 @@ public class Acolyte : MonoBehaviour, IAct
     public void OnHarvesting() { }
 
 
+    public void OnHasObjective() { }
+
+
     public void OnHostileActorsSighted()
     {
         Me.Actions.Decider.FriendsInNeed.Clear();

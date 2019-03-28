@@ -56,6 +56,28 @@ public class TemplateMelee : MonoBehaviour, IAct
     }
 
 
+    public virtual void OnHasObjective()
+    {
+        ClaimNode target_node = null;
+
+        List<ClaimNode> target_nodes = FindObjectsOfType<ClaimNode>()
+            .Where(claim_node => Me.Actions.Decider.Objectives.Contains(claim_node.Objective) && (claim_node.CurrentClaimPercentage() < 1f) || claim_node.NodeFaction != Me.Faction)
+            .OrderBy(claim_node => Vector3.Distance(transform.position, claim_node.transform.position))
+            .ToList();
+
+        if (target_nodes.Any()) {
+            target_node = target_nodes.First();
+        }
+
+        if (target_node != null) {
+            Me.Actions.Decider.AchievedAllObjectives = false;
+            Me.Actions.Movement.SetDestination(target_node.transform.position);
+        } else {
+            Me.Actions.Decider.AchievedAllObjectives = true;
+        }
+    }
+
+
     public virtual void OnHostileActorsSighted()
     {
         Me.Actions.CloseWithEnemies();
@@ -106,7 +128,11 @@ public class TemplateMelee : MonoBehaviour, IAct
     public virtual void OnNeedsRest()
     {
         Me.Actions.SheathWeapon();
-        Me.Actions.Movement.Home();
+        if (Me.Actions.Decider.Objectives.Any()) {
+            Me.Actions.Movement.ResetPath();
+        } else {
+            Me.Actions.Movement.Home();
+        }
     }
 
 

@@ -7,12 +7,12 @@ public class Objective : MonoBehaviour
 {
     // Inspector settings
 
-    public Conflict.Alignment initial_claim;
+    public Faction initial_claim;
     public List<ClaimNode> claim_nodes;
 
     // properties
 
-    public Conflict.Alignment Claim { get; set; }
+    public Faction ClaimingFaction { get; set; }
     public bool Claimed { get; set; }
 
 
@@ -36,7 +36,7 @@ public class Objective : MonoBehaviour
 
     public bool IsFriendlyTo(Actor unit)
     {
-        return Claimed && unit != null && Claim == unit.Alignment || Claim == Conflict.Alignment.Neutral;
+        return Claimed && unit != null && ClaimingFaction == unit.Faction || !ClaimingFaction.IsHostileTo(unit.Faction);
     }
 
 
@@ -58,21 +58,21 @@ public class Objective : MonoBehaviour
     private IEnumerator CheckClaim()
     {
         while (true) {
-            Conflict.Alignment new_faction = Conflict.Alignment.Unaligned;
-            Conflict.Alignment previous_faction = Claim;
+            Faction new_faction = null;
+            Faction previous_faction = ClaimingFaction;
 
             foreach (var node in claim_nodes) {
-                Conflict.Alignment point_faction = node.ClaimFaction;
+                Faction node_faction = node.NodeFaction;
 
-                if (new_faction == Conflict.Alignment.Unaligned)
+                if (new_faction == null)
                     // We have just entered the loop
-                    new_faction = point_faction;
+                    new_faction = node_faction;
 
-                if ((point_faction == Conflict.Alignment.Unaligned)) {
-                    new_faction = Conflict.Alignment.Unaligned;
+                if ((node_faction == null)) {
+                    new_faction = null;
                     break;
-                } else if (new_faction != point_faction) {
-                    new_faction = Conflict.Alignment.Unaligned;
+                } else if (new_faction != node_faction) {
+                    new_faction = null;
                     break;
                 }
             }
@@ -87,16 +87,16 @@ public class Objective : MonoBehaviour
 
     private void SetComponents()
     {
-        Claim = initial_claim;
-        Claimed = Claim != Conflict.Alignment.Unaligned;
+        ClaimingFaction = initial_claim;
+        Claimed = ClaimingFaction != null;
     }
 
 
-    private void TransferClaim(Conflict.Alignment new_faction, Conflict.Alignment previous_faction)
+    private void TransferClaim(Faction new_faction, Faction previous_faction)
     {
-        if (new_faction != Conflict.Alignment.Unaligned) {
+        if (new_faction != null) {
             Claimed = true;
-            Claim = new_faction;
+            ClaimingFaction = new_faction;
         }
     }
 }

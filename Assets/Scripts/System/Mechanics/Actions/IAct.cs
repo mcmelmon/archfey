@@ -9,6 +9,7 @@ public interface IAct
     void OnFullLoad();
     void OnDamagedFriendlyStructuresSighted();
     void OnHarvesting();
+    void OnHasObjective();
     void OnHostileActorsSighted();
     void OnHostileStructuresSighted();
     void OnIdle();

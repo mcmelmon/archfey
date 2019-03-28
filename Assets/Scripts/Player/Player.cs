@@ -82,6 +82,7 @@ public class Player : MonoBehaviour, IAct {
     public void OnFullLoad() { }
     public void OnDamagedFriendlyStructuresSighted() { }
     public void OnHarvesting() { }
+    public void OnHasObjective() { }
     public void OnHostileActorsSighted() { }
     public void OnHostileStructuresSighted() { }
     public void OnInCombat() { }

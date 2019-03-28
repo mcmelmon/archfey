@@ -14,6 +14,7 @@ public class Decider : MonoBehaviour
         FriendlyActorsSighted,
         FullLoad,
         Harvesting,
+        HasObjective,
         HostileActorsSighted,
         HostileStructuresSighted,
         Idle,
@@ -35,6 +36,7 @@ public class Decider : MonoBehaviour
 
     // properties
 
+    public bool AchievedAllObjectives { get; set; }
     public bool AttackAtRange { get; set; }
     public List<GameObject> AvailableMeleeTargets { get; set; }
     public List<GameObject> AvailableRangedTargets { get; set; }
@@ -44,6 +46,7 @@ public class Decider : MonoBehaviour
     public List<Structure> FriendlyStructures { get; set; }
     public List<Structure> HostileStructures { get; set; }
     public Actor Me { get; set; }
+    public List<Objective> Objectives { get; set; }
     public GameObject Target { get; set; }
     public Threat Threat { get; set; }
 
@@ -77,6 +80,8 @@ public class Decider : MonoBehaviour
             SetState(State.UnderAttack);
         } else if (HostileActorsSighted()) {
             SetState(State.HostileActorsSighted);
+        } else if (HasObjective()) {
+            SetState(State.HasObjective);
         } else if (CallsForHelp()) {
             SetState(State.FriendsInNeed);
         } else if (HostileStructuresSighted()) {
@@ -244,11 +249,19 @@ public class Decider : MonoBehaviour
 
     private bool GiveUpChase()
     {
+        // TODO: objectives may need to be added to routes
+
         Vector3 home = Me.Actions.Movement.Destinations.ContainsKey(Movement.CommonDestination.Home) ? Me.Actions.Movement.Destinations[Movement.CommonDestination.Home] : Vector3.zero;
         Vector3 closest_stop = Me.Route.WorldStops.Any() ? Me.Route.WorldStops.OrderBy(stop => Vector3.Distance(transform.position, stop)).First() : Vector3.zero;
         float smaller_separation = Mathf.Min(Vector3.Distance(home, transform.position), Vector3.Distance(closest_stop, transform.position));
 
-        return smaller_separation > 20f; // if we've strayed too far, forget about them
+        return smaller_separation > 40f; // if we've strayed too far, forget about them
+    }
+
+
+    private bool HasObjective()
+    {
+        return !AchievedAllObjectives && Objectives.Any();
     }
 
 
@@ -260,8 +273,7 @@ public class Decider : MonoBehaviour
 
     private bool HostileActorsSighted()
     {
-        IdentifyEnemies(); 
-        return !GiveUpChase() && Enemies.Count > 0;
+        return HasObjective() ? Enemies.Count > 0 : !GiveUpChase() && Enemies.Count > 0;
     }
 
 
@@ -277,7 +289,7 @@ public class Decider : MonoBehaviour
 
     private bool InCombat()
     {
-        return !GiveUpChase() && Enemies.Any() && Me.Actions.Combat.Engaged;
+        return HasObjective() ? Enemies.Any() && Me.Actions.Combat.Engaged : !GiveUpChase() && Enemies.Any() && Me.Actions.Combat.Engaged;
     }
 
 
@@ -307,8 +319,11 @@ public class Decider : MonoBehaviour
 
     private bool NeedsRest()
     {
+        IdentifyEnemies();
         bool spent_spell_slots = Me.Magic != null && Me.Magic.UsedSlot;
-        return !Me.Actions.Combat.Engaged && !HostileActorsSighted() && (Me.Health.CurrentHitPoints < Me.Health.MaximumHitPoints || spent_spell_slots);
+        bool injured = Me.Health.CurrentHitPoints < Me.Health.MaximumHitPoints;
+        bool enemies_abound = HostileActorsSighted();
+        return !enemies_abound && (injured || spent_spell_slots);
     }
 
 
@@ -358,8 +373,9 @@ public class Decider : MonoBehaviour
         Enemies = new List<Actor>();
         Friends = new List<Actor>();
         FriendsInNeed = new List<Actor>();
-        Me = GetComponentInParent<Actor>();
         HostileStructures = new List<Structure>();
+        Me = GetComponentInParent<Actor>();
+        Objectives = new List<Objective>();
         Target = null;
         Threat = GetComponent<Threat>();
         state = State.Idle;
@@ -419,7 +435,7 @@ public class Decider : MonoBehaviour
 
     private bool UnderAttack()
     {
-        return !GiveUpChase() && Threat.Threats.Count > 0;
+        return HasObjective() ? Threat.Threats.Count > 0 : !GiveUpChase() && Threat.Threats.Count > 0;
     }
 
 
