@@ -323,7 +323,7 @@ public class Decider : MonoBehaviour
         bool spent_spell_slots = Me.Magic != null && Me.Magic.UsedSlot;
         bool injured = Me.Health.CurrentHitPoints < Me.Health.MaximumHitPoints;
         bool enemies_abound = HostileActorsSighted();
-        return !HasObjective() && !enemies_abound && (injured || spent_spell_slots);
+        return !enemies_abound && (injured || spent_spell_slots);
     }
 
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -14,23 +13,10 @@ public class Faction : MonoBehaviour
 
     // Inspector settings
     public string identifier;
+    public Color colors;
     public Conflict.Alignment alignment;
     public List<Faction> allies;
     public List<Faction> rivals;
-
-    // properties
-
-    public List<Actor> Units { get; set; }
-
-
-    // Unity
-
-
-    private void Awake()
-    {
-        SetComponents();
-        StartCoroutine(PruneUnits());
-    }
 
 
     // public
@@ -48,22 +34,14 @@ public class Faction : MonoBehaviour
     }
 
 
-    // private
-
-
-    private IEnumerator PruneUnits()
+    public void LoseTotalObjectiveControl()
     {
-        while (true) {
-            for (int i = 0; i < Units.Count; i++) {
-                if (Units[i] == null) Units.Remove(Units[i]);
-            }
-            yield return null;
+        List<Actor> faction_units = FindObjectsOfType<Actor>()
+            .Where(actor => actor != null && actor.Faction == this)
+            .ToList();
+
+        for (int i = 0; i < faction_units.Count; i++) {
+            faction_units[i].Actions.Decider.AchievedAllObjectives = false;
         }
-    }
-
-
-    private void SetComponents()
-    {
-        Units = new List<Actor>();
     }
 }

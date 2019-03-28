@@ -20,7 +20,6 @@ public class ClaimNode : MonoBehaviour
     public float CurrentClaimPoints { get; set; }
     public List<Actor> Defenders { get; set; }
     public SphereCollider InfluenceZone { get; set; }
-    public Faction OccupyingFaction { get; set; }
     public Objective Objective { get; set; }
 
     // Unity
@@ -31,41 +30,30 @@ public class ClaimNode : MonoBehaviour
         if (actor != null) {
             if (ClaimFaction != null) {
                 if (actor.Faction.IsHostileTo(ClaimFaction)) {
-                    if (Attackers.Contains(actor)) Attackers.Remove(actor);
+                    if (Attackers.Contains(actor) || actor == null) Attackers.Remove(actor);
                 } else {
-                    if (Defenders.Contains(actor)) Defenders.Remove(actor);
+                    if (Defenders.Contains(actor) || actor == null) Defenders.Remove(actor);
                 }
-            } else if (OccupyingFaction != null) {
-                if (actor.Faction.IsHostileTo(OccupyingFaction)) {
-                    if (Attackers.Contains(actor)) Attackers.Remove(actor);
-                } else {
-                    if (Defenders.Contains(actor)) Defenders.Remove(actor);
-                }
-            }
-        } 
+            } 
+        }
+        PruneAttackAndDefense();
     }
 
 
     private void OnTriggerStay(Collider other)
-    {
+    { 
         Actor actor = other.gameObject.GetComponent<Actor>();
         if (actor != null) {
             if (ClaimFaction != null) {
                 if (actor.Faction.IsHostileTo(ClaimFaction)) {
-                    if (!Attackers.Contains(actor)) Attackers.Add(actor);
+                    if (!Attackers.Contains(actor) && actor != null) Attackers.Add(actor);
                 } else {
-                    if (!Defenders.Contains(actor)) Defenders.Add(actor);
-                }
-            }
-            else if (OccupyingFaction != null)
-            {
-                if (actor.Faction.IsHostileTo(OccupyingFaction)) {
-                    if (!Attackers.Contains(actor)) Attackers.Add(actor);
-                } else {
-                    if (!Defenders.Contains(actor)) Defenders.Add(actor);
+                    if (!Defenders.Contains(actor) && actor != null) Defenders.Add(actor);
                 }
             }
         }
+
+        PruneAttackAndDefense();
     }
 
 
@@ -84,7 +72,7 @@ public class ClaimNode : MonoBehaviour
     public void ClearAllClaim()
     {
         CurrentClaimPoints = 0;
-        OccupyingFaction = ClaimFaction = null;
+        ClaimFaction = null;
         Claimed = false;
     }
 
@@ -99,45 +87,52 @@ public class ClaimNode : MonoBehaviour
 
     private IEnumerator CheckClaim()
     {
-        // Attackers and Defenders lists are managed by trigger stay/exit
 
         // TODO: we may want to alter the amount units boost or reduce the claim
 
         while (true) {
-            int net_offense = Attackers.Count - Defenders.Count;
+            int net_offense = Attackers.Count - Defenders.Count;   // Attackers and Defenders lists are managed by trigger stay/exit
 
-            if (net_offense > 0) {
-                if (Claimed) {
-                    ReduceClaim(net_offense);
-                } else {
-                    OccupyingFaction = Attackers.First().Faction;
-                    SwapRoles();
-                    BoostClaim(net_offense);
+            if (net_offense != 0)
+            {
+                Faction attacking_faction = Attackers.Any() ? Attackers.First().Faction : null;
+                Faction defending_faction = Defenders.Any() ? Defenders.First().Faction : null;
+
+                if (net_offense > 0)
+                {
+                    if (Claimed && ClaimFaction != attacking_faction)
+                    {
+                        ReduceClaim(net_offense);
+                    }
+                    else if (!Claimed)
+                    {
+                        BoostClaim(net_offense, attacking_faction);
+                    }
                 }
-            } else if (net_offense < 0) {
-                if (Claimed) {
-                    BoostClaim(Mathf.Abs(net_offense));
-                } else { // if claim was lost, then the defenders "probably" won't end up here, but would instead become attackers...
-                    OccupyingFaction = Defenders.First().Faction;
-                    BoostClaim(Mathf.Abs(net_offense));
+                else if (net_offense < 0)
+                {
+                    if (Claimed && ClaimFaction == defending_faction)
+                    {
+                        BoostClaim(Mathf.Abs(net_offense), defending_faction);
+                    }
                 }
+
+                UpdateClaimBar();
             }
-
-            UpdateClaimBar();
             yield return new WaitForSeconds(Turn.ActionThreshold);
         }
     }
 
 
-    private void BoostClaim(int boost)
+    private void BoostClaim(int boost, Faction boosting_faction)
     {
         if (CurrentClaimPoints >= maximum_claim_points) return;
 
         CurrentClaimPoints += boost;
         if (CurrentClaimPoints >= maximum_claim_points) {
             CurrentClaimPoints = maximum_claim_points;
-            ClaimFaction = OccupyingFaction;
             Claimed = true;
+            ClaimFaction = boosting_faction;
         }
     }
 
@@ -155,10 +150,33 @@ public class ClaimNode : MonoBehaviour
     }
 
 
+    private void PruneAttackAndDefense()
+    {
+        if (Attackers.Any())
+        {
+            for (var i = Attackers.Count -1; i >= 0; i--)
+            {
+                if (Attackers[i] == null) Attackers.RemoveAt(i);
+            }
+        }
+
+        if (Defenders.Any())
+        {
+            for (var i = Defenders.Count - 1; i >= 0; i--)
+            {
+                if (Defenders[i] == null) Defenders.RemoveAt(i);
+            }
+        }
+    }
+
+
     private void ReduceClaim(int reduction)
     {
         CurrentClaimPoints -= reduction;
         if (CurrentClaimPoints <= 0) ClearAllClaim();
+        if (ClaimFaction != null) {
+            ClaimFaction.LoseTotalObjectiveControl();
+        }
     }
 
 
@@ -173,14 +191,6 @@ public class ClaimNode : MonoBehaviour
         Defenders = new List<Actor>();
         InfluenceZone = GetComponent<SphereCollider>();
         InfluenceZone.radius = influence_zone_radius;
-        OccupyingFaction = ClaimFaction;
-    }
-
-
-    private void SwapRoles()
-    {
-        Attackers.Clear();
-        Defenders.Clear();
     }
 
 

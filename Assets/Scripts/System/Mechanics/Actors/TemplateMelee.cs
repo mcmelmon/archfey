@@ -60,17 +60,13 @@ public class TemplateMelee : MonoBehaviour, IAct
     {
         ClaimNode target_node = null;
 
-        List<Objective> target_objectives = Me.Actions.Decider.Objectives
-            .Where(objective => objective.ClaimingFaction != Me.Faction)
-            .OrderBy(objective => Vector3.Distance(transform.position, objective.transform.position))
+        List<ClaimNode> target_nodes = FindObjectsOfType<ClaimNode>()
+            .Where(claim_node => Me.Actions.Decider.Objectives.Contains(claim_node.Objective) && (claim_node.CurrentClaimPercentage() < 1f) || claim_node.ClaimFaction != Me.Faction)
+            .OrderBy(claim_node => Vector3.Distance(transform.position, claim_node.transform.position))
             .ToList();
 
-        if (target_objectives.Any()) {
-            target_node = target_objectives.First().claim_nodes
-                .Where(node => node.ClaimFaction != Me.Faction)
-                .OrderBy(node => Vector3.Distance(transform.position, node.transform.position))
-                .ToList()
-                .First();
+        if (target_nodes.Any()) {
+            target_node = target_nodes.First();
         }
 
         if (target_node != null) {
@@ -132,7 +128,11 @@ public class TemplateMelee : MonoBehaviour, IAct
     public virtual void OnNeedsRest()
     {
         Me.Actions.SheathWeapon();
-        Me.Actions.Movement.Home();
+        if (Me.Actions.Decider.Objectives.Any()) {
+            Me.Actions.Movement.ResetPath();
+        } else {
+            Me.Actions.Movement.Home();
+        }
     }
 
 

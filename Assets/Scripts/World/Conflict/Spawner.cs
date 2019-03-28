@@ -27,6 +27,7 @@ public class Spawner : MonoBehaviour
 
     // properties
 
+    public bool Captured { get; set; }
     public int RespawnTick { get; set; }
     public Circle SpawnCircle { get; set; }
     public Dictionary<string, List<Actor>> Spawned { get; set; }
@@ -51,10 +52,17 @@ public class Spawner : MonoBehaviour
 
     // public
 
+    public void Capture()
+    {
+        Captured = true;
+    }
+
 
     public void Spawn()
     {
         PruneSpawned();
+
+        if (Captured) return;
 
         foreach (var spawn in spawn_prefabs) {
             GameObject prefab = spawn.spawn_prefab;
@@ -62,6 +70,10 @@ public class Spawner : MonoBehaviour
             for (int i = 0; i < spawn.units_to_spawn - already_spawned; i++) {
                 GameObject new_spawn = Instantiate(prefab, SpawnCircle.RandomContainedPoint(), prefab.transform.rotation);
                 new_spawn.transform.parent = FindObjectOfType<Characters>().gameObject.transform;
+
+                Renderer rend = new_spawn.GetComponent<Renderer>();
+                rend.sharedMaterial.SetColor("_BaseColor", faction.colors);
+
                 Actor actor = new_spawn.GetComponent<Actor>();
                 actor.Faction = faction;
                 actor.Alignment = faction.alignment;
@@ -70,7 +82,6 @@ public class Spawner : MonoBehaviour
                 } else {
                     Spawned[spawn.spawn_name] = new List<Actor>() { actor };
                 }
-                faction.Units.Add(actor);
 
                 if (objective != null) {
                     actor.Actions.Decider.Objectives.Add(objective);
@@ -85,7 +96,7 @@ public class Spawner : MonoBehaviour
     private void PruneSpawned()
     {
         foreach (KeyValuePair<string, List<Actor>> pair in Spawned) {
-            for (int i = 0; i < pair.Value.Count; i++) {
+            for (int i = pair.Value.Count - 1; i > -1; i--) {
                 if (pair.Value[i] == null) pair.Value.Remove(pair.Value[i]);
             }
         }
@@ -94,7 +105,7 @@ public class Spawner : MonoBehaviour
 
     private IEnumerator ProximitySpawn()
     {
-        while (respawn_strategy == RespawnStrategy.Proximity) {
+        while (!Captured && respawn_strategy == RespawnStrategy.Proximity) {
             if (Player.Instance != null && Vector3.Distance(transform.position, Player.Instance.transform.position) < player_proximity_trigger) {
                 if (RespawnTick == 0 || RespawnTick >= respawn_delay) {
                     // The first time the player approaches, spawn right away; but then delay
@@ -112,7 +123,7 @@ public class Spawner : MonoBehaviour
 
     private IEnumerator Respawn()
     {
-        while (respawn_strategy == RespawnStrategy.Timer) {
+        while (!Captured && respawn_strategy == RespawnStrategy.Timer) {
             if (RespawnTick >= respawn_delay ) {
                 Spawn(); // Spawn ensures that the number outstanding is equal to or less than the number to be spawned
                 RespawnTick = 0;
@@ -125,6 +136,7 @@ public class Spawner : MonoBehaviour
 
     private void SetComponents()
     {
+        Captured = false;
         SpawnCircle = Circle.New(transform.position, spawn_circle_radius);
         Spawned = new Dictionary<string, List<Actor>>();
     }
