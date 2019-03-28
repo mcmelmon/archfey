@@ -9,7 +9,6 @@ public class Objective : MonoBehaviour
 
     public Faction initial_claim;
     public List<ClaimNode> claim_nodes;
-    public Spawner defenders;
 
     // properties
 

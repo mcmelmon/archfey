@@ -11,6 +11,8 @@ public class ClaimNode : MonoBehaviour
     public int maximum_claim_points = 50;
     public Slider claim_indicator;
     public float influence_zone_radius = 10f;
+    public Spawner node_spawner;
+
 
     // properties
 
@@ -95,6 +97,9 @@ public class ClaimNode : MonoBehaviour
             CurrentClaimPoints = maximum_claim_points;
             Claimed = true;
             NodeFaction = boosting_faction;
+            if (node_spawner != null) {
+                node_spawner.faction = boosting_faction;
+            }
         }
     }
 

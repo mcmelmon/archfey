@@ -1771,7 +1771,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: 0.000034321274
+    Value: 0.00003602075
     m_MaxSpeed: 100
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -2374,6 +2374,53 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: spawn_prefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: spawn_prefabs.Array.data[0].spawn_name
+      value: HalfOgre
+      objectReference: {fileID: 0}
+    - target: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: spawn_prefabs.Array.data[0].spawn_prefab
+      value: 
+      objectReference: {fileID: 8807392985313635984, guid: 9b269fe1a2af74647bc4a6d1345fcedf,
+        type: 3}
+    - target: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: spawn_prefabs.Array.data[0].units_to_spawn
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: respawn_strategy
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: respawn_delay
+      value: 220
+      objectReference: {fileID: 0}
+    - target: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: spawn_circle_radius
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: faction
+      value: 
+      objectReference: {fileID: 5947408550990878629, guid: 295e5e8edd4294599b7dade0b81c59b3,
+        type: 3}
+    - target: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: claim_node
+      value: 
+      objectReference: {fileID: 69880420}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd8fcdd0b6b6c4ddd865c7becae8319f, type: 3}
 --- !u!4 &69880419 stripped
@@ -3696,7 +3743,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 168323430}
-  m_LocalRotation: {x: -0.07768817, y: 0.012658887, z: -0.006923675, w: 0.9968734}
+  m_LocalRotation: {x: -0.07768002, y: 0.011395447, z: -0.006970616, w: 0.9968889}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -12804,7 +12851,6 @@ Transform:
   - {fileID: 1023952246}
   - {fileID: 1116784816}
   - {fileID: 69880419}
-  - {fileID: 1910601080}
   m_Father: {fileID: 827964332}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -12826,7 +12872,6 @@ MonoBehaviour:
   - {fileID: 1023952247}
   - {fileID: 1116784817}
   - {fileID: 69880420}
-  defenders: {fileID: 1910601081}
 --- !u!1 &515827426
 GameObject:
   m_ObjectHideFlags: 0
@@ -15141,7 +15186,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 641421152}
-  m_LocalRotation: {x: 0.020142905, y: 0.034999058, z: 0.8660018, w: -0.49840775}
+  m_LocalRotation: {x: 0.020142872, y: 0.034999076, z: 0.86600196, w: -0.49840733}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -18291,7 +18336,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: 0.000034321274
+    Value: 0.00003602075
     m_MaxSpeed: 100
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -25241,6 +25286,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42bb823098d8348ee9100d49e83798be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1018183323 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+    type: 3}
+  m_PrefabInstance: {fileID: 1023952245}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dc5d5d2e59d84ae9a77e6d4f90f838d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!43 &1023255403
 Mesh:
   m_ObjectHideFlags: 0
@@ -25483,6 +25540,11 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 569735298951101850, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: node_spawner
+      value: 
+      objectReference: {fileID: 1018183323}
     - target: {fileID: 4710749848172193785, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -25493,6 +25555,53 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: spawn_prefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: spawn_prefabs.Array.data[0].spawn_name
+      value: Goblins
+      objectReference: {fileID: 0}
+    - target: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: spawn_prefabs.Array.data[0].spawn_prefab
+      value: 
+      objectReference: {fileID: 7008212635584689065, guid: 6a88b32fb91894fe2bc5dec2e61ec18e,
+        type: 3}
+    - target: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: spawn_prefabs.Array.data[0].units_to_spawn
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: respawn_strategy
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: respawn_delay
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: spawn_circle_radius
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: faction
+      value: 
+      objectReference: {fileID: 5947408550990878629, guid: 295e5e8edd4294599b7dade0b81c59b3,
+        type: 3}
+    - target: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: claim_node
+      value: 
+      objectReference: {fileID: 1023952247}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd8fcdd0b6b6c4ddd865c7becae8319f, type: 3}
 --- !u!4 &1023952246 stripped
@@ -27277,7 +27386,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1106487735}
-  m_LocalRotation: {x: 0.0025679593, y: 0.9916801, z: -0.020030964, w: 0.12713286}
+  m_LocalRotation: {x: 0.0025426275, y: 0.99184006, z: -0.02003418, w: 0.12587889}
   m_LocalPosition: {x: -333.5663, y: 64.5, z: 73.435005}
   m_LocalScale: {x: 1.500001, y: 1.9665062, z: 1.5334942}
   m_Children:
@@ -27532,6 +27641,53 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: spawn_prefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: spawn_prefabs.Array.data[0].spawn_name
+      value: Bugbear
+      objectReference: {fileID: 0}
+    - target: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: spawn_prefabs.Array.data[0].spawn_prefab
+      value: 
+      objectReference: {fileID: 375010842027341522, guid: ec129c36b33484889871ea2cbb4e0416,
+        type: 3}
+    - target: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: spawn_prefabs.Array.data[0].units_to_spawn
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: respawn_strategy
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: respawn_delay
+      value: 210
+      objectReference: {fileID: 0}
+    - target: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: spawn_circle_radius
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: claim_node
+      value: 
+      objectReference: {fileID: 1116784817}
+    - target: {fileID: 4588162436389480898, guid: fd8fcdd0b6b6c4ddd865c7becae8319f,
+        type: 3}
+      propertyPath: faction
+      value: 
+      objectReference: {fileID: 5947408550990878629, guid: 295e5e8edd4294599b7dade0b81c59b3,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd8fcdd0b6b6c4ddd865c7becae8319f, type: 3}
 --- !u!4 &1116784816 stripped
@@ -35425,7 +35581,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: 0.000034321274
+    Value: 0.00003602075
     m_MaxSpeed: 100
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -36817,6 +36973,11 @@ PrefabInstance:
       propertyPath: objective
       value: 
       objectReference: {fileID: 506143294}
+    - target: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
+        type: 3}
+      propertyPath: claim_node
+      value: 
+      objectReference: {fileID: 1023952247}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b7f0889fefd164662b76c951966c6b59, type: 3}
 --- !u!4 &1629188252 stripped
@@ -41374,7 +41535,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1839084876}
-  m_LocalRotation: {x: -0.0060234875, y: -0.02338502, z: -0.9462107, w: -0.32264897}
+  m_LocalRotation: {x: -0.00482685, y: -0.022977682, z: -0.946234, w: -0.32262993}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -42476,172 +42637,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!1001 &1910601079
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 506143293}
-    m_Modifications:
-    - target: {fileID: 8398448617537818373, guid: b7f0889fefd164662b76c951966c6b59,
-        type: 3}
-      propertyPath: m_Name
-      value: Defenders
-      objectReference: {fileID: 0}
-    - target: {fileID: 7343276044260966329, guid: b7f0889fefd164662b76c951966c6b59,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7343276044260966329, guid: b7f0889fefd164662b76c951966c6b59,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7343276044260966329, guid: b7f0889fefd164662b76c951966c6b59,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7343276044260966329, guid: b7f0889fefd164662b76c951966c6b59,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7343276044260966329, guid: b7f0889fefd164662b76c951966c6b59,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7343276044260966329, guid: b7f0889fefd164662b76c951966c6b59,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7343276044260966329, guid: b7f0889fefd164662b76c951966c6b59,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7343276044260966329, guid: b7f0889fefd164662b76c951966c6b59,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7343276044260966329, guid: b7f0889fefd164662b76c951966c6b59,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7343276044260966329, guid: b7f0889fefd164662b76c951966c6b59,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7343276044260966329, guid: b7f0889fefd164662b76c951966c6b59,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
-        type: 3}
-      propertyPath: spawn_prefabs.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
-        type: 3}
-      propertyPath: respawn_strategy
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
-        type: 3}
-      propertyPath: spawn_prefabs.Array.data[0].spawn_name
-      value: Goblins
-      objectReference: {fileID: 0}
-    - target: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
-        type: 3}
-      propertyPath: spawn_prefabs.Array.data[0].spawn_prefab
-      value: 
-      objectReference: {fileID: 7008212635584689065, guid: 6a88b32fb91894fe2bc5dec2e61ec18e,
-        type: 3}
-    - target: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
-        type: 3}
-      propertyPath: spawn_prefabs.Array.data[0].units_to_spawn
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
-        type: 3}
-      propertyPath: spawn_prefabs.Array.data[1].spawn_name
-      value: Bugbear
-      objectReference: {fileID: 0}
-    - target: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
-        type: 3}
-      propertyPath: spawn_prefabs.Array.data[1].spawn_prefab
-      value: 
-      objectReference: {fileID: 375010842027341522, guid: ec129c36b33484889871ea2cbb4e0416,
-        type: 3}
-    - target: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
-        type: 3}
-      propertyPath: spawn_prefabs.Array.data[1].units_to_spawn
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
-        type: 3}
-      propertyPath: spawn_prefabs.Array.data[2].spawn_name
-      value: HalfOgre
-      objectReference: {fileID: 0}
-    - target: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
-        type: 3}
-      propertyPath: spawn_prefabs.Array.data[2].spawn_prefab
-      value: 
-      objectReference: {fileID: 8807392985313635984, guid: 9b269fe1a2af74647bc4a6d1345fcedf,
-        type: 3}
-    - target: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
-        type: 3}
-      propertyPath: spawn_prefabs.Array.data[2].units_to_spawn
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
-        type: 3}
-      propertyPath: respawn_delay
-      value: 180
-      objectReference: {fileID: 0}
-    - target: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
-        type: 3}
-      propertyPath: spawn_circle_radius
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
-        type: 3}
-      propertyPath: faction
-      value: 
-      objectReference: {fileID: 5947408550990878629, guid: 295e5e8edd4294599b7dade0b81c59b3,
-        type: 3}
-    - target: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
-        type: 3}
-      propertyPath: objective
-      value: 
-      objectReference: {fileID: 506143294}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: b7f0889fefd164662b76c951966c6b59, type: 3}
---- !u!4 &1910601080 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7343276044260966329, guid: b7f0889fefd164662b76c951966c6b59,
-    type: 3}
-  m_PrefabInstance: {fileID: 1910601079}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1910601081 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
-    type: 3}
-  m_PrefabInstance: {fileID: 1910601079}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6dc5d5d2e59d84ae9a77e6d4f90f838d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1919743786
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -43433,7 +43428,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: 0.000034321274
+    Value: 0.00003602075
     m_MaxSpeed: 100
     m_AccelTime: 0.1
     m_DecelTime: 0.1
