@@ -153,8 +153,8 @@ MonoBehaviour:
     supportSSAO: 0
     supportSubsurfaceScattering: 0
     increaseSssSampleCount: 0
-    supportVolumetrics: 0
-    increaseResolutionOfVolumetrics: 0
+    supportVolumetrics: 1
+    increaseResolutionOfVolumetrics: 1
     supportLightLayers: 0
     supportDistortion: 0
     supportTransparentBackface: 0
@@ -178,7 +178,7 @@ MonoBehaviour:
       reflectionCubemapSize: 256
       reflectionCacheCompressed: 0
       planarReflectionCacheCompressed: 0
-      skyReflectionSize: 128
+      skyReflectionSize: 256
       skyLightingOverrideLayerMask:
         serializedVersion: 2
         m_Bits: 0
