@@ -15,7 +15,7 @@ public class Spawner : MonoBehaviour
     public int respawn_delay;
     public float spawn_circle_radius;
     public Faction faction;
-    public ClaimNode claim_node;
+    public Objective objective;
 
     [Serializable]
     public struct SpawnEntry
@@ -56,27 +56,31 @@ public class Spawner : MonoBehaviour
     {
         PruneSpawned();
 
-        foreach (var spawn in spawn_prefabs) {
-            GameObject prefab = spawn.spawn_prefab;
-            int already_spawned = Spawned.ContainsKey(spawn.spawn_name) ? Spawned[spawn.spawn_name].Count() : 0;
-            for (int i = 0; i < spawn.units_to_spawn - already_spawned; i++) {
-                GameObject new_spawn = Instantiate(prefab, SpawnCircle.RandomContainedPoint(), prefab.transform.rotation);
-                new_spawn.transform.parent = FindObjectOfType<Characters>().gameObject.transform;
+        if (faction != null) {
 
-                Renderer rend = new_spawn.GetComponent<Renderer>();
-                rend.sharedMaterial.SetColor("_BaseColor", faction.colors);
+            foreach (var spawn in spawn_prefabs) {
+                GameObject prefab = spawn.spawn_prefab;
+                int already_spawned = Spawned.ContainsKey(spawn.spawn_name) ? Spawned[spawn.spawn_name].Count() : 0;
+                for (int i = 0; i < spawn.units_to_spawn - already_spawned; i++) {
+                    GameObject new_spawn = Instantiate(prefab, SpawnCircle.RandomContainedPoint(), prefab.transform.rotation);
+                    new_spawn.transform.parent = FindObjectOfType<Characters>().gameObject.transform;
 
-                Actor actor = new_spawn.GetComponent<Actor>();
-                actor.Faction = faction;
-                actor.Alignment = faction.alignment;
-                if (Spawned.ContainsKey(spawn.spawn_name)) {
-                    Spawned[spawn.spawn_name].Add(actor);
-                } else {
-                    Spawned[spawn.spawn_name] = new List<Actor>() { actor };
-                }
+                    Renderer rend = new_spawn.GetComponent<Renderer>();
+                    rend.sharedMaterial.SetColor("_BaseColor", faction.colors);
 
-                if (claim_node != null) {
-                    actor.Actions.Decider.Objectives.Add(claim_node.Objective);
+                    Actor actor = new_spawn.GetComponent<Actor>();
+                    actor.Faction = faction;
+                    actor.Alignment = faction.alignment;
+
+                    if (Spawned.ContainsKey(spawn.spawn_name)) {
+                        Spawned[spawn.spawn_name].Add(actor);
+                    } else {
+                        Spawned[spawn.spawn_name] = new List<Actor>() { actor };
+                    }
+
+                    if (objective != null) {
+                        actor.Actions.Decider.Objectives.Add(objective);
+                    }
                 }
             }
         }

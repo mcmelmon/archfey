@@ -58,16 +58,7 @@ public class TemplateMelee : MonoBehaviour, IAct
 
     public virtual void OnHasObjective()
     {
-        ClaimNode target_node = null;
-
-        List<ClaimNode> target_nodes = FindObjectsOfType<ClaimNode>()
-            .Where(claim_node => Me.Actions.Decider.Objectives.Contains(claim_node.Objective) && (claim_node.CurrentClaimPercentage() < 1f) || claim_node.NodeFaction != Me.Faction)
-            .OrderBy(claim_node => Vector3.Distance(transform.position, claim_node.transform.position))
-            .ToList();
-
-        if (target_nodes.Any()) {
-            target_node = target_nodes.First();
-        }
+        ClaimNode target_node = PickNodeFromObjective(Me.Actions.Decider.Objectives.First());
 
         if (target_node != null) {
             Me.Actions.Decider.AchievedAllObjectives = false;
@@ -102,8 +93,9 @@ public class TemplateMelee : MonoBehaviour, IAct
 
         if (Me.Route.local_stops.Length > 1){
             Me.Route.MoveToNextPosition();
-        } else if (Me.Actions.Movement.Destinations.ContainsKey(Movement.CommonDestination.Home)) {
-            Me.Actions.Movement.Home(); 
+        } else if (!Me.Actions.Decider.Objectives.Any()) {
+            PickRandomObjective(); // If the unit already has an objective, it is handled by OnHasObjective
+                                   // If there are no available objectives, the unit moves home
         }
     }
 
@@ -160,5 +152,39 @@ public class TemplateMelee : MonoBehaviour, IAct
         Me.Actions.Movement.ResetPath();
         Me.Actions.CloseWithEnemies();
         Me.Actions.Attack();
+    }
+
+
+    // private
+
+
+    private void PickRandomObjective()
+    {
+        ClaimNode node = null;
+
+        List<Objective> available_objectives = FindObjectsOfType<Objective>()
+            .Where(objective => !objective.Claimed || objective.ClaimingFaction.IsHostileTo(Me.Faction))
+            .ToList();
+
+        if (available_objectives.Any()) {
+            node = PickNodeFromObjective(available_objectives[Random.Range(0, available_objectives.Count)]);
+        }
+
+        if (node != null) {
+            Me.Actions.Movement.SetDestination(node.transform.position);
+        } else {
+            Me.Actions.Movement.Home();
+        }
+    }
+
+
+    private ClaimNode PickNodeFromObjective(Objective objective)
+    {
+        List<ClaimNode> target_nodes = objective.claim_nodes
+            .Where(node => (node.CurrentClaimPercentage() < 1f) || node.NodeFaction.IsHostileTo(Me.Faction))
+            .OrderBy(node => Vector3.Distance(transform.position, node.transform.position))
+            .ToList();
+
+        return target_nodes.FirstOrDefault();
     }
 }
