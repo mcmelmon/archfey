@@ -79,7 +79,7 @@ public class CommandBarOne : MonoBehaviour {
 
     public void Attack()
     {
-        if (Me.Actions.CanTakeAction && AttackButton.interactable) {
+        if (Me.Actions.CanTakeAction && AttackButton.interactable && Mouse.SelectedObjects != null) {
             var targets = Mouse.SelectedObjects.Where(so => so != null && Me.Actions.Combat.IsAttackable(so) && Me.Actions.Combat.IsWithinAttackRange(so.transform));
             if (targets.Any()) {
                 GameObject target = targets.First();
@@ -140,7 +140,7 @@ public class CommandBarOne : MonoBehaviour {
 
     public void Offhand()
     {
-        if (Me.Actions.CanTakeBonusAction && OffhandButton.interactable) {
+        if (Me.Actions.CanTakeBonusAction && OffhandButton.interactable && Mouse.SelectedObjects != null) {
             var targets = Mouse.SelectedObjects.Where(so => so != null && Me.Actions.Combat.IsAttackable(so) && Me.Actions.Combat.IsWithinAttackRange(so.transform));
             if (targets.Any()) {
                 GameObject target = targets.First();
@@ -189,7 +189,7 @@ public class CommandBarOne : MonoBehaviour {
 
     public void Smite()
     {
-        if (Me.Actions.CanTakeAction && SmiteButton.interactable) {
+        if (Me.Actions.CanTakeAction && SmiteButton.interactable && Mouse.SelectedObjects != null) {
             var targets = Mouse.SelectedObjects.Where(so => so != null && Me.Actions.Combat.IsAttackable(so) && Me.Actions.Combat.IsWithinAttackRange(so.transform));
             if (targets.Any()) {
                 Actor actor = targets.First().GetComponent<Actor>();
@@ -207,7 +207,7 @@ public class CommandBarOne : MonoBehaviour {
 
     public void Talk()
     {
-        if (TalkButton.interactable) {
+        if (TalkButton.interactable && Mouse.SelectedObjects != null) {
             Actor interactor = Mouse.SelectedObjects.First().GetComponent<Actor>();
             if (interactor != null) {
                 interactor.Dialog.InitiateDialog(dialog_panel);
@@ -226,7 +226,7 @@ public class CommandBarOne : MonoBehaviour {
 
                 // deal with the buttons as if no cooldowns
 
-                if (AttackButton != null) {
+                if (AttackButton != null && Mouse.SelectedObjects != null) {
                     var interactors = Mouse.SelectedObjects
                                            .Where(so => so != null && Me.Actions.Combat.IsAttackable(so) && Me.Actions.Combat.IsWithinAttackRange(so.transform));
                     bool have_target = interactors.Any();
@@ -246,7 +246,7 @@ public class CommandBarOne : MonoBehaviour {
                     HideButton.interactable = !Me.Actions.Combat.Engaged && (Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction);
                 }
 
-                if (OffhandButton != null) {
+                if (OffhandButton != null && Mouse.SelectedObjects != null) {
                     var interactors = Mouse.SelectedObjects
                                            .Where(so => so != null && Me.Actions.Combat.IsAttackable(so) && Me.Actions.Combat.IsWithinAttackRange(so.transform));
                     bool have_target = interactors.Any();
@@ -257,7 +257,7 @@ public class CommandBarOne : MonoBehaviour {
                     PerformanceButton.interactable = Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction;
                 }
 
-                if (PickLockButton != null) {
+                if (PickLockButton != null && Mouse.SelectedObjects != null) {
                     if (Mouse.SelectedObjects.Count == 1 && Mouse.SelectedObjects.First() != null) {
                         Item target = Mouse.SelectedObjects.First().GetComponent<Item>();
                         PickLockButton.interactable = Me.Actions.CanTakeAction && target != null && !target.IsUnlocked;
@@ -270,7 +270,7 @@ public class CommandBarOne : MonoBehaviour {
                     RageButton.interactable = Me.ExhaustionLevel == 0;
                 }
 
-                if (SleightButton != null) {
+                if (SleightButton != null && Mouse.SelectedObjects != null) {
                     if (Mouse.SelectedObjects.Count == 1 
                         && Mouse.SelectedObjects.First() != null 
                         && Vector3.Distance(transform.position, Mouse.SelectedObjects.First().transform.position) < Me.Actions.Movement.ReachedThreshold) 
@@ -283,7 +283,7 @@ public class CommandBarOne : MonoBehaviour {
                     }
                 }
 
-                if (TalkButton != null && Mouse.HoveredObject != null) {
+                if (TalkButton != null && Mouse.HoveredObject != null && Mouse.SelectedObjects != null) {
                     TalkButton.interactable = false;
                     Actor hovered_actor = Mouse.HoveredObject?.GetComponent<Actor>();
                     Actor selected_actor = null;
