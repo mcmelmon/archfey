@@ -44,6 +44,7 @@ public class Decider : MonoBehaviour
     public List<Actor> Friends { get; set; }
     public List<Actor> FriendsInNeed { get; set; }
     public List<Structure> FriendlyStructures { get; set; }
+    public ClaimNode Goal { get; set; }
     public List<Structure> HostileStructures { get; set; }
     public Actor Me { get; set; }
     public List<Objective> Objectives { get; set; }
@@ -80,8 +81,6 @@ public class Decider : MonoBehaviour
             SetState(State.UnderAttack);
         } else if (HostileActorsSighted()) {
             SetState(State.HostileActorsSighted);
-        } else if (HasObjective()) {
-            SetState(State.HasObjective);
         } else if (CallsForHelp()) {
             SetState(State.FriendsInNeed);
         } else if (HostileStructuresSighted()) {
@@ -92,6 +91,8 @@ public class Decider : MonoBehaviour
             SetState(State.Crafting);
         } else if (ReachedGoal()) {
             SetState(State.ReachedGoal);
+        } else if (HasObjective()) {
+            SetState(State.HasObjective);
         } else if (Moving()) {
             SetState(State.MovingToGoal);
         } else if (FullLoad()) {
@@ -116,6 +117,7 @@ public class Decider : MonoBehaviour
     public List<Actor> IdentifyEnemies()
     {
         // needs rest checks for enemies, triggering this very early in decision tree
+
         ClearTargets();
         Enemies = Me.Senses.Actors.Where(actor => !IsFriendOrNeutral(actor)).ToList();
 
@@ -259,20 +261,21 @@ public class Decider : MonoBehaviour
     }
 
 
-    private bool HasObjective()
-    {
-        return !AchievedAllObjectives && Objectives.Any();
-    }
-
-
     private bool Harvesting()
     {
         return Proficiencies.Instance.IsHarvester(Me) && !FullLoad();
     }
 
 
+    private bool HasObjective()
+    {
+        return !AchievedAllObjectives && Goal != null;
+    }
+
+
     private bool HostileActorsSighted()
     {
+        IdentifyEnemies();
         return HasObjective() ? Enemies.Count > 0 : !GiveUpChase() && Enemies.Count > 0;
     }
 
@@ -319,16 +322,20 @@ public class Decider : MonoBehaviour
 
     private bool NeedsRest()
     {
-        IdentifyEnemies();
+        bool enemies_abound = HostileActorsSighted();
         bool spent_spell_slots = Me.Magic != null && Me.Magic.UsedSlot;
         bool injured = Me.Health.CurrentHitPoints < Me.Health.MaximumHitPoints;
-        bool enemies_abound = HostileActorsSighted();
         return !enemies_abound && (injured || spent_spell_slots);
     }
 
 
     private bool ReachedGoal()
     {
+        if (Goal != null) {
+            float separation = Vector3.Distance(transform.position, Goal.transform.position);
+            return separation < Goal.influence_zone_radius;
+        } 
+
         return (previous_state == State.MovingToGoal || previous_state == State.FullLoad || previous_state == State.Idle) && !Me.Actions.Movement.InProgress();
     }
 
@@ -373,6 +380,7 @@ public class Decider : MonoBehaviour
         Enemies = new List<Actor>();
         Friends = new List<Actor>();
         FriendsInNeed = new List<Actor>();
+        Goal = null;
         HostileStructures = new List<Structure>();
         Me = GetComponentInParent<Actor>();
         Objectives = new List<Objective>();

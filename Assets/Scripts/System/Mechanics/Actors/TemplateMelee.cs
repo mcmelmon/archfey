@@ -58,10 +58,13 @@ public class TemplateMelee : MonoBehaviour, IAct
 
     public virtual void OnHasObjective()
     {
+        if (Me.Actions.Decider.Goal != null) return;
+
         ClaimNode target_node = PickNodeFromObjective(Me.Actions.Decider.Objectives.First());
 
         if (target_node != null) {
             Me.Actions.Decider.AchievedAllObjectives = false;
+            Me.Actions.Decider.Goal = target_node;
             Me.Actions.Movement.SetDestination(target_node.transform.position);
         } else {
             Me.Actions.Decider.AchievedAllObjectives = true;
@@ -93,7 +96,7 @@ public class TemplateMelee : MonoBehaviour, IAct
 
         if (Me.Route.local_stops.Length > 1){
             Me.Route.MoveToNextPosition();
-        } else if (!Me.Actions.Decider.Objectives.Any()) {
+        } else if (Me.Actions.Decider.Goal == null && !Me.Actions.Decider.Objectives.Any()) {
             PickRandomObjective(); // If the unit already has an objective, it is handled by OnHasObjective
                                    // If there are no available objectives, the unit moves home
         }
@@ -171,6 +174,7 @@ public class TemplateMelee : MonoBehaviour, IAct
         }
 
         if (node != null) {
+            Me.Actions.Decider.Goal = node;
             Me.Actions.Movement.SetDestination(node.transform.position);
         } else {
             Me.Actions.Movement.Home();
