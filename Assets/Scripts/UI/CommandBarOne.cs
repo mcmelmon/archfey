@@ -10,6 +10,7 @@ public class CommandBarOne : MonoBehaviour {
 
     public GameObject player;
     public GameObject attack_action;
+    public GameObject collude_action;
     public GameObject dash_action;
     public GameObject disengage_action;
     public GameObject hide_action;
@@ -28,6 +29,7 @@ public class CommandBarOne : MonoBehaviour {
     public List<GameObject> AllActions { get; set; }
     public Button AttackButton { get; set; }
     public Dictionary<string, List<Button>> ButtonSets { get; set; }
+    public Button ColludeButton { get; set; }
     public Button DashButton { get; set; }
     public Button DisengageButton { get; set; }
     public Button HideButton { get; set; }
@@ -79,7 +81,7 @@ public class CommandBarOne : MonoBehaviour {
 
     public void Attack()
     {
-        if (Me.Actions.CanTakeAction && AttackButton.interactable) {
+        if (Me.Actions.CanTakeAction && AttackButton.interactable && Mouse.SelectedObjects != null) {
             var targets = Mouse.SelectedObjects.Where(so => so != null && Me.Actions.Combat.IsAttackable(so) && Me.Actions.Combat.IsWithinAttackRange(so.transform));
             if (targets.Any()) {
                 GameObject target = targets.First();
@@ -90,6 +92,17 @@ public class CommandBarOne : MonoBehaviour {
                 }
                 Me.Actions.Attack(false, true); // offhand = false, player target = true
                 Me.Actions.CanTakeAction = false;
+            }
+        }
+    }
+
+
+    public void Collude()
+    {
+        if (ColludeButton.interactable && Mouse.SelectedObjects != null) {
+            Actor interactor = Mouse.SelectedObjects.First().GetComponent<Actor>();
+            if (interactor != null) {
+                Me.ChangeFaction(interactor.CurrentFaction);
             }
         }
     }
@@ -140,7 +153,7 @@ public class CommandBarOne : MonoBehaviour {
 
     public void Offhand()
     {
-        if (Me.Actions.CanTakeBonusAction && OffhandButton.interactable) {
+        if (Me.Actions.CanTakeBonusAction && OffhandButton.interactable && Mouse.SelectedObjects != null) {
             var targets = Mouse.SelectedObjects.Where(so => so != null && Me.Actions.Combat.IsAttackable(so) && Me.Actions.Combat.IsWithinAttackRange(so.transform));
             if (targets.Any()) {
                 GameObject target = targets.First();
@@ -189,7 +202,7 @@ public class CommandBarOne : MonoBehaviour {
 
     public void Smite()
     {
-        if (Me.Actions.CanTakeAction && SmiteButton.interactable) {
+        if (Me.Actions.CanTakeAction && SmiteButton.interactable && Mouse.SelectedObjects != null) {
             var targets = Mouse.SelectedObjects.Where(so => so != null && Me.Actions.Combat.IsAttackable(so) && Me.Actions.Combat.IsWithinAttackRange(so.transform));
             if (targets.Any()) {
                 Actor actor = targets.First().GetComponent<Actor>();
@@ -207,7 +220,7 @@ public class CommandBarOne : MonoBehaviour {
 
     public void Talk()
     {
-        if (TalkButton.interactable) {
+        if (TalkButton.interactable && Mouse.SelectedObjects != null) {
             Actor interactor = Mouse.SelectedObjects.First().GetComponent<Actor>();
             if (interactor != null) {
                 interactor.Dialog.InitiateDialog(dialog_panel);
@@ -226,7 +239,7 @@ public class CommandBarOne : MonoBehaviour {
 
                 // deal with the buttons as if no cooldowns
 
-                if (AttackButton != null) {
+                if (AttackButton != null && Mouse.SelectedObjects != null) {
                     var interactors = Mouse.SelectedObjects
                                            .Where(so => so != null && Me.Actions.Combat.IsAttackable(so) && Me.Actions.Combat.IsWithinAttackRange(so.transform));
                     bool have_target = interactors.Any();
@@ -246,7 +259,7 @@ public class CommandBarOne : MonoBehaviour {
                     HideButton.interactable = !Me.Actions.Combat.Engaged && (Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction);
                 }
 
-                if (OffhandButton != null) {
+                if (OffhandButton != null && Mouse.SelectedObjects != null) {
                     var interactors = Mouse.SelectedObjects
                                            .Where(so => so != null && Me.Actions.Combat.IsAttackable(so) && Me.Actions.Combat.IsWithinAttackRange(so.transform));
                     bool have_target = interactors.Any();
@@ -257,7 +270,7 @@ public class CommandBarOne : MonoBehaviour {
                     PerformanceButton.interactable = Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction;
                 }
 
-                if (PickLockButton != null) {
+                if (PickLockButton != null && Mouse.SelectedObjects != null) {
                     if (Mouse.SelectedObjects.Count == 1 && Mouse.SelectedObjects.First() != null) {
                         Item target = Mouse.SelectedObjects.First().GetComponent<Item>();
                         PickLockButton.interactable = Me.Actions.CanTakeAction && target != null && !target.IsUnlocked;
@@ -270,7 +283,7 @@ public class CommandBarOne : MonoBehaviour {
                     RageButton.interactable = Me.ExhaustionLevel == 0;
                 }
 
-                if (SleightButton != null) {
+                if (SleightButton != null && Mouse.SelectedObjects != null) {
                     if (Mouse.SelectedObjects.Count == 1 
                         && Mouse.SelectedObjects.First() != null 
                         && Vector3.Distance(transform.position, Mouse.SelectedObjects.First().transform.position) < Me.Actions.Movement.ReachedThreshold) 
@@ -283,17 +296,40 @@ public class CommandBarOne : MonoBehaviour {
                     }
                 }
 
-                if (TalkButton != null && Mouse.HoveredObject != null) {
+                if (TalkButton != null) {
                     TalkButton.interactable = false;
-                    Actor hovered_actor = Mouse.HoveredObject?.GetComponent<Actor>();
+                    Actor hovered_actor = null;
                     Actor selected_actor = null;
 
-                    if (Mouse.SelectedObjects.Count == 1 && Mouse.SelectedObjects.First() != null) {
+                    if (Mouse.HoveredObject != null) {
+                        hovered_actor = Mouse.HoveredObject?.GetComponent<Actor>();
+                    }
+                    
+                    if (Mouse.SelectedObjects?.Count == 1 && Mouse.SelectedObjects.First() != null) {
                         selected_actor = Mouse.SelectedObjects.First().GetComponent<Actor>();
                     }
 
                     if (hovered_actor != null || selected_actor != null) {
                         TalkButton.interactable = (hovered_actor != null) ? hovered_actor.Dialog.WithinRange(Me) : selected_actor.Dialog.WithinRange(Me);
+                    }
+                }
+
+
+                if (ColludeButton != null) {
+                    ColludeButton.interactable = false;
+                    Actor hovered_actor = null;
+                    Actor selected_actor = null;
+
+                    if (Mouse.HoveredObject != null) {
+                        hovered_actor = Mouse.HoveredObject?.GetComponent<Actor>();
+                    }
+
+                    if (Mouse.SelectedObjects?.Count == 1 && Mouse.SelectedObjects.First() != null) {
+                        selected_actor = Mouse.SelectedObjects.First().GetComponent<Actor>();
+                    }
+
+                    if (hovered_actor != null || selected_actor != null) {
+                        ColludeButton.interactable = (hovered_actor != null) ? hovered_actor.Dialog.WithinRange(Me) : selected_actor.Dialog.WithinRange(Me);
                     }
                 }
 
@@ -398,6 +434,7 @@ public class CommandBarOne : MonoBehaviour {
 
         AllActions = new List<GameObject> { attack_action, dash_action, rage_action, smite_action, hide_action, talk_action };
         AttackButton = attack_action.GetComponent<Button>();
+        ColludeButton = collude_action.GetComponent<Button>();
         DashButton = dash_action.GetComponent<Button>();
         DisengageButton = disengage_action.GetComponent<Button>();
         OnCooldown = new List<Button>();
@@ -412,7 +449,7 @@ public class CommandBarOne : MonoBehaviour {
 
         ButtonSets = new Dictionary<string, List<Button>>
         {
-            ["Thief"] = new List<Button> { AttackButton, OffhandButton, DashButton, DisengageButton, HideButton, PickLockButton, SleightButton, PerformanceButton, TalkButton, RageButton },
+            ["Thief"] = new List<Button> { AttackButton, OffhandButton, DashButton, DisengageButton, HideButton, PickLockButton, SleightButton, PerformanceButton, TalkButton, RageButton, ColludeButton },
             ["Warlock"] = new List<Button> { AttackButton, SmiteButton, TalkButton }
         };
     }

@@ -31,7 +31,7 @@ PrefabInstance:
         type: 3}
       propertyPath: rivals.Array.data[0]
       value: 
-      objectReference: {fileID: 5977216355613215229, guid: 0db6a0df10aa441d38b5cc3a870fedb3,
+      objectReference: {fileID: 5220889291076156951, guid: 66b972d861c6c44ce9eb601e4722d7c0,
         type: 3}
     - target: {fileID: 3266668026256983198, guid: 8f235e1a43a41495d91c3cb637668d39,
         type: 3}

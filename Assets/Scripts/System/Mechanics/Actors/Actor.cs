@@ -20,7 +20,8 @@ public class Actor : MonoBehaviour
     public Conflict.Alignment Alignment { get; set; }
     public Dialog Dialog { get; set; }
     public int ExhaustionLevel { get; set; } // TODO: create exhaustion class
-    public Faction Faction { get; set; }
+    public Faction CurrentFaction { get; set; }
+    public List<Faction> Factions { get; set; }
     public Health Health { get; set; }
     public Interactable Interactions { get; set; }
     public Inventory Inventory { get; set; }
@@ -43,6 +44,15 @@ public class Actor : MonoBehaviour
 
 
     // public
+
+
+    public void ChangeFaction(Faction new_faction)
+    {
+        if (!Factions.Contains(CurrentFaction)) Factions.Add(CurrentFaction);
+        Me.CurrentFaction = new_faction;
+        Renderer rend = GetComponent<Renderer>();
+        rend.sharedMaterial.SetColor("_BaseColor", new_faction.colors);
+    }
 
 
     public Vector3 GetHarassPoint(Actor other_unit)
@@ -181,8 +191,10 @@ public class Actor : MonoBehaviour
     {
         Actions = GetComponentInChildren<Actions>();
         Alignment = Conflict.Alignment.Unaligned;
+        CurrentFaction = null;
         Dialog = GetComponent<Dialog>();
         ExhaustionLevel = 0;
+        Factions = new List<Faction>();
         Health = GetComponent<Health>();
         Interactions = GetComponent<Interactable>();
         Inventory = GetComponent<Inventory>();
@@ -193,7 +205,7 @@ public class Actor : MonoBehaviour
         Senses = GetComponent<Senses>();
         Stats = GetComponent<Stats>();
 
-        if (GetComponent<Faction>() != null) Faction = GetComponent<Faction>();
+        if (GetComponent<Faction>() != null) CurrentFaction = GetComponent<Faction>();
     }
 
 

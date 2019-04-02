@@ -154,7 +154,7 @@ MonoBehaviour:
     supportSubsurfaceScattering: 0
     increaseSssSampleCount: 0
     supportVolumetrics: 0
-    increaseResolutionOfVolumetrics: 0
+    increaseResolutionOfVolumetrics: 1
     supportLightLayers: 0
     supportDistortion: 0
     supportTransparentBackface: 0

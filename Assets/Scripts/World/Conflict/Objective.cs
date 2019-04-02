@@ -9,6 +9,7 @@ public class Objective : MonoBehaviour
 
     public Faction initial_claim;
     public List<ClaimNode> claim_nodes;
+    public GameObject marker;
 
     // properties
 
@@ -36,7 +37,7 @@ public class Objective : MonoBehaviour
 
     public bool IsFriendlyTo(Actor unit)
     {
-        return Claimed && unit != null && ClaimingFaction == unit.Faction || !ClaimingFaction.IsHostileTo(unit.Faction);
+        return Claimed && unit != null && ClaimingFaction == unit.CurrentFaction || !ClaimingFaction.IsHostileTo(unit.CurrentFaction);
     }
 
 
