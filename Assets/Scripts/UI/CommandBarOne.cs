@@ -10,6 +10,7 @@ public class CommandBarOne : MonoBehaviour {
 
     public GameObject player;
     public GameObject attack_action;
+    public GameObject collude_action;
     public GameObject dash_action;
     public GameObject disengage_action;
     public GameObject hide_action;
@@ -28,6 +29,7 @@ public class CommandBarOne : MonoBehaviour {
     public List<GameObject> AllActions { get; set; }
     public Button AttackButton { get; set; }
     public Dictionary<string, List<Button>> ButtonSets { get; set; }
+    public Button ColludeButton { get; set; }
     public Button DashButton { get; set; }
     public Button DisengageButton { get; set; }
     public Button HideButton { get; set; }
@@ -90,6 +92,17 @@ public class CommandBarOne : MonoBehaviour {
                 }
                 Me.Actions.Attack(false, true); // offhand = false, player target = true
                 Me.Actions.CanTakeAction = false;
+            }
+        }
+    }
+
+
+    public void Collude()
+    {
+        if (ColludeButton.interactable && Mouse.SelectedObjects != null) {
+            Actor interactor = Mouse.SelectedObjects.First().GetComponent<Actor>();
+            if (interactor != null) {
+                Me.ChangeFaction(interactor.CurrentFaction);
             }
         }
     }
@@ -283,17 +296,40 @@ public class CommandBarOne : MonoBehaviour {
                     }
                 }
 
-                if (TalkButton != null && Mouse.HoveredObject != null && Mouse.SelectedObjects != null) {
+                if (TalkButton != null) {
                     TalkButton.interactable = false;
-                    Actor hovered_actor = Mouse.HoveredObject?.GetComponent<Actor>();
+                    Actor hovered_actor = null;
                     Actor selected_actor = null;
 
-                    if (Mouse.SelectedObjects.Count == 1 && Mouse.SelectedObjects.First() != null) {
+                    if (Mouse.HoveredObject != null) {
+                        hovered_actor = Mouse.HoveredObject?.GetComponent<Actor>();
+                    }
+                    
+                    if (Mouse.SelectedObjects?.Count == 1 && Mouse.SelectedObjects.First() != null) {
                         selected_actor = Mouse.SelectedObjects.First().GetComponent<Actor>();
                     }
 
                     if (hovered_actor != null || selected_actor != null) {
                         TalkButton.interactable = (hovered_actor != null) ? hovered_actor.Dialog.WithinRange(Me) : selected_actor.Dialog.WithinRange(Me);
+                    }
+                }
+
+
+                if (ColludeButton != null) {
+                    ColludeButton.interactable = false;
+                    Actor hovered_actor = null;
+                    Actor selected_actor = null;
+
+                    if (Mouse.HoveredObject != null) {
+                        hovered_actor = Mouse.HoveredObject?.GetComponent<Actor>();
+                    }
+
+                    if (Mouse.SelectedObjects?.Count == 1 && Mouse.SelectedObjects.First() != null) {
+                        selected_actor = Mouse.SelectedObjects.First().GetComponent<Actor>();
+                    }
+
+                    if (hovered_actor != null || selected_actor != null) {
+                        ColludeButton.interactable = (hovered_actor != null) ? hovered_actor.Dialog.WithinRange(Me) : selected_actor.Dialog.WithinRange(Me);
                     }
                 }
 
@@ -398,6 +434,7 @@ public class CommandBarOne : MonoBehaviour {
 
         AllActions = new List<GameObject> { attack_action, dash_action, rage_action, smite_action, hide_action, talk_action };
         AttackButton = attack_action.GetComponent<Button>();
+        ColludeButton = collude_action.GetComponent<Button>();
         DashButton = dash_action.GetComponent<Button>();
         DisengageButton = disengage_action.GetComponent<Button>();
         OnCooldown = new List<Button>();
@@ -412,7 +449,7 @@ public class CommandBarOne : MonoBehaviour {
 
         ButtonSets = new Dictionary<string, List<Button>>
         {
-            ["Thief"] = new List<Button> { AttackButton, OffhandButton, DashButton, DisengageButton, HideButton, PickLockButton, SleightButton, PerformanceButton, TalkButton, RageButton },
+            ["Thief"] = new List<Button> { AttackButton, OffhandButton, DashButton, DisengageButton, HideButton, PickLockButton, SleightButton, PerformanceButton, TalkButton, RageButton, ColludeButton },
             ["Warlock"] = new List<Button> { AttackButton, SmiteButton, TalkButton }
         };
     }

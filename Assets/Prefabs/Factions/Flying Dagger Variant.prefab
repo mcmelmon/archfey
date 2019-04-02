@@ -10,7 +10,7 @@ PrefabInstance:
     - target: {fileID: 4234383038254447763, guid: 8f235e1a43a41495d91c3cb637668d39,
         type: 3}
       propertyPath: m_Name
-      value: Flying Dagger
+      value: Flying Dagger Variant
       objectReference: {fileID: 0}
     - target: {fileID: 3266668026256983198, guid: 8f235e1a43a41495d91c3cb637668d39,
         type: 3}
@@ -25,17 +25,17 @@ PrefabInstance:
     - target: {fileID: 3266668026256983198, guid: 8f235e1a43a41495d91c3cb637668d39,
         type: 3}
       propertyPath: colors.r
-      value: 0.5
+      value: 0.4405482
       objectReference: {fileID: 0}
     - target: {fileID: 3266668026256983198, guid: 8f235e1a43a41495d91c3cb637668d39,
         type: 3}
       propertyPath: colors.g
-      value: 0.3561321
+      value: 0.55318445
       objectReference: {fileID: 0}
     - target: {fileID: 3266668026256983198, guid: 8f235e1a43a41495d91c3cb637668d39,
         type: 3}
       propertyPath: colors.b
-      value: 0.36302996
+      value: 0.9433962
       objectReference: {fileID: 0}
     - target: {fileID: 3266668026256983198, guid: 8f235e1a43a41495d91c3cb637668d39,
         type: 3}

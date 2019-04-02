@@ -149,9 +149,9 @@ public class Decider : MonoBehaviour
 
         if (Threat.Threats.ContainsKey(other_unit)) return false;
 
-        bool faction_hostile = Me.Faction.IsHostileTo(other_unit.Faction);
+        bool faction_hostile = Me.CurrentFaction.IsHostileTo(other_unit.CurrentFaction);
 
-        return only_friends ? other_unit.Faction == Me.Faction : !faction_hostile;
+        return only_friends ? other_unit.CurrentFaction == Me.CurrentFaction : !faction_hostile;
     }
 
 
@@ -230,7 +230,7 @@ public class Decider : MonoBehaviour
         // TODO: we only want units that repair to see this
 
         FriendlyStructures = Me.Senses.Structures
-                               .Where(structure => structure.Faction == Me.Faction && structure.CurrentHitPoints < structure.maximum_hit_points)
+                               .Where(structure => structure.Faction == Me.CurrentFaction && structure.CurrentHitPoints < structure.maximum_hit_points)
                                .ToList();
 
         return FriendlyStructures.Count > 0;
@@ -283,7 +283,7 @@ public class Decider : MonoBehaviour
     private bool HostileStructuresSighted()
     {
         HostileStructures = Me.Senses.Structures
-                              .Where(structure => Me.Faction.IsHostileTo(structure.Faction) && structure.CurrentHitPoints > 0)
+                              .Where(structure => Me.CurrentFaction.IsHostileTo(structure.Faction) && structure.CurrentHitPoints > 0)
                               .ToList();
 
         return HostileStructures.Count > 0;

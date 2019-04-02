@@ -38,7 +38,8 @@ public class Player : MonoBehaviour, IAct {
     {
         SetComponents();
         SetNormalState();
-        Enrage();
+        //Enrage();
+        SetSkills();
         StartCoroutine(AdjustCameraDistance());
         StartCoroutine(HandleMovement());
     }
@@ -171,7 +172,7 @@ public class Player : MonoBehaviour, IAct {
         Me = GetComponent<Actor>();
         Me.Actions = GetComponentInChildren<Actions>();
         Me.Alignment = Conflict.Alignment.Neutral;
-        Me.Faction = faction;
+        Me.CurrentFaction = faction;
         Me.Health = GetComponent<Health>();
         Me.Load = new Dictionary<HarvestingNode, int>();
         Me.RestCounter = 0;

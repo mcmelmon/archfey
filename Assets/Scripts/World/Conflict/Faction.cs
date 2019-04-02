@@ -37,7 +37,7 @@ public class Faction : MonoBehaviour
     public void LoseTotalObjectiveControl()
     {
         List<Actor> faction_units = FindObjectsOfType<Actor>()
-            .Where(actor => actor != null && actor.Faction == this)
+            .Where(actor => actor != null && actor.CurrentFaction == this)
             .ToList();
 
         for (int i = 0; i < faction_units.Count; i++) {

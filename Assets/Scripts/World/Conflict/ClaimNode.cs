@@ -12,6 +12,7 @@ public class ClaimNode : MonoBehaviour
     public Slider claim_indicator;
     public float influence_zone_radius = 10f;
     public Spawner node_spawner;
+    public GameObject marker;
 
 
     // properties
@@ -66,8 +67,8 @@ public class ClaimNode : MonoBehaviour
             int net_offense = Attackers.Count - Defenders.Count;   // Attackers and Defenders lists are managed by trigger stay/exit
 
             if (net_offense != 0) {
-                Faction attacking_faction = Attackers.Any() ? Attackers.First().Faction : null;
-                Faction defending_faction = Defenders.Any() ? Defenders.First().Faction : null;
+                Faction attacking_faction = Attackers.Any() ? Attackers.First().CurrentFaction : null;
+                Faction defending_faction = Defenders.Any() ? Defenders.First().CurrentFaction : null;
 
                 if (net_offense > 0) {
                     if (Claimed && NodeFaction != attacking_faction) {
@@ -143,7 +144,7 @@ public class ClaimNode : MonoBehaviour
                 Actor actor = units_within_range[i];
 
                 if (actor != null) {
-                    if (actor.Faction.IsHostileTo(NodeFaction)) {
+                    if (actor.CurrentFaction.IsHostileTo(NodeFaction)) {
                         if (!Attackers.Contains(actor) && actor != null) Attackers.Add(actor);
                     } else {
                         if (!Defenders.Contains(actor) && actor != null) Defenders.Add(actor);
@@ -155,14 +156,14 @@ public class ClaimNode : MonoBehaviour
             // NOTE: the faction that has the most units for the last boost gains the node (of course, then they have to keep it)
 
             var faction_units = units_within_range
-                .GroupBy(unit => unit.Faction,
+                .GroupBy(unit => unit.CurrentFaction,
                         (faction, factions) => new {
                             Key = faction,
                             Count = factions.Count()
                         })
                 .OrderByDescending(faction => faction.Count);
 
-            Attackers.AddRange(units_within_range.Where(unit => unit.Faction == faction_units.First().Key));
+            Attackers.AddRange(units_within_range.Where(unit => unit.CurrentFaction == faction_units.First().Key));
         }
     }
 
@@ -188,6 +189,13 @@ public class ClaimNode : MonoBehaviour
             claim_indicator.gameObject.SetActive(false);
         } else {
             claim_indicator.gameObject.SetActive(true);
+        }
+
+        if (Claimed) {
+            if (marker != null) {
+                Renderer rend = marker.GetComponent<Renderer>();
+                rend.material.SetColor("_BaseColor", NodeFaction.colors);
+            }
         }
     }
 }
