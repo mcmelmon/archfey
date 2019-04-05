@@ -8,7 +8,7 @@ public class Player : MonoBehaviour, IAct {
 
     // Inspector settings
     public CinemachineFreeLook viewport;
-    public Faction faction;
+    public Faction player_faction;
 
     // properties
 
@@ -40,8 +40,12 @@ public class Player : MonoBehaviour, IAct {
         SetNormalState();
         //Enrage();
         SetSkills();
+
         StartCoroutine(AdjustCameraDistance());
         StartCoroutine(HandleMovement());
+
+        // Set home here to avoid overwriting it during respawns
+        Me.Actions.Movement.AddDestination(Movement.CommonDestination.Home, transform.position);
     }
 
 
@@ -109,6 +113,16 @@ public class Player : MonoBehaviour, IAct {
     }
 
 
+    public void Respawn()
+    {
+        SetComponents();
+        SetNormalState();
+        SetSkills();
+        transform.position = Me.Actions.Movement.Destinations[Movement.CommonDestination.Home];
+        Me.ChangeFaction(player_faction);
+    }
+
+
     // private
 
 
@@ -172,7 +186,7 @@ public class Player : MonoBehaviour, IAct {
         Me = GetComponent<Actor>();
         Me.Actions = GetComponentInChildren<Actions>();
         Me.Alignment = Conflict.Alignment.Neutral;
-        Me.CurrentFaction = faction;
+        Me.CurrentFaction = player_faction;
         Me.Health = GetComponent<Health>();
         Me.Load = new Dictionary<HarvestingNode, int>();
         Me.RestCounter = 0;
