@@ -87,6 +87,13 @@ public class Spawner : MonoBehaviour
     }
 
 
+    public int TotalUnitsAvailable()
+    {
+        int total_units = spawn_prefabs.Select(prefab => prefab.units_to_spawn).Sum();
+        return total_units;
+    }
+
+
     // private
 
 

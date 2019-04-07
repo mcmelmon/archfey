@@ -58,7 +58,10 @@ public class TemplateMelee : MonoBehaviour, IAct
 
     public virtual void OnHasObjective()
     {
-        if (Me.Actions.Decider.Goal != null) return;
+        if (!Me.Actions.Decider.Objectives.Any()) {
+            Me.Actions.Decider.Goal = null;
+            return;
+        }
 
         ClaimNode target_node = PickNodeFromObjective(Me.Actions.Decider.Objectives.First());
 
