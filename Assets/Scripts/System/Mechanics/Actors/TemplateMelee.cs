@@ -58,7 +58,10 @@ public class TemplateMelee : MonoBehaviour, IAct
 
     public virtual void OnHasObjective()
     {
-        if (Me.Actions.Decider.Goal != null) return;
+        if (!Me.Actions.Decider.Objectives.Any()) {
+            Me.Actions.Decider.Goal = null;
+            return;
+        }
 
         ClaimNode target_node = PickNodeFromObjective(Me.Actions.Decider.Objectives.First());
 
@@ -185,7 +188,7 @@ public class TemplateMelee : MonoBehaviour, IAct
     private ClaimNode PickNodeFromObjective(Objective objective)
     {
         List<ClaimNode> target_nodes = objective.claim_nodes
-            .Where(node => (node.CurrentClaimPercentage() < 1f) || node.NodeFaction.IsHostileTo(Me.CurrentFaction))
+            .Where(node => (!node.Claimed || (node.NodeFaction != null && node.NodeFaction.IsHostileTo(Me.CurrentFaction))))
             .OrderBy(node => Vector3.Distance(transform.position, node.transform.position))
             .ToList();
 

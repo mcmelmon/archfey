@@ -91,10 +91,10 @@ public class Decider : MonoBehaviour
             SetState(State.Crafting);
         } else if (ReachedGoal()) {
             SetState(State.ReachedGoal);
-        } else if (HasObjective()) {
-            SetState(State.HasObjective);
         } else if (Moving()) {
             SetState(State.MovingToGoal);
+        } else if (HasObjective()) {
+            SetState(State.HasObjective);
         } else if (FullLoad()) {
             SetState(State.FullLoad);
         } else if (Harvesting()) {

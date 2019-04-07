@@ -100,8 +100,12 @@ public class Health : MonoBehaviour {
 
     public bool Persist()
     {
-        if (CurrentHitPoints <= 0 && Me != Player.Instance.Me) {
-            Destroy(gameObject);
+        if (CurrentHitPoints <= 0) {
+            if (Me != Player.Instance.Me) {
+                Destroy(gameObject);
+            } else {
+                Player.Instance.Respawn();
+            }
             return false;
         }
 
