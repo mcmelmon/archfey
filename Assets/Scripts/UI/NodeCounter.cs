@@ -1,23 +1,15 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UnitMenu : MonoBehaviour
+public class NodeCounter : MonoBehaviour
 {
 
     // Inspector settings
-    public List<FactionBlock> factions;
+    public List<UnitCounter.FactionBlock> factions;
 
-    [Serializable]
-    public struct FactionBlock
-    {
-        public Faction faction;
-        public Slider slider;
-        public Image fill;
-    }
 
     // Unity
 
@@ -32,8 +24,8 @@ public class UnitMenu : MonoBehaviour
 
     private float FactionPercentage(Faction faction)
     {
-        float faction_count = FindObjectsOfType<Actor>().Count(actor => actor.CurrentFaction == faction);
-        return faction_count / TotalUnits();
+        float faction_count = FindObjectsOfType<ClaimNode>().Count(spawner => spawner.NodeFaction == faction);
+        return faction_count / TotalNodes();
     }
 
 
@@ -43,10 +35,10 @@ public class UnitMenu : MonoBehaviour
     }
 
 
-    private float TotalUnits()
+    private float TotalNodes()
     {
-        float total_units = FindObjectsOfType<Spawner>().Select(spawner => spawner.TotalUnitsAvailable()).Sum();
-        return total_units;
+        float total_nodes = FindObjectsOfType<ClaimNode>().Count();
+        return total_nodes;
     }
 
 

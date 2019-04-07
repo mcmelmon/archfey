@@ -188,7 +188,7 @@ public class TemplateMelee : MonoBehaviour, IAct
     private ClaimNode PickNodeFromObjective(Objective objective)
     {
         List<ClaimNode> target_nodes = objective.claim_nodes
-            .Where(node => (node.CurrentClaimPercentage() < 1f) || node.NodeFaction.IsHostileTo(Me.CurrentFaction))
+            .Where(node => (!node.Claimed || (node.NodeFaction != null && node.NodeFaction.IsHostileTo(Me.CurrentFaction))))
             .OrderBy(node => Vector3.Distance(transform.position, node.transform.position))
             .ToList();
 
