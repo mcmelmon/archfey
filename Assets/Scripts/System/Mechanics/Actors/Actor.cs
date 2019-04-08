@@ -84,6 +84,7 @@ public class Actor : MonoBehaviour
 
     public IEnumerator GetStatsFromServer(string name)
     {
+        if (name == "Sebbie") name = "Goblin";
         UnityWebRequest www = UnityWebRequest.Get("http://localhost:3000/stat_blocks/" + name + ".json");
         JSON_StatBlock stat_block = new JSON_StatBlock();
         yield return www.SendWebRequest();
