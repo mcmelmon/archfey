@@ -112,11 +112,16 @@ public class Actions : MonoBehaviour
 
     public void Attack(bool offhand = false, bool player_target = false)
     {
-        if (Decider.Target == null) return;
+        if (Decider.Target == null) {
+            Combat.Engaged = false;
+            return;
+        }
 
         for (int i = 0; i < Combat.AttacksPerAction; i++) {
             Combat.StrikeEnemy(Decider.Target, Decider.AttackAtRange, offhand, player_target);
         }
+
+        Me.RestCounter = 0;
     }
 
 

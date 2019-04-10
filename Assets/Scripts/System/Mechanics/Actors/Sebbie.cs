@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Sebbie : TemplateVersatile
+public class Sebbie : TemplateMelee
 {
     // properties
 
@@ -22,20 +22,23 @@ public class Sebbie : TemplateVersatile
 
     public override void OnHostileActorsSighted()
     {
-        Me.Actions.Decider.FriendsInNeed.Clear();
-        Me.Actions.CloseWithEnemies();
+        Me.Actions.KeepEnemiesAtRange();
         AttackWithSpell();
+        Me.RestCounter = 0;
     }
 
 
     public override void OnInCombat()
     {
+        Me.Actions.KeepEnemiesAtRange();
         AttackWithSpell();
+        Me.RestCounter = 0;
     }
 
 
     public override void OnUnderAttack()
     {
+        Me.Actions.KeepEnemiesAtRange();
         AttackWithSpell();
         Me.RestCounter = 0;
     }
@@ -67,5 +70,6 @@ public class Sebbie : TemplateVersatile
         Me.Actions.Combat.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.Leather));
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
         RayOfFrost = gameObject.AddComponent<RayOfFrost>();
+        Me.Actions.Combat.CombatSpells.Add(Weapons.Instance.GetSpellNamed(Spell.SpellName.RayOfFrost));
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class RayOfFrost : MonoBehaviour
@@ -7,6 +8,7 @@ public class RayOfFrost : MonoBehaviour
 
     public bool Advantage { get; set; }
     public int AttackModifier { get; set; }
+    public GameObject Beam { get; set; }
     public bool Critical { get; set; }
     public int DamageModifier { get; set; }
     public Weapons.DamageType DamageType { get; set; }
@@ -42,6 +44,9 @@ public class RayOfFrost : MonoBehaviour
 
         if (Hit()) {
             ApplyDamage();
+            GameObject _impact = Instantiate(SpellEffects.Instance.physical_strike_prefab, Target.transform.position, SpellEffects.Instance.physical_strike_prefab.transform.rotation);
+            _impact.name = "Impact";
+            Destroy(_impact, 3f);
         }
     }
 
@@ -73,18 +78,11 @@ public class RayOfFrost : MonoBehaviour
 
     private void DisplayEffects()
     {
-        GameObject beam = new GameObject();
-        beam.transform.position = Me.GetInteractionPoint(Target);
-        beam.AddComponent<LineRenderer>();
-        LineRenderer lr = beam.GetComponent<LineRenderer>();
-        lr.material = Me.GetComponent<Interactable>().highlight_material; // TODO: create ray material
-        lr.startColor = Color.blue;
-        lr.endColor = Color.blue;
-        lr.startWidth = 0.1f;
-        lr.endWidth = 0.1f;
-        lr.SetPosition(0, Me.weapon_transform.position);
-        lr.SetPosition(1, Target.GetInteractionPoint(Me));
-        Destroy(beam, 1f);
+        if (Beam == null) {
+            Beam = new GameObject();
+            Beam.AddComponent<LineRenderer>();
+            StartCoroutine(MoveBeam());
+        }
     }
 
 
@@ -105,6 +103,30 @@ public class RayOfFrost : MonoBehaviour
         }
 
         return false;
+    }
+
+
+    private IEnumerator MoveBeam()
+    {
+        int tick = 0;
+        LineRenderer lr = Beam.GetComponent<LineRenderer>();
+        lr.material = Me.GetComponent<Interactable>().highlight_material; // TODO: create ray material
+        lr.startWidth = 0.2f;
+        lr.endWidth = 0.2f;
+        Destroy(Beam, 1f);
+
+        while (Beam != null) {
+            tick++;
+            Vector3 start = Me == null || Target == null ? Vector3.zero : Me.GetComponent<Collider>().ClosestPointOnBounds(Target.transform.position);
+            Vector3 stop = Target == null ? Vector3.zero : Target.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
+            if (start != Vector3.zero && stop != Vector3.zero) {
+                lr.SetPosition(0, start);
+                lr.SetPosition(1, stop);
+            } else {
+                break;
+            }
+            yield return null;
+        }
     }
 
 

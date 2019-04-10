@@ -43,7 +43,8 @@ public class Weapons : MonoBehaviour
         Trident,
         War_Pick,
         Warhammer,
-        Whip
+        Whip,
+        Spell
     };
 
     public enum DamageType {
@@ -90,6 +91,13 @@ public class Weapons : MonoBehaviour
 
 
     // public
+
+
+    public Weapon GetSpellNamed(Spell.SpellName name)
+    {
+        Weapon the_spell = weapons.First(weapon => weapon.GetComponent<Spell>() != null && weapon.GetComponent<Spell>().spell_name == name);
+        return the_spell;
+    }
 
 
     public Weapon GetWeaponNamed(WeaponName name, string qualifer = "")
