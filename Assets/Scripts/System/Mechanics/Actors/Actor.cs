@@ -73,6 +73,7 @@ public class Actor : MonoBehaviour
 
     public Vector3 GetInteractionPoint(Actor other_unit)
     {
+        if (other_unit == null || Me == null) return Vector3.zero;
         // The point on Me that other_unit will move to so that I am in their range
         Vector3 toward_approach = (other_unit.transform.position - transform.position).normalized * other_unit.Actions.Movement.ReachedThreshold;
         Vector3 interaction_point = GetComponent<Collider>().ClosestPointOnBounds(other_unit.transform.position) + toward_approach;
@@ -84,6 +85,7 @@ public class Actor : MonoBehaviour
 
     public IEnumerator GetStatsFromServer(string name)
     {
+        if (name == "Sebbie") name = "Goblin";
         UnityWebRequest www = UnityWebRequest.Get("http://localhost:3000/stat_blocks/" + name + ".json");
         JSON_StatBlock stat_block = new JSON_StatBlock();
         yield return www.SendWebRequest();

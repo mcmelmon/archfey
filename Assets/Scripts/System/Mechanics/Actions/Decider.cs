@@ -157,6 +157,7 @@ public class Decider : MonoBehaviour
 
     public GameObject TargetEnemy()
     {
+        IdentifyEnemies();
         RemoveSanctuaryTargets();
 
         if (AvailableMeleeTargets.Any() && AvailableMeleeTargets.Contains(Threat.PrimaryThreat()?.gameObject)) {
@@ -396,6 +397,7 @@ public class Decider : MonoBehaviour
 
         float melee_range = Me.Actions.Combat.MeleeRange();
         Weapon ranged_weapon = Me.Actions.Combat.EquippedRangedWeapon;
+        Weapon combat_spell = Me.Actions.Combat.CombatSpells.First(); // TODO: cycle through spells and choose the longest ranged.
 
         if (Enemies.Any()) {
             AvailableMeleeTargets.AddRange(Enemies
@@ -408,6 +410,15 @@ public class Decider : MonoBehaviour
             if (ranged_weapon != null) {
                 AvailableRangedTargets.AddRange(Enemies
                                                 .Where(actor => actor != null && Me.SeparationFrom(actor.transform) <= ranged_weapon.Range)
+                                                .OrderBy(actor => actor.Health.CurrentHitPoints)
+                                                .Select(actor => actor.gameObject)
+                                                .Distinct()
+                                                .ToList());
+            }
+
+            if (combat_spell != null) {
+                AvailableRangedTargets.AddRange(Enemies
+                                                .Where(actor => actor != null && Me.SeparationFrom(actor.transform) <= combat_spell.GetComponent<Spell>().range)
                                                 .OrderBy(actor => actor.Health.CurrentHitPoints)
                                                 .Select(actor => actor.gameObject)
                                                 .Distinct()
@@ -426,6 +437,14 @@ public class Decider : MonoBehaviour
             if (ranged_weapon != null) {
                 AvailableRangedTargets.AddRange(Me.Actions.Decider.HostileStructures
                                                 .Where(structure => Me.SeparationFrom(structure.transform) <= ranged_weapon.Range + Me.Actions.Movement.ReachedThreshold)
+                                                .Select(structure => structure.gameObject)
+                                                .Distinct()
+                                                .ToList());
+            }
+
+            if (combat_spell != null) {
+                AvailableRangedTargets.AddRange(Me.Actions.Decider.HostileStructures
+                                                .Where(structure => Me.SeparationFrom(structure.transform) <= combat_spell.GetComponent<Spell>().range + Me.Actions.Movement.ReachedThreshold)
                                                 .Select(structure => structure.gameObject)
                                                 .Distinct()
                                                 .ToList());

@@ -1,15 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SacredFlame : MonoBehaviour
 {
     // properties
 
-    public Actor Me { get; set; }
     public Weapons.DamageType DamageType { get; set; }
     public int Die { get; set; }
     public int Level { get; set; }
+    public Actor Me { get; set; }
     public int NumberOfDice { get; set; }
     public float Range { get; set; }
     public Magic.School School { get; set; }

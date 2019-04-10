@@ -11,6 +11,7 @@ public class Combat : MonoBehaviour
     public Melee AttackInMelee { get; set; }
     public int AttacksPerAction { get; set; }
     public AdditionalDamage CalculateAdditionalDamage { get; set; }
+    public List<Weapon> CombatSpells { get; set; }
     public int CriticalRangeStart { get; set; }
     public bool Engaged { get; set; }
     public Armor EquippedArmor { get; set; }
@@ -126,7 +127,7 @@ public class Combat : MonoBehaviour
 
     public void StrikeEnemy(GameObject target, bool is_ranged, bool offhand = false, bool player_target = false)
     {
-        if (target == null) return;
+        if (target == null || (EquippedMeleeWeapon == null && EquippedRangedWeapon == null)) return;
 
         if (player_target) {
             StrikePlayerChoice(target, is_ranged, offhand);
@@ -156,6 +157,7 @@ public class Combat : MonoBehaviour
     {
         AttacksPerAction = 1;
         CalculateAdditionalDamage = DefaultAdditionalDamage;
+        CombatSpells = new List<Weapon>();
         CriticalRangeStart = 20;
         Engaged = false;
         Me = GetComponentInParent<Actor>();
