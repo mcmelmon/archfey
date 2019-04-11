@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Player : MonoBehaviour, IAct {
 
@@ -38,7 +37,7 @@ public class Player : MonoBehaviour, IAct {
     {
         SetComponents();
         SetNormalState();
-        //Enrage();
+        Enrage();
         SetSkills();
 
         StartCoroutine(AdjustCameraDistance());

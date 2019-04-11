@@ -154,7 +154,7 @@ public class Actor : MonoBehaviour
 
     public bool IsPlayer()
     {
-        return Me == Player.Instance.Me;
+        return Me.GetComponent<Player>() != null;
     }
 
 
@@ -175,9 +175,7 @@ public class Actor : MonoBehaviour
             my_closest_point_to_them = GetComponent<Collider>().ClosestPointOnBounds(actor.transform.position);
             my_bottom = GetComponent<Collider>().bounds.min;
             separation = Vector3.Distance(new Vector3(my_closest_point_to_them.x, my_bottom.y, my_closest_point_to_them.z), new Vector3(their_closest_point_to_me.x, their_bottom.y, their_closest_point_to_me.z));
-        }
-        else if (structure != null)
-        {
+        } else if (structure != null) {
             structure_interaction_point = structure.GetInteractionPoint(Me);
             separation = Vector3.Distance(structure_interaction_point, transform.position);
         }
