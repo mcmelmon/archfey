@@ -270,7 +270,7 @@ public class Decider : MonoBehaviour
 
     private bool HasObjective()
     {
-        return !AchievedAllObjectives && Goal != null;
+        return !AchievedAllObjectives && Goal != null && previous_state != State.ReachedGoal;
     }
 
 
@@ -311,13 +311,16 @@ public class Decider : MonoBehaviour
 
     private bool Medic()
     {
-        return Me.Magic != null && Me.Magic.HaveSpellSlot(Magic.Level.First) && IdentifyFriends().Any(friend => friend.Health.BadlyInjured());
+        bool can_cast = Me.Magic != null && Me.Magic.HaveSpellSlot(Magic.Level.First);
+        bool wounded_friend = IdentifyFriends().Any(friend => friend.Health.BadlyInjured());
+
+        return can_cast && wounded_friend;
     }
 
 
     private bool Moving()
     {
-        return Me.Actions.Movement.InProgress();
+        return Me.Actions.Movement.InProgress() && previous_state != State.ReachedGoal;
     }
 
 
@@ -334,7 +337,7 @@ public class Decider : MonoBehaviour
     {
         if (Goal != null) {
             float separation = Vector3.Distance(transform.position, Goal.transform.position);
-            return separation < Goal.influence_zone_radius;
+            return previous_state != State.ReachedGoal && separation < Goal.influence_zone_radius;
         } 
 
         return (previous_state == State.MovingToGoal || previous_state == State.FullLoad || previous_state == State.Idle) && !Me.Actions.Movement.InProgress();
@@ -397,7 +400,7 @@ public class Decider : MonoBehaviour
 
         float melee_range = Me.Actions.Combat.MeleeRange();
         Weapon ranged_weapon = Me.Actions.Combat.EquippedRangedWeapon;
-        Weapon combat_spell = Me.Actions.Combat.CombatSpells.First(); // TODO: cycle through spells and choose the longest ranged.
+        Weapon combat_spell = Me.Actions.Combat.CombatSpells.FirstOrDefault(); // TODO: cycle through spells and choose the longest ranged.
 
         if (Enemies.Any()) {
             AvailableMeleeTargets.AddRange(Enemies

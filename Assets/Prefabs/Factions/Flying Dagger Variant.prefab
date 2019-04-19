@@ -15,7 +15,7 @@ PrefabInstance:
     - target: {fileID: 3266668026256983198, guid: 8f235e1a43a41495d91c3cb637668d39,
         type: 3}
       propertyPath: rivals.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3266668026256983198, guid: 8f235e1a43a41495d91c3cb637668d39,
         type: 3}
@@ -53,6 +53,12 @@ PrefabInstance:
       propertyPath: rivals.Array.data[1]
       value: 
       objectReference: {fileID: 5947408550990878629, guid: 295e5e8edd4294599b7dade0b81c59b3,
+        type: 3}
+    - target: {fileID: 3266668026256983198, guid: 8f235e1a43a41495d91c3cb637668d39,
+        type: 3}
+      propertyPath: rivals.Array.data[2]
+      value: 
+      objectReference: {fileID: 5977216355613215229, guid: 0db6a0df10aa441d38b5cc3a870fedb3,
         type: 3}
     - target: {fileID: 7491154403795611845, guid: 8f235e1a43a41495d91c3cb637668d39,
         type: 3}

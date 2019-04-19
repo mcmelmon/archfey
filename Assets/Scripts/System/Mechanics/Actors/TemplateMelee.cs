@@ -63,7 +63,7 @@ public class TemplateMelee : MonoBehaviour, IAct
             return;
         }
 
-        ClaimNode target_node = PickNodeFromObjective(Me.Actions.Decider.Objectives.First());
+        ClaimNode target_node = Me.Actions.Decider.Goal ?? PickNodeFromObjective(Me.Actions.Decider.Objectives.First());
 
         if (target_node != null) {
             Me.Actions.Decider.AchievedAllObjectives = false;
@@ -99,9 +99,8 @@ public class TemplateMelee : MonoBehaviour, IAct
 
         if (Me.Route.local_stops.Length > 1){
             Me.Route.MoveToNextPosition();
-        } else if (Me.Actions.Decider.Goal == null && !Me.Actions.Decider.Objectives.Any()) {
-            PickRandomObjective(); // If the unit already has an objective, it is handled by OnHasObjective
-                                   // If there are no available objectives, the unit moves home
+        } else if (Me.Actions.Decider.Objectives.Any() && !Me.Actions.Decider.AchievedAllObjectives) {
+            PickRandomObjective();
         }
     }
 

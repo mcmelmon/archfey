@@ -12,6 +12,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Main/Splash.unity
     guid: beaf974eaf5684137b35057fb278a9b5
   - enabled: 1
-    path: Assets/Scenes/Main/Space.unity
-    guid: f9e34320772c94bda8dd3bd04d94e565
+    path: Assets/Scenes/Main/Cannery.unity
+    guid: 3d8f13dfe87064143a1d35cdf08c20ee
   m_configObjects: {}
