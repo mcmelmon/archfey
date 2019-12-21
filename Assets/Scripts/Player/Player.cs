@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class Player : MonoBehaviour, IAct {
 
@@ -160,10 +161,23 @@ public class Player : MonoBehaviour, IAct {
     private IEnumerator HandleMovement()
     {
         while (true) {
-            float translation = Input.GetAxis("Vertical") * Me.Actions.Movement.GetAdjustedSpeed() * Time.deltaTime;
-            float straffe = Input.GetAxis("Straffe") * Me.Actions.Movement.GetAdjustedSpeed() * Time.deltaTime;
-            float rotation = Input.GetAxis("Horizontal") * 60f * Time.deltaTime;
-            
+
+            // Touch to move
+            //if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) {
+            //    Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
+            //    int ground_mask = LayerMask.GetMask("Ground");
+
+            //    if (Physics.Raycast(ray, out RaycastHit hit, 150f, ground_mask, QueryTriggerInteraction.Ignore)) {
+            //        Me.Actions.Movement.SetDestination(hit.point);
+            //    }
+            //}
+
+            float rotation, straffe, translation;
+
+            translation = CrossPlatformInputManager.GetAxis("Vertical") * Me.Actions.Movement.GetAdjustedSpeed() * Time.deltaTime;
+            straffe = CrossPlatformInputManager.GetAxis("Straffe") * Me.Actions.Movement.GetAdjustedSpeed() * Time.deltaTime;
+            rotation = CrossPlatformInputManager.GetAxis("Horizontal") * 60f * Time.deltaTime;
+
             if (!Mathf.Approximately(0, translation) || !Mathf.Approximately(0, straffe)) {
                 Me.Actions.CanTakeAction = false;
             }
