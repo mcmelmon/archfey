@@ -217,6 +217,16 @@ public class Actions : MonoBehaviour
     }
 
 
+    public void Search()
+    {
+        // TODO: get a list of anything interesting within range
+        // compare the difficulty of finding it with the skill check roll
+
+        int roll = SkillCheck(true, Proficiencies.Skill.Perception);
+        Debug.Log("Search roll: " + roll);
+    }
+
+
     public void SheathWeapon()
     {
         Combat.Engaged = false;

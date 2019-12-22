@@ -87,14 +87,16 @@ public class Stats : MonoBehaviour
 
     public void UpdateStatBars()
     {
-        if (rage_bar != null) {
-            rage_bar.value = CurrentRagePercentage();
-            if (rage_bar.value >= 1) {
-                rage_bar.gameObject.SetActive(false);
-            } else {
-                rage_bar.gameObject.SetActive(true);
-            }
-        }
+        // Story doesn't have Rage anymore, but may add an altered state
+        
+        // if (rage_bar != null) {
+        //     rage_bar.value = CurrentRagePercentage();
+        //     if (rage_bar.value >= 1) {
+        //         rage_bar.gameObject.SetActive(false);
+        //     } else {
+        //         rage_bar.gameObject.SetActive(true);
+        //     }
+        // }
 
         if (health_bar != null) {
             health_bar.value = Me.Health.CurrentHealthPercentage();

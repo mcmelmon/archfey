@@ -6,8 +6,10 @@ public class World : MonoBehaviour {
 
     // Inspector settings
 
-    public bool battleground;
     public Light the_sun;
+    public Vector3 sun_angle = new Vector3(45, 70, 0);
+    public bool generate_map = false;
+
 
 
     // properties
@@ -26,9 +28,12 @@ public class World : MonoBehaviour {
             return;
         }
         Instance = this;
-        Vector3 sun_rotation = new Vector3(45, 70, 0);
-        the_sun.transform.rotation = Quaternion.Euler(sun_rotation);
+        the_sun.transform.rotation = Quaternion.Euler(sun_angle);
 
+    }
+
+    private void Start() {
+        CreateTheWorld();
     }
 
 
@@ -38,5 +43,13 @@ public class World : MonoBehaviour {
     public Light Sun()
     {
         return the_sun;
+    }
+
+    // private
+
+    private void CreateTheWorld()
+    {
+        if (generate_map) GetComponentInChildren<Map>().DrawMap();
+        // GetComponentInChildren<Conflict>().Hajime();
     }
 }

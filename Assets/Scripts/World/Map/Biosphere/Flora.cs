@@ -6,7 +6,7 @@ public class Flora : MonoBehaviour {
 
     // Inspector settings
 
-    public Tree tree_prefab;
+    public GameObject tree_prefab;
     public float tree_coverage;
     public int canopy_layers;
     public List<Canopy> leaves = new List<Canopy>();
@@ -26,7 +26,7 @@ public class Flora : MonoBehaviour {
     public int Depth { get; set; }
     public GameObject[] ForestLayers { get; set; }
     public static Flora Instance { get; set; }
-    public List<Tree> Trees { get; set; }
+    public List<GameObject> Trees { get; set; }
     public int Width { get; set; }
 
 
@@ -50,7 +50,7 @@ public class Flora : MonoBehaviour {
     {
         SetComponents();
         PlantTrees();
-        //CarpetForest();
+        CarpetForest();
         CoverForest();
     }
 
@@ -72,7 +72,7 @@ public class Flora : MonoBehaviour {
         float[,] _carpet = noise.GenerateNoiseMap(Width, Depth, seed, scale, octaves, persistance, lacunarity, offset);
         Carpet = Layer(_carpet);
         Carpet.transform.localScale = new Vector3(75, 1, 75);
-        Carpet.transform.position = new Vector3(Geography.Instance.GetResolution() / 2f, 100.1f, Geography.Instance.GetResolution() / 2f);
+        Carpet.transform.position = new Vector3(Geography.Instance.GetResolution() / 2f, 1f, Geography.Instance.GetResolution() / 2f);
         Carpet.name = "Carpet";
     }
 
@@ -141,7 +141,12 @@ public class Flora : MonoBehaviour {
     private void PlantTrees()
     {
         int number_of_trees = Mathf.RoundToInt((Geography.Instance.GetResolution()) * (tree_coverage / 100f));
-
+        for (int i = 0; i < number_of_trees; i++) {
+            Vector3 position = Geography.Instance.RandomLocation();
+            Quaternion rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
+            GameObject _tree = Instantiate(tree_prefab, position, rotation, transform);
+            Trees.Add(_tree);
+        }
     }
 
 
@@ -149,7 +154,7 @@ public class Flora : MonoBehaviour {
     {
         Depth = Geography.Instance.GetResolution();
         ForestLayers = new GameObject[canopy_layers];
-        Trees = new List<Tree>();
+        Trees = new List<GameObject>();
         Width = Depth;
     }
 }
