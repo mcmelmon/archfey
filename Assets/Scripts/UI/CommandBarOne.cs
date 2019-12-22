@@ -17,6 +17,7 @@ public class CommandBarOne : MonoBehaviour {
     public GameObject performance_action;
     public GameObject pick_lock_action;
     public GameObject rage_action;
+    public GameObject search_action;
     public GameObject sleight_action;
     public GameObject smite_action;
     public GameObject talk_action;
@@ -38,6 +39,7 @@ public class CommandBarOne : MonoBehaviour {
     public Button PerformanceButton { get; set; }
     public Button PickLockButton { get; set; }
     public Button RageButton { get; set; }
+    public Button SearchButton { get; set; }
     public Button SleightButton { get; set; }
     public Button SmiteButton { get; set; }
     public Button TalkButton { get; set; }
@@ -178,6 +180,15 @@ public class CommandBarOne : MonoBehaviour {
     }
 
 
+    public void Search()
+    {
+        if ((Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction) && SearchButton.interactable) {
+            Me.Actions.CanTakeAction = false;
+            Me.Actions.Search();
+        }
+    }
+
+
     public void SleightOfHand()
     {
         if ((Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction) && SleightButton.interactable) {
@@ -268,6 +279,10 @@ public class CommandBarOne : MonoBehaviour {
 
                 if (RageButton != null) {
                     RageButton.interactable = Me.ExhaustionLevel == 0;
+                }
+
+                if (SearchButton != null) {
+                    SearchButton.interactable = Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction;
                 }
 
                 if (SleightButton != null && Mouse.SelectedObjects != null) {
@@ -400,22 +415,26 @@ public class CommandBarOne : MonoBehaviour {
     {
         Me = player.GetComponent<Actor>();
 
-        AllActions = new List<GameObject> { attack_action, dash_action, rage_action, smite_action, hide_action, talk_action };
+        AllActions = new List<GameObject> { attack_action, dash_action, disengage_action, hide_action, performance_action, pick_lock_action, rage_action, search_action, sleight_action, smite_action, talk_action  };
         AttackButton = attack_action.GetComponent<Button>();
         DashButton = dash_action.GetComponent<Button>();
         DisengageButton = disengage_action.GetComponent<Button>();
+        HideButton = hide_action.GetComponent<Button>();
         OnCooldown = new List<Button>();
         OffhandButton = offhand_action.GetComponent<Button>();
         PerformanceButton = performance_action.GetComponent<Button>();
         PickLockButton = pick_lock_action.GetComponent<Button>();
         RageButton = rage_action.GetComponent<Button>();
+        SearchButton = search_action.GetComponent<Button>();
         SleightButton = sleight_action.GetComponent<Button>();
         SmiteButton = smite_action.GetComponent<Button>();
-        HideButton = hide_action.GetComponent<Button>();
         TalkButton = talk_action.GetComponent<Button>();
 
         ButtonSets = new Dictionary<string, List<Button>>
         {
+            // In new story, only have "druid" role at moment, but may add other roles
+
+            ["Druid"] = new List<Button> { AttackButton, HideButton, SearchButton },
             ["Thief"] = new List<Button> { AttackButton, OffhandButton, DashButton, DisengageButton, HideButton, PickLockButton, SleightButton, PerformanceButton, TalkButton, RageButton },
             ["Warlock"] = new List<Button> { AttackButton, SmiteButton, TalkButton }
         };

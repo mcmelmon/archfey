@@ -153,12 +153,12 @@ public class Workshop : MonoBehaviour
 
     private void SpawnArtisanFor(Industry.Product _product)
     {
-        Actor primary_artistan;
-        Structure random_residence = FindObjectsOfType<Structure>()
-            .Where(s => s.alignment == Storage.Structure.alignment && s.purpose == Structure.Purpose.Residential && s.GetComponent<HarvestingNode>() == null)
-            .OrderBy(s => UnityEngine.Random.value)
-            .ToList()
-            .First();
+        // Actor primary_artistan;
+        // Structure random_residence = FindObjectsOfType<Structure>()
+        //     .Where(s => s.alignment == Storage.Structure.alignment && s.purpose == Structure.Purpose.Residential && s.GetComponent<HarvestingNode>() == null)
+        //     .OrderBy(s => UnityEngine.Random.value)
+        //     .ToList()
+        //     .First();
 
         // TODO: this needs to be handled by Spawners now
 

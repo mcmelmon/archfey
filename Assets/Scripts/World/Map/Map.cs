@@ -12,8 +12,6 @@ public class Map : MonoBehaviour {
 
     public Dictionary<Cardinal, Vector3[]> Boundaries { get; set; }
     public static Map Instance { get; set; }  // singletons may become an issue when we move on to the next "level" 
-    public static Terrain Terrain { get; set; }
-
 
     public struct HeavenAndEarth
     {
@@ -69,7 +67,7 @@ public class Map : MonoBehaviour {
             if (boundary.Key == Cardinal.East || boundary.Key == Cardinal.West) wall.transform.rotation = Quaternion.Euler(new Vector3(0, 90, 90));
 
             if (boundary.Key == Cardinal.Sky) {
-                wall.transform.position = new Vector3(Terrain.terrainData.heightmapResolution / 2, sky_height, Terrain.terrainData.heightmapResolution / 2);
+                wall.transform.position = new Vector3(Geography.Instance.GetResolution() / 2, sky_height, Geography.Instance.GetResolution() / 2);
                 wall.transform.rotation = Quaternion.Euler(new Vector3(90, 0, 90));
             } else {
                 wall.transform.position = boundary.Value[0] + heading / 2;
@@ -105,7 +103,6 @@ public class Map : MonoBehaviour {
 
     private void SetComponents()
     {
-        Terrain = GetComponentInChildren<Terrain>();
         Boundaries = new Dictionary<Cardinal, Vector3[]>();
     }
 

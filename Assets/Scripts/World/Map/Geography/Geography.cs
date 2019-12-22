@@ -6,7 +6,7 @@ using UnityEditor;
 
 public class Geography : MonoBehaviour {
 
-    public enum GridType { Unit = 0 };
+    public enum GridType { Unit };
 
     public static int unit_spacing = 8;
 

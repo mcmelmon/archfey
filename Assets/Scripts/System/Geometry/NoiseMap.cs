@@ -52,7 +52,8 @@ public class NoiseMap : MonoBehaviour
         texture.SetPixels(colors);
         texture.Apply();
 
-        plane.sharedMaterial.mainTexture = texture;
+        Debug.Log("Plane: " + plane.material.mainTexture);
+        plane.material.mainTexture = texture;
         plane.transform.localScale = new Vector3(width, 1, depth);
     }
 }
