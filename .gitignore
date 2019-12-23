@@ -5,6 +5,7 @@
 [Bb]uilds/
 Assets/AssetStoreTools*
 Assets/Terrain/TerrainTools
+Assets/ImportedAssets
 
 # Visual Studio cache directory
 .vs/

@@ -169,31 +169,34 @@ public class Player : MonoBehaviour, IAct {
     {
         while (true) {
 
+            // TODO: Use the new InputSystem
+
+
             // Touch to move
-            //if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) {
-            //    Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
-            //    int ground_mask = LayerMask.GetMask("Ground");
+            if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) {
+               Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
+               int ground_mask = LayerMask.GetMask("Ground");
 
-            //    if (Physics.Raycast(ray, out RaycastHit hit, 150f, ground_mask, QueryTriggerInteraction.Ignore)) {
-            //        Me.Actions.Movement.SetDestination(hit.point);
-            //    }
-            //}
+               if (Physics.Raycast(ray, out RaycastHit hit, 150f, ground_mask, QueryTriggerInteraction.Ignore)) {
+                   Me.Actions.Movement.SetDestination(hit.point);
+               }
+            } else {
+                float rotation, straffe, translation;
 
-            float rotation, straffe, translation;
+                translation = CrossPlatformInputManager.GetAxis("Vertical") * Me.Actions.Movement.GetAdjustedSpeed() * Time.deltaTime;
+                straffe = CrossPlatformInputManager.GetAxis("Straffe") * Me.Actions.Movement.GetAdjustedSpeed() * Time.deltaTime;
+                rotation = CrossPlatformInputManager.GetAxis("Horizontal") * 60f * Time.deltaTime;
 
-            translation = CrossPlatformInputManager.GetAxis("Vertical") * Me.Actions.Movement.GetAdjustedSpeed() * Time.deltaTime;
-            straffe = CrossPlatformInputManager.GetAxis("Straffe") * Me.Actions.Movement.GetAdjustedSpeed() * Time.deltaTime;
-            rotation = CrossPlatformInputManager.GetAxis("Horizontal") * 60f * Time.deltaTime;
+                if (!Mathf.Approximately(0, translation) || !Mathf.Approximately(0, straffe)) {
+                    Me.Actions.CanTakeAction = false;
+                }
 
-            if (!Mathf.Approximately(0, translation) || !Mathf.Approximately(0, straffe)) {
-                Me.Actions.CanTakeAction = false;
-            }
+                transform.Translate(straffe, 0, translation);
+                transform.Rotate(0, rotation, 0);
 
-            transform.Translate(straffe, 0, translation);
-            transform.Rotate(0, rotation, 0);
-
-            if (Me.IsGrounded() && Input.GetKeyDown(KeyCode.Space)) {
-                Me.Actions.Movement.Jump();
+                if (Me.IsGrounded() && Input.GetKeyDown(KeyCode.Space)) {
+                    Me.Actions.Movement.Jump();
+                }
             }
 
             yield return null;
