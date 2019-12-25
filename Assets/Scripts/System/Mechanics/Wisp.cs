@@ -63,6 +63,7 @@ class Wisp : MonoBehaviour
                 path.Add(CreateBreadcrumb(point));
             }
             looping_path = true;
+            transform.position = path[0].position;
             current_objective = path[0];
         }
     }
@@ -80,14 +81,14 @@ class Wisp : MonoBehaviour
     }
 
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawRay(transform.position, transform.TransformDirection(Vector3.forward * 100));
+    // private void OnDrawGizmos()
+    // {
+    //     Gizmos.color = Color.red;
+    //     Gizmos.DrawRay(transform.position, transform.TransformDirection(Vector3.forward * 100));
 
-        Gizmos.color = Color.blue;
-        Gizmos.DrawRay(transform.position, (current_objective.position - transform.position));
-    }
+    //     Gizmos.color = Color.blue;
+    //     Gizmos.DrawRay(transform.position, (current_objective.position - transform.position));
+    // }
 
 
     // public
@@ -103,7 +104,7 @@ class Wisp : MonoBehaviour
 
     public void Move()
     {
-        float terrain_height = Geography.Terrain != null ? Geography.Terrain.SampleHeight(current_objective.position) : current_objective.position.y;
+        // float terrain_height = Geography.Terrain != null ? Geography.Terrain.SampleHeight(current_objective.position) : current_objective.position.y;
 
         Vector3 forward_motion = transform.TransformDirection(Vector3.forward);
         forward_motion.y = 0;
@@ -118,7 +119,8 @@ class Wisp : MonoBehaviour
 
         Vector3 new_position = (forward_motion) * 3f * Time.deltaTime;
         transform.position += new_position;
-        transform.position = new Vector3(transform.position.x, terrain_height, transform.position.z);
+        // transform.position = new Vector3(transform.position.x, terrain_height, transform.position.z);
+        transform.position = FindSurface(transform.position);
         current_objective.remaining_distance = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(current_objective.position.x, 0, current_objective.position.z));
     }
 
@@ -154,6 +156,18 @@ class Wisp : MonoBehaviour
         //GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
         //cube.name = "Crumb";
         //cube.transform.position = last_crumb.position;
+    }
+
+
+    Vector3 FindSurface(Vector3 position)
+    {
+        Vector3 above = position + Vector3.up * 500f;
+        RaycastHit hit;
+        if (Physics.Raycast(above, Vector3.down, out hit, Mathf.Infinity)) {
+            // Debug.DrawRay(above, transform.TransformDirection(Vector3.down) * hit.distance, Color.yellow);
+            return hit.point + Vector3.up * 2;
+        }
+        return position;
     }
 
 

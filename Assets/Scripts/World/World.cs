@@ -6,10 +6,7 @@ public class World : MonoBehaviour {
 
     // Inspector settings
 
-    public Light the_sun;
-    public Vector3 sun_angle = new Vector3(45, 70, 0);
     public bool generate_map = false;
-
 
 
     // properties
@@ -28,22 +25,11 @@ public class World : MonoBehaviour {
             return;
         }
         Instance = this;
-        the_sun.transform.rotation = Quaternion.Euler(sun_angle);
-
-    }
-
-    private void Start() {
-        CreateTheWorld();
     }
 
 
     // public
 
-
-    public Light Sun()
-    {
-        return the_sun;
-    }
 
     // private
 

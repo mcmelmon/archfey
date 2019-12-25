@@ -83,7 +83,7 @@ public class Geography : MonoBehaviour {
 
     public Vector3 GetCenter()
     {
-        return new Vector3(TerrainData.heightmapResolution / 2, 0, TerrainData.heightmapResolution / 2);  // TODO: sample height
+        return new Vector3(TerrainData.size.x / 2, 0, TerrainData.size.z / 2);  // TODO: sample height
     }
 
 
