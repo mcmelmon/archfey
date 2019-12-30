@@ -181,17 +181,17 @@ public class Player : MonoBehaviour, IAct {
                    Me.Actions.Movement.SetDestination(hit.point);
                }
             } else {
-                float rotation, straffe, translation;
+                float rotation, strafe, translation;
 
                 translation = CrossPlatformInputManager.GetAxis("Vertical") * Me.Actions.Movement.GetAdjustedSpeed() * Time.deltaTime;
-                straffe = CrossPlatformInputManager.GetAxis("Straffe") * Me.Actions.Movement.GetAdjustedSpeed() * Time.deltaTime;
+                strafe = CrossPlatformInputManager.GetAxis("Strafe") * Me.Actions.Movement.GetAdjustedSpeed() * Time.deltaTime;
                 rotation = CrossPlatformInputManager.GetAxis("Horizontal") * 60f * Time.deltaTime;
 
-                if (!Mathf.Approximately(0, translation) || !Mathf.Approximately(0, straffe)) {
+                if (!Mathf.Approximately(0, translation) || !Mathf.Approximately(0, strafe)) {
                     Me.Actions.CanTakeAction = false;
                 }
 
-                transform.Translate(straffe, 0, translation);
+                transform.Translate(strafe, 0, translation);
                 transform.Rotate(0, rotation, 0);
 
                 if (Me.IsGrounded() && Input.GetKeyDown(KeyCode.Space)) {
