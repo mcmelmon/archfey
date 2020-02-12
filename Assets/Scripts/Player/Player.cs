@@ -69,22 +69,6 @@ public class Player : MonoBehaviour, IAct {
     }
 
 
-    public void Enrage()
-    {
-        // The new story is unlikely to include "rage" per se, but we may want to switch between some kind of altered state
-
-        GodOfRage = true;
-        SetSkills();
-        Me.Actions.Movement.AdjustSpeed(0.1f); // results in 20 percent boost
-        Me.Health.GainTemporaryHitPoints(100);
-        Me.Stats.AdjustAttribute(Proficiencies.Attribute.Constitution, 5);
-        Me.Stats.AdjustAttribute(Proficiencies.Attribute.Dexterity, -3);
-        Me.Stats.AdjustAttribute(Proficiencies.Attribute.Strength, 5);
-
-        StartCoroutine(GodOfRageCountdown());
-    }
-
-
     public void OnBadlyInjured() { }
     public void OnCrafting() { }
     public void OnFriendsInNeed() { }
@@ -150,21 +134,6 @@ public class Player : MonoBehaviour, IAct {
     }
 
 
-    private IEnumerator GodOfRageCountdown()
-    {
-        // In the new story, the player is unlikely to enrage...
-
-        Me.Stats.RageTick = 0;
-
-        while (GodOfRage && Me.Stats.RageTick < Me.Stats.RageDuration) {
-            Me.Stats.RageTick++;
-            yield return new WaitForSeconds(1);
-        }
-
-        Unrage();
-    }
-
-
     private IEnumerator HandleMovement()
     {
         while (true) {
@@ -221,28 +190,28 @@ public class Player : MonoBehaviour, IAct {
     private void SetNormalState()
     {
         Me.Stats.BaseArmorClass = 10;
-        Me.Stats.BaseAttributes[Proficiencies.Attribute.Charisma] = 0;
-        Me.Stats.BaseAttributes[Proficiencies.Attribute.Constitution] = 2;
-        Me.Stats.BaseAttributes[Proficiencies.Attribute.Dexterity] = 3;
-        Me.Stats.BaseAttributes[Proficiencies.Attribute.Intelligence] = 2;
-        Me.Stats.BaseAttributes[Proficiencies.Attribute.Strength] = 0;
-        Me.Stats.BaseAttributes[Proficiencies.Attribute.Wisdom] = 5;
+        Me.Stats.Attributes[Proficiencies.Attribute.Charisma] = 10;
+        Me.Stats.Attributes[Proficiencies.Attribute.Constitution] = 10;
+        Me.Stats.Attributes[Proficiencies.Attribute.Dexterity] = 10;
+        Me.Stats.Attributes[Proficiencies.Attribute.Intelligence] = 10;
+        Me.Stats.Attributes[Proficiencies.Attribute.Strength] = 10;
+        Me.Stats.Attributes[Proficiencies.Attribute.Wisdom] = 10;
 
-        Me.Senses.Darkvision = true;
+        Me.Senses.Darkvision = false;
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
 
-        Me.Health.HitDice = 7;
+        Me.Health.HitDice = 1;
         Me.Health.HitDiceType = 8;
         Me.Health.SetCurrentAndMaxHitPoints();
-        Me.Stats.ProficiencyBonus = 3;
-        Me.Stats.Family = "Humanoid";
-        Me.Stats.Size = "Medium";
+        Me.Stats.ProficiencyBonus = 2;
+        Me.Stats.Family = Stats.CreatureFamily.Humanoid;
+        Me.Stats.Subfamily = Stats.CreatureSubfamily.Human;
+        Me.Stats.Size = Stats.Sizes.Medium;
 
         Me.Actions.Movement.ReachedThreshold = 2f;
         Me.Actions.Movement.BaseSpeed = 5;
         Me.Actions.Movement.Agent.speed = 5;
 
-        Me.Actions.Combat.Raging = false;
         Me.Actions.Combat.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.Leather));
 
         Me.Actions.Combat.CalculateAdditionalDamage = AdditionalDamage;
@@ -257,53 +226,18 @@ public class Player : MonoBehaviour, IAct {
         Me.Stats.Skills.Clear();
         Me.Stats.Tools.Clear();
 
-        if (GodOfRage) {
-            // The new story is unlikely to include "rage" per se, but we may want to switch between some kind of altered state
+        Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Intelligence);
+        Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Wisdom);
 
-            Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Constitution);
-            Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Dexterity);
-            Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Strength);
+        Me.Stats.ClassFeatures.Add("Druid State Class Feature");  // TODO: the features will provide benefits after "leveling up"
+        Me.Stats.ExpertiseInSkills.Add(Proficiencies.Skill.Insight);
 
-            Me.Stats.ClassFeatures.Add("Altered State Class Feature");
+        Me.Stats.Skills.Add(Proficiencies.Skill.Insight);
+        Me.Stats.Skills.Add(Proficiencies.Skill.Perception);
+        Me.Stats.Tools.Add(Proficiencies.Tool.Herbalist);
 
-            Me.Actions.Combat.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Battleaxe, "lost_eye_axe"));
-            Me.Actions.Combat.AttacksPerAction = 2;
-            Me.Actions.Combat.Raging = true;
-
-            CommandBarOne.Instance.ActivateButtonSet("Warlock");
-            if (EldritchSmite == null) EldritchSmite = gameObject.AddComponent<EldritchSmite>();
-        }
-        else {
-            Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Intelligence);
-            Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Wisdom);
-
-            Me.Stats.ClassFeatures.Add("Druid State Class Feature");  // TODO: the features will provide benefits after "leveling up"
-            Me.Stats.ExpertiseInSkills.Add(Proficiencies.Skill.Insight);
-
-            Me.Stats.Skills.Add(Proficiencies.Skill.Insight);
-            Me.Stats.Skills.Add(Proficiencies.Skill.Perception);
-            Me.Stats.Tools.Add(Proficiencies.Tool.Herbalist);
-
-            Me.Actions.Combat.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Quarterstaff));
-            Me.Actions.Combat.AttacksPerAction = 1;
-            Me.Actions.Combat.Raging = false;
-            CommandBarOne.Instance.ActivateButtonSet("Druid");
-        }
-    }
-
-
-    private void Unrage()
-    {
-        // The new story is unlikely to include "rage" per se, but we may want to switch between some kind of altered state
-        GodOfRage = false;
-        Me.Actions.SheathWeapon();
-        Me.Health.ClearTemporaryHitPoints();
-        Me.Actions.Movement.ResetSpeed();
-        Me.ExhaustionLevel++;
-        Me.Stats.AdjustAttribute(Proficiencies.Attribute.Constitution, -5);
-        Me.Stats.AdjustAttribute(Proficiencies.Attribute.Dexterity, 3);
-        Me.Stats.AdjustAttribute(Proficiencies.Attribute.Strength, -5);
-
-        SetSkills();
+        Me.Actions.Combat.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Quarterstaff));
+        Me.Actions.Combat.AttacksPerAction = 1;
+        CommandBarOne.Instance.ActivateButtonSet("Druid");
     }
 }

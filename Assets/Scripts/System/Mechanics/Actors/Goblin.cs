@@ -23,7 +23,6 @@ public class Goblin : TemplateMelee
     private void SetStats()
     {
         Me = GetComponent<Actor>();
-        StartCoroutine(Me.GetStatsFromServer(this.GetType().Name));
         SetAdditionalStats();
     }
 

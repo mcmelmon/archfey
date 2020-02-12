@@ -28,7 +28,6 @@ public class HalfOgre : TemplateMelee
     private void SetStats()
     {
         Me = GetComponent<Actor>();
-        StartCoroutine(Me.GetStatsFromServer("Half Ogre"));
         SetAdditionalStats();
     }
 

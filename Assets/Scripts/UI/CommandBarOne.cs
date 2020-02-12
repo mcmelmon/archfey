@@ -130,16 +130,6 @@ public class CommandBarOne : MonoBehaviour {
     }
 
 
-    public void Rage()
-    {
-        if (Me.Actions.CanTakeAction && RageButton.interactable) {
-            if (!Player.Instance.GodOfRage) {
-                Player.Instance.Enrage();
-            }
-        }
-    }
-
-
     public void Offhand()
     {
         if (Me.Actions.CanTakeBonusAction && OffhandButton.interactable && Mouse.SelectedObjects != null) {

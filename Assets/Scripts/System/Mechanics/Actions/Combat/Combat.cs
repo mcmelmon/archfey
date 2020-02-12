@@ -19,8 +19,6 @@ public class Combat : MonoBehaviour
     public Weapon EquippedRangedWeapon { get; set; }
     public Weapon EquippedOffhand { get; set; }
     public Actor Me { get; set; }
-    public bool Raging { get; set; }
-
 
     // Unity
 

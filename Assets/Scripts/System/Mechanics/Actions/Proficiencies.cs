@@ -5,7 +5,7 @@ using UnityEngine;
 public class Proficiencies : MonoBehaviour
 {
 
-    public enum Attribute { Charisma = 0, Dexterity = 1, Constitution = 2, Intelligence = 3, Strength = 4, Wisdom = 5 };
+    public enum Attribute { Charisma, Dexterity, Constitution, Intelligence, Strength, Wisdom };
 
     public enum Skill { 
         Acrobatics,
