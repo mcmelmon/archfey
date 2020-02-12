@@ -31,12 +31,12 @@ public class Player : MonoBehaviour, IAct {
         }
         Instance = this;
         Inventory = GetComponent<PlayerInventory>();
+        SetComponents();
     }
 
 
     private void Start()
     {
-        SetComponents();
         SetNormalState();
         SetSkills();
 
@@ -158,9 +158,9 @@ public class Player : MonoBehaviour, IAct {
 
                 if (!Mathf.Approximately(0, translation) || !Mathf.Approximately(0, strafe)) {
                     Me.Actions.CanTakeAction = false;
+                    transform.Translate(strafe, 0, translation);
                 }
 
-                transform.Translate(strafe, 0, translation);
                 transform.Rotate(0, rotation, 0);
 
                 if (Me.IsGrounded() && Input.GetKeyDown(KeyCode.Space)) {
@@ -189,28 +189,8 @@ public class Player : MonoBehaviour, IAct {
 
     private void SetNormalState()
     {
-        Me.Stats.BaseArmorClass = 10;
-        Me.Stats.Attributes[Proficiencies.Attribute.Charisma] = 10;
-        Me.Stats.Attributes[Proficiencies.Attribute.Constitution] = 10;
-        Me.Stats.Attributes[Proficiencies.Attribute.Dexterity] = 10;
-        Me.Stats.Attributes[Proficiencies.Attribute.Intelligence] = 10;
-        Me.Stats.Attributes[Proficiencies.Attribute.Strength] = 10;
-        Me.Stats.Attributes[Proficiencies.Attribute.Wisdom] = 10;
-
         Me.Senses.Darkvision = false;
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
-
-        Me.Health.HitDice = 1;
-        Me.Health.HitDiceType = 8;
-        Me.Health.SetCurrentAndMaxHitPoints();
-        Me.Stats.ProficiencyBonus = 2;
-        Me.Stats.Family = Stats.CreatureFamily.Humanoid;
-        Me.Stats.Subfamily = Stats.CreatureSubfamily.Human;
-        Me.Stats.Size = Stats.Sizes.Medium;
-
-        Me.Actions.Movement.ReachedThreshold = 2f;
-        Me.Actions.Movement.BaseSpeed = 5;
-        Me.Actions.Movement.Agent.speed = 5;
 
         Me.Actions.Combat.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.Leather));
 
@@ -229,7 +209,7 @@ public class Player : MonoBehaviour, IAct {
         Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Intelligence);
         Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Wisdom);
 
-        Me.Stats.ClassFeatures.Add("Druid State Class Feature");  // TODO: the features will provide benefits after "leveling up"
+        Me.Stats.ClassFeatures.Add("Druid");  // TODO: the features will provide benefits after "leveling up"
         Me.Stats.ExpertiseInSkills.Add(Proficiencies.Skill.Insight);
 
         Me.Stats.Skills.Add(Proficiencies.Skill.Insight);

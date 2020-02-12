@@ -1,0 +1,154 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &5713903240744615740
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1690649058592984, guid: 235a3e539eea845b79c0d0cb44baec18, type: 3}
+      propertyPath: m_Name
+      value: Actor
+      objectReference: {fileID: 0}
+    - target: {fileID: 4083075569688968, guid: 235a3e539eea845b79c0d0cb44baec18, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4083075569688968, guid: 235a3e539eea845b79c0d0cb44baec18, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4083075569688968, guid: 235a3e539eea845b79c0d0cb44baec18, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4083075569688968, guid: 235a3e539eea845b79c0d0cb44baec18, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4083075569688968, guid: 235a3e539eea845b79c0d0cb44baec18, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4083075569688968, guid: 235a3e539eea845b79c0d0cb44baec18, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4083075569688968, guid: 235a3e539eea845b79c0d0cb44baec18, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4083075569688968, guid: 235a3e539eea845b79c0d0cb44baec18, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4083075569688968, guid: 235a3e539eea845b79c0d0cb44baec18, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4083075569688968, guid: 235a3e539eea845b79c0d0cb44baec18, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4083075569688968, guid: 235a3e539eea845b79c0d0cb44baec18, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: strength
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: dexterity
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: constitution
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: intelligence
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: wisdom
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: charisma
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: alignment
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: family
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: subfamily
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: armor_class
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: hit_dice
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: hit_dice_type
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: speed
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: action_count
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: proficiency_bonus
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7396572855923113708, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7396572855923113708, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8319845979828185162, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: highlight_material
+      value: 
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 235a3e539eea845b79c0d0cb44baec18, type: 3}
