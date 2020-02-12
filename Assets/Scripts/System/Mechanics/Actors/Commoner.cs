@@ -272,7 +272,6 @@ public class Commoner : TemplateMelee
     private void SetComponents()
     {
         Me = GetComponent<Actor>();
-        StartCoroutine(Me.GetStatsFromServer(this.GetType().Name));
         SetAdditionalStats();
     }
 

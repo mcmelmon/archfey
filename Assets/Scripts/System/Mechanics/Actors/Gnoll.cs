@@ -19,7 +19,6 @@ public class Gnoll : TemplateMelee
     private void SetStats()
     {
         Me = GetComponent<Actor>();
-        StartCoroutine(Me.GetStatsFromServer(this.GetType().Name));
         SetAdditionalStats();
     }
 

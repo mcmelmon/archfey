@@ -82,66 +82,66 @@ public class Actor : MonoBehaviour
         return new Vector3(interaction_point.x, their_bottom.y, interaction_point.z);
     }
 
+    // FOR REFERENCE
+    // public IEnumerator GetStatsFromServer(string name)
+    // {
+    //     if (name == "Sebbie") name = "Goblin";
+    //     UnityWebRequest www = UnityWebRequest.Get("http://localhost:3000/stat_blocks/" + name + ".json");
+    //     JSON_StatBlock stat_block = new JSON_StatBlock();
+    //     yield return www.SendWebRequest();
 
-    public IEnumerator GetStatsFromServer(string name)
-    {
-        if (name == "Sebbie") name = "Goblin";
-        UnityWebRequest www = UnityWebRequest.Get("http://localhost:3000/stat_blocks/" + name + ".json");
-        JSON_StatBlock stat_block = new JSON_StatBlock();
-        yield return www.SendWebRequest();
+    //     if (www.isNetworkError || www.isHttpError) {
+    //         Debug.Log(www.error);
+    //     } else {
+    //         stat_block = JsonUtility.FromJson<JSON_StatBlock>(www.downloadHandler.text);
+    //     }
 
-        if (www.isNetworkError || www.isHttpError) {
-            Debug.Log(www.error);
-        } else {
-            stat_block = JsonUtility.FromJson<JSON_StatBlock>(www.downloadHandler.text);
-        }
+    //     Senses.Darkvision = stat_block.darkvision;
 
-        Senses.Darkvision = stat_block.darkvision;
+    //     Stats.Attributes[Proficiencies.Attribute.Charisma] = stat_block.charisma_proficiency;
+    //     Stats.Attributes[Proficiencies.Attribute.Constitution] = stat_block.constituion_proficiency;
+    //     Stats.Attributes[Proficiencies.Attribute.Dexterity] = stat_block.dexterity_proficiency;
+    //     Stats.Attributes[Proficiencies.Attribute.Intelligence] = stat_block.intelligence_proficiency;
+    //     Stats.Attributes[Proficiencies.Attribute.Strength] = stat_block.strength_proficiency;
+    //     Stats.Attributes[Proficiencies.Attribute.Wisdom] = stat_block.wisdom_proficiency;
+    //     Stats.ProficiencyBonus = stat_block.proficiency_bonus;
+    //     Stats.Family = stat_block.family;
+    //     Stats.Size = stat_block.size;
 
-        Stats.BaseAttributes[Proficiencies.Attribute.Charisma] = stat_block.charisma_proficiency;
-        Stats.BaseAttributes[Proficiencies.Attribute.Constitution] = stat_block.constituion_proficiency;
-        Stats.BaseAttributes[Proficiencies.Attribute.Dexterity] = stat_block.dexterity_proficiency;
-        Stats.BaseAttributes[Proficiencies.Attribute.Intelligence] = stat_block.intelligence_proficiency;
-        Stats.BaseAttributes[Proficiencies.Attribute.Strength] = stat_block.strength_proficiency;
-        Stats.BaseAttributes[Proficiencies.Attribute.Wisdom] = stat_block.wisdom_proficiency;
-        Stats.ProficiencyBonus = stat_block.proficiency_bonus;
-        Stats.Family = stat_block.family;
-        Stats.Size = stat_block.size;
+    //     Actions.Combat.AttacksPerAction = stat_block.multiattack ? 2 : 1;
+    //     Actions.Movement.BaseSpeed = stat_block.speed;
+    //     Actions.Movement.Agent.speed = stat_block.speed;
+    //     switch (Stats.Size) {
+    //         case "Tiny":
+    //             Actions.Movement.ReachedThreshold = 1.5f;
+    //             break;
+    //         case "Small":
+    //             Actions.Movement.ReachedThreshold = 2f;
+    //             break;
+    //         case "Medium":
+    //             Actions.Movement.ReachedThreshold = 2.5f;
+    //             break;
+    //         case "Large":
+    //             Actions.Movement.ReachedThreshold = 3f;
+    //             break;
+    //         case "Huge":
+    //             Actions.Movement.ReachedThreshold = 3.5f;
+    //             break;
+    //         case "Gargantuan":
+    //             Actions.Movement.ReachedThreshold = 4f;
+    //             break;
+    //         default:
+    //             Actions.Movement.ReachedThreshold = 2.5f;
+    //             break;
+    //     }
 
-        Actions.Combat.AttacksPerAction = stat_block.multiattack ? 2 : 1;
-        Actions.Movement.BaseSpeed = stat_block.speed;
-        Actions.Movement.Agent.speed = stat_block.speed;
-        switch (Stats.Size) {
-            case "Tiny":
-                Actions.Movement.ReachedThreshold = 1.5f;
-                break;
-            case "Small":
-                Actions.Movement.ReachedThreshold = 2f;
-                break;
-            case "Medium":
-                Actions.Movement.ReachedThreshold = 2.5f;
-                break;
-            case "Large":
-                Actions.Movement.ReachedThreshold = 3f;
-                break;
-            case "Huge":
-                Actions.Movement.ReachedThreshold = 3.5f;
-                break;
-            case "Gargantuan":
-                Actions.Movement.ReachedThreshold = 4f;
-                break;
-            default:
-                Actions.Movement.ReachedThreshold = 2.5f;
-                break;
-        }
+    //     Stats.BaseArmorClass = stat_block.armor_class;
 
-        Stats.BaseArmorClass = stat_block.armor_class;
+    //     Health.HitDice = stat_block.hit_dice;
+    //     Health.HitDiceType = stat_block.hit_dice_type;
 
-        Health.HitDice = stat_block.hit_dice;
-        Health.HitDiceType = stat_block.hit_dice_type;
-
-        Health.SetCurrentAndMaxHitPoints();
-    }
+    //     Health.SetCurrentAndMaxHitPoints();
+    // }
 
 
     public bool IsGrounded()

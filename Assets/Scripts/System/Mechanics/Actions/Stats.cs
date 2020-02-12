@@ -5,28 +5,54 @@ using UnityEngine.UI;
 
 public class Stats : MonoBehaviour
 {
+    public enum CreatureFamily { Abberation, Beast, Celestial, Construct, Dragon, Elemental, Fey, Fiend, Giant, Humanoid, Monstrosity, Ooze, Plant, Swarm, Undead };
+    public enum CreatureSubfamily { None, Dwarf, Elf, Gnoll, Gnome, Goblinoid, Grimlock, Human, Kobold, Lizardfolk, Merfolk, Orc, Sahuagin, Shapechanger };
+    public enum Sizes { Tiny, Small, Medium, Large, Huge, Gargantuan }
+
     // Inspector settings
 
     public Slider health_bar;
     public Slider temporary_health_bar;
-    public Slider rage_bar;
     public Transform stat_bars;
+
+    [Header("Stat Block")]
+    [Space(5)]
+    [SerializeField] int strength;
+    [SerializeField] int dexterity;
+    [SerializeField] int constitution;
+    [SerializeField] int intelligence;
+    [SerializeField] int wisdom;
+    [SerializeField] int charisma;
+
+    [Space(10)]
+    [SerializeField] CreatureFamily family;
+    [SerializeField] CreatureSubfamily subfamily;
+    [SerializeField] int armor_class;
+    [SerializeField] int hit_dice;
+    [SerializeField] int hit_dice_type;
+    [SerializeField] int speed = 30;
+    [SerializeField] Sizes size;
+    [SerializeField] int action_count = 1;
+    [SerializeField] int proficiency_bonus = 2;
+    [SerializeField] List<Proficiencies.Skill> skillset;
+    [SerializeField] List<Proficiencies.Tool> toolset;
+
+
 
     // properties
 
     public List<string> ClassFeatures { get; set; }
     public Actor Me { get; set; }
-    public string Family { get; set; }
-    public string Size { get; set; }
+    public CreatureFamily Family { get; set; }
+    public Sizes Size { get; set; }
+    public CreatureSubfamily Subfamily { get; set; }
     public int Level { get; set; }
 
     public int BaseArmorClass { get; set; } // TODO: build up AC from equipment and dex
+    public Dictionary<Proficiencies.Attribute, int> Attributes { get; set; }
     public Dictionary<Proficiencies.Attribute, int> AttributeAdjustments { get; set; }
-    public Dictionary<Proficiencies.Attribute, int> BaseAttributes { get; set; }
     public List<Proficiencies.Skill> ExpertiseInSkills { get; set; }
     public List<Proficiencies.Tool> ExpertiseInTools { get; set; }
-    public float RageDuration { get; set; }
-    public float RageTick { get; set; }
     public Dictionary<Weapons.DamageType, int> Resistances { get; set; }
     public int ProficiencyBonus { get; set; }
     public List<Proficiencies.Attribute> SavingThrows { get; set; }
@@ -42,6 +68,10 @@ public class Stats : MonoBehaviour
         SetComponents();
         StartCoroutine(StatBarsFaceCamera());
         StartCoroutine(ManageStatBars());
+    }
+
+    private void Start() {
+        SetDependentComponents();
     }
 
 
@@ -72,7 +102,8 @@ public class Stats : MonoBehaviour
 
     public int GetAdjustedAttributeScore(Proficiencies.Attribute attribute)
     {
-        return Mathf.Clamp(BaseAttributes[attribute] + AttributeAdjustments[attribute], -5, 10);
+        int adjustment = (Mathf.Clamp(Attributes[attribute] + AttributeAdjustments[attribute], 0, 30) - 10) / 2;
+        return Mathf.Clamp(adjustment, -5, 10);
     }
 
 
@@ -87,17 +118,6 @@ public class Stats : MonoBehaviour
 
     public void UpdateStatBars()
     {
-        // Story doesn't have Rage anymore, but may add an altered state
-        
-        // if (rage_bar != null) {
-        //     rage_bar.value = CurrentRagePercentage();
-        //     if (rage_bar.value >= 1) {
-        //         rage_bar.gameObject.SetActive(false);
-        //     } else {
-        //         rage_bar.gameObject.SetActive(true);
-        //     }
-        // }
-
         if (health_bar != null) {
             health_bar.value = Me.Health.CurrentHealthPercentage();
             if (health_bar.value >= 1) {
@@ -119,12 +139,6 @@ public class Stats : MonoBehaviour
 
 
     // private
-
-
-    public float CurrentRagePercentage()
-    {
-        return Me.Actions.Combat.Raging ? 1 - (RageTick / RageDuration) : 0;
-    }
 
 
     private int DamageAfterResistance(int _damage, Weapons.DamageType _type)
@@ -158,11 +172,24 @@ public class Stats : MonoBehaviour
         ClassFeatures = new List<string>();
         ExpertiseInSkills = new List<Proficiencies.Skill>();
         ExpertiseInTools = new List<Proficiencies.Tool>();
+        Family = family;
         Level = 1;
-        RageDuration = 60;
+        ProficiencyBonus = proficiency_bonus;
         SavingThrows = new List<Proficiencies.Attribute>();
-        Skills = new List<Proficiencies.Skill>();
-        Tools = new List<Proficiencies.Tool>();
+        Size = size;
+        Skills = new List<Proficiencies.Skill>(skillset);
+        Subfamily = subfamily;
+        Tools = new List<Proficiencies.Tool>(toolset);
+
+        Attributes = new Dictionary<Proficiencies.Attribute, int>
+        {
+            [Proficiencies.Attribute.Charisma] = charisma,
+            [Proficiencies.Attribute.Constitution] = constitution,
+            [Proficiencies.Attribute.Dexterity] = dexterity,
+            [Proficiencies.Attribute.Intelligence] = intelligence,
+            [Proficiencies.Attribute.Strength] = strength,
+            [Proficiencies.Attribute.Wisdom] = wisdom
+        };
 
         AttributeAdjustments = new Dictionary<Proficiencies.Attribute, int>
         {
@@ -173,16 +200,43 @@ public class Stats : MonoBehaviour
             [Proficiencies.Attribute.Strength] = 0,
             [Proficiencies.Attribute.Wisdom] = 0
         };
+    }
 
-        BaseAttributes = new Dictionary<Proficiencies.Attribute, int>
-        {
-            [Proficiencies.Attribute.Charisma] = 0,
-            [Proficiencies.Attribute.Constitution] = 0,
-            [Proficiencies.Attribute.Dexterity] = 0,
-            [Proficiencies.Attribute.Intelligence] = 0,
-            [Proficiencies.Attribute.Strength] = 0,
-            [Proficiencies.Attribute.Wisdom] = 0
-        };
+    private void SetDependentComponents()
+    {
+        Me.Actions.Combat.AttacksPerAction = action_count;
+        Me.Actions.Movement.BaseSpeed = speed / 10;
+        Me.Actions.Movement.Agent.speed = speed / 10;
+        switch (Size) {
+            case Sizes.Tiny:
+                Me.Actions.Movement.ReachedThreshold = 1.5f;
+                break;
+            case Sizes.Small:
+                Me.Actions.Movement.ReachedThreshold = 2f;
+                break;
+            case Sizes.Medium:
+                Me.Actions.Movement.ReachedThreshold = 2.5f;
+                break;
+            case Sizes.Large:
+                Me.Actions.Movement.ReachedThreshold = 3f;
+                break;
+            case Sizes.Huge:
+                Me.Actions.Movement.ReachedThreshold = 3.5f;
+                break;
+            case Sizes.Gargantuan:
+                Me.Actions.Movement.ReachedThreshold = 4f;
+                break;
+            default:
+                Me.Actions.Movement.ReachedThreshold = 2.5f;
+                break;
+        }
+
+        BaseArmorClass = armor_class;
+
+        Me.Health.HitDice = hit_dice;
+        Me.Health.HitDiceType = hit_dice_type;
+
+        Me.Health.SetCurrentAndMaxHitPoints();
     }
 
 

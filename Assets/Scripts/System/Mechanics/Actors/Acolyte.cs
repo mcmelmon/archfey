@@ -157,7 +157,6 @@ public class Acolyte : MonoBehaviour, IAct
     private void SetComponents()
     {
         Me = GetComponent<Actor>();
-        StartCoroutine(Me.GetStatsFromServer(this.GetType().Name));
         SetAdditionalStats();
     }
 

@@ -115,7 +115,7 @@ public class Health : MonoBehaviour {
 
     public void SetCurrentAndMaxHitPoints()
     {
-        CurrentHitPoints = MaximumHitPoints = Mathf.RoundToInt((Me.Stats.BaseAttributes[Proficiencies.Attribute.Constitution] * HitDice) + (HitDice * (HitDiceType / 2f) + 1) + HitDice/2f);
+        CurrentHitPoints = MaximumHitPoints = Mathf.RoundToInt((Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Constitution) * HitDice) + (HitDice * (HitDiceType / 2f) + 1) + HitDice/2f);
         CurrentTemporaryHitPoints = TemporaryHitPoints = 0;
     }
 }
