@@ -5,9 +5,10 @@ using UnityEngine.UI;
 
 public class Stats : MonoBehaviour
 {
-    public enum CreatureFamily { Abberation, Beast, Celestial, Construct, Dragon, Elemental, Fey, Fiend, Giant, Humanoid, Monstrosity, Ooze, Plant, Swarm, Undead };
-    public enum CreatureSubfamily { None, Dwarf, Elf, Gnoll, Gnome, Goblinoid, Grimlock, Human, Kobold, Lizardfolk, Merfolk, Orc, Sahuagin, Shapechanger };
+    public enum Alignments { LawfulGood, LawfulNeutral, LawfulEvil, NeutralGood, Neutral, NeutralEvil, ChaoticGood, ChaoticNeutral, ChaoticEvil }
+    public enum Families { Abberation, Beast, Celestial, Construct, Dragon, Elemental, Fey, Fiend, Giant, Humanoid, Monstrosity, Ooze, Plant, Swarm, Undead };
     public enum Sizes { Tiny, Small, Medium, Large, Huge, Gargantuan }
+    public enum Subfamilies { None, Dwarf, Elf, Gnoll, Gnome, Goblinoid, Grimlock, Human, Kobold, Lizardfolk, Merfolk, Orc, Sahuagin, Shapechanger };
 
     // Inspector settings
 
@@ -25,8 +26,9 @@ public class Stats : MonoBehaviour
     [SerializeField] int charisma;
 
     [Space(10)]
-    [SerializeField] CreatureFamily family;
-    [SerializeField] CreatureSubfamily subfamily;
+    [SerializeField] Alignments alignment;
+    [SerializeField] Families family;
+    [SerializeField] Subfamilies subfamily;
     [SerializeField] int armor_class;
     [SerializeField] int hit_dice;
     [SerializeField] int hit_dice_type;
@@ -41,11 +43,12 @@ public class Stats : MonoBehaviour
 
     // properties
 
+    public Alignments Alignment { get; set; }
     public List<string> ClassFeatures { get; set; }
     public Actor Me { get; set; }
-    public CreatureFamily Family { get; set; }
+    public Families Family { get; set; }
     public Sizes Size { get; set; }
-    public CreatureSubfamily Subfamily { get; set; }
+    public Subfamilies Subfamily { get; set; }
     public int Level { get; set; }
 
     public int BaseArmorClass { get; set; } // TODO: build up AC from equipment and dex
@@ -169,6 +172,7 @@ public class Stats : MonoBehaviour
     {
         Me = GetComponentInParent<Actor>();
 
+        Alignment = alignment;
         ClassFeatures = new List<string>();
         ExpertiseInSkills = new List<Proficiencies.Skill>();
         ExpertiseInTools = new List<Proficiencies.Tool>();

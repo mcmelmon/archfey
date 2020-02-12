@@ -201,6 +201,11 @@ PrefabInstance:
       propertyPath: proficiency_bonus
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: alignment
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 5307651885853832245, guid: 235a3e539eea845b79c0d0cb44baec18,
         type: 3}
       propertyPath: m_TargetGraphic
