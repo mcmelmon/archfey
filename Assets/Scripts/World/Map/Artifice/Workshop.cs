@@ -48,7 +48,7 @@ public class Workshop : MonoBehaviour
 
         if (product == null) return false;
 
-        if (Storage.materials.First(m => m.material == product.Material).amount >= product.MaterialAmount) {
+        if (Storage.MaterialsHandled.First(m => m.material == product.Material).amount >= product.MaterialAmount) {
             Industry.CurrentlyCrafting.Add(artisan);
             StartCoroutine(Crafting(product, artisan));
             return true;
@@ -92,35 +92,33 @@ public class Workshop : MonoBehaviour
     }
 
 
-    public IEnumerator GetProductsMadeWith(Proficiencies.Tool tool)
-    {
-        // It "may" make sense to grab all of the products at once (in Industry), but when there
-        // are a lot of them, we will only need a small subset workshop by workshop as the settlements
-        // expand.
+    // public IEnumerator GetProductsMadeWith(Proficiencies.Tool tool)
+    // {
+    //     // TODO: rework using prefabs, not server calls
 
-        UnityWebRequest www = UnityWebRequest.Get("http://localhost:3000/products?tool=" + tool);
-        Industry.JSON_Products products_json = new Industry.JSON_Products();
-        yield return www.SendWebRequest();
+    //     UnityWebRequest www = UnityWebRequest.Get("http://localhost:3000/products?tool=" + tool);
+    //     Industry.JSON_Products products_json = new Industry.JSON_Products();
+    //     yield return www.SendWebRequest();
 
-        if (www.isNetworkError || www.isHttpError) {
-            Debug.Log(www.error);
-        } else {
-            products_json = JsonUtility.FromJson<Industry.JSON_Products>(www.downloadHandler.text);
-            List<string> products_from_server = new List<string>(products_json.products);
-            foreach (var product in products_from_server) {
-                string[] split = product.Split(new char[] { ',' });
-                Industry.Product new_product = new Industry.Product {
-                    Name = split[0],
-                    Material = split[1],
-                    MaterialAmount = int.Parse(split[2]),
-                    Tool = (Proficiencies.Tool)Enum.Parse(typeof(Proficiencies.Tool), split[3]),
-                Value_CP = int.Parse(split[4])
-                };
+    //     if (www.isNetworkError || www.isHttpError) {
+    //         Debug.Log(www.error);
+    //     } else {
+    //         products_json = JsonUtility.FromJson<Industry.JSON_Products>(www.downloadHandler.text);
+    //         List<string> products_from_server = new List<string>(products_json.products);
+    //         foreach (var product in products_from_server) {
+    //             string[] split = product.Split(new char[] { ',' });
+    //             Industry.Product new_product = new Industry.Product {
+    //                 Name = split[0],
+    //                 Material = split[1],
+    //                 MaterialAmount = int.Parse(split[2]),
+    //                 Tool = (Proficiencies.Tool)Enum.Parse(typeof(Proficiencies.Tool), split[3]),
+    //             Value_CP = int.Parse(split[4])
+    //             };
 
-                Craftworks.Add(new_product);
-            }
-        }
-    }
+    //             Craftworks.Add(new_product);
+    //         }
+    //     }
+    // }
 
 
     private IEnumerator MonitorStorage()
@@ -131,7 +129,7 @@ public class Workshop : MonoBehaviour
             }
             
             foreach (var work in Craftworks) {
-                if (Storage.materials.First(m => m.material == work.Material).amount > work.MaterialAmount) {
+                if (Storage.MaterialsHandled.First(m => m.material == work.Material).amount > work.MaterialAmount) {
                     SpawnArtisanFor(work); // if we have the materials, spawn a tool maker if one is not available
                 }
             }
@@ -146,7 +144,7 @@ public class Workshop : MonoBehaviour
         Craftworks = new List<Industry.Product>();
         Storage = GetComponent<Storage>();
         foreach (var tool in shop_tools) {
-            StartCoroutine(GetProductsMadeWith(tool));
+            // StartCoroutine(GetProductsMadeWith(tool));
         }
     }
 

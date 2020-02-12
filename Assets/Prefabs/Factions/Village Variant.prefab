@@ -7,10 +7,43 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3266668026256983198, guid: 8f235e1a43a41495d91c3cb637668d39,
+        type: 3}
+      propertyPath: rivals.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3266668026256983198, guid: 8f235e1a43a41495d91c3cb637668d39,
+        type: 3}
+      propertyPath: identifier
+      value: Village
+      objectReference: {fileID: 0}
+    - target: {fileID: 3266668026256983198, guid: 8f235e1a43a41495d91c3cb637668d39,
+        type: 3}
+      propertyPath: alignment
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3266668026256983198, guid: 8f235e1a43a41495d91c3cb637668d39,
+        type: 3}
+      propertyPath: rivals.Array.data[0]
+      value: 
+      objectReference: {fileID: 4908333391941868846, guid: 9bc45ff19c15645f39f2360af5801ea4,
+        type: 3}
+    - target: {fileID: 3266668026256983198, guid: 8f235e1a43a41495d91c3cb637668d39,
+        type: 3}
+      propertyPath: rivals.Array.data[1]
+      value: 
+      objectReference: {fileID: 5220889291076156951, guid: 66b972d861c6c44ce9eb601e4722d7c0,
+        type: 3}
+    - target: {fileID: 3266668026256983198, guid: 8f235e1a43a41495d91c3cb637668d39,
+        type: 3}
+      propertyPath: rivals.Array.data[2]
+      value: 
+      objectReference: {fileID: 5947408550990878629, guid: 295e5e8edd4294599b7dade0b81c59b3,
+        type: 3}
     - target: {fileID: 4234383038254447763, guid: 8f235e1a43a41495d91c3cb637668d39,
         type: 3}
       propertyPath: m_Name
-      value: Player Variant
+      value: Village Variant
       objectReference: {fileID: 0}
     - target: {fileID: 7491154403795611845, guid: 8f235e1a43a41495d91c3cb637668d39,
         type: 3}
@@ -66,16 +99,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3266668026256983198, guid: 8f235e1a43a41495d91c3cb637668d39,
-        type: 3}
-      propertyPath: identifier
-      value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 3266668026256983198, guid: 8f235e1a43a41495d91c3cb637668d39,
-        type: 3}
-      propertyPath: alignment
-      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f235e1a43a41495d91c3cb637668d39, type: 3}

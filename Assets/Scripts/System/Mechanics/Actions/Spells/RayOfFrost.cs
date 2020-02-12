@@ -99,7 +99,7 @@ public class RayOfFrost : MonoBehaviour
         if (target_actor != null) {
             return roll + AttackModifier > target_actor.Actions.Stats.GetArmorClass();
         } else if (target_structure != null) {
-            return roll + AttackModifier > target_structure.armor_class;
+            return roll + AttackModifier > target_structure.ArmorClass;
         }
 
         return false;

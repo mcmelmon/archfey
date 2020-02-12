@@ -38,42 +38,42 @@ public class Map : MonoBehaviour {
     // public
 
 
-    public void DrawMap()
-    {
-        SetHeavenAndEarth();
-        SetBounds();
-        SetFoundations();
-    }
+    // public void DrawMap()
+    // {
+    //     SetHeavenAndEarth();
+    //     SetBounds();
+    //     SetFoundations();
+    // }
 
 
     // private
 
 
-    void AddDirectionBoundaries()
-    {
-        GameObject bounds = new GameObject();
-        bounds.transform.parent = transform;
-        bounds.name = "Bounds";
+    // void AddDirectionBoundaries()
+    // {
+    //     GameObject bounds = new GameObject();
+    //     bounds.transform.parent = transform;
+    //     bounds.name = "Bounds";
 
-        foreach (KeyValuePair <Cardinal, Vector3[]> boundary in Boundaries)
-        {
-            GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            wall.transform.parent = bounds.transform;
-            Vector3 heading = boundary.Value[1] - boundary.Value[0];
-            wall.transform.localScale = new Vector3(heading.magnitude, heading.magnitude, 20);
-            wall.transform.gameObject.GetComponentInChildren<Renderer>().enabled = false;
-            wall.transform.up = heading;
+    //     foreach (KeyValuePair <Cardinal, Vector3[]> boundary in Boundaries)
+    //     {
+    //         GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+    //         wall.transform.parent = bounds.transform;
+    //         Vector3 heading = boundary.Value[1] - boundary.Value[0];
+    //         wall.transform.localScale = new Vector3(heading.magnitude, heading.magnitude, 20);
+    //         wall.transform.gameObject.GetComponentInChildren<Renderer>().enabled = false;
+    //         wall.transform.up = heading;
 
-            if (boundary.Key == Cardinal.East || boundary.Key == Cardinal.West) wall.transform.rotation = Quaternion.Euler(new Vector3(0, 90, 90));
+    //         if (boundary.Key == Cardinal.East || boundary.Key == Cardinal.West) wall.transform.rotation = Quaternion.Euler(new Vector3(0, 90, 90));
 
-            if (boundary.Key == Cardinal.Sky) {
-                wall.transform.position = new Vector3(Geography.Instance.GetResolution() / 2, sky_height, Geography.Instance.GetResolution() / 2);
-                wall.transform.rotation = Quaternion.Euler(new Vector3(90, 0, 90));
-            } else {
-                wall.transform.position = boundary.Value[0] + heading / 2;
-            }
-        }
-    }
+    //         if (boundary.Key == Cardinal.Sky) {
+    //             wall.transform.position = new Vector3(Geography.Instance.GetResolution() / 2, sky_height, Geography.Instance.GetResolution() / 2);
+    //             wall.transform.rotation = Quaternion.Euler(new Vector3(90, 0, 90));
+    //         } else {
+    //             wall.transform.position = boundary.Value[0] + heading / 2;
+    //         }
+    //     }
+    // }
 
 
     private void SetFoundations()
@@ -83,22 +83,22 @@ public class Map : MonoBehaviour {
     }
 
 
-    private void SetBounds()
-    {
-        // using a dictionary instead of list or array to ensure accurate lookup by edge name (e.g. "north")
+    // private void SetBounds()
+    // {
+    //     // using a dictionary instead of list or array to ensure accurate lookup by edge name (e.g. "north")
 
-        Boundaries[Cardinal.North] = Geography.Instance.GetBorder(Cardinal.North);
-        Boundaries[Cardinal.East] = Geography.Instance.GetBorder(Cardinal.East);
-        Boundaries[Cardinal.South] = Geography.Instance.GetBorder(Cardinal.South);
-        Boundaries[Cardinal.West] = Geography.Instance.GetBorder(Cardinal.West);
+    //     Boundaries[Cardinal.North] = Geography.Instance.GetBorder(Cardinal.North);
+    //     Boundaries[Cardinal.East] = Geography.Instance.GetBorder(Cardinal.East);
+    //     Boundaries[Cardinal.South] = Geography.Instance.GetBorder(Cardinal.South);
+    //     Boundaries[Cardinal.West] = Geography.Instance.GetBorder(Cardinal.West);
 
-        Vector3[] sky = new Vector3[2];
-        sky[0] = Boundaries[Cardinal.North][0];
-        sky[1] = Boundaries[Cardinal.South][0];
-        Boundaries[Cardinal.Sky] = sky;
+    //     Vector3[] sky = new Vector3[2];
+    //     sky[0] = Boundaries[Cardinal.North][0];
+    //     sky[1] = Boundaries[Cardinal.South][0];
+    //     Boundaries[Cardinal.Sky] = sky;
 
-        AddDirectionBoundaries();
-    }
+    //     AddDirectionBoundaries();
+    // }
 
 
     private void SetComponents()

@@ -25,7 +25,7 @@ public class Actor : MonoBehaviour
     public Health Health { get; set; }
     public Interactable Interactions { get; set; }
     public Inventory Inventory { get; set; }
-    public Dictionary<HarvestingNode, int> Load { get; set; }
+    public Dictionary<Resources.Raw, int> Load { get; set; }
     public Magic Magic { get; set; }
     public Actor Me { get; set; }
     public int RestCounter { get; set; }
@@ -198,7 +198,7 @@ public class Actor : MonoBehaviour
         Health = GetComponent<Health>();
         Interactions = GetComponent<Interactable>();
         Inventory = GetComponent<Inventory>();
-        Load = new Dictionary<HarvestingNode, int>();
+        Load = new Dictionary<Resources.Raw, int>();
         Me = this;
         RestCounter = 0;
         Route = GetComponent<Route>();

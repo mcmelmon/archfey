@@ -46,115 +46,115 @@ public class Flora : MonoBehaviour {
     // public
 
 
-    public void Grow()
-    {
-        SetComponents();
-        PlantTrees();
-        CarpetForest();
-        CoverForest();
-    }
+    // public void Grow()
+    // {
+    //     SetComponents();
+    //     PlantTrees();
+    //     CarpetForest();
+    //     CoverForest();
+    // }
 
 
 
     // private
 
 
-    private void CarpetForest()
-    {
-        int octaves = 4;
-        float persistance = .5f;
-        float lacunarity = 2;
-        int seed = Random.Range(1,10);
-        float scale = Random.Range(10,20);
-        Vector2 offset = new Vector2(0,0);
+    // private void CarpetForest()
+    // {
+    //     int octaves = 4;
+    //     float persistance = .5f;
+    //     float lacunarity = 2;
+    //     int seed = Random.Range(1,10);
+    //     float scale = Random.Range(10,20);
+    //     Vector2 offset = new Vector2(0,0);
 
-        Noise noise = new Noise();
-        float[,] _carpet = noise.GenerateNoiseMap(Width, Depth, seed, scale, octaves, persistance, lacunarity, offset);
-        Carpet = Layer(_carpet);
-        Carpet.transform.localScale = new Vector3(75, 1, 75);
-        Carpet.transform.position = new Vector3(Geography.Instance.GetResolution() / 2f, 1f, Geography.Instance.GetResolution() / 2f);
-        Carpet.name = "Carpet";
-    }
-
-
-
-    private void CoverForest()
-    {
-        int octaves = 4;
-        float persistance = .5f;
-        float lacunarity= 2;
-
-        for (int i = 0; i < canopy_layers; i++)
-        {
-            int seed = Random.Range(11,99);
-            float scale = Random.Range(30,70);
-            Vector2 offset = new Vector2(Random.Range(0,20), Random.Range(0,20));
-
-            Noise noise = new Noise();
-            float[,] _canopy = noise.GenerateNoiseMap(Width, Depth, seed, scale, octaves, persistance, lacunarity, offset);
-            ForestLayers[i] = Layer(_canopy, true);
-            ForestLayers[i].transform.localScale = new Vector3(75, -1, 75);
-            ForestLayers[i].transform.position = new Vector3(Geography.Instance.GetResolution() / 2f, 170f + (i * 50f), Geography.Instance.GetResolution() / 2f);
-            ForestLayers[i].name = "Canopy";
-        }
-    }
+    //     Noise noise = new Noise();
+    //     float[,] _carpet = noise.GenerateNoiseMap(Width, Depth, seed, scale, octaves, persistance, lacunarity, offset);
+    //     Carpet = Layer(_carpet);
+    //     Carpet.transform.localScale = new Vector3(75, 1, 75);
+    //     Carpet.transform.position = new Vector3(Geography.Instance.GetResolution() / 2f, 1f, Geography.Instance.GetResolution() / 2f);
+    //     Carpet.name = "Carpet";
+    // }
 
 
-    private GameObject Layer(float[,] _canopy, bool enable_transparency = false)
-    {
-        Texture2D texture = new Texture2D(Width, Depth);
 
-        Color[] colors = new Color[Width * Depth];
-        for (int w = 0; w < Width; w++) {
-            for (int d = 0; d < Depth; d++) {
-                foreach (var layer in leaves) {
-                    if (_canopy[w,d] <= layer.height) {
-                        float alpha = 1f - _canopy[w,d];
-                        colors[w * Width + d] = layer.color;
-                        colors[w * Width + d].a = alpha;
-                        break;
-                    }
-                }
-            }
-        }
+    // private void CoverForest()
+    // {
+    //     int octaves = 4;
+    //     float persistance = .5f;
+    //     float lacunarity= 2;
 
-        texture.wrapMode = TextureWrapMode.Clamp;
-        texture.SetPixels(colors);
-        texture.Apply();
+    //     for (int i = 0; i < canopy_layers; i++)
+    //     {
+    //         int seed = Random.Range(11,99);
+    //         float scale = Random.Range(30,70);
+    //         Vector2 offset = new Vector2(Random.Range(0,20), Random.Range(0,20));
 
-        GameObject canopy_plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
-        canopy_plane.transform.parent = transform;
-        canopy_plane.GetComponent<Renderer>().material = new Material(Shader.Find("Nature/Tree Creator Leaves Fast")) { mainTexture = texture };
-        canopy_plane.GetComponent<Renderer>().material.SetFloat("_Glossiness", 1f);
-
-        if (enable_transparency) { 
-            canopy_plane.GetComponent<Renderer>().material.SetFloat("_Cutoff", 0.45f); 
-        } else {
-            canopy_plane.GetComponent<Renderer>().material.SetFloat("_Cutoff", 0f);
-        }
+    //         Noise noise = new Noise();
+    //         float[,] _canopy = noise.GenerateNoiseMap(Width, Depth, seed, scale, octaves, persistance, lacunarity, offset);
+    //         ForestLayers[i] = Layer(_canopy, true);
+    //         ForestLayers[i].transform.localScale = new Vector3(75, -1, 75);
+    //         ForestLayers[i].transform.position = new Vector3(Geography.Instance.GetResolution() / 2f, 170f + (i * 50f), Geography.Instance.GetResolution() / 2f);
+    //         ForestLayers[i].name = "Canopy";
+    //     }
+    // }
 
 
-        return canopy_plane;
-    }
+    // private GameObject Layer(float[,] _canopy, bool enable_transparency = false)
+    // {
+    //     Texture2D texture = new Texture2D(Width, Depth);
+
+    //     Color[] colors = new Color[Width * Depth];
+    //     for (int w = 0; w < Width; w++) {
+    //         for (int d = 0; d < Depth; d++) {
+    //             foreach (var layer in leaves) {
+    //                 if (_canopy[w,d] <= layer.height) {
+    //                     float alpha = 1f - _canopy[w,d];
+    //                     colors[w * Width + d] = layer.color;
+    //                     colors[w * Width + d].a = alpha;
+    //                     break;
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     texture.wrapMode = TextureWrapMode.Clamp;
+    //     texture.SetPixels(colors);
+    //     texture.Apply();
+
+    //     GameObject canopy_plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
+    //     canopy_plane.transform.parent = transform;
+    //     canopy_plane.GetComponent<Renderer>().material = new Material(Shader.Find("Nature/Tree Creator Leaves Fast")) { mainTexture = texture };
+    //     canopy_plane.GetComponent<Renderer>().material.SetFloat("_Glossiness", 1f);
+
+    //     if (enable_transparency) { 
+    //         canopy_plane.GetComponent<Renderer>().material.SetFloat("_Cutoff", 0.45f); 
+    //     } else {
+    //         canopy_plane.GetComponent<Renderer>().material.SetFloat("_Cutoff", 0f);
+    //     }
 
 
-    private void PlantTrees()
-    {
-        int number_of_trees = Mathf.RoundToInt((Geography.Instance.GetResolution()) * (tree_coverage / 100f));
-        for (int i = 0; i < number_of_trees; i++) {
-            Vector3 position = Geography.Instance.RandomLocation();
-            Quaternion rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
-            GameObject _tree = Instantiate(tree_prefab, position, rotation, transform);
-            Trees.Add(_tree);
-        }
-    }
+    //     return canopy_plane;
+    // }
 
 
-    private void SetComponents()
-    {
-        Depth = Geography.Instance.GetResolution();
-        ForestLayers = new GameObject[canopy_layers];
-        Trees = new List<GameObject>();
-        Width = Depth;
-    }
+    // private void PlantTrees()
+    // {
+    //     int number_of_trees = Mathf.RoundToInt((Geography.Instance.GetResolution()) * (tree_coverage / 100f));
+    //     for (int i = 0; i < number_of_trees; i++) {
+    //         Vector3 position = Geography.Instance.RandomLocation();
+    //         Quaternion rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
+    //         GameObject _tree = Instantiate(tree_prefab, position, rotation, transform);
+    //         Trees.Add(_tree);
+    //     }
+    // }
+
+
+    // private void SetComponents()
+    // {
+    //     Depth = Geography.Instance.GetResolution();
+    //     ForestLayers = new GameObject[canopy_layers];
+    //     Trees = new List<GameObject>();
+    //     Width = Depth;
+    // }
 }

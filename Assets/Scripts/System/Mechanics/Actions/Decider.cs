@@ -231,7 +231,7 @@ public class Decider : MonoBehaviour
         // TODO: we only want units that repair to see this
 
         FriendlyStructures = Me.Senses.Structures
-                               .Where(structure => structure.Faction == Me.CurrentFaction && structure.CurrentHitPoints < structure.maximum_hit_points)
+                               .Where(structure => structure.Faction == Me.CurrentFaction && structure.CurrentHitPoints < structure.MaximumHitPoints)
                                .ToList();
 
         return FriendlyStructures.Count > 0;
@@ -243,7 +243,9 @@ public class Decider : MonoBehaviour
         if (!Proficiencies.Instance.IsHarvester(Me)) return false;
 
         foreach (var pair in Me.Load) {  // there "should" only be at most one pair at any given time
-            return pair.Value >= pair.Key.full_harvest;
+            HarvestingNode source = GetComponents<HarvestingNode>().Where(hn => hn.Material == pair.Key).First();   // TODO: should different nodes of same type have different full harvests?
+                                                                                                                    // Use the harvester's current raget node
+            return pair.Value >= source.FullHarvest;
         }
 
         return false;

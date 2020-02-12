@@ -8,26 +8,29 @@ public class Structure : MonoBehaviour
     public enum Purpose { Civic = 0, Commercial = 1, Industrial = 2, Military = 3, Residential = 4, Sacred = 5 };
 
     // Inspector settings
-    public Conflict.Alignment alignment;
-    public Purpose purpose;
+    [SerializeField] Purpose use;
 
-    public int armor_class = 13;
-    public int damage_resistance;
-    public int maximum_hit_points = 100;
+    [SerializeField] int armor_class = 13;
+    [SerializeField] int damage_resistance;
+    [SerializeField] int maximum_hit_points = 100;
+    [SerializeField] float revenue_cp;
 
     public List<Transform> entrances = new List<Transform>();
 
-    public float revenue_cp;
 
     // properties
 
+    public int ArmorClass { get; set; }
     public List<Actor> AttachedUnits { get; set; }
     public int CurrentHitPoints { get; set; }
+    public int DamageResistance { get; set; }
     public Faction Faction { get; set; }
+    public int MaximumHitPoints { get; set; }
     public float OriginalY { get; set; }
     public float OriginalYScale { get; set; }
     public Dictionary<Weapons.DamageType, int> Resistances { get; set; }
     public Storage Storage { get; set; }
+    public Purpose Use { get; set; }
     public Workshop Workshop { get; set; }
 
 
@@ -84,10 +87,10 @@ public class Structure : MonoBehaviour
     }
 
 
-    public List<string> MaterialsWanted()
+    public List<Resources.Raw> MaterialsWanted()
     {
         if (Storage != null) {
-            var wanted_materials = Storage.materials.Select(s => s.material);
+            var wanted_materials = Storage.MaterialsHandled.Select(s => s.material);
             return wanted_materials.ToList();
         }
 
@@ -144,9 +147,12 @@ public class Structure : MonoBehaviour
 
     private void SetComponents()
     {
+        ArmorClass = armor_class;
         AttachedUnits = new List<Actor>();
         CurrentHitPoints = maximum_hit_points;
+        DamageResistance = damage_resistance;
         Faction = GetComponentInParent<Faction>();
+        MaximumHitPoints = maximum_hit_points;
         OriginalY = transform.position.y;
         OriginalYScale = transform.localScale.y;
         Resistances = new Dictionary<Weapons.DamageType, int>  // TODO: override some reistances
@@ -165,6 +171,7 @@ public class Structure : MonoBehaviour
             [Weapons.DamageType.Thunder] = 0
         };
         Storage = GetComponent<Storage>();
+        Use = use;
         Workshop = GetComponent<Workshop>();
     }
 

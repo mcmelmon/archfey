@@ -35,7 +35,9 @@ public class World : MonoBehaviour {
 
     private void CreateTheWorld()
     {
-        if (generate_map) GetComponentInChildren<Map>().DrawMap();
+        // TODO: We are creating the world in scenes, not programatically
+        
+        // if (generate_map) GetComponentInChildren<Map>().DrawMap();
         // GetComponentInChildren<Conflict>().Hajime();
     }
 }

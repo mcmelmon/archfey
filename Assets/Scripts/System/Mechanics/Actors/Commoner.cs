@@ -141,7 +141,7 @@ public class Commoner : TemplateMelee
     private void FindDamagedStructure()
     {
         Structure damaged_structure = FindObjectsOfType<Structure>()
-            .Where(s => s.alignment == Me.Alignment && s.CurrentHitPointPercentage() < 1f)
+            .Where(s => s.Faction == Me.CurrentFaction && s.CurrentHitPointPercentage() < 1f)
             .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
             .ToList()
             .First();
@@ -156,7 +156,7 @@ public class Commoner : TemplateMelee
     private void FindGuard()
     {
         Structure nearest_military_structure = FindObjectsOfType<Structure>()
-            .Where(s => s.alignment == Me.Alignment && s.purpose == Structure.Purpose.Military)
+            .Where(s => s.Faction == Me.CurrentFaction && s.Use == Structure.Purpose.Military)
             .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
             .ToList()
             .First();
@@ -169,7 +169,7 @@ public class Commoner : TemplateMelee
     private void FindShrine()
     {
         Structure nearest_sacred_structure = FindObjectsOfType<Structure>()
-            .Where(s => s.alignment == Me.Alignment && s.purpose == Structure.Purpose.Sacred)
+            .Where(s => s.Faction == Me.CurrentFaction && s.Use == Structure.Purpose.Sacred)
             .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
             .ToList()
             .First();
@@ -181,17 +181,16 @@ public class Commoner : TemplateMelee
     private void FindWarehouse()
     {
         MyWarehouse = FindObjectsOfType<Structure>()
-            .Where(s => s.alignment == Me.Alignment && s.Storage != null && s.MaterialsWanted().Contains(Me.Load.First().Key.material))
+            .Where(s => s.Faction == Me.CurrentFaction && s.Storage != null && s.MaterialsWanted().Contains(Me.Load.First().Key))
             .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
             .ToList()
             .First();
 
         if (MyWarehouse == null) return;
 
-        Vector3 entrance = MyWarehouse.RandomEntrance().transform.position;
-        Vector3 grounded_entrance = new Vector3(entrance.x, Geography.Terrain.SampleHeight(entrance), entrance.z);
+        Vector3 entrance = MyWarehouse.RandomEntrance().transform.position; // NOTE: there may be an issue with Y height; be sure entrances are placed on/near the ground
 
-        Me.Actions.Movement.AddDestination(Movement.CommonDestination.Warehouse, grounded_entrance);
+        Me.Actions.Movement.AddDestination(Movement.CommonDestination.Warehouse, entrance);
     }
 
 
@@ -201,7 +200,7 @@ public class Commoner : TemplateMelee
 
         if (Proficiencies.Instance.IsHarvester(Me)) {
             MyHarvest = new List<HarvestingNode>(FindObjectsOfType<HarvestingNode>())
-                .Where(r => r.owner == Me.Alignment && r.AccessibleTo(Me))
+                .Where(r => r.Owner == Me.CurrentFaction && r.AccessibleTo(Me))
                 .OrderBy(r => Vector3.Distance(transform.position, r.transform.position))
                 .ToList()
                 .First();
@@ -248,7 +247,7 @@ public class Commoner : TemplateMelee
         if (!Me.Actions.Movement.Destinations.ContainsKey(Movement.CommonDestination.Repair)) return false;
 
         var damaged_structures = FindObjectsOfType<Structure>()
-            .Where(s => s.alignment == Me.Alignment && s.CurrentHitPointPercentage() < 1f)
+            .Where(s => s.Faction == Me.CurrentFaction && s.CurrentHitPointPercentage() < 1f)
             .OrderBy(s => Vector3.Distance(transform.position, s.transform.position));
 
         if (!damaged_structures.Any()) {

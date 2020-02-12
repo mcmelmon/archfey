@@ -54,7 +54,7 @@ public class Industry : MonoBehaviour
         // properties
 
         public string Name { get; set; }
-        public string Material { get; set; }
+        public Resources.Raw Material { get; set; }
         public int MaterialAmount { get; set; }
         public Proficiencies.Tool Tool { get; set; }
         public int Value_CP { get; set; }

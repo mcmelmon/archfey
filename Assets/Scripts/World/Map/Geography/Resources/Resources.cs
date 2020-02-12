@@ -32,12 +32,13 @@ public class Resources : MonoBehaviour
 
     // Inspector settings
 
-    public List<HarvestingNode> harvesting_nodes;
     public List<RawValue> resource_valuations;
 
     // properties
 
     public static Resources Instance { get; set; }
+
+    public List<HarvestingNode> HarvestingNodes { get; set; }
 
 
     // Unity
@@ -52,8 +53,14 @@ public class Resources : MonoBehaviour
             return;
         }
         Instance = this;
+        SetComponents();
     }
 
 
     // private
+
+    void SetComponents()
+    {
+        HarvestingNodes = new List<HarvestingNode>(GetComponentsInChildren<HarvestingNode>());
+    }
 }
