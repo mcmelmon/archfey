@@ -290,7 +290,7 @@ public class Commoner : TemplateMelee
         float distance = Vector3.Distance(Me.Actions.Movement.Destinations[Movement.CommonDestination.Warehouse], transform.position);
         
         if (distance <= Me.Actions.Movement.ReachedThreshold) {
-            MyWarehouse.DeliverMaterials(Me, Random.Range(1, 12) * .1f); // TODO: base amount on resources!
+            MyWarehouse.DeliverMaterials(Me); // TODO: base amount on resources!
             return true;
         }
 

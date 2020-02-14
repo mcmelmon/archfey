@@ -48,21 +48,4 @@ public class Industry : MonoBehaviour
         };
         //Products = new List<Product>();
     }
-
-    public class Product
-    {
-        // properties
-
-        public string Name { get; set; }
-        public Resources.Raw Material { get; set; }
-        public int MaterialAmount { get; set; }
-        public Proficiencies.Tool Tool { get; set; }
-        public int Value_CP { get; set; }
-    }
-
-
-    public class JSON_Products
-    {
-        public string[] products;
-    }
 }

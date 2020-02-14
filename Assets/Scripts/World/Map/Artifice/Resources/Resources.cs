@@ -5,41 +5,12 @@ using UnityEngine;
 
 public class Resources : MonoBehaviour
 {
-    public enum Raw
-    {
-        Adamantite,
-        Copper,
-        Electrum,
-        Farm,
-        Fish,
-        Game,
-        Gold,
-        Herbs,
-        Iron,
-        Mithril,
-        Silver,
-        Skins,
-        Timber,
-        Tin,
-        None
-    };
-
-    [Serializable]
-    public struct RawValue {
-        public Raw material;
-        public float value_cp ;
-    }
-
-    // Inspector settings
-
-    public List<RawValue> resource_valuations;
-
     // properties
 
+    public List<Resource> AvailableResources { get; set; }
     public static Resources Instance { get; set; }
 
     public List<HarvestingNode> HarvestingNodes { get; set; }
-
 
     // Unity
 
@@ -61,6 +32,7 @@ public class Resources : MonoBehaviour
 
     void SetComponents()
     {
+        AvailableResources = new List<Resource>(GetComponentsInChildren<Resource>());
         HarvestingNodes = new List<HarvestingNode>(GetComponentsInChildren<HarvestingNode>());
     }
 }

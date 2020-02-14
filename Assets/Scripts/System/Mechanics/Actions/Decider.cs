@@ -242,10 +242,10 @@ public class Decider : MonoBehaviour
     {
         if (!Proficiencies.Instance.IsHarvester(Me)) return false;
 
-        foreach (var pair in Me.Load) {  // there "should" only be at most one pair at any given time
-            HarvestingNode source = GetComponents<HarvestingNode>().Where(hn => hn.Material == pair.Key).First();   // TODO: should different nodes of same type have different full harvests?
-                                                                                                                    // Use the harvester's current raget node
-            return pair.Value >= source.FullHarvest;
+        if (Me.GetComponent<Commoner>() != null) {
+            HarvestingNode node = Me.GetComponent<Commoner>().MyHarvest;
+            if (node == null) return false;
+            return Harvesting() && Me.IsEncumbered(node.HarvestedMaterial.Weight);
         }
 
         return false;
@@ -266,7 +266,7 @@ public class Decider : MonoBehaviour
 
     private bool Harvesting()
     {
-        return Proficiencies.Instance.IsHarvester(Me) && !FullLoad();
+        return Proficiencies.Instance.IsHarvester(Me) && !Me.IsEncumbered();
     }
 
 

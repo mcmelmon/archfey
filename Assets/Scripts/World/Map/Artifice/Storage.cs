@@ -9,30 +9,30 @@ public class Storage : MonoBehaviour
     [Serializable]
     public struct StoredMaterials
     {
-        public Resources.Raw material;
-        public int amount;
-        public float value_cp;
+        public Resource stored_material;
+        public int stored_amount;
+        public float stored_value_cp;
 
-        public StoredMaterials(Resources.Raw _material, int _amount, float _value)
+        public StoredMaterials(Resource _material, int _amount, float _value)
         {
-            this.material = _material;
-            this.amount = _amount;
-            this.value_cp = _value;
+            this.stored_material = _material;
+            this.stored_amount = _amount;
+            this.stored_value_cp = _value;
         }
     }
 
     [Serializable]
     public struct StoredProducts
     {
-        public string name;
-        public int quantity;
-        public float value_cp;
+        public string stored_product;
+        public int stored_amount;
+        public float stored_value_cp;
 
-        public StoredProducts(string _name, int _amount)
+        public StoredProducts(string _name, int _amount, int _value)
         {
-            this.name = _name;
-            this.quantity = _amount;
-            this.value_cp = 5; // placeholder
+            this.stored_product = _name;
+            this.stored_amount = _amount;
+            this.stored_value_cp = _value;
         }
     }
 
@@ -59,38 +59,43 @@ public class Storage : MonoBehaviour
     // public
 
 
-    public void RemoveMaterials(Resources.Raw _material, int _amount)
+    public void RemoveMaterials(Resource _material, int _amount)
     {
-        StoredMaterials inventory_row = MaterialsHandled.First(r => r.material == _material);
-        int new_amount = inventory_row.amount - _amount;
+        StoredMaterials inventory_row = MaterialsHandled.First(r => r.stored_material == _material);
+        int new_amount = inventory_row.stored_amount - _amount;
+        float material_value = Resources.Instance.AvailableResources.Where(ar => ar.Name == inventory_row.stored_material.Name).First().ValueInCopper;
         if (new_amount < 0) new_amount = 0;
-        float value = inventory_row.value_cp * new_amount;
+        float value = material_value * new_amount;
         MaterialsHandled.Remove(inventory_row); // we can't update the existing row; have to remove the old and add the new
         MaterialsHandled.Add(new StoredMaterials(_material, new_amount, value)); 
     }
 
 
-    public void StoreMaterials(Actor harvester)
+    public void StoreMaterials(Actor _worker)
     {
-        foreach (KeyValuePair<Resources.Raw, int> pair in harvester.Load) {
-            StoredMaterials inventory_row = MaterialsHandled.First(r => r.material == pair.Key);
-            int new_amount = inventory_row.amount + pair.Value;
-            float value = inventory_row.value_cp * new_amount;
-            MaterialsHandled.Remove(inventory_row); // we can't update the existing row; have to remove the old and add the new
-            MaterialsHandled.Add(new StoredMaterials(pair.Key, new_amount, value));
-        }
+        // TODO: have a single update materials function for add and remove
+        
+        Resource delivered_material = _worker.Load.First().Key;
+        float material_value = Resources.Instance.AvailableResources.Where(ar => ar.Name == delivered_material.Name).First().ValueInCopper;
+        int delivered_quantity = _worker.Load.First().Value;
 
-        harvester.Load.Clear(); // TODO: allow harvesters to have multiple materials
+        StoredMaterials current_inventory = MaterialsHandled.First(r => r.stored_material == delivered_material);
+        int new_inventory = current_inventory.stored_amount + delivered_quantity;
+        float new_value = material_value * new_inventory;
+        MaterialsHandled.Remove(current_inventory); // we can't update the existing row; have to remove the old and add the new
+        MaterialsHandled.Add(new StoredMaterials(delivered_material, new_inventory, new_value));
+
+        _worker.Load.Clear(); // TODO: allow harvesters to have multiple materials
     }
 
 
-    public void StoreProducts(Industry.Product product, int amount)
+    public void StoreProducts(Actor worker)
     {
-        StoredProducts inventory_row = ProductsHandled.First(p => p.name == product.Name);
-        int new_amount = inventory_row.quantity + amount;
-        float value = new_amount * product.Value_CP;
-        ProductsHandled.Remove(inventory_row);
-        ProductsHandled.Add(new StoredProducts(product.Name, new_amount));
+        // StoredProducts inventory_row = ProductsHandled.First(p => p.stored_product == product.Name);
+        // int new_amount = inventory_row.stored_amount + amount;
+        // float value = new_amount * product.Value_CP;
+        // ProductsHandled.Remove(inventory_row);
+        // ProductsHandled.Add(new StoredProducts(product.Name, new_amount));
     }
 
 

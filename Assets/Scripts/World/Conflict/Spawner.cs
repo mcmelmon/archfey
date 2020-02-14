@@ -9,13 +9,13 @@ public class Spawner : MonoBehaviour
     public enum RespawnStrategy { Once, Proximity, Timer };
 
     // Inspector settings
-    public List<SpawnEntry> spawn_prefabs;
-    public RespawnStrategy respawn_strategy;
-    public float player_proximity_trigger;
-    public int respawn_delay;
-    public float spawn_circle_radius;
-    public Faction faction;
-    public Objective objective;
+    [SerializeField] List<SpawnEntry> spawn_prefabs;
+    [SerializeField] RespawnStrategy respawn_strategy;
+    [SerializeField] float player_proximity_trigger;
+    [SerializeField] int respawn_delay;
+    [SerializeField] float spawn_circle_radius;
+    [SerializeField] Faction faction;
+    [SerializeField] Objective objective;
 
     [Serializable]
     public struct SpawnEntry
@@ -26,6 +26,8 @@ public class Spawner : MonoBehaviour
     }
 
     // properties
+
+    public Faction Allegiance { get; set; }
 
     public int RespawnTick { get; set; }
     public Circle SpawnCircle { get; set; }
@@ -140,6 +142,7 @@ public class Spawner : MonoBehaviour
 
     private void SetComponents()
     {
+        Allegiance = faction;
         SpawnCircle = Circle.New(transform.position, spawn_circle_radius);
         Spawned = new Dictionary<string, List<Actor>>();
     }

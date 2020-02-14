@@ -97,9 +97,47 @@ public class Stats : MonoBehaviour
     }
 
 
+    public float CarryingCapacity()
+    {
+        float encumbered_weight;
+
+        switch (Size) {
+            case Sizes.Tiny:
+                encumbered_weight = GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) * 7.5f;
+                break;
+            case Sizes.Small:
+                encumbered_weight = GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) * 15f;
+                break;
+            case Sizes.Medium:
+                encumbered_weight = GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) * 15f;
+                break;
+            case Sizes.Large:
+                encumbered_weight = GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) * 30f;
+                break;
+            case Sizes.Huge:
+                encumbered_weight = GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) * 60f;
+                break;
+            case Sizes.Gargantuan:
+                encumbered_weight = GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) * 120f;
+                break;
+            default:
+                encumbered_weight = GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) * 15f;
+                break;
+        }
+
+        return encumbered_weight;
+    }
+
+
     public int DamageAfterDefenses(int _damage, Weapons.DamageType _type)
     {
         return DamageAfterResistance(_damage, _type);
+    }
+
+
+    public float DragPushLiftCapacity()
+    {
+        return CarryingCapacity() * 2;
     }
 
 

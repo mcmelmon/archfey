@@ -13,7 +13,7 @@ public class Workshop : MonoBehaviour
 
     // properties
 
-    public List<Industry.Product> Craftworks { get; set; }
+    public List<Products.Product> Craftworks { get; set; }
     public Storage Storage { get; set; }
 
 
@@ -37,22 +37,21 @@ public class Workshop : MonoBehaviour
 
     public bool Craft(Actor artisan)
     {
-        if (Craftworks.Count == 0 || Industry.CurrentlyCrafting.Contains(artisan)) return false;
-        Industry.Product product = null;
+        // if (Craftworks.Count == 0 || Industry.CurrentlyCrafting.Contains(artisan)) return false;
 
-        foreach (var tool in artisan.Stats.Tools) {
-            // TODO: pick "most valuable" product/tool available to artisan
-            product = Craftworks.First(cw => cw.Tool == tool);
-            if (product != null) break;
-        }
+        // foreach (var tool in artisan.Stats.Tools) {
+        //     // TODO: pick "most valuable" product/tool available to artisan
+        //     Products.Product product = Craftworks.First(cw => cw.required_tool == tool);
+        //     if (product != null) break;
+        // }
 
-        if (product == null) return false;
+        // if (product == null) return false;
 
-        if (Storage.MaterialsHandled.First(m => m.material == product.Material).amount >= product.MaterialAmount) {
-            Industry.CurrentlyCrafting.Add(artisan);
-            StartCoroutine(Crafting(product, artisan));
-            return true;
-        }
+        // if (Storage.MaterialsHandled.First(m => m.material == product.Material).amount >= product.MaterialAmount) {
+        //     Industry.CurrentlyCrafting.Add(artisan);
+        //     StartCoroutine(Crafting(product, artisan));
+        //     return true;
+        // }
 
         return false;
     }
@@ -73,23 +72,23 @@ public class Workshop : MonoBehaviour
     // private
 
 
-    private IEnumerator Crafting(Industry.Product product, Actor artisan)
-    {
-        Storage.RemoveMaterials(product.Material, product.MaterialAmount);
+    // private IEnumerator Crafting(Industry.Product product, Actor artisan)
+    // {
+    //     Storage.RemoveMaterials(product.Material, product.MaterialAmount);
 
-        int turn = 0;
-        float time_to_finish = 1 + product.Value_CP / 100f;
+    //     int turn = 0;
+    //     float time_to_finish = 1 + product.Value_CP / 100f;
 
 
-        while (turn < time_to_finish) {
-            if (artisan.gameObject == null) break;
-            turn++;
-            yield return new WaitForSeconds(Turn.ActionThreshold);
-        }
+    //     while (turn < time_to_finish) {
+    //         if (artisan.gameObject == null) break;
+    //         turn++;
+    //         yield return new WaitForSeconds(Turn.ActionThreshold);
+    //     }
 
-        Industry.CurrentlyCrafting.Remove(artisan);
-        Storage.StoreProducts(product, 1);
-    }
+    //     Industry.CurrentlyCrafting.Remove(artisan);
+    //     Storage.StoreProducts(product, 1);
+    // }
 
 
     // public IEnumerator GetProductsMadeWith(Proficiencies.Tool tool)
@@ -129,7 +128,7 @@ public class Workshop : MonoBehaviour
             }
             
             foreach (var work in Craftworks) {
-                if (Storage.MaterialsHandled.First(m => m.material == work.Material).amount > work.MaterialAmount) {
+                if (Storage.MaterialsHandled.First(m => m.stored_material == work.required_material).stored_amount > work.required_material_amount) {
                     SpawnArtisanFor(work); // if we have the materials, spawn a tool maker if one is not available
                 }
             }
@@ -141,7 +140,7 @@ public class Workshop : MonoBehaviour
 
     private void SetComponents()
     {
-        Craftworks = new List<Industry.Product>();
+        Craftworks = new List<Products.Product>();
         Storage = GetComponent<Storage>();
         foreach (var tool in shop_tools) {
             // StartCoroutine(GetProductsMadeWith(tool));
@@ -149,7 +148,7 @@ public class Workshop : MonoBehaviour
     }
 
 
-    private void SpawnArtisanFor(Industry.Product _product)
+    private void SpawnArtisanFor(Products.Product _product)
     {
         // Actor primary_artistan;
         // Structure random_residence = FindObjectsOfType<Structure>()

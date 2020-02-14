@@ -12,6 +12,7 @@ public class Structure : MonoBehaviour
 
     [SerializeField] int armor_class = 13;
     [SerializeField] int damage_resistance;
+    [SerializeField] Faction faction;
     [SerializeField] int maximum_hit_points = 100;
     [SerializeField] float revenue_cp;
 
@@ -52,11 +53,10 @@ public class Structure : MonoBehaviour
     }
 
 
-    public void DeliverMaterials(Actor _unit, float _amount)
+    public void DeliverMaterials(Actor _worker)
     {
-        BookRevenue(_amount);
         if (Storage != null)
-            Storage.StoreMaterials(_unit);
+            Storage.StoreMaterials(_worker);
     }
 
 
@@ -87,10 +87,10 @@ public class Structure : MonoBehaviour
     }
 
 
-    public List<Resources.Raw> MaterialsWanted()
+    public List<Resource> MaterialsWanted()
     {
         if (Storage != null) {
-            var wanted_materials = Storage.MaterialsHandled.Select(s => s.material);
+            var wanted_materials = Storage.MaterialsHandled.Select(s => s.stored_material);
             return wanted_materials.ToList();
         }
 
@@ -116,12 +116,6 @@ public class Structure : MonoBehaviour
 
 
     // private
-
-
-    private void BookRevenue(float amount)
-    {
-        // TODO: accumulate revenue
-    }
 
 
     private int DamageAfterResistance(int damage, Weapons.DamageType type)
@@ -151,7 +145,7 @@ public class Structure : MonoBehaviour
         AttachedUnits = new List<Actor>();
         CurrentHitPoints = maximum_hit_points;
         DamageResistance = damage_resistance;
-        Faction = GetComponentInParent<Faction>();
+        Faction = faction;
         MaximumHitPoints = maximum_hit_points;
         OriginalY = transform.position.y;
         OriginalYScale = transform.localScale.y;

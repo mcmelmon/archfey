@@ -5,19 +5,16 @@ using UnityEngine;
 public class HarvestingNode : MonoBehaviour
 {
     // Inspector settings
-    [SerializeField] Resources.Raw material;
+    [SerializeField] Resource harvested_material;
     [SerializeField] Faction faction;
     [SerializeField] bool perpetual;
     [SerializeField] int initial_quantity;
-    [SerializeField] int harvest_increment;
-    [SerializeField] int full_harvest;
-    [SerializeField] List<Proficiencies.Tool> required_tools;
 
     // properties
 
     public int CurrentlyAvailable { get; set; }
     public int FullHarvest { get; set; }
-    public Resources.Raw Material { get; set; }
+    public Resource HarvestedMaterial { get; set; }
     public float OriginalY { get; set; } // TODO: Come up with a better way to indicate destruction/depletion
     public float OriginalYScale { get; set; }
     public Faction Owner { get; set; }
@@ -36,40 +33,22 @@ public class HarvestingNode : MonoBehaviour
 
     // public
 
-
     public bool AccessibleTo(Actor _unit)
     {
         foreach (var tool in _unit.Stats.Tools) {
-            if (required_tools.Contains(tool)) return true;
+            if (HarvestedMaterial.RequiredTools.Contains(tool)) return true;
         }
 
         return false;
     }
 
-
     public void HarvestResource(Actor _harvestor)
     {
         if (!Proficiencies.Instance.IsHarvester(_harvestor)) return;
 
-        int optimal_harvest = harvest_increment * _harvestor.Stats.ProficiencyBonus;
-        int harvested = optimal_harvest;
+        HarvestedMaterial.HarvestedBy(_harvestor);
 
-        if (Structure != null) {
-            // TODO: reduce harvested amount if structure damaged
-        }
-
-        if (_harvestor.Load.ContainsKey(this.material) && _harvestor.Load[this.material] + harvested > full_harvest) 
-            harvested = full_harvest - _harvestor.Load[this.material];
-
-        if (!perpetual && harvested > CurrentlyAvailable) harvested = CurrentlyAvailable;
-        CurrentlyAvailable -= perpetual ? 0 : harvested;
-
-        if (_harvestor.Load.ContainsKey(this.material))
-        {
-            _harvestor.Load[this.material] += harvested;
-        } else {
-            _harvestor.Load[this.material] = harvested;
-        }
+        CurrentlyAvailable -= 1;
     }
 
 
@@ -85,8 +64,7 @@ public class HarvestingNode : MonoBehaviour
     private void SetComponents()
     {
         CurrentlyAvailable = initial_quantity;
-        FullHarvest = full_harvest;
-        Material = material;
+        HarvestedMaterial = harvested_material;
         OriginalY = transform.position.y;
         OriginalYScale = transform.localScale.y;
         Owner = faction;
