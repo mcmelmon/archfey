@@ -27,10 +27,8 @@ public class Inventory : MonoBehaviour
 
     public void AddToInventory(GameObject stored_object)
     {
-        if (Contents.Count < 20) {
-            Contents.Add(stored_object);
-            stored_object.SetActive(false);
-        }
+        Contents.Add(stored_object);
+        stored_object.SetActive(false);
 
         if (Me == Player.Instance.Me) PlayerInventory.Instance.SyncDisplayedInventory();
     }
@@ -38,10 +36,8 @@ public class Inventory : MonoBehaviour
 
     public void AddToPockets(GameObject stored_object)
     {
-        if (Pockets.Count < 5) {
-            Pockets.Add(stored_object);
-            stored_object.SetActive(false);
-        }
+        Pockets.Add(stored_object);
+        stored_object.SetActive(false);
 
         if (Me == Player.Instance.Me) PlayerInventory.Instance.SyncDisplayedInventory();
     }
@@ -59,17 +55,40 @@ public class Inventory : MonoBehaviour
     public void RemoveFromInventory(GameObject stored_object)
     {
         Contents.Remove(stored_object);
+        // set active true?
     }
 
-    public float StoredValue()
+    public void RemoveFromInventoryAt(int index)
+    {
+        Contents.RemoveAt(index);
+    }
+
+    public int StorageCount()
+    {
+        return Contents.Count;
+    }
+
+    public float StorageValue()
     {
         float stored_value = 0f;
 
         foreach (Item item in Contents.Select(i => i.GetComponent<Item>())) {
-            stored_value += item.base_cost_cp;
+            stored_value += item.GetAdjustedValueInCopper();
         }
 
         return stored_value;
+    }
+
+    public float StorageWeight()
+    {
+        float stored_weight = 0;
+
+        foreach (Item item in Contents.Select(i => i.GetComponent<Item>())) {
+            stored_weight += item.GetAdjustedWeight();
+        }
+
+        return stored_weight;
+
     }
 
     // private

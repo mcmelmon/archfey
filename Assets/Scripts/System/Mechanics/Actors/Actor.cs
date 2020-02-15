@@ -85,14 +85,9 @@ public class Actor : MonoBehaviour
 
     public bool IsEncumbered(float prospetive_additional_weight = 0)
     {
-        float carried_weight = 0f + prospetive_additional_weight;
+        float carried_weight = Inventory.StorageWeight();
 
-        foreach (var thing in Inventory.Contents) {
-            Item item = thing.GetComponent<Item>();
-            carried_weight += item.GetAdjustedWeight();
-        }
-
-        if (carried_weight > Me.Stats.CarryingCapacity()) {
+        if (carried_weight + prospetive_additional_weight > Me.Stats.CarryingCapacity()) {
             HasFullLoad = true;
         } else {
             HasFullLoad = false;

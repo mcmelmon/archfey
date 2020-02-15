@@ -44,7 +44,7 @@ public class HarvestingNode : MonoBehaviour
 
     public bool HarvestResource(Actor _harvestor)
     {
-        if (!Proficiencies.Instance.IsHarvester(_harvestor)) return false;
+        if (!Proficiencies.Instance.IsHarvester(_harvestor) || CurrentlyAvailable <= 0) return false;
 
         if (HarvestedMaterial.HarvestBy(_harvestor)) {
             CurrentlyAvailable -= 1;

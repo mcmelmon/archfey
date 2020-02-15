@@ -28,6 +28,14 @@ public class Commoner : TemplateMelee
 
     public override void OnCrafting() { }
 
+    public override void OnDamagedFriendlyStructuresSighted()
+    {
+        if (!RepairStructure()) {
+            FindDamagedStructure();
+            Me.Actions.Movement.SetDestination(Me.Actions.Movement.Destinations[Movement.CommonDestination.Repair]);
+        }
+    }
+
     public override void OnFriendsInNeed()
     {
         if (Me.Actions.Decider.FriendsInNeed.First() != null) {
@@ -35,14 +43,6 @@ public class Commoner : TemplateMelee
         }
         Me.Actions.Attack();
         Me.Actions.Decider.FriendsInNeed.Clear();
-    }
-
-    public override void OnDamagedFriendlyStructuresSighted()
-    {
-        if (!RepairStructure()) {
-            FindDamagedStructure();
-            Me.Actions.Movement.SetDestination(Me.Actions.Movement.Destinations[Movement.CommonDestination.Repair]);
-        }
     }
 
     public override void OnFullLoad()
@@ -77,7 +77,6 @@ public class Commoner : TemplateMelee
             Me.Route.MoveToNextPosition();
         } else {
             FindWork();
-            Me.Actions.Movement.Work();
         }
     }
     public override void OnNeedsRest()
@@ -87,9 +86,13 @@ public class Commoner : TemplateMelee
     }
     public override void OnReachedGoal()
     {
+        Debug.Log("Reached goal");
         if (!Harvest()) {
+            Debug.Log("Failed to harvest");
             if (!Craft()) {
+                Debug.Log("No craft");
                 if (!Warehouse()) {
+                    Debug.Log("No warehouse");
                     if (!RepairStructure()) {
                         OnIdle();
                     }
@@ -105,6 +108,39 @@ public class Commoner : TemplateMelee
     private void AbandonLoad()
     {
         Me.Inventory.Empty();
+    }
+
+    private bool ChooseHarvest()
+    {
+        List<HarvestingNode> available = FindObjectsOfType<HarvestingNode>().Where(node => node.Owner == Me.CurrentFaction && node.AccessibleTo(Me) && node.CurrentlyAvailable > 0).ToList();
+        if (available.Any()) {
+            MyHarvest = available.OrderBy(node => Vector3.Distance(transform.position, node.transform.position)).First();
+            Me.HasTask = true;
+            return true;
+        }
+
+        MyHarvest = null;
+        Me.HasTask = false;
+        return false;
+    }
+
+    private bool ChooseWarehouse()
+    {
+        if (Me.Inventory.StorageCount() > 0) {
+            foreach (var item in Me.Inventory.Contents) {
+                List<Structure> available = FindObjectsOfType<Structure>().Where(s => s.Faction == Me.CurrentFaction && s.WillAccept(item)).ToList();
+
+                if (available.Any()) {
+                    MyWarehouse = available.OrderBy(s => Vector3.Distance(transform.position, s.transform.position)).First();
+                    Me.HasTask = true;
+                    return true;
+                }
+            }
+        } 
+        
+        MyWarehouse = null;
+        Me.HasTask = false;
+        return false;
     }
 
     private bool Craft()
@@ -162,40 +198,33 @@ public class Commoner : TemplateMelee
             return;
         }
 
-        foreach (var item in Me.Inventory.Contents) {
-            MyWarehouse = FindObjectsOfType<Structure>()
-                .Where(s => s.Faction == Me.CurrentFaction && s.WillAccept(item))
-                .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
-                .ToList()
-                .First();
-
-            if (MyWarehouse != null) break;
+        if (ChooseWarehouse()) {
+            Me.Actions.Movement.SetDestination(MyWarehouse.NearestEntranceTo(Me.transform));
         }
-
-        if (MyWarehouse == null) return;
-        Me.HasTask = true;
-        Me.Actions.Movement.SetDestination(MyWarehouse.NearestEntranceTo(Me.transform));
     }
 
     private void FindWork()
     {
-        if (MyHarvest != null || MyWorkshop != null) return; // work has found us
+        if (MyHarvest != null || MyWarehouse != null || MyWorkshop != null) return; // work has found us
 
         if (Proficiencies.Instance.IsHarvester(Me)) {
-            MyHarvest = new List<HarvestingNode>(FindObjectsOfType<HarvestingNode>())
-                .Where(r => r.Owner == Me.CurrentFaction && r.AccessibleTo(Me))
-                .OrderBy(r => Vector3.Distance(transform.position, r.transform.position))
-                .ToList()
-                .First();
-            if (MyHarvest == null) return;
-            Me.HasTask = true;
-            Collider target_collider = MyHarvest.GetComponent<Collider>();
-            Me.Actions.Movement.SetDestination(MyHarvest.transform);
+            if (ChooseHarvest()) {
+                Me.Actions.Movement.SetDestination(MyHarvest.transform);
+                return;
+            }
         } else if (Proficiencies.Instance.IsArtisan(Me)) {
             MyWorkshop = FindObjectsOfType<Workshop>().First(ws => ws.UsefulTo(Me));
             if (MyWorkshop == null) return;
             Me.HasTask = true;
             Me.Actions.Movement.SetDestination(MyWorkshop.Structure.NearestEntranceTo(Me.transform));
+            return;
+        }
+
+        // No work is available, so see if we can drop anything off despite not having a full load
+        if (ChooseWarehouse()) {
+            Me.Actions.Movement.SetDestination(MyWarehouse.NearestEntranceTo(Me.transform));
+        } else {
+            Me.Actions.Movement.ClearCurrentDestination(); // nothing to do and nowhere to be
         }
     }
 
@@ -207,12 +236,15 @@ public class Commoner : TemplateMelee
 
     private bool Harvest()
     {
-        if (!Proficiencies.Instance.IsHarvester(Me) || MyHarvest == null) return false;
+        if (!Proficiencies.Instance.IsHarvester(Me)) return false;
 
-        if (Me.HasTask && Me.Actions.Movement.AtCurrentDestination()) {
-            return MyHarvest.HarvestResource(Me);
+        if (MyHarvest != null && MyHarvest.CurrentlyAvailable > 0 && Me.HasTask && Me.Actions.Movement.AtCurrentDestination() && MyHarvest.HarvestResource(Me)) {
+            return true;
         }
 
+        MyHarvest = null;
+        Me.HasTask = false;
+        Me.Actions.Movement.ClearCurrentDestination();
         return false;
     }
 

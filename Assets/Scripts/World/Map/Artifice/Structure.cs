@@ -53,17 +53,14 @@ public class Structure : MonoBehaviour
 
     public void DeliverMaterials(Actor _worker)
     {
-        for (int i = 0; i < _worker.Inventory.Contents.Count; i++) {
-            GameObject item = _worker.Inventory.Contents[i];
-            if (WillAccept(item)) {
-                Inventory.AddToInventory(item);
-                _worker.Inventory.RemoveFromInventory(item);
-            }       
+        foreach (var acceptable in will_accept_for_storage) {
+            foreach (var transfer in _worker.Inventory.Contents.Where(item => item.gameObject == acceptable).ToList()) {
+                Inventory.AddToInventory(transfer);
+            }
+            _worker.Inventory.RemoveFromInventory(acceptable);
         }
 
         _worker.IsEncumbered();
-
-        Debug.Log("Stored value: " + StoredValue());
     }
 
     public void GainStructure(int _amount)
@@ -107,7 +104,7 @@ public class Structure : MonoBehaviour
 
     public float StoredValue()
     {
-        return Inventory.StoredValue();
+        return Inventory.StorageValue();
     }
 
     public bool WillAccept(GameObject item)

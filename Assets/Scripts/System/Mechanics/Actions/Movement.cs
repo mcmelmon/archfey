@@ -54,6 +54,11 @@ public class Movement : MonoBehaviour
         Agent.speed = GetAdjustedSpeed();
     }
 
+    public void ClearCurrentDestination()
+    {
+        CurrentDestination = Vector3.zero;
+    }
+
     public void Dash()
     {
         if (!IsDashing) StartCoroutine(Dashing());
