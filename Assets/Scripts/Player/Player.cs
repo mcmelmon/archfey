@@ -180,7 +180,6 @@ public class Player : MonoBehaviour, IAct {
         Me.Alignment = Conflict.Alignment.Neutral;
         Me.CurrentFaction = player_faction;
         Me.Health = GetComponent<Health>();
-        Me.Load = new Dictionary<Resource, int>();
         Me.RestCounter = 0;
         Me.Senses = GetComponent<Senses>();
         Me.Stats = GetComponent<Stats>();

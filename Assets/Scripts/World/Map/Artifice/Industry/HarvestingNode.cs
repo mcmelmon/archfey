@@ -42,13 +42,16 @@ public class HarvestingNode : MonoBehaviour
         return false;
     }
 
-    public void HarvestResource(Actor _harvestor)
+    public bool HarvestResource(Actor _harvestor)
     {
-        if (!Proficiencies.Instance.IsHarvester(_harvestor)) return;
+        if (!Proficiencies.Instance.IsHarvester(_harvestor)) return false;
 
-        HarvestedMaterial.HarvestedBy(_harvestor);
-
-        CurrentlyAvailable -= 1;
+        if (HarvestedMaterial.HarvestedBy(_harvestor)) {
+            CurrentlyAvailable -= 1;
+            return true;
+        }
+        _harvestor.HasTask = false;
+        return false;
     }
 
 

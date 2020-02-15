@@ -13,6 +13,7 @@ public class Movement : MonoBehaviour
     public bool IsDashing { get; set; }
     public Actor Me { get; set; }
     public NavMeshAgent Agent { get; set; }
+    public Vector3 CurrentDestination { get; set; }
     public Dictionary<CommonDestination, Vector3> Destinations { get; set; }
     public bool IsJumping { get; set; }
     public float ReachedThreshold { get; set; }
@@ -38,6 +39,10 @@ public class Movement : MonoBehaviour
         }
     }
 
+    public bool AtCurrentDestination()
+    {
+        return CurrentDestination != Vector3.zero && Vector3.Distance(Me.transform.position, CurrentDestination) < ReachedThreshold + 1.5f; // account for navmesh obstacle buffer
+    }
 
     public void AdjustSpeed(float boost)
     {
@@ -49,12 +54,10 @@ public class Movement : MonoBehaviour
         Agent.speed = GetAdjustedSpeed();
     }
 
-
     public void Dash()
     {
         if (!IsDashing) StartCoroutine(Dashing());
     }
-
 
     public void Disengage()
     {
@@ -65,7 +68,6 @@ public class Movement : MonoBehaviour
 
         Me.Actions.SheathWeapon();
     }
-
 
     public float GetAdjustedSpeed()
     {
@@ -82,45 +84,41 @@ public class Movement : MonoBehaviour
         }
     }
 
-
     public void Home()
     {
         SetDestination(Destinations[CommonDestination.Home]);
     }
 
-
     public bool InProgress()
     {
-        return (Agent != null) && Agent.hasPath && Agent.velocity != Vector3.zero;
+        return Me.HasTask && !AtCurrentDestination();
     }
-
 
     public void Jump()
     {
         StartCoroutine(Jumping());
     }
 
-
     public float JumpVelocity()
     {
         return Me.Stats.Skills.Contains(Proficiencies.Skill.Acrobatics)
-                         ? 3 + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) + Me.Stats.ProficiencyBonus / 2
-                         : 3 + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength);
+                         ? 3 + Me.Stats.GetAdjustedAttributeModifier(Proficiencies.Attribute.Strength) + Me.Stats.ProficiencyBonus / 2
+                         : 3 + Me.Stats.GetAdjustedAttributeModifier(Proficiencies.Attribute.Strength);
     }
-
 
     public void ResetPath()
     {
-        if (!IsJumping) Agent.ResetPath();
+        if (!IsJumping) {
+            Agent.ResetPath();
+            CurrentDestination = Vector3.zero;
+        }
     }
-
 
     public void ResetSpeed()
     {
         SpeedAdjustment = 0;
         Agent.speed = GetAdjustedSpeed();
     }
-
 
     public void SetDestination(Transform target_object)
     {
@@ -129,18 +127,19 @@ public class Movement : MonoBehaviour
         Vector3 destination = (target_collider != null) ? target_collider.ClosestPointOnBounds(transform.position) : target_object.position;
         Vector3 new_facing = Vector3.RotateTowards(transform.forward, transform.position - destination, 30f * Time.deltaTime, 0f);
         transform.rotation = Quaternion.LookRotation(new_facing);
-        Agent.SetDestination(destination);  // may have height issues on terrain
+        Agent.SetDestination(destination);
+        CurrentDestination = destination;
     }
-
 
     public void SetDestination(Vector3 destination)
     {
         ResetPath();
         Vector3 new_facing = Vector3.RotateTowards(transform.forward, transform.position - destination, 30f * Time.deltaTime, 0f);
         transform.rotation = Quaternion.LookRotation(new_facing);
-        Agent.SetDestination(destination);  // may have height issues on terrain
+        NavMeshPath path = new NavMeshPath();
+        Agent.SetDestination(destination);
+        CurrentDestination = destination;
     }
-
 
     public IEnumerator TrackUnit(Actor unit)
     {
@@ -151,12 +150,10 @@ public class Movement : MonoBehaviour
         }
     }
 
-
     public void Warehouse()
     {
         SetDestination(Destinations[CommonDestination.Warehouse]);
     }
-
 
     public void Work()
     {
@@ -169,7 +166,6 @@ public class Movement : MonoBehaviour
 
 
     // private
-
 
     private IEnumerator Dashing()
     {
@@ -188,7 +184,6 @@ public class Movement : MonoBehaviour
         AdjustSpeed(previous_speed_adjustment);
     }
 
-
     private IEnumerator Jumping()
     {
         while (true) {
@@ -202,6 +197,10 @@ public class Movement : MonoBehaviour
         Agent.enabled = true;
     }
 
+    private bool NotMoving()
+    {
+        return Agent.velocity.x < 0.01f && Agent.velocity.y < 0.01f && Agent.velocity.z < 0.01f;
+    }
 
     private void SetComponents()
     {
@@ -209,6 +208,7 @@ public class Movement : MonoBehaviour
 
         Agent = GetComponentInParent<NavMeshAgent>();
         Agent.ResetPath();
+        CurrentDestination = Vector3.zero;
         Destinations = new Dictionary<CommonDestination, Vector3>();
         IsJumping = false;
         SpeedAdjustment = 0;

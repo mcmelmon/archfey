@@ -103,25 +103,25 @@ public class Stats : MonoBehaviour
 
         switch (Size) {
             case Sizes.Tiny:
-                encumbered_weight = GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) * 7.5f;
+                encumbered_weight = GetAdjustedAttribute(Proficiencies.Attribute.Strength) * 7.5f;
                 break;
             case Sizes.Small:
-                encumbered_weight = GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) * 15f;
+                encumbered_weight = GetAdjustedAttribute(Proficiencies.Attribute.Strength) * 15f;
                 break;
             case Sizes.Medium:
-                encumbered_weight = GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) * 15f;
+                encumbered_weight = GetAdjustedAttribute(Proficiencies.Attribute.Strength) * 15f;
                 break;
             case Sizes.Large:
-                encumbered_weight = GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) * 30f;
+                encumbered_weight = GetAdjustedAttribute(Proficiencies.Attribute.Strength) * 30f;
                 break;
             case Sizes.Huge:
-                encumbered_weight = GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) * 60f;
+                encumbered_weight = GetAdjustedAttribute(Proficiencies.Attribute.Strength) * 60f;
                 break;
             case Sizes.Gargantuan:
-                encumbered_weight = GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) * 120f;
+                encumbered_weight = GetAdjustedAttribute(Proficiencies.Attribute.Strength) * 120f;
                 break;
             default:
-                encumbered_weight = GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) * 15f;
+                encumbered_weight = GetAdjustedAttribute(Proficiencies.Attribute.Strength) * 15f;
                 break;
         }
 
@@ -141,16 +141,20 @@ public class Stats : MonoBehaviour
     }
 
 
-    public int GetAdjustedAttributeScore(Proficiencies.Attribute attribute)
+    public int GetAdjustedAttribute(Proficiencies.Attribute attribute)
     {
-        int adjustment = (Mathf.Clamp(Attributes[attribute] + AttributeAdjustments[attribute], 0, 30) - 10) / 2;
-        return Mathf.Clamp(adjustment, -5, 10);
+        return Mathf.Clamp(Attributes[attribute] + AttributeAdjustments[attribute], 0, 30);
+    }
+
+    public int GetAdjustedAttributeModifier(Proficiencies.Attribute attribute)
+    {
+        return Mathf.Clamp((GetAdjustedAttribute(attribute) - 10)/2, -5, 10);
     }
 
 
     public int GetArmorClass()
     {
-        int armor_class = Mathf.Max(BaseArmorClass, Me.Actions.Combat.EquippedArmor.ArmorClass(GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity)));
+        int armor_class = Mathf.Max(BaseArmorClass, Me.Actions.Combat.EquippedArmor.ArmorClass(GetAdjustedAttributeModifier(Proficiencies.Attribute.Dexterity)));
         Armor shield = Me.Actions.Combat.EquippedOffhand?.GetComponent<Armor>();
 
         return shield != null ? armor_class + shield.ArmorClassEnhancement : armor_class;
@@ -252,24 +256,31 @@ public class Stats : MonoBehaviour
         switch (Size) {
             case Sizes.Tiny:
                 Me.Actions.Movement.ReachedThreshold = 1.5f;
+                Me.Actions.Movement.Agent.stoppingDistance = 1.5f;
                 break;
             case Sizes.Small:
                 Me.Actions.Movement.ReachedThreshold = 2f;
+                Me.Actions.Movement.Agent.stoppingDistance = 2f;
                 break;
             case Sizes.Medium:
                 Me.Actions.Movement.ReachedThreshold = 2.5f;
+                Me.Actions.Movement.Agent.stoppingDistance = 2.5f;
                 break;
             case Sizes.Large:
                 Me.Actions.Movement.ReachedThreshold = 3f;
+                Me.Actions.Movement.Agent.stoppingDistance = 3f;
                 break;
             case Sizes.Huge:
                 Me.Actions.Movement.ReachedThreshold = 3.5f;
+                Me.Actions.Movement.Agent.stoppingDistance = 3.5f;
                 break;
             case Sizes.Gargantuan:
                 Me.Actions.Movement.ReachedThreshold = 4f;
+                Me.Actions.Movement.Agent.stoppingDistance = 4f;
                 break;
             default:
                 Me.Actions.Movement.ReachedThreshold = 2.5f;
+                Me.Actions.Movement.Agent.stoppingDistance = 2.5f;
                 break;
         }
 

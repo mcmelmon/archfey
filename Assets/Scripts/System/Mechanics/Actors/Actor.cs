@@ -22,10 +22,11 @@ public class Actor : MonoBehaviour
     public int ExhaustionLevel { get; set; } // TODO: create exhaustion class
     public Faction CurrentFaction { get; set; }
     public List<Faction> Factions { get; set; }
+    public bool HasFullLoad { get; set; }
+    public bool HasTask { get; set; }
     public Health Health { get; set; }
     public Interactable Interactions { get; set; }
     public Inventory Inventory { get; set; }
-    public Dictionary<Resource, int> Load { get; set; }
     public Magic Magic { get; set; }
     public Actor Me { get; set; }
     public int RestCounter { get; set; }
@@ -86,11 +87,18 @@ public class Actor : MonoBehaviour
     {
         float carried_weight = 0f + prospetive_additional_weight;
 
-        foreach (KeyValuePair<Resource, int> pair in Load) {
-            carried_weight += pair.Key.Weight * pair.Value;
+        foreach (var thing in Inventory.Contents) {
+            Item item = thing.GetComponent<Item>();
+            carried_weight += item.GetAdjustedWeight();
         }
 
-        return carried_weight > Me.Stats.CarryingCapacity();
+        if (carried_weight > Me.Stats.CarryingCapacity()) {
+            HasFullLoad = true;
+        } else {
+            HasFullLoad = false;
+        }
+
+        return HasFullLoad;
     }
 
     public bool IsGrounded()
@@ -144,10 +152,11 @@ public class Actor : MonoBehaviour
         Dialog = GetComponent<Dialog>();
         ExhaustionLevel = 0;
         Factions = new List<Faction>();
+        HasFullLoad = false;
+        HasTask = false;
         Health = GetComponent<Health>();
         Interactions = GetComponent<Interactable>();
         Inventory = GetComponent<Inventory>();
-        Load = new Dictionary<Resource, int>();
         Me = this;
         RestCounter = 0;
         Route = GetComponent<Route>();

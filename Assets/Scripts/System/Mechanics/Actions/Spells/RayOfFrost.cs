@@ -156,7 +156,7 @@ public class RayOfFrost : MonoBehaviour
 
     private void SetModifiers()
     {
-        AttackModifier = Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeScore(SpellCastingAttribute);
+        AttackModifier = Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeModifier(SpellCastingAttribute);
         DamageModifier = 0; // but may eventually include class feature bonuses
     }
 }

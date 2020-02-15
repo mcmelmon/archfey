@@ -11,9 +11,7 @@ public class Commoner : TemplateMelee
     public Structure MyWarehouse { get; set; }
     public Workshop MyWorkshop { get; set; }
 
-
     // Unity
-
 
     private void Start()
     {
@@ -23,15 +21,12 @@ public class Commoner : TemplateMelee
 
     // public
 
-
     public override void OnBadlyInjured()
     {
         Me.Actions.Movement.Home();
     }
 
-
     public override void OnCrafting() { }
-
 
     public override void OnFriendsInNeed()
     {
@@ -42,31 +37,22 @@ public class Commoner : TemplateMelee
         Me.Actions.Decider.FriendsInNeed.Clear();
     }
 
-
     public override void OnDamagedFriendlyStructuresSighted()
     {
         if (!RepairStructure()) {
             FindDamagedStructure();
-            Me.Actions.Movement.ResetPath();
             Me.Actions.Movement.SetDestination(Me.Actions.Movement.Destinations[Movement.CommonDestination.Repair]);
         }
     }
 
-
     public override void OnFullLoad()
     {
         FindWarehouse();
-        Me.Actions.Movement.Warehouse();
     }
-
-
     public override void OnHarvesting()
     {
-        Me.Actions.Movement.ResetPath();
         Harvest();
     }
-
-
     public override void OnHostileActorsSighted()
     {
         if (Me.Actions.Decider.FriendsInNeed.Count == 0) {
@@ -74,18 +60,18 @@ public class Commoner : TemplateMelee
             FindGuard();
         }
     }
-
-
     public override void OnHostileStructuresSighted()
     {
         Me.Actions.CallForHelp();
         Me.Actions.FleeFromEnemies();
     }
-
-
     public override void OnIdle()
     {
         Me.Actions.SheathWeapon();
+        Me.HasTask = false;
+        MyHarvest = null;
+        MyWarehouse = null;
+        MyWorkshop = null;
 
         if (Me.Route.local_stops.Length > 1) {
             Me.Route.MoveToNextPosition();
@@ -94,19 +80,13 @@ public class Commoner : TemplateMelee
             Me.Actions.Movement.Work();
         }
     }
-
-
     public override void OnNeedsRest()
     {
         Me.Actions.SheathWeapon();
         Me.Actions.Movement.Home();
     }
-
-
     public override void OnReachedGoal()
     {
-        Me.Actions.Movement.ResetPath();
-
         if (!Harvest()) {
             if (!Craft()) {
                 if (!Warehouse()) {
@@ -124,19 +104,15 @@ public class Commoner : TemplateMelee
 
     private void AbandonLoad()
     {
-        Me.Load.Clear();
+        Me.Inventory.Empty();
     }
-
 
     private bool Craft()
     {
         if (!Proficiencies.Instance.IsArtisan(Me) || MyWorkshop == null) return false;
 
-        float distance = Vector3.Distance(Me.Actions.Movement.Destinations[Movement.CommonDestination.Craft], transform.position);
-
-        return distance < Me.Actions.Movement.ReachedThreshold && MyWorkshop.Craft(Me);
+        return Me.HasTask && Me.Actions.Movement.AtCurrentDestination() && MyWorkshop.Craft(Me);
     }
-
 
     private void FindDamagedStructure()
     {
@@ -152,7 +128,6 @@ public class Commoner : TemplateMelee
         Me.Actions.Movement.AddDestination(Movement.CommonDestination.Repair, _collider.ClosestPointOnBounds(transform.position));
     }
 
-
     private void FindGuard()
     {
         Structure nearest_military_structure = FindObjectsOfType<Structure>()
@@ -165,7 +140,6 @@ public class Commoner : TemplateMelee
         Me.Actions.Movement.SetDestination(nearest_military_structure.transform);
     }
 
-
     private void FindShrine()
     {
         Structure nearest_sacred_structure = FindObjectsOfType<Structure>()
@@ -177,22 +151,44 @@ public class Commoner : TemplateMelee
         Me.Actions.Movement.SetDestination(nearest_sacred_structure.transform);
     }
 
-
     private void FindWarehouse()
     {
-        MyWarehouse = FindObjectsOfType<Structure>()
-            .Where(s => s.Faction == Me.CurrentFaction && s.Storage != null && s.MaterialsWanted().Contains(Me.Load.First().Key))
-            .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
-            .ToList()
-            .First();
+        if (!Me.Inventory.HasContents()) return;
+
+        if (MyWarehouse != null) {
+            if (Warehouse()) {
+                Me.HasTask = false;
+            }
+            return;
+        }
+
+        foreach (var item in Me.Inventory.Contents) {
+            Resource material = item.GetComponent<Resource>();
+            Product product = item.GetComponent<Product>();
+
+            if (material != null) {
+                MyWarehouse = FindObjectsOfType<Structure>()
+                    .Where(s => s.Faction == Me.CurrentFaction && s.Storage != null && s.Storage.materials_accepted.Contains(material))
+                    .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
+                    .ToList()
+                    .First();
+
+                if (MyWarehouse != null) break;
+            } else if (product != null) {
+                MyWarehouse = FindObjectsOfType<Structure>()
+                    .Where(s => s.Faction == Me.CurrentFaction && s.Storage != null && s.Storage.products_accepted.Contains(product))
+                    .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
+                    .ToList()
+                    .First();
+
+                if (MyWarehouse != null) break;
+            }
+        }
 
         if (MyWarehouse == null) return;
-
-        Vector3 entrance = MyWarehouse.RandomEntrance().transform.position; // NOTE: there may be an issue with Y height; be sure entrances are placed on/near the ground
-
-        Me.Actions.Movement.AddDestination(Movement.CommonDestination.Warehouse, entrance);
+        Me.HasTask = true;
+        Me.Actions.Movement.SetDestination(MyWarehouse.RandomEntrance().transform.position);
     }
-
 
     private void FindWork()
     {
@@ -204,21 +200,17 @@ public class Commoner : TemplateMelee
                 .OrderBy(r => Vector3.Distance(transform.position, r.transform.position))
                 .ToList()
                 .First();
-
             if (MyHarvest == null) return;
-
-            Collider _collider = MyHarvest.GetComponent<Collider>();
-            Me.Actions.Movement.AddDestination(Movement.CommonDestination.Harvest, _collider.ClosestPointOnBounds(transform.position));
-
+            Me.HasTask = true;
+            Collider target_collider = MyHarvest.GetComponent<Collider>();
+            Me.Actions.Movement.SetDestination(MyHarvest.transform);
         } else if (Proficiencies.Instance.IsArtisan(Me)) {
             MyWorkshop = FindObjectsOfType<Workshop>().First(ws => ws.UsefulTo(Me));
             if (MyWorkshop == null) return;
-
-            Collider _collider = MyWorkshop.GetComponent<Collider>();
-            Me.Actions.Movement.AddDestination(Movement.CommonDestination.Craft, _collider.ClosestPointOnBounds(transform.position));
+            Me.HasTask = true;
+            Me.Actions.Movement.SetDestination(MyWorkshop.Storage.Structure.NearestEntranceTo(Me.transform));
         }
     }
-
 
     private void GoHome()
     {
@@ -230,12 +222,8 @@ public class Commoner : TemplateMelee
     {
         if (!Proficiencies.Instance.IsHarvester(Me) || MyHarvest == null) return false;
 
-        // MyHarvest is the node itself, not the "destination"
-        float distance = Vector3.Distance(Me.Actions.Movement.Destinations[Movement.CommonDestination.Harvest], transform.position);
-
-        if (distance <= Me.Actions.Movement.ReachedThreshold) {
-            MyHarvest.HarvestResource(Me);
-            return true;
+        if (Me.HasTask && Me.Actions.Movement.AtCurrentDestination()) {
+            return MyHarvest.HarvestResource(Me);
         }
 
         return false;
@@ -285,12 +273,10 @@ public class Commoner : TemplateMelee
 
     private bool Warehouse()
     {
-        if (Me.Load.Count <= 0 || MyWarehouse == null) return false;
-
-        float distance = Vector3.Distance(Me.Actions.Movement.Destinations[Movement.CommonDestination.Warehouse], transform.position);
+        if (!Me.Inventory.HasContents() || MyWarehouse == null || MyWarehouse.Storage == null) return false;
         
-        if (distance <= Me.Actions.Movement.ReachedThreshold) {
-            MyWarehouse.DeliverMaterials(Me); // TODO: base amount on resources!
+        if (Me.Actions.Movement.AtCurrentDestination()) {
+            MyWarehouse.Storage.DeliverMaterials(Me);
             return true;
         }
 

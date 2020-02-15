@@ -38,7 +38,6 @@ public class TemplateVersatile : TemplateMelee
 
     public override void OnWatch()
     {
-        Me.Actions.Movement.ResetPath();
         Me.Actions.KeepEnemiesAtRange();
         Me.Actions.Attack();
     }

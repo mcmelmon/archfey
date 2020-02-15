@@ -112,8 +112,8 @@ public class Acolyte : MonoBehaviour, IAct
 
     public void OnReachedGoal()
     {
-        Me.Actions.Movement.ResetPath();
         Me.Actions.Decider.FriendsInNeed.Clear();
+        OnIdle();
     }
 
 

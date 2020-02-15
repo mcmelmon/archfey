@@ -44,7 +44,7 @@ public class Decider : MonoBehaviour
     public List<Actor> Friends { get; set; }
     public List<Actor> FriendsInNeed { get; set; }
     public List<Structure> FriendlyStructures { get; set; }
-    public ClaimNode Goal { get; set; }
+    public ClaimNode GoalClaim { get; set; }
     public List<Structure> HostileStructures { get; set; }
     public Actor Me { get; set; }
     public List<Objective> Objectives { get; set; }
@@ -87,18 +87,18 @@ public class Decider : MonoBehaviour
             SetState(State.HostileStructuresSighted);
         } else if (DamagedFriendlyStructures()) {
             SetState(State.DamagedFriendlyStructuresSighted);
+        } else if (FullLoad()) {
+            SetState(State.FullLoad);
         } else if (Crafting()) {
             SetState(State.Crafting);
+        } else if (Harvesting()) {
+            SetState(State.Harvesting);
         } else if (ReachedGoal()) {
             SetState(State.ReachedGoal);
         } else if (Moving()) {
             SetState(State.MovingToGoal);
         } else if (HasObjective()) {
             SetState(State.HasObjective);
-        } else if (FullLoad()) {
-            SetState(State.FullLoad);
-        } else if (Harvesting()) {
-            SetState(State.Harvesting);
         } else if (Watching()) {
             SetState(State.Watch);
         } else {
@@ -126,7 +126,6 @@ public class Decider : MonoBehaviour
                 int performance_challenge_rating = Enemies[i].Actions.SkillCheck(true, Proficiencies.Skill.Performance);
                 int my_insight_check = Me.Actions.SkillCheck(true, Proficiencies.Skill.Insight);
                 if (my_insight_check < performance_challenge_rating) {
-                    Debug.Log(Me.name + " failed an insight check with " + my_insight_check + " vs " + performance_challenge_rating);
                     Enemies.Remove(Enemies[i]);
                 } else {
                     Debug.Log(Me.name + " succeeded an insight check with " + my_insight_check + " vs " + performance_challenge_rating);
@@ -240,15 +239,7 @@ public class Decider : MonoBehaviour
 
     private bool FullLoad()
     {
-        if (!Proficiencies.Instance.IsHarvester(Me)) return false;
-
-        if (Me.GetComponent<Commoner>() != null) {
-            HarvestingNode node = Me.GetComponent<Commoner>().MyHarvest;
-            if (node == null) return false;
-            return Harvesting() && Me.IsEncumbered(node.HarvestedMaterial.Weight);
-        }
-
-        return false;
+        return Me.HasFullLoad;
     }
 
 
@@ -266,13 +257,13 @@ public class Decider : MonoBehaviour
 
     private bool Harvesting()
     {
-        return Proficiencies.Instance.IsHarvester(Me) && !Me.IsEncumbered();
+        return !FullLoad() && Me.HasTask && Me.Actions.Movement.AtCurrentDestination();
     }
 
 
     private bool HasObjective()
     {
-        return !AchievedAllObjectives && Goal != null && previous_state != State.ReachedGoal;
+        return !AchievedAllObjectives && GoalClaim != null && previous_state != State.ReachedGoal;
     }
 
 
@@ -322,7 +313,7 @@ public class Decider : MonoBehaviour
 
     private bool Moving()
     {
-        return Me.Actions.Movement.InProgress() && previous_state != State.ReachedGoal;
+        return Me.Actions.Movement.InProgress();
     }
 
 
@@ -337,12 +328,12 @@ public class Decider : MonoBehaviour
 
     private bool ReachedGoal()
     {
-        if (Goal != null) {
-            float separation = Vector3.Distance(transform.position, Goal.transform.position);
-            return previous_state != State.ReachedGoal && separation < Goal.influence_zone_radius;
+        if (GoalClaim != null) {
+            float separation = Vector3.Distance(transform.position, GoalClaim.transform.position);
+            return previous_state != State.ReachedGoal && separation < GoalClaim.influence_zone_radius;
         } 
 
-        return (previous_state == State.MovingToGoal || previous_state == State.FullLoad || previous_state == State.Idle) && !Me.Actions.Movement.InProgress();
+        return Me.HasTask && Me.Actions.Movement.AtCurrentDestination();
     }
 
 
@@ -386,7 +377,7 @@ public class Decider : MonoBehaviour
         Enemies = new List<Actor>();
         Friends = new List<Actor>();
         FriendsInNeed = new List<Actor>();
-        Goal = null;
+        GoalClaim = null;
         HostileStructures = new List<Structure>();
         Me = GetComponentInParent<Actor>();
         Objectives = new List<Objective>();

@@ -208,7 +208,7 @@ public class Actions : MonoBehaviour
     public bool SavingThrow(Proficiencies.Attribute attribute, int challenge_rating, bool advantage = false, bool disadvantage = false)
     {
         int proficiency_bonus = Me.Stats.SavingThrows.Contains(attribute) ? Me.Stats.ProficiencyBonus : 0;
-        int attribute_bonus = Me.Stats.GetAdjustedAttributeScore(attribute);
+        int attribute_bonus = Me.Stats.GetAdjustedAttributeModifier(attribute);
         int bonus = proficiency_bonus + attribute_bonus;
 
         int die_roll = RollDie(20, 1, advantage, disadvantage);
@@ -241,7 +241,7 @@ public class Actions : MonoBehaviour
         bool proficient = Me.Stats.Skills.Contains(skill);
         bool expertise = Me.Stats.ExpertiseInSkills.Contains(skill);
         int proficiency_bonus = expertise ? Me.Stats.ProficiencyBonus * 2 : Me.Stats.ProficiencyBonus;
-        int attribute_bonus = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Instance.GetAttributeForSkill(skill));
+        int attribute_bonus = Me.Stats.GetAdjustedAttributeModifier(Proficiencies.Instance.GetAttributeForSkill(skill));
         int bonus = expertise ? proficiency_bonus + attribute_bonus : attribute_bonus;
 
         int roll = active ? RollDie(20, 1, advantage, disadvatnage) : 10;

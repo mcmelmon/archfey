@@ -13,7 +13,7 @@ public class Workshop : MonoBehaviour
 
     // properties
 
-    public List<Products.Product> Craftworks { get; set; }
+    public List<Product> Craftworks { get; set; }
     public Storage Storage { get; set; }
 
 
@@ -123,15 +123,15 @@ public class Workshop : MonoBehaviour
     private IEnumerator MonitorStorage()
     {
         while (true) {
-            if (Craftworks.Count == 0) {
-                yield return new WaitForSeconds(Turn.ActionThreshold);
-            }
+            // if (Craftworks.Count == 0) {
+            //     yield return new WaitForSeconds(Turn.ActionThreshold);
+            // }
             
-            foreach (var work in Craftworks) {
-                if (Storage.MaterialsHandled.First(m => m.stored_material == work.required_material).stored_amount > work.required_material_amount) {
-                    SpawnArtisanFor(work); // if we have the materials, spawn a tool maker if one is not available
-                }
-            }
+            // foreach (var work in Craftworks) {
+            //     if (Storage.MaterialsHandled.First(m => m.stored_material == work.required_material).stored_amount > work.required_material_amount) {
+            //         SpawnArtisanFor(work); // if we have the materials, spawn a tool maker if one is not available
+            //     }
+            // }
 
             yield return new WaitForSeconds(Turn.ActionThreshold);
         }
@@ -140,7 +140,7 @@ public class Workshop : MonoBehaviour
 
     private void SetComponents()
     {
-        Craftworks = new List<Products.Product>();
+        Craftworks = new List<Product>();
         Storage = GetComponent<Storage>();
         foreach (var tool in shop_tools) {
             // StartCoroutine(GetProductsMadeWith(tool));
@@ -148,7 +148,7 @@ public class Workshop : MonoBehaviour
     }
 
 
-    private void SpawnArtisanFor(Products.Product _product)
+    private void SpawnArtisanFor(Product _product)
     {
         // Actor primary_artistan;
         // Structure random_residence = FindObjectsOfType<Structure>()

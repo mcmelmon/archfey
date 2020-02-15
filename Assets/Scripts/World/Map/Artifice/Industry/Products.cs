@@ -6,16 +6,6 @@ using UnityEngine;
 public class Products : MonoBehaviour
 {
 
-    [Serializable]
-    public struct Product
-    {
-        public string product;
-        public Resource required_material;
-        public int required_material_amount;
-        public Proficiencies.Tool required_tool;
-        public int value_cp;
-    }
-
     // Inspector settings
 
     [SerializeField] List<Product> available_products;

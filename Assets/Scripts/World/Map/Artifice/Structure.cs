@@ -53,13 +53,6 @@ public class Structure : MonoBehaviour
     }
 
 
-    public void DeliverMaterials(Actor _worker)
-    {
-        if (Storage != null)
-            Storage.StoreMaterials(_worker);
-    }
-
-
     public void GainStructure(int _amount)
     {
         if (CurrentHitPoints == maximum_hit_points) return;
@@ -87,20 +80,9 @@ public class Structure : MonoBehaviour
     }
 
 
-    public List<Resource> MaterialsWanted()
+    public Vector3 NearestEntranceTo(Transform _location)
     {
-        if (Storage != null) {
-            var wanted_materials = Storage.MaterialsHandled.Select(s => s.stored_material);
-            return wanted_materials.ToList();
-        }
-
-        return null;
-    }
-
-
-    public Transform NearestEntranceTo(Transform _location)
-    {
-        return entrances.OrderBy(s => Vector3.Distance(transform.position, _location.position)).Reverse().ToList().First();
+        return entrances.OrderBy(s => Vector3.Distance(transform.position, _location.position)).Reverse().ToList().First().position;
     }
 
 

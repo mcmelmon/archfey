@@ -46,4 +46,19 @@ public class Inventory : MonoBehaviour
 
         if (Me == Player.Instance.Me) PlayerInventory.Instance.SyncDisplayedInventory();
     }
+
+    public void Empty()
+    {
+        Contents.Clear();
+    }
+
+    public bool HasContents()
+    {
+        return Contents.Count > 0;
+    }
+
+    public void RemoveFromInventory(GameObject stored_object)
+    {
+        Contents.Remove(stored_object);
+    }
 }

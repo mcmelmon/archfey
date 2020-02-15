@@ -7,8 +7,6 @@ public class Resource : MonoBehaviour
     // Inspector fields
     [SerializeField] int acquisition_turns;
     [SerializeField] List<Proficiencies.Tool> required_tools;
-    [SerializeField] int value_cp;
-    [SerializeField] float weight;
 
     // properties
 
@@ -16,17 +14,12 @@ public class Resource : MonoBehaviour
     public string Name { get; set; }
     public List<Proficiencies.Tool> RequiredTools { get; set; }
 
-    public int ValueInCopper { get; set; }
-    public float Weight { get; set; }
-
     // Unity
 
     private void Awake() {
         AcquisitionTurns = acquisition_turns;
         Name = this.name;
         RequiredTools = new List<Proficiencies.Tool>(required_tools);
-        ValueInCopper = value_cp;
-        Weight = weight;
     }
 
 
@@ -34,16 +27,12 @@ public class Resource : MonoBehaviour
 
     public bool HarvestedBy(Actor _harvester)
     {
-        if (!_harvester.IsEncumbered(Weight)) {
-            if (_harvester.Load.ContainsKey(this)) {
-                _harvester.Load[this] += 1;
-            } else {
-                _harvester.Load[this] = 1;
-            }
-
+        if (!_harvester.IsEncumbered(GetComponent<Item>().GetAdjustedWeight())) {
+            _harvester.Me.Inventory.AddToInventory(this.gameObject);
+            _harvester.HasFullLoad = false;
             return true;
         }
-
+        _harvester.HasFullLoad = true;
         return false;
     }
 
