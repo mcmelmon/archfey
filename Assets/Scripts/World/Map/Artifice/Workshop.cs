@@ -14,7 +14,7 @@ public class Workshop : MonoBehaviour
     // properties
 
     public List<Product> Craftworks { get; set; }
-    public Storage Storage { get; set; }
+    public Structure Structure { get; set; }
 
 
     // Unity
@@ -141,7 +141,7 @@ public class Workshop : MonoBehaviour
     private void SetComponents()
     {
         Craftworks = new List<Product>();
-        Storage = GetComponent<Storage>();
+        Structure = GetComponent<Structure>();
         foreach (var tool in shop_tools) {
             // StartCoroutine(GetProductsMadeWith(tool));
         }

@@ -10,6 +10,7 @@ public class Inventory : MonoBehaviour
     public List<GameObject> Contents { get; set; }
     public Actor Me { get; set; }
     public List<GameObject> Pockets { get; set; }
+    public Structure Structure { get; set; }
 
 
     // Unity
@@ -17,9 +18,7 @@ public class Inventory : MonoBehaviour
 
     private void Awake()
     {
-        Contents = new List<GameObject>();
-        Me = GetComponent<Actor>();
-        Pockets = new List<GameObject>();
+        SetComponents();
     }
 
 
@@ -60,5 +59,26 @@ public class Inventory : MonoBehaviour
     public void RemoveFromInventory(GameObject stored_object)
     {
         Contents.Remove(stored_object);
+    }
+
+    public float StoredValue()
+    {
+        float stored_value = 0f;
+
+        foreach (Item item in Contents.Select(i => i.GetComponent<Item>())) {
+            stored_value += item.base_cost_cp;
+        }
+
+        return stored_value;
+    }
+
+    // private
+
+    private void SetComponents()
+    {
+        Contents = new List<GameObject>();
+        Me = GetComponent<Actor>();
+        Pockets = new List<GameObject>();
+        Structure = GetComponent<Structure>();
     }
 }

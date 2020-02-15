@@ -5,6 +5,7 @@ using UnityEngine;
 public class Resource : MonoBehaviour
 {
     // Inspector fields
+    [SerializeField] Resources.Category category;
     [SerializeField] int acquisition_turns;
     [SerializeField] List<Proficiencies.Tool> required_tools;
 
@@ -25,7 +26,7 @@ public class Resource : MonoBehaviour
 
     // public
 
-    public bool HarvestedBy(Actor _harvester)
+    public bool HarvestBy(Actor _harvester)
     {
         if (!_harvester.IsEncumbered(GetComponent<Item>().GetAdjustedWeight())) {
             _harvester.Me.Inventory.AddToInventory(this.gameObject);

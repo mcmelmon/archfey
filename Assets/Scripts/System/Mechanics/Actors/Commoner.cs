@@ -163,31 +163,18 @@ public class Commoner : TemplateMelee
         }
 
         foreach (var item in Me.Inventory.Contents) {
-            Resource material = item.GetComponent<Resource>();
-            Product product = item.GetComponent<Product>();
+            MyWarehouse = FindObjectsOfType<Structure>()
+                .Where(s => s.Faction == Me.CurrentFaction && s.WillAccept(item))
+                .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
+                .ToList()
+                .First();
 
-            if (material != null) {
-                MyWarehouse = FindObjectsOfType<Structure>()
-                    .Where(s => s.Faction == Me.CurrentFaction && s.Storage != null && s.Storage.materials_accepted.Contains(material))
-                    .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
-                    .ToList()
-                    .First();
-
-                if (MyWarehouse != null) break;
-            } else if (product != null) {
-                MyWarehouse = FindObjectsOfType<Structure>()
-                    .Where(s => s.Faction == Me.CurrentFaction && s.Storage != null && s.Storage.products_accepted.Contains(product))
-                    .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
-                    .ToList()
-                    .First();
-
-                if (MyWarehouse != null) break;
-            }
+            if (MyWarehouse != null) break;
         }
 
         if (MyWarehouse == null) return;
         Me.HasTask = true;
-        Me.Actions.Movement.SetDestination(MyWarehouse.RandomEntrance().transform.position);
+        Me.Actions.Movement.SetDestination(MyWarehouse.NearestEntranceTo(Me.transform));
     }
 
     private void FindWork()
@@ -208,7 +195,7 @@ public class Commoner : TemplateMelee
             MyWorkshop = FindObjectsOfType<Workshop>().First(ws => ws.UsefulTo(Me));
             if (MyWorkshop == null) return;
             Me.HasTask = true;
-            Me.Actions.Movement.SetDestination(MyWorkshop.Storage.Structure.NearestEntranceTo(Me.transform));
+            Me.Actions.Movement.SetDestination(MyWorkshop.Structure.NearestEntranceTo(Me.transform));
         }
     }
 
@@ -273,10 +260,10 @@ public class Commoner : TemplateMelee
 
     private bool Warehouse()
     {
-        if (!Me.Inventory.HasContents() || MyWarehouse == null || MyWarehouse.Storage == null) return false;
+        if (!Me.Inventory.HasContents() || MyWarehouse == null || MyWarehouse.Inventory == null) return false;
         
         if (Me.Actions.Movement.AtCurrentDestination()) {
-            MyWarehouse.Storage.DeliverMaterials(Me);
+            MyWarehouse.DeliverMaterials(Me);
             return true;
         }
 

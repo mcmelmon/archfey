@@ -9,7 +9,7 @@ public class Structure : MonoBehaviour
 
     // Inspector settings
     [SerializeField] Purpose use;
-
+    [SerializeField] List<GameObject> will_accept_for_storage = new List<GameObject>();
     [SerializeField] int armor_class = 13;
     [SerializeField] int damage_resistance;
     [SerializeField] Faction faction;
@@ -26,11 +26,11 @@ public class Structure : MonoBehaviour
     public int CurrentHitPoints { get; set; }
     public int DamageResistance { get; set; }
     public Faction Faction { get; set; }
+    public Inventory Inventory { get; set; }
     public int MaximumHitPoints { get; set; }
     public float OriginalY { get; set; }
     public float OriginalYScale { get; set; }
     public Dictionary<Weapons.DamageType, int> Resistances { get; set; }
-    public Storage Storage { get; set; }
     public Purpose Use { get; set; }
     public Workshop Workshop { get; set; }
 
@@ -46,12 +46,25 @@ public class Structure : MonoBehaviour
 
     // public
 
-
     public float CurrentHitPointPercentage()
     {
         return ((float)CurrentHitPoints / (float)maximum_hit_points);
     }
 
+    public void DeliverMaterials(Actor _worker)
+    {
+        for (int i = 0; i < _worker.Inventory.Contents.Count; i++) {
+            GameObject item = _worker.Inventory.Contents[i];
+            if (WillAccept(item)) {
+                Inventory.AddToInventory(item);
+                _worker.Inventory.RemoveFromInventory(item);
+            }       
+        }
+
+        _worker.IsEncumbered();
+
+        Debug.Log("Stored value: " + StoredValue());
+    }
 
     public void GainStructure(int _amount)
     {
@@ -62,12 +75,10 @@ public class Structure : MonoBehaviour
         UpdateStructure();
     }
 
-
     public Vector3 GetInteractionPoint(Actor other_unit)
     {
         return GetComponent<Collider>().ClosestPointOnBounds(other_unit.transform.position);
     }
-
 
     public void LoseStructure(int amount, Weapons.DamageType type)
     {
@@ -79,12 +90,10 @@ public class Structure : MonoBehaviour
         UpdateStructure();
     }
 
-
     public Vector3 NearestEntranceTo(Transform _location)
     {
         return entrances.OrderBy(s => Vector3.Distance(transform.position, _location.position)).Reverse().ToList().First().position;
     }
-
 
     public Transform RandomEntrance()
     {
@@ -96,6 +105,16 @@ public class Structure : MonoBehaviour
         return entrance;
     }
 
+    public float StoredValue()
+    {
+        return Inventory.StoredValue();
+    }
+
+    public bool WillAccept(GameObject item)
+    {
+       return will_accept_for_storage.Contains(item);
+    }
+
 
     // private
 
@@ -104,7 +123,6 @@ public class Structure : MonoBehaviour
     {
         return (damage <= 0 || Resistances == null) ? damage : (damage -= damage * (Resistances[type] / 100));
     }
-
 
     private IEnumerator PruneAttachedUnits()
     {
@@ -120,7 +138,6 @@ public class Structure : MonoBehaviour
         }
     }
 
-
     private void SetComponents()
     {
         ArmorClass = armor_class;
@@ -128,6 +145,7 @@ public class Structure : MonoBehaviour
         CurrentHitPoints = maximum_hit_points;
         DamageResistance = damage_resistance;
         Faction = faction;
+        Inventory = GetComponent<Inventory>();
         MaximumHitPoints = maximum_hit_points;
         OriginalY = transform.position.y;
         OriginalYScale = transform.localScale.y;
@@ -146,11 +164,9 @@ public class Structure : MonoBehaviour
             [Weapons.DamageType.Slashing] = 25,
             [Weapons.DamageType.Thunder] = 0
         };
-        Storage = GetComponent<Storage>();
         Use = use;
         Workshop = GetComponent<Workshop>();
     }
-
 
     private void UpdateStructure()
     {

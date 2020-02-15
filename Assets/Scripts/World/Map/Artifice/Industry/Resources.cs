@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Resources : MonoBehaviour
 {
+    public enum Category { Timber }
     // properties
 
     public List<Resource> AvailableResources { get; set; }
