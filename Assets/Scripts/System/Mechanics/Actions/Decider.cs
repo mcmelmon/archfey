@@ -313,7 +313,7 @@ public class Decider : MonoBehaviour
 
     private bool Moving()
     {
-        return Me.Actions.Movement.InProgress();
+        return Me.HasTask && Me.Actions.Movement.InProgress();
     }
 
 
@@ -425,14 +425,14 @@ public class Decider : MonoBehaviour
         if (Me.Actions.Decider.HostileStructures.Any())
         {
             AvailableMeleeTargets.AddRange(Me.Actions.Decider.HostileStructures
-                                           .Where(structure => Me.SeparationFrom(structure.transform) <= melee_range + Me.Actions.Movement.ReachedThreshold)
+                                           .Where(structure => Me.SeparationFrom(structure.transform) <= melee_range + Me.Actions.Movement.StoppingDistance())
                                            .Select(structure => structure.gameObject)
                                            .Distinct()
                                            .ToList());
 
             if (ranged_weapon != null) {
                 AvailableRangedTargets.AddRange(Me.Actions.Decider.HostileStructures
-                                                .Where(structure => Me.SeparationFrom(structure.transform) <= ranged_weapon.Range + Me.Actions.Movement.ReachedThreshold)
+                                                .Where(structure => Me.SeparationFrom(structure.transform) <= ranged_weapon.Range + Me.Actions.Movement.StoppingDistance())
                                                 .Select(structure => structure.gameObject)
                                                 .Distinct()
                                                 .ToList());
@@ -440,7 +440,7 @@ public class Decider : MonoBehaviour
 
             if (combat_spell != null) {
                 AvailableRangedTargets.AddRange(Me.Actions.Decider.HostileStructures
-                                                .Where(structure => Me.SeparationFrom(structure.transform) <= combat_spell.GetComponent<Spell>().range + Me.Actions.Movement.ReachedThreshold)
+                                                .Where(structure => Me.SeparationFrom(structure.transform) <= combat_spell.GetComponent<Spell>().range + Me.Actions.Movement.StoppingDistance())
                                                 .Select(structure => structure.gameObject)
                                                 .Distinct()
                                                 .ToList());

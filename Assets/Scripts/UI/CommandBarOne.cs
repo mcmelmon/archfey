@@ -278,7 +278,7 @@ public class CommandBarOne : MonoBehaviour {
                 if (SleightButton != null && Mouse.SelectedObjects != null) {
                     if (Mouse.SelectedObjects.Count == 1 
                         && Mouse.SelectedObjects.First() != null 
-                        && Vector3.Distance(transform.position, Mouse.SelectedObjects.First().transform.position) < Me.Actions.Movement.ReachedThreshold) 
+                        && Vector3.Distance(transform.position, Mouse.SelectedObjects.First().transform.position) < Me.Actions.Movement.StoppingDistance()) 
                     {
                         Actor target_actor = Mouse.SelectedObjects.First().GetComponent<Actor>();
                         Item target_item = Mouse.SelectedObjects.First().GetComponent<Item>();

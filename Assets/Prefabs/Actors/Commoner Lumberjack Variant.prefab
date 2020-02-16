@@ -25,12 +25,12 @@ PrefabInstance:
     - target: {fileID: 1083948588113410988, guid: bafcbeeff7e1b4bee89145f5fa4745cf,
         type: 3}
       propertyPath: dexterity
-      value: 15
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 1083948588113410988, guid: bafcbeeff7e1b4bee89145f5fa4745cf,
         type: 3}
       propertyPath: constitution
-      value: 14
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 1083948588113410988, guid: bafcbeeff7e1b4bee89145f5fa4745cf,
         type: 3}
@@ -45,7 +45,7 @@ PrefabInstance:
     - target: {fileID: 1083948588113410988, guid: bafcbeeff7e1b4bee89145f5fa4745cf,
         type: 3}
       propertyPath: hit_dice
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1083948588113410988, guid: bafcbeeff7e1b4bee89145f5fa4745cf,
         type: 3}

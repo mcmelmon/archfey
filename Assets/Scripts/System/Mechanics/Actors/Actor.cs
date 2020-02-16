@@ -76,7 +76,7 @@ public class Actor : MonoBehaviour
     {
         if (other_unit == null || Me == null) return Vector3.zero;
         // The point on Me that other_unit will move to so that I am in their range
-        Vector3 toward_approach = (other_unit.transform.position - transform.position).normalized * other_unit.Actions.Movement.ReachedThreshold;
+        Vector3 toward_approach = (other_unit.transform.position - transform.position).normalized * other_unit.Actions.Movement.StoppingDistance();
         Vector3 interaction_point = GetComponent<Collider>().ClosestPointOnBounds(other_unit.transform.position) + toward_approach;
         Vector3 their_bottom = other_unit.GetComponent<Collider>().bounds.min;
 

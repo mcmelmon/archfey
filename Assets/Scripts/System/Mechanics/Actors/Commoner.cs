@@ -8,6 +8,7 @@ public class Commoner : TemplateMelee
     // properties
 
     public HarvestingNode MyHarvest { get; set; }
+    public List<HarvestingNode> MyHarvestPath {get; set; }
     public Structure MyWarehouse { get; set; }
     public Workshop MyWorkshop { get; set; }
 
@@ -51,7 +52,13 @@ public class Commoner : TemplateMelee
     }
     public override void OnHarvesting()
     {
-        Harvest();
+        if (Me.Senses.PerceptionCheck(true, MyHarvest.ChallengeRating)) {
+            Debug.Log("Spotted node");
+            Harvest();
+        } else {
+            Debug.Log("Failed to spot node");
+            ChooseHarvest();
+        }
     }
     public override void OnHostileActorsSighted()
     {
@@ -112,15 +119,24 @@ public class Commoner : TemplateMelee
 
     private bool ChooseHarvest()
     {
-        List<HarvestingNode> available = FindObjectsOfType<HarvestingNode>().Where(node => node.AccessibleTo(Me) && node.CurrentlyAvailable > 0).ToList();
-        if (available.Any()) {
-            MyHarvest = available.OrderBy(node => Vector3.Distance(transform.position, node.transform.position)).First();
-            Me.HasTask = true;
-            return true;
+        if (MyHarvestPath.Any()) {
+            if (MyHarvest == null) {
+                MyHarvest = MyHarvestPath.First();
+            } else {
+                int current_harvest_index = MyHarvestPath.IndexOf(MyHarvest);
+                int next_harvest_index = current_harvest_index += 1;
+                MyHarvest = MyHarvestPath[next_harvest_index % MyHarvestPath.Count];
+            }
+            
+            if (MyHarvest != null) {
+                Me.HasTask = true;
+                Me.Actions.Movement.SetDestination(MyHarvest.transform);
+                return true;
+            }
         }
 
-        MyHarvest = null;
         Me.HasTask = false;
+        Me.Actions.Movement.ClearCurrentDestination();
         return false;
     }
 
@@ -208,10 +224,7 @@ public class Commoner : TemplateMelee
         if (MyHarvest != null || MyWarehouse != null || MyWorkshop != null) return; // work has found us
 
         if (Proficiencies.Instance.IsHarvester(Me)) {
-            if (ChooseHarvest()) {
-                Me.Actions.Movement.SetDestination(MyHarvest.transform);
-                return;
-            }
+            if (ChooseHarvest()) return;
         } else if (Proficiencies.Instance.IsArtisan(Me)) {
             MyWorkshop = FindObjectsOfType<Workshop>().First(ws => ws.UsefulTo(Me) && ws.Structure.IsOpenToMe(Me));
             if (MyWorkshop == null) return;
@@ -236,16 +249,11 @@ public class Commoner : TemplateMelee
 
     private bool Harvest()
     {
-        if (!Proficiencies.Instance.IsHarvester(Me)) return false;
+        if (!Proficiencies.Instance.IsHarvester(Me) || MyHarvest == null) return false;
 
-        if (MyHarvest != null && MyHarvest.CurrentlyAvailable > 0 && Me.HasTask && Me.Actions.Movement.AtCurrentDestination() && MyHarvest.HarvestResource(Me)) {
-            return true;
-        }
+        if (MyHarvest.CurrentlyAvailable <= 0) return ChooseHarvest();
 
-        MyHarvest = null;
-        Me.HasTask = false;
-        Me.Actions.Movement.ClearCurrentDestination();
-        return false;
+        return Me.HasTask && Me.Actions.Movement.AtCurrentDestination() && MyHarvest.HarvestResource(Me);
     }
 
 
@@ -266,7 +274,7 @@ public class Commoner : TemplateMelee
         Vector3 destination = structure.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
         float distance = Vector3.Distance(destination, transform.position);
 
-        if (distance <= Me.Actions.Movement.ReachedThreshold) {
+        if (distance <= Me.Actions.Movement.StoppingDistance()) {
             structure.GainStructure(Me.Stats.ProficiencyBonus * 2);
             return true;
         }
@@ -274,19 +282,26 @@ public class Commoner : TemplateMelee
         return false;
     }
 
-
-    private void SetComponents()
-    {
-        Me = GetComponent<Actor>();
-        SetAdditionalStats();
-    }
-
-
     private void SetAdditionalStats()
     {
         Me.Actions.Combat.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.None));
         Me.Actions.Combat.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Club));
         Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
+    }
+
+    private void SetComponents()
+    {
+        Me = GetComponent<Actor>();
+        SetHarvestPath();
+        SetAdditionalStats();
+    }
+
+    private void SetHarvestPath()
+    {
+        List<HarvestingNode> available = FindObjectsOfType<HarvestingNode>().Where(node => node.AccessibleTo(Me)).ToList();
+        if (available.Any()) {
+            MyHarvestPath = available.OrderBy(h => Vector3.Distance(h.transform.position, transform.position)).ToList();
+        }
     }
 
 

@@ -17,7 +17,6 @@ public class Movement : MonoBehaviour
     public Dictionary<CommonDestination, Vector3> Destinations { get; set; }
     public bool Encumbered { get; set; }
     public bool IsJumping { get; set; }
-    public float ReachedThreshold { get; set; }
     public float SpeedAdjustment { get; set; }
 
 
@@ -43,7 +42,7 @@ public class Movement : MonoBehaviour
 
     public bool AtCurrentDestination()
     {
-        return CurrentDestination != Vector3.zero && Vector3.Distance(Me.transform.position, CurrentDestination) < ReachedThreshold + 1.5f; // account for navmesh obstacle buffer
+        return CurrentDestination != Vector3.zero && Vector3.Distance(Me.transform.position, CurrentDestination) < StoppingDistance(); // account for navmesh obstacle buffer
     }
 
     public void AdjustSpeed(float boost)
@@ -99,7 +98,7 @@ public class Movement : MonoBehaviour
 
     public bool InProgress()
     {
-        return Me.HasTask && !AtCurrentDestination();
+        return !AtCurrentDestination();
     }
 
     public void Jump()
@@ -147,6 +146,11 @@ public class Movement : MonoBehaviour
         NavMeshPath path = new NavMeshPath();
         Agent.SetDestination(destination);
         CurrentDestination = destination;
+    }
+
+    public float StoppingDistance()
+    {
+        return Agent.stoppingDistance * 2f;
     }
 
     public IEnumerator TrackUnit(Actor unit)

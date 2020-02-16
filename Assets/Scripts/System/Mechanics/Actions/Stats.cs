@@ -255,31 +255,24 @@ public class Stats : MonoBehaviour
         Me.Actions.Movement.Agent.speed = speed / 10;
         switch (Size) {
             case Sizes.Tiny:
-                Me.Actions.Movement.ReachedThreshold = 1.5f;
                 Me.Actions.Movement.Agent.stoppingDistance = 1.5f;
                 break;
             case Sizes.Small:
-                Me.Actions.Movement.ReachedThreshold = 2f;
                 Me.Actions.Movement.Agent.stoppingDistance = 2f;
                 break;
             case Sizes.Medium:
-                Me.Actions.Movement.ReachedThreshold = 2.5f;
                 Me.Actions.Movement.Agent.stoppingDistance = 2.5f;
                 break;
             case Sizes.Large:
-                Me.Actions.Movement.ReachedThreshold = 3f;
                 Me.Actions.Movement.Agent.stoppingDistance = 3f;
                 break;
             case Sizes.Huge:
-                Me.Actions.Movement.ReachedThreshold = 3.5f;
                 Me.Actions.Movement.Agent.stoppingDistance = 3.5f;
                 break;
             case Sizes.Gargantuan:
-                Me.Actions.Movement.ReachedThreshold = 4f;
                 Me.Actions.Movement.Agent.stoppingDistance = 4f;
                 break;
             default:
-                Me.Actions.Movement.ReachedThreshold = 2.5f;
                 Me.Actions.Movement.Agent.stoppingDistance = 2.5f;
                 break;
         }

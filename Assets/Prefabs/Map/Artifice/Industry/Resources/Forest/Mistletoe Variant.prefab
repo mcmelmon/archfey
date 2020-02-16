@@ -65,12 +65,12 @@ PrefabInstance:
     - target: {fileID: 1799126228495362617, guid: 835b40d02416441ef9fc81e4f3e7f3b5,
         type: 3}
       propertyPath: base_weight
-      value: 10
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1799126228495362617, guid: 835b40d02416441ef9fc81e4f3e7f3b5,
         type: 3}
       propertyPath: base_cost_cp
-      value: 3000
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 4391544133669531493, guid: 835b40d02416441ef9fc81e4f3e7f3b5,
         type: 3}
@@ -80,7 +80,7 @@ PrefabInstance:
     - target: {fileID: 7258184742708812191, guid: 835b40d02416441ef9fc81e4f3e7f3b5,
         type: 3}
       propertyPath: required_tool
-      value: 14
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 7258184742708812191, guid: 835b40d02416441ef9fc81e4f3e7f3b5,
         type: 3}

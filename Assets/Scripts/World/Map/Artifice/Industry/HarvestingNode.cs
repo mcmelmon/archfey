@@ -17,6 +17,7 @@ public class HarvestingNode : MonoBehaviour
 
     // properties
 
+    public int ChallengeRating { get; set; }
     public int CurrentlyAvailable { get; set; }
     public ReplenishStrategy Replenishes { get; set; }
     public int ReplenishTurn { get; set; }
@@ -48,7 +49,7 @@ public class HarvestingNode : MonoBehaviour
     {
         if (!Proficiencies.Instance.IsHarvester(_harvester) || CurrentlyAvailable <= 0) return false;
 
-        if (_harvester.Senses.PerceptionCheck(true, perception_challenge_rating) && SelectHarvestFor(_harvester).HarvestBy(_harvester)) {
+        if (SelectHarvestFor(_harvester).HarvestBy(_harvester)) {
             CurrentlyAvailable -= 1;
             return true;
         }
@@ -77,11 +78,13 @@ public class HarvestingNode : MonoBehaviour
     private Resource SelectHarvestFor(Actor _harvester)
     {
         List<Resource> available = available_for_harvest.Where(r => r.IsAccessibleTo(_harvester)).ToList();
-        return available[Random.Range (0, available.Count)];
+        Random.InitState(System.DateTime.Now.Second);
+        return available[Random.Range (0, available.Count - 1)];
     }
 
     private void SetComponents()
     {
+        ChallengeRating = perception_challenge_rating;
         CurrentlyAvailable = initial_quantity;
         Replenishes = replenish_strategy;
         ReplenishTurn = 0;
