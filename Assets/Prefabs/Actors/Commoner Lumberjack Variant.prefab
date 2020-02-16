@@ -70,7 +70,12 @@ PrefabInstance:
     - target: {fileID: 1083948588113410988, guid: bafcbeeff7e1b4bee89145f5fa4745cf,
         type: 3}
       propertyPath: skillset.Array.data[2]
-      value: 17
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083948588113410988, guid: bafcbeeff7e1b4bee89145f5fa4745cf,
+        type: 3}
+      propertyPath: proficiency_bonus
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3442360358424386194, guid: bafcbeeff7e1b4bee89145f5fa4745cf,
         type: 3}

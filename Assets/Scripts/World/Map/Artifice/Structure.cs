@@ -59,8 +59,6 @@ public class Structure : MonoBehaviour
             }
             _worker.Inventory.RemoveFromInventory(acceptable);
         }
-
-        _worker.IsEncumbered();
     }
 
     public void GainStructure(int _amount)
@@ -75,6 +73,11 @@ public class Structure : MonoBehaviour
     public Vector3 GetInteractionPoint(Actor other_unit)
     {
         return GetComponent<Collider>().ClosestPointOnBounds(other_unit.transform.position);
+    }
+
+    public bool IsOpenToMe(Actor _unit)
+    {
+        return Faction == null || !Faction.IsHostileTo(_unit.CurrentFaction);
     }
 
     public void LoseStructure(int amount, Weapons.DamageType type)

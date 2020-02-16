@@ -112,7 +112,7 @@ public class Commoner : TemplateMelee
 
     private bool ChooseHarvest()
     {
-        List<HarvestingNode> available = FindObjectsOfType<HarvestingNode>().Where(node => node.Owner == Me.CurrentFaction && node.AccessibleTo(Me) && node.CurrentlyAvailable > 0).ToList();
+        List<HarvestingNode> available = FindObjectsOfType<HarvestingNode>().Where(node => node.AccessibleTo(Me) && node.CurrentlyAvailable > 0).ToList();
         if (available.Any()) {
             MyHarvest = available.OrderBy(node => Vector3.Distance(transform.position, node.transform.position)).First();
             Me.HasTask = true;
@@ -128,7 +128,7 @@ public class Commoner : TemplateMelee
     {
         if (Me.Inventory.StorageCount() > 0) {
             foreach (var item in Me.Inventory.Contents) {
-                List<Structure> available = FindObjectsOfType<Structure>().Where(s => s.Faction == Me.CurrentFaction && s.WillAccept(item)).ToList();
+                List<Structure> available = FindObjectsOfType<Structure>().Where(s => s.IsOpenToMe(Me) && s.WillAccept(item)).ToList();
 
                 if (available.Any()) {
                     MyWarehouse = available.OrderBy(s => Vector3.Distance(transform.position, s.transform.position)).First();
@@ -213,7 +213,7 @@ public class Commoner : TemplateMelee
                 return;
             }
         } else if (Proficiencies.Instance.IsArtisan(Me)) {
-            MyWorkshop = FindObjectsOfType<Workshop>().First(ws => ws.UsefulTo(Me));
+            MyWorkshop = FindObjectsOfType<Workshop>().First(ws => ws.UsefulTo(Me) && ws.Structure.IsOpenToMe(Me));
             if (MyWorkshop == null) return;
             Me.HasTask = true;
             Me.Actions.Movement.SetDestination(MyWorkshop.Structure.NearestEntranceTo(Me.transform));

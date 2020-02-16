@@ -83,19 +83,6 @@ public class Actor : MonoBehaviour
         return new Vector3(interaction_point.x, their_bottom.y, interaction_point.z);
     }
 
-    public bool IsEncumbered(float prospetive_additional_weight = 0)
-    {
-        float carried_weight = Inventory.StorageWeight();
-
-        if (carried_weight + prospetive_additional_weight > Me.Stats.CarryingCapacity()) {
-            HasFullLoad = true;
-        } else {
-            HasFullLoad = false;
-        }
-
-        return HasFullLoad;
-    }
-
     public bool IsGrounded()
     {
         CapsuleCollider my_collider = GetComponent<CapsuleCollider>();

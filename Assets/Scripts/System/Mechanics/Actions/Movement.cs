@@ -15,6 +15,7 @@ public class Movement : MonoBehaviour
     public NavMeshAgent Agent { get; set; }
     public Vector3 CurrentDestination { get; set; }
     public Dictionary<CommonDestination, Vector3> Destinations { get; set; }
+    public bool Encumbered { get; set; }
     public bool IsJumping { get; set; }
     public float ReachedThreshold { get; set; }
     public float SpeedAdjustment { get; set; }
@@ -26,6 +27,7 @@ public class Movement : MonoBehaviour
     private void Awake()
     {
         SetComponents();
+        StartCoroutine(IsEncumbered());
     }
 
 
@@ -76,7 +78,8 @@ public class Movement : MonoBehaviour
 
     public float GetAdjustedSpeed()
     {
-        return Mathf.Clamp(BaseSpeed + (SpeedAdjustment * BaseSpeed * 2), 0, 20);
+        float raw_speed = BaseSpeed + (SpeedAdjustment * BaseSpeed * 2);
+        return Mathf.Clamp(raw_speed, 0, 20);
     }
 
 
@@ -189,6 +192,21 @@ public class Movement : MonoBehaviour
         AdjustSpeed(previous_speed_adjustment);
     }
 
+    private IEnumerator IsEncumbered()
+    {
+        while (true) {
+            if (Encumbered) {
+                Agent.speed = GetAdjustedSpeed() / 2f;
+                Me.HasFullLoad = true;
+            } else {
+                Agent.speed = GetAdjustedSpeed();
+                Me.HasFullLoad = false;
+            }
+
+            yield return new WaitForSeconds(Turn.ActionThreshold);
+        }
+    }
+
     private IEnumerator Jumping()
     {
         while (true) {
@@ -196,7 +214,7 @@ public class Movement : MonoBehaviour
             Me.GetComponent<Rigidbody>().AddForce(Vector3.up * JumpVelocity() * 150f, ForceMode.Impulse);
             if (IsJumping) break;
             IsJumping = true;
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(1);
         }
         IsJumping = false;
         Agent.enabled = true;
@@ -215,6 +233,7 @@ public class Movement : MonoBehaviour
         Agent.ResetPath();
         CurrentDestination = Vector3.zero;
         Destinations = new Dictionary<CommonDestination, Vector3>();
+        Encumbered = false;
         IsJumping = false;
         SpeedAdjustment = 0;
 

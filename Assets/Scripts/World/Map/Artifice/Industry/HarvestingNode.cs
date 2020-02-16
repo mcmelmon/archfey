@@ -1,24 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class HarvestingNode : MonoBehaviour
 {
+    public enum ReplenishStrategy { Once, Random, Perpetual, Proximity, Timer };
+
     // Inspector settings
-    [SerializeField] Resource harvested_material;
-    [SerializeField] Faction faction;
-    [SerializeField] bool perpetual;
-    [SerializeField] int initial_quantity;
+    [SerializeField] int perception_challenge_rating;
+    [SerializeField] ReplenishStrategy replenish_strategy;
+    [SerializeField] int replenish_delay;
+    [SerializeField] int initial_quantity;  // the quantity of total chances to get a resource in the node; not the quantity of one particular resource (unless there is only one)
+    [SerializeField] List<Resource> available_for_harvest;  // to simulate rareness, have multiple copies of 'common" and fewer copies of "rare"
+
 
     // properties
 
     public int CurrentlyAvailable { get; set; }
-    public int FullHarvest { get; set; }
-    public Resource HarvestedMaterial { get; set; }
-    public float OriginalY { get; set; } // TODO: Come up with a better way to indicate destruction/depletion
-    public float OriginalYScale { get; set; }
-    public Faction Owner { get; set; }
-    public bool Perpetual { get; set; }
+    public ReplenishStrategy Replenishes { get; set; }
+    public int ReplenishTurn { get; set; }
     public Structure Structure { get; set; }
 
 
@@ -28,77 +29,62 @@ public class HarvestingNode : MonoBehaviour
     private void Awake()
     {
         SetComponents();
+        StartCoroutine(Replenish());
     }
 
 
     // public
 
-    public bool AccessibleTo(Actor _unit)
+    public bool AccessibleTo(Actor _harvester)
     {
-        foreach (var tool in _unit.Stats.Tools) {
-            if (HarvestedMaterial.RequiredTools.Contains(tool)) return true;
+        foreach (var resource in available_for_harvest) {
+            if (resource.IsAccessibleTo(_harvester)) return true;
         }
 
         return false;
     }
 
-    public bool HarvestResource(Actor _harvestor)
+    public bool HarvestResource(Actor _harvester)
     {
-        if (!Proficiencies.Instance.IsHarvester(_harvestor) || CurrentlyAvailable <= 0) return false;
+        if (!Proficiencies.Instance.IsHarvester(_harvester) || CurrentlyAvailable <= 0) return false;
 
-        if (HarvestedMaterial.HarvestBy(_harvestor)) {
+        if (_harvester.Senses.PerceptionCheck(true, perception_challenge_rating) && SelectHarvestFor(_harvester).HarvestBy(_harvester)) {
             CurrentlyAvailable -= 1;
             return true;
         }
-        _harvestor.HasTask = false;
         return false;
     }
 
 
     // private
 
-
-    private float CurrentlyAvailablePercentage()
+    private IEnumerator Replenish()
     {
-        return ((float)CurrentlyAvailable / (float)initial_quantity);
+        while (true) {
+            if (CurrentlyAvailable <= 0 && replenish_strategy == ReplenishStrategy.Timer) {
+                if (ReplenishTurn >= replenish_delay ) {
+                    CurrentlyAvailable = initial_quantity;
+                    ReplenishTurn = 0;
+                } else {
+                    ReplenishTurn++;
+                }
+            }
+
+            yield return new WaitForSeconds(Turn.ActionThreshold);
+        }
     }
 
+    private Resource SelectHarvestFor(Actor _harvester)
+    {
+        List<Resource> available = available_for_harvest.Where(r => r.IsAccessibleTo(_harvester)).ToList();
+        return available[Random.Range (0, available.Count)];
+    }
 
     private void SetComponents()
     {
         CurrentlyAvailable = initial_quantity;
-        HarvestedMaterial = harvested_material;
-        OriginalY = transform.position.y;
-        OriginalYScale = transform.localScale.y;
-        Owner = faction;
-        Perpetual = perpetual;
+        Replenishes = replenish_strategy;
+        ReplenishTurn = 0;
         Structure = GetComponent<Structure>();
-    }
-
-
-    private void UpdateResource()
-    {
-        if (CurrentlyAvailable == initial_quantity) return;
-
-        Vector3 scaling = transform.localScale;
-        Vector3 position = transform.position;
-
-        switch (CurrentlyAvailablePercentage())
-        {
-            case float n when (n >= 0.33f && n <= 0.66f):
-                scaling.y = OriginalYScale * 0.66f;
-                transform.position = new Vector3(transform.position.x, OriginalY * 0.66f, transform.position.z);
-                break;
-            case float n when (n >= 0.1f && n < 0.33f):
-                scaling.y = OriginalYScale * 0.33f;
-                transform.position = new Vector3(transform.position.x, OriginalY * 0.33f, transform.position.z);
-                break;
-            case float n when (n < 0.1f):
-                scaling.y = OriginalYScale * 0.01f;
-                transform.position = new Vector3(transform.position.x, OriginalY * 0.01f, transform.position.z);
-                break;
-        }
-
-        transform.localScale = scaling;
     }
 }

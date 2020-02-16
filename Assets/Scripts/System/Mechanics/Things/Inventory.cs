@@ -28,18 +28,24 @@ public class Inventory : MonoBehaviour
     public void AddToInventory(GameObject stored_object)
     {
         Contents.Add(stored_object);
-        stored_object.SetActive(false);
+        CheckIfEncumbered();
 
-        if (Me == Player.Instance.Me) PlayerInventory.Instance.SyncDisplayedInventory();
+        // TODO: some objects should be deactivated (like weapons picked up), some shouldn't (like resource primitives)
+
+        if (Me != null && Me.IsPlayer()) {
+            PlayerInventory.Instance.SyncDisplayedInventory();
+        }
     }
 
 
     public void AddToPockets(GameObject stored_object)
     {
         Pockets.Add(stored_object);
-        stored_object.SetActive(false);
+    }
 
-        if (Me == Player.Instance.Me) PlayerInventory.Instance.SyncDisplayedInventory();
+    public void CheckIfEncumbered()
+    {
+        if (Me != null) Me.Actions.Movement.Encumbered = StorageWeight() > Me.Stats.CarryingCapacity();
     }
 
     public void Empty()
@@ -55,7 +61,7 @@ public class Inventory : MonoBehaviour
     public void RemoveFromInventory(GameObject stored_object)
     {
         Contents.Remove(stored_object);
-        // set active true?
+        CheckIfEncumbered();
     }
 
     public void RemoveFromInventoryAt(int index)
