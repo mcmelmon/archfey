@@ -108,7 +108,7 @@ public class Range : MonoBehaviour
         if (target_actor != null) {
             return  roll + AttackModifier > target_actor.Actions.Stats.GetArmorClass();
         } else if (target_structure != null) {
-            return roll + AttackModifier > target_structure.armor_class;
+            return roll + AttackModifier > target_structure.ArmorClass;
         }
 
         return false;
@@ -126,8 +126,8 @@ public class Range : MonoBehaviour
 
     private void SetModifiers()
     {
-        AttackModifier = Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + Weapon.DamageBonus;
-        DamageModifier = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + Weapon.DamageBonus + Me.Actions.Combat.CalculateAdditionalDamage(Target, true);
+        AttackModifier = Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeModifier(Proficiencies.Attribute.Dexterity) + Weapon.DamageBonus;
+        DamageModifier = Me.Stats.GetAdjustedAttributeModifier(Proficiencies.Attribute.Dexterity) + Weapon.DamageBonus + Me.Actions.Combat.CalculateAdditionalDamage(Target, true);
     }
 
 

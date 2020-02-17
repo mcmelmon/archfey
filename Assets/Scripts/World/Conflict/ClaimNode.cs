@@ -99,7 +99,7 @@ public class ClaimNode : MonoBehaviour
             Claimed = true;
             NodeFaction = boosting_faction;
             if (node_spawner != null) {
-                node_spawner.faction = boosting_faction;
+                node_spawner.Allegiance = boosting_faction;
             }
         }
     }

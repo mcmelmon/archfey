@@ -112,8 +112,8 @@ public class Acolyte : MonoBehaviour, IAct
 
     public void OnReachedGoal()
     {
-        Me.Actions.Movement.ResetPath();
         Me.Actions.Decider.FriendsInNeed.Clear();
+        OnIdle();
     }
 
 
@@ -184,7 +184,7 @@ public class Acolyte : MonoBehaviour, IAct
     private bool TreatWounded()
     {
         var nearby_wounded = Me.Senses.Actors
-                               .Where(f => Me.Actions.Decider.IsFriendOrNeutral(f) && f.Health.BadlyInjured() && Vector3.Distance(transform.position, f.transform.position) < Me.Actions.Movement.ReachedThreshold)
+                               .Where(f => Me.Actions.Decider.IsFriendOrNeutral(f) && f.Health.BadlyInjured() && Vector3.Distance(transform.position, f.transform.position) < Me.Actions.Movement.StoppingDistance())
                                .ToList();
 
         if (nearby_wounded.Count > 0) {

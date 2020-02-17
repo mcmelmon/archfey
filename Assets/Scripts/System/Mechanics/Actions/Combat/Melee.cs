@@ -119,7 +119,7 @@ public class Melee : MonoBehaviour
         if (target_actor != null) {
             return roll + AttackModifier > target_actor.Actions.Stats.GetArmorClass();
         } else if (target_structure != null) {
-            return roll + AttackModifier > target_structure.armor_class;
+            return roll + AttackModifier > target_structure.ArmorClass;
         }
 
         return false;
@@ -138,12 +138,12 @@ public class Melee : MonoBehaviour
     private void SetModifiers()
     {
         if (MainHand.IsFinesse) {
-            AttackModifier = Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + MainHand.DamageBonus;
-            DamageModifierMain = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Dexterity) + MainHand.DamageBonus + Me.Actions.Combat.CalculateAdditionalDamage(Target, false);
+            AttackModifier = Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeModifier(Proficiencies.Attribute.Dexterity) + MainHand.DamageBonus;
+            DamageModifierMain = Me.Stats.GetAdjustedAttributeModifier(Proficiencies.Attribute.Dexterity) + MainHand.DamageBonus + Me.Actions.Combat.CalculateAdditionalDamage(Target, false);
         }
         else {
-            AttackModifier = Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) + MainHand.DamageBonus;
-            DamageModifierMain = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Attribute.Strength) + MainHand.DamageBonus + Me.Actions.Combat.CalculateAdditionalDamage(Target, false);
+            AttackModifier = Me.Stats.ProficiencyBonus + Me.Stats.GetAdjustedAttributeModifier(Proficiencies.Attribute.Strength) + MainHand.DamageBonus;
+            DamageModifierMain = Me.Stats.GetAdjustedAttributeModifier(Proficiencies.Attribute.Strength) + MainHand.DamageBonus + Me.Actions.Combat.CalculateAdditionalDamage(Target, false);
         }
         DamageModifierOff = OffHand != null ? OffHand.DamageBonus : 0;
     }

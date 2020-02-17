@@ -56,7 +56,7 @@ public class Weapon : MonoBehaviour {
 
         switch (weapon_name) {
             case Weapons.WeaponName.Club:
-                Item.base_cost = 0.1f; // use Industry.Coin
+                Item.base_cost_cp = 10;
                 Item.base_weight = 2;
                 DamageType = Weapons.DamageType.Bludgeoning;
                 DiceType = 4;
@@ -65,7 +65,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Simple_Melee;
                 break;
             case Weapons.WeaponName.Dagger:
-                Item.base_cost = 2;
+                Item.base_cost_cp = 200;
                 Item.base_weight = 1;
                 DamageType = Weapons.DamageType.Piercing;
                 DiceType = 4;
@@ -77,7 +77,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Simple_Melee;
                 break;
             case Weapons.WeaponName.Greatclub:
-                Item.base_cost = 0.2f;
+                Item.base_cost_cp = 20;
                 Item.base_weight = 10;
                 DamageType = Weapons.DamageType.Bludgeoning;
                 DiceType = 8;
@@ -86,7 +86,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Simple_Melee;
                 break;
             case Weapons.WeaponName.Handaxe:
-                Item.base_cost = 5;
+                Item.base_cost_cp = 500;
                 Item.base_weight = 2;
                 DamageType = Weapons.DamageType.Slashing;
                 DiceType = 6;
@@ -97,7 +97,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Simple_Melee;
                 break;
             case Weapons.WeaponName.Javelin:
-                Item.base_cost = 0.5f;
+                Item.base_cost_cp = 50;
                 Item.base_weight = 2;
                 DamageType = Weapons.DamageType.Piercing;
                 DiceType = 6;
@@ -107,7 +107,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Simple_Melee;
                 break;
             case Weapons.WeaponName.Light_Hammer:
-                Item.base_cost = 2;
+                Item.base_cost_cp = 200;
                 Item.base_weight = 2;
                 DamageType = Weapons.DamageType.Bludgeoning;
                 DiceType = 4;
@@ -118,7 +118,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Simple_Melee;
                 break;
             case Weapons.WeaponName.Mace:
-                Item.base_cost = 5;
+                Item.base_cost_cp = 500;
                 Item.base_weight = 4;
                 DamageType = Weapons.DamageType.Bludgeoning;
                 DiceType = 6;
@@ -126,7 +126,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Simple_Melee;
                 break;
             case Weapons.WeaponName.Quarterstaff:
-                Item.base_cost = 0.2f;
+                Item.base_cost_cp = 20;
                 Item.base_weight = 4;
                 DamageType = Weapons.DamageType.Bludgeoning;
                 DiceType = 6;
@@ -135,7 +135,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Simple_Melee;
                 break;
             case Weapons.WeaponName.Sickle:
-                Item.base_cost = 1;
+                Item.base_cost_cp = 100;
                 Item.base_weight = 4;
                 DamageType = Weapons.DamageType.Slashing;
                 DiceType = 4;
@@ -144,7 +144,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Simple_Melee;
                 break;
             case Weapons.WeaponName.Spear:
-                Item.base_cost = 1;
+                Item.base_cost_cp = 100;
                 Item.base_weight = 3;
                 DamageType = Weapons.DamageType.Piercing;
                 DiceType = 6;
@@ -155,7 +155,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Simple_Melee;
                 break;
             case Weapons.WeaponName.Light_Crossbow:
-                Item.base_cost = 25;
+                Item.base_cost_cp = 2500;
                 Item.base_weight = 5;
                 DamageType = Weapons.DamageType.Piercing;
                 DiceType = 8;
@@ -167,7 +167,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Simple_Ranged;
                 break;
             case Weapons.WeaponName.Dart:
-                Item.base_cost = 0.05f;
+                Item.base_cost_cp = 5;
                 Item.base_weight = 0.25f;
                 DamageType = Weapons.DamageType.Piercing;
                 DiceType = 4;
@@ -178,7 +178,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Simple_Ranged;
                 break;
             case Weapons.WeaponName.Shortbow:
-                Item.base_cost = 25;
+                Item.base_cost_cp = 2500;
                 Item.base_weight = 2;
                 DamageType = Weapons.DamageType.Piercing;
                 DiceType = 6;
@@ -189,7 +189,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Simple_Ranged;
                 break;
             case Weapons.WeaponName.Sling:
-                Item.base_cost = 0.1f;
+                Item.base_cost_cp = 10;
                 Item.base_weight = 0.01f;
                 DamageType = Weapons.DamageType.Bludgeoning;
                 DiceType = 4;
@@ -199,7 +199,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Simple_Ranged;
                 break;
             case Weapons.WeaponName.Battleaxe:
-                Item.base_cost = 10;
+                Item.base_cost_cp = 1000;
                 Item.base_weight = 4;
                 DamageType = Weapons.DamageType.Slashing;
                 DiceType = 8;
@@ -208,7 +208,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Martial_Melee;
                 break;
             case Weapons.WeaponName.Flail:
-                Item.base_cost = 10;
+                Item.base_cost_cp = 1000;
                 Item.base_weight = 2;
                 DamageType = Weapons.DamageType.Bludgeoning;
                 DiceType = 8;
@@ -216,7 +216,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Martial_Melee;
                 break;
             case Weapons.WeaponName.Glaive:
-                Item.base_cost = 20;
+                Item.base_cost_cp = 2000;
                 Item.base_weight = 6;
                 DamageType = Weapons.DamageType.Slashing;
                 DiceType = 10;
@@ -227,7 +227,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Martial_Melee;
                 break;
             case Weapons.WeaponName.Greataxe:
-                Item.base_cost = 30;
+                Item.base_cost_cp = 3000;
                 Item.base_weight = 7;
                 DamageType = Weapons.DamageType.Slashing;
                 DiceType = 12;
@@ -237,7 +237,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Martial_Melee;
                 break;
             case Weapons.WeaponName.Halberd:
-                Item.base_cost = 20;
+                Item.base_cost_cp = 200;
                 Item.base_weight = 6;
                 DamageType = Weapons.DamageType.Slashing;
                 DiceType = 10;
@@ -248,7 +248,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Martial_Melee;
                 break;
             case Weapons.WeaponName.Lance:
-                Item.base_cost = 10;
+                Item.base_cost_cp = 100;
                 Item.base_weight = 6;
                 DamageType = Weapons.DamageType.Piercing;
                 DiceType = 12;
@@ -257,7 +257,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Martial_Melee;
                 break;
             case Weapons.WeaponName.Longsword:
-                Item.base_cost = 15;
+                Item.base_cost_cp = 1500;
                 Item.base_weight = 3;
                 DamageType = Weapons.DamageType.Slashing;
                 DiceType = 8;
@@ -266,7 +266,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Martial_Melee;
                 break;
             case Weapons.WeaponName.Maul:
-                Item.base_cost = 10;
+                Item.base_cost_cp = 1000;
                 Item.base_weight = 10;
                 DamageType = Weapons.DamageType.Bludgeoning;
                 DiceType = 6;
@@ -276,7 +276,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Martial_Melee;
                 break;
             case Weapons.WeaponName.Morningstar:
-                Item.base_cost = 15;
+                Item.base_cost_cp = 1500;
                 Item.base_weight = 4;
                 DamageType = Weapons.DamageType.Piercing;
                 DiceType = 8;
@@ -284,7 +284,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Martial_Melee;
                 break;
             case Weapons.WeaponName.Pike:
-                Item.base_cost = 5;
+                Item.base_cost_cp = 500;
                 Item.base_weight = 18;
                 DamageType = Weapons.DamageType.Piercing;
                 DiceType = 10;
@@ -295,7 +295,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Martial_Melee;
                 break;
             case Weapons.WeaponName.Rapier:
-                Item.base_cost = 25;
+                Item.base_cost_cp = 2500;
                 Item.base_weight = 2;
                 DamageType = Weapons.DamageType.Piercing;
                 DiceType = 8;
@@ -304,7 +304,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Martial_Melee;
                 break;
             case Weapons.WeaponName.Scimitar:
-                Item.base_cost = 25;
+                Item.base_cost_cp = 2500;
                 Item.base_weight = 3;
                 DamageType = Weapons.DamageType.Slashing;
                 DiceType = 6;
@@ -314,7 +314,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Martial_Melee;
                 break;
             case Weapons.WeaponName.Shortsword:
-                Item.base_cost = 10;
+                Item.base_cost_cp = 1000;
                 Item.base_weight = 2;
                 DamageType = Weapons.DamageType.Piercing;
                 DiceType = 6;
@@ -324,7 +324,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Martial_Melee;
                 break;
             case Weapons.WeaponName.Trident:
-                Item.base_cost = 5;
+                Item.base_cost_cp = 500;
                 Item.base_weight = 4;
                 DamageType = Weapons.DamageType.Piercing;
                 DiceType = 6;
@@ -335,7 +335,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Martial_Melee;
                 break;
             case Weapons.WeaponName.War_Pick:
-                Item.base_cost = 5;
+                Item.base_cost_cp = 500;
                 Item.base_weight = 2;
                 DamageType = Weapons.DamageType.Piercing;
                 DiceType = 8;
@@ -343,7 +343,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Martial_Melee;
                 break;
             case Weapons.WeaponName.Warhammer:
-                Item.base_cost = 15;
+                Item.base_cost_cp = 1500;
                 Item.base_weight = 2;
                 DamageType = Weapons.DamageType.Bludgeoning;
                 DiceType = 8;
@@ -352,7 +352,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Martial_Melee;
                 break;
             case Weapons.WeaponName.Whip:
-                Item.base_cost = 2;
+                Item.base_cost_cp = 200;
                 Item.base_weight = 3;
                 DamageType = Weapons.DamageType.Slashing;
                 DiceType = 4;
@@ -362,7 +362,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Martial_Melee;
                 break;
             case Weapons.WeaponName.Blowgun:
-                Item.base_cost = 10;
+                Item.base_cost_cp = 1000;
                 Item.base_weight = 1;
                 DamageType = Weapons.DamageType.Piercing;
                 DiceType = 1;
@@ -373,7 +373,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Martial_Ranged;
                 break;
             case Weapons.WeaponName.Hand_Crossbow:
-                Item.base_cost = 75;
+                Item.base_cost_cp = 7500;
                 Item.base_weight = 3;
                 DamageType = Weapons.DamageType.Piercing;
                 DiceType = 6;
@@ -385,7 +385,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Martial_Ranged;
                 break;
             case Weapons.WeaponName.Heavy_Crossbow:
-                Item.base_cost = 50;
+                Item.base_cost_cp = 5000;
                 Item.base_weight = 18;
                 DamageType = Weapons.DamageType.Piercing;
                 DiceType = 10;
@@ -398,7 +398,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Martial_Ranged;
                 break;
             case Weapons.WeaponName.Longbow:
-                Item.base_cost = 50;
+                Item.base_cost_cp = 5000;
                 Item.base_weight = 2;
                 DamageType = Weapons.DamageType.Piercing;
                 DiceType = 8;
@@ -410,7 +410,7 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Martial_Ranged;
                 break;
             case Weapons.WeaponName.Net:
-                Item.base_cost = 1;
+                Item.base_cost_cp = 100;
                 Item.base_weight = 3;
                 DamageType = Weapons.DamageType.Bludgeoning;
                 DiceType = 0;
@@ -420,6 +420,8 @@ public class Weapon : MonoBehaviour {
                 WeaponType = Weapons.WeaponType.Martial_Ranged;
                 break;
             case Weapons.WeaponName.Shield:
+                Item.base_cost_cp = 1000;
+                Item.base_weight = 6;
                 DamageType = Weapons.DamageType.Bludgeoning;
                 DiceType = 4;
                 NumberOfDice = 1;

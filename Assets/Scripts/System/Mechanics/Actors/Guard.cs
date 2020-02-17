@@ -52,7 +52,7 @@ public class Guard : TemplateMelee
     private void FindShrine()
     {
         Structure nearest_sacred_structure = new List<Structure>(FindObjectsOfType<Structure>())
-            .Where(s => s.alignment == Me.Alignment && s.purpose == Structure.Purpose.Sacred)
+            .Where(s => s.Faction == Me.CurrentFaction && s.Use == Structure.Purpose.Sacred)
             .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
             .ToList()
             .First();

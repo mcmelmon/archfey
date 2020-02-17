@@ -42,18 +42,21 @@ public class Senses : MonoBehaviour
 
     public bool InsightCheck(bool active_check, int challenge_rating, bool obscurity = false, bool advantage = false, bool disadvantage = false)
     {
+        // TODO: handle obscurity etc.
         return Me.Actions.SkillCheck(active_check, Proficiencies.Skill.Insight) >= challenge_rating;
     }
 
 
     public bool InvestigationCheck(bool active_check, int challenge_rating, bool obscurity = false, bool advantage = false, bool disadvantage = false)
     {
+        // TODO: handle obscurity etc.
         return Me.Actions.SkillCheck(active_check, Proficiencies.Skill.Investigation) >= challenge_rating;
     }
 
 
     public bool PerceptionCheck(bool active_check, int challenge_rating, bool obscurity = false, bool advantage = false, bool disadvantage = false)
     {
+        // TODO: handle obscurity etc.
         return Me.Actions.SkillCheck(active_check, Proficiencies.Skill.Perception) >= challenge_rating;
     }
 

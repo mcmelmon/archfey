@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    public enum ItemFamily { Component, Consumable, Container, Jewelry, Ore }
+    public enum ItemFamily { Material, Product }
 
     public bool is_equipable;
     public bool is_pocketable;
@@ -12,17 +12,16 @@ public class Item : MonoBehaviour
     public bool is_locked;
     public int unlock_challenge_rating;
     public float base_weight;
-    public float weight_override;
-    public float base_cost;
-    public float cost_override;
+    public float base_cost_cp;
     
     // properties
 
     public Interactable Interactable { get; set; }
-    public Action OnDoubleClick { get; set; }
     public bool IsSpotted { get; set; }
     public bool IsUnlocked { get; set; }
-
+    public Action OnDoubleClick { get; set; }
+    public float ValueAdjustmentRatio { get; set; }
+    public float WeightAdjustmentRatio { get; set; }
 
     // Unity
 
@@ -34,9 +33,20 @@ public class Item : MonoBehaviour
 
     // public
 
+    public float GetAdjustedValueInCopper()
+    {
+        return ValueAdjustmentRatio * base_cost_cp;
+    }
+    
+    public float GetAdjustedWeight()
+    {
+        return WeightAdjustmentRatio * base_weight;
+    }
 
     public bool HandleDoubleClick(Actor player)
     {
+        if (!player == Player.Instance.Me) return false;
+
         if (OnDoubleClick != null) {
             OnDoubleClick.Invoke();
         } else {
@@ -58,5 +68,7 @@ public class Item : MonoBehaviour
         Interactable = GetComponent<Interactable>();
         IsSpotted = !is_hidden;
         IsUnlocked = !is_locked;
+        ValueAdjustmentRatio = 1f;
+        WeightAdjustmentRatio = 1f;
     }
 }

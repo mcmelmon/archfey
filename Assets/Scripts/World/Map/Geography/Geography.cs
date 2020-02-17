@@ -15,8 +15,8 @@ public class Geography : MonoBehaviour {
 
     public static Dictionary<GridType, Grid> Grids { get; set; }
     public static Geography Instance { get; set; }
-    public static Terrain Terrain { get; set; }
-    public static TerrainData TerrainData { get; set; }
+    // public static Terrain Terrain { get; set; }
+    // public static TerrainData TerrainData { get; set; }
 
 
     // Unity
@@ -28,7 +28,7 @@ public class Geography : MonoBehaviour {
             return;
         }
         Instance = this;
-        SetComponents();
+        // SetComponents();
     }
 
 
@@ -49,48 +49,48 @@ public class Geography : MonoBehaviour {
     }
 
 
-    public Vector3[] GetBorder(Map.Cardinal cardinal)
-    {
-        Vector3[] border = new Vector3[2];
-        float resolution = TerrainData.heightmapResolution;
+    // public Vector3[] GetBorder(Map.Cardinal cardinal)
+    // {
+    //     Vector3[] border = new Vector3[2];
+    //     float resolution = TerrainData.heightmapResolution;
 
-        switch (cardinal){
-            case Map.Cardinal.North:
-                border[0] = new Vector3(0, 0, resolution);
-                border[1] = new Vector3(resolution, 0, resolution);
-                break;
-            case Map.Cardinal.East:
-                border[0] = new Vector3(resolution, 0, resolution); ;
-                border[1] = new Vector3(resolution, 0, 0);
-                break;
-            case Map.Cardinal.South:
-                border[0] = new Vector3(resolution, 0, 0);
-                border[1] = new Vector3(0, 0, 0);
-                break;
-            case Map.Cardinal.West:
-                border[0] = new Vector3(0, 0, 0);
-                border[1] = new Vector3(0, 0, resolution);
-                break;
-            default:
-                border[0] = Vector3.zero;
-                border[1] = Vector3.zero;
-                break;
-        }
+    //     switch (cardinal){
+    //         case Map.Cardinal.North:
+    //             border[0] = new Vector3(0, 0, resolution);
+    //             border[1] = new Vector3(resolution, 0, resolution);
+    //             break;
+    //         case Map.Cardinal.East:
+    //             border[0] = new Vector3(resolution, 0, resolution); ;
+    //             border[1] = new Vector3(resolution, 0, 0);
+    //             break;
+    //         case Map.Cardinal.South:
+    //             border[0] = new Vector3(resolution, 0, 0);
+    //             border[1] = new Vector3(0, 0, 0);
+    //             break;
+    //         case Map.Cardinal.West:
+    //             border[0] = new Vector3(0, 0, 0);
+    //             border[1] = new Vector3(0, 0, resolution);
+    //             break;
+    //         default:
+    //             border[0] = Vector3.zero;
+    //             border[1] = Vector3.zero;
+    //             break;
+    //     }
 
-        return border;
-    }
-
-
-    public Vector3 GetCenter()
-    {
-        return new Vector3(TerrainData.size.x / 2, 0, TerrainData.size.z / 2);  // TODO: sample height
-    }
+    //     return border;
+    // }
 
 
-    public int GetResolution()
-    {
-        return TerrainData.heightmapResolution;
-    }
+    // public Vector3 GetCenter()
+    // {
+    //     return new Vector3(TerrainData.size.x / 2, 0, TerrainData.size.z / 2);  // TODO: sample height
+    // }
+
+
+    // public int GetResolution()
+    // {
+    //     return TerrainData.heightmapResolution;
+    // }
 
 
     public void LayTheLand()
@@ -154,10 +154,8 @@ public class Geography : MonoBehaviour {
     private void SetComponents()
     {
         Grids = new Dictionary<GridType, Grid>();
-        Terrain = GetComponentInChildren<Terrain>();
-        TerrainData = Terrain.terrainData;
 
-        Grids[GridType.Unit] = Grid.New(new Vector3(1, 0, GetResolution() - 2), GetResolution() / unit_spacing, GetResolution() / unit_spacing, unit_spacing, false);
+        // Grids[GridType.Unit] = Grid.New(new Vector3(1, 0, GetResolution() - 2), GetResolution() / unit_spacing, GetResolution() / unit_spacing, unit_spacing, false);
 
         foreach (var location in Grids[GridType.Unit].Elements)
         {

@@ -124,6 +124,16 @@ public class Actions : MonoBehaviour
         Me.RestCounter = 0;
     }
 
+    public int AttributeCheck(bool active, Proficiencies.Attribute attribute, bool advantage = false, bool disadvatnage = false)
+    {
+        // Don't compare with a challenge rating here, because this may be to create the challenge rating (e.g. a grapple)
+        int proficiency_bonus = Me.Stats.ProficiencyBonus;
+        int attribute_bonus = Me.Stats.GetAdjustedAttributeModifier(attribute);
+
+        int roll = active ? RollDie(20, 1, advantage, disadvatnage) : 10;
+
+        return roll + attribute_bonus;
+    }
 
     public void CallForHelp()
     {
@@ -208,7 +218,7 @@ public class Actions : MonoBehaviour
     public bool SavingThrow(Proficiencies.Attribute attribute, int challenge_rating, bool advantage = false, bool disadvantage = false)
     {
         int proficiency_bonus = Me.Stats.SavingThrows.Contains(attribute) ? Me.Stats.ProficiencyBonus : 0;
-        int attribute_bonus = Me.Stats.GetAdjustedAttributeScore(attribute);
+        int attribute_bonus = Me.Stats.GetAdjustedAttributeModifier(attribute);
         int bonus = proficiency_bonus + attribute_bonus;
 
         int die_roll = RollDie(20, 1, advantage, disadvantage);
@@ -217,13 +227,14 @@ public class Actions : MonoBehaviour
     }
 
 
-    public void Search()
+    public bool Search()
     {
         // TODO: get a list of anything interesting within range
         // compare the difficulty of finding it with the skill check roll
 
-        int roll = SkillCheck(true, Proficiencies.Skill.Perception);
-        Debug.Log("Search roll: " + roll);
+        // Use Senses.Investigation or Perception, whichever is higher
+
+        return false;
     }
 
 
@@ -238,11 +249,13 @@ public class Actions : MonoBehaviour
 
     public int SkillCheck(bool active, Proficiencies.Skill skill, bool advantage = false, bool disadvatnage = false)
     {
+        // Don't compare with the challenge rating in here because we may be rolling to create the challenge rating (e.g. trying to hide or bluff)
+
         bool proficient = Me.Stats.Skills.Contains(skill);
         bool expertise = Me.Stats.ExpertiseInSkills.Contains(skill);
         int proficiency_bonus = expertise ? Me.Stats.ProficiencyBonus * 2 : Me.Stats.ProficiencyBonus;
-        int attribute_bonus = Me.Stats.GetAdjustedAttributeScore(Proficiencies.Instance.GetAttributeForSkill(skill));
-        int bonus = expertise ? proficiency_bonus + attribute_bonus : attribute_bonus;
+        int attribute_bonus = Me.Stats.GetAdjustedAttributeModifier(Proficiencies.Instance.GetAttributeForSkill(skill));
+        int bonus = proficient ? proficiency_bonus + attribute_bonus : attribute_bonus;
 
         int roll = active ? RollDie(20, 1, advantage, disadvatnage) : 10;
 
@@ -252,6 +265,7 @@ public class Actions : MonoBehaviour
 
     public int ToolCheck(Proficiencies.Tool tool, bool advantage = false, bool disadvatnage = false)
     {
+        // We may be rolling to create the challenge rating (e.g. a forgery), so don't check for "success" here
         bool proficient = Me.Stats.Tools.Contains(tool);
         bool expertise = Me.Stats.ExpertiseInTools.Contains(tool);
         int proficiency_bonus = expertise ? Me.Stats.ProficiencyBonus * 2 : Me.Stats.ProficiencyBonus;

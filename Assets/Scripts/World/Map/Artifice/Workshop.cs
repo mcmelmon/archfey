@@ -13,8 +13,8 @@ public class Workshop : MonoBehaviour
 
     // properties
 
-    public List<Industry.Product> Craftworks { get; set; }
-    public Storage Storage { get; set; }
+    public List<Product> Craftworks { get; set; }
+    public Structure Structure { get; set; }
 
 
     // Unity
@@ -37,22 +37,21 @@ public class Workshop : MonoBehaviour
 
     public bool Craft(Actor artisan)
     {
-        if (Craftworks.Count == 0 || Industry.CurrentlyCrafting.Contains(artisan)) return false;
-        Industry.Product product = null;
+        // if (Craftworks.Count == 0 || Industry.CurrentlyCrafting.Contains(artisan)) return false;
 
-        foreach (var tool in artisan.Stats.Tools) {
-            // TODO: pick "most valuable" product/tool available to artisan
-            product = Craftworks.First(cw => cw.Tool == tool);
-            if (product != null) break;
-        }
+        // foreach (var tool in artisan.Stats.Tools) {
+        //     // TODO: pick "most valuable" product/tool available to artisan
+        //     Products.Product product = Craftworks.First(cw => cw.required_tool == tool);
+        //     if (product != null) break;
+        // }
 
-        if (product == null) return false;
+        // if (product == null) return false;
 
-        if (Storage.materials.First(m => m.material == product.Material).amount >= product.MaterialAmount) {
-            Industry.CurrentlyCrafting.Add(artisan);
-            StartCoroutine(Crafting(product, artisan));
-            return true;
-        }
+        // if (Storage.MaterialsHandled.First(m => m.material == product.Material).amount >= product.MaterialAmount) {
+        //     Industry.CurrentlyCrafting.Add(artisan);
+        //     StartCoroutine(Crafting(product, artisan));
+        //     return true;
+        // }
 
         return false;
     }
@@ -73,68 +72,66 @@ public class Workshop : MonoBehaviour
     // private
 
 
-    private IEnumerator Crafting(Industry.Product product, Actor artisan)
-    {
-        Storage.RemoveMaterials(product.Material, product.MaterialAmount);
+    // private IEnumerator Crafting(Industry.Product product, Actor artisan)
+    // {
+    //     Storage.RemoveMaterials(product.Material, product.MaterialAmount);
 
-        int turn = 0;
-        float time_to_finish = 1 + product.Value_CP / 100f;
-
-
-        while (turn < time_to_finish) {
-            if (artisan.gameObject == null) break;
-            turn++;
-            yield return new WaitForSeconds(Turn.ActionThreshold);
-        }
-
-        Industry.CurrentlyCrafting.Remove(artisan);
-        Storage.StoreProducts(product, 1);
-    }
+    //     int turn = 0;
+    //     float time_to_finish = 1 + product.Value_CP / 100f;
 
 
-    public IEnumerator GetProductsMadeWith(Proficiencies.Tool tool)
-    {
-        // It "may" make sense to grab all of the products at once (in Industry), but when there
-        // are a lot of them, we will only need a small subset workshop by workshop as the settlements
-        // expand.
+    //     while (turn < time_to_finish) {
+    //         if (artisan.gameObject == null) break;
+    //         turn++;
+    //         yield return new WaitForSeconds(Turn.ActionThreshold);
+    //     }
 
-        UnityWebRequest www = UnityWebRequest.Get("http://localhost:3000/products?tool=" + tool);
-        Industry.JSON_Products products_json = new Industry.JSON_Products();
-        yield return www.SendWebRequest();
+    //     Industry.CurrentlyCrafting.Remove(artisan);
+    //     Storage.StoreProducts(product, 1);
+    // }
 
-        if (www.isNetworkError || www.isHttpError) {
-            Debug.Log(www.error);
-        } else {
-            products_json = JsonUtility.FromJson<Industry.JSON_Products>(www.downloadHandler.text);
-            List<string> products_from_server = new List<string>(products_json.products);
-            foreach (var product in products_from_server) {
-                string[] split = product.Split(new char[] { ',' });
-                Industry.Product new_product = new Industry.Product {
-                    Name = split[0],
-                    Material = split[1],
-                    MaterialAmount = int.Parse(split[2]),
-                    Tool = (Proficiencies.Tool)Enum.Parse(typeof(Proficiencies.Tool), split[3]),
-                Value_CP = int.Parse(split[4])
-                };
 
-                Craftworks.Add(new_product);
-            }
-        }
-    }
+    // public IEnumerator GetProductsMadeWith(Proficiencies.Tool tool)
+    // {
+    //     // TODO: rework using prefabs, not server calls
+
+    //     UnityWebRequest www = UnityWebRequest.Get("http://localhost:3000/products?tool=" + tool);
+    //     Industry.JSON_Products products_json = new Industry.JSON_Products();
+    //     yield return www.SendWebRequest();
+
+    //     if (www.isNetworkError || www.isHttpError) {
+    //         Debug.Log(www.error);
+    //     } else {
+    //         products_json = JsonUtility.FromJson<Industry.JSON_Products>(www.downloadHandler.text);
+    //         List<string> products_from_server = new List<string>(products_json.products);
+    //         foreach (var product in products_from_server) {
+    //             string[] split = product.Split(new char[] { ',' });
+    //             Industry.Product new_product = new Industry.Product {
+    //                 Name = split[0],
+    //                 Material = split[1],
+    //                 MaterialAmount = int.Parse(split[2]),
+    //                 Tool = (Proficiencies.Tool)Enum.Parse(typeof(Proficiencies.Tool), split[3]),
+    //             Value_CP = int.Parse(split[4])
+    //             };
+
+    //             Craftworks.Add(new_product);
+    //         }
+    //     }
+    // }
 
 
     private IEnumerator MonitorStorage()
     {
         while (true) {
-            if (Craftworks.Count == 0) {
-                yield return new WaitForSeconds(Turn.ActionThreshold);
-            }
+            // if (Craftworks.Count == 0) {
+            //     yield return new WaitForSeconds(Turn.ActionThreshold);
+            // }
             
-            foreach (var work in Craftworks) {
-                if (Storage.materials.First(m => m.material == work.Material).amount > work.MaterialAmount) {
-                    SpawnArtisanFor(work); // if we have the materials, spawn a tool maker if one is not available
-                }
-            }
+            // foreach (var work in Craftworks) {
+            //     if (Storage.MaterialsHandled.First(m => m.stored_material == work.required_material).stored_amount > work.required_material_amount) {
+            //         SpawnArtisanFor(work); // if we have the materials, spawn a tool maker if one is not available
+            //     }
+            // }
 
             yield return new WaitForSeconds(Turn.ActionThreshold);
         }
@@ -143,15 +140,15 @@ public class Workshop : MonoBehaviour
 
     private void SetComponents()
     {
-        Craftworks = new List<Industry.Product>();
-        Storage = GetComponent<Storage>();
+        Craftworks = new List<Product>();
+        Structure = GetComponent<Structure>();
         foreach (var tool in shop_tools) {
-            StartCoroutine(GetProductsMadeWith(tool));
+            // StartCoroutine(GetProductsMadeWith(tool));
         }
     }
 
 
-    private void SpawnArtisanFor(Industry.Product _product)
+    private void SpawnArtisanFor(Product _product)
     {
         // Actor primary_artistan;
         // Structure random_residence = FindObjectsOfType<Structure>()

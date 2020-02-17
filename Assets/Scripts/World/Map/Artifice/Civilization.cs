@@ -7,7 +7,8 @@ public class Civilization : MonoBehaviour {
     // properties
 
     public static Civilization Instance { get; set; }
-    public Ruins ruins;
+    public List<Structure> Structures { get; set; } 
+
 
 
     // Unity
@@ -21,26 +22,22 @@ public class Civilization : MonoBehaviour {
             return;
         }
         Instance = this;
+        SetComponents();
     }
 
     private void Start() {
-        ruins = GetComponentInChildren<Ruins>();
     }
 
 
     // public
 
-    public void DawnOfMhoddim()
-    {
-        LayRuins();
-    }
 
 
     // private
 
-
-    private void LayRuins()
+    void SetComponents()
     {
-        Ruins.Instance.ErectRuins();
+        Structures = new List<Structure>();
     }
+
 }

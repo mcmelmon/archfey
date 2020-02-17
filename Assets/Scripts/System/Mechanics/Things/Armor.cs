@@ -57,7 +57,7 @@ public class Armor : MonoBehaviour
 
         switch (armor_name) {
             case Armors.ArmorName.Padded:
-                Item.base_cost = 5;  // TODO: use Industry.Coin
+                Item.base_cost_cp = 500;  // TODO: use Industry.Coin
                 Item.base_weight = 8;
                 ArmorWeightClass = Armors.ArmorType.Light;
                 BaseArmorClass = 11;
@@ -66,7 +66,7 @@ public class Armor : MonoBehaviour
                 StealthDisadvantage = true;
                 break;
             case Armors.ArmorName.Leather:
-                Item.base_cost = 10;
+                Item.base_cost_cp = 1000;
                 Item.base_weight = 10;
                 ArmorWeightClass = Armors.ArmorType.Light;
                 BaseArmorClass = 11;
@@ -75,7 +75,7 @@ public class Armor : MonoBehaviour
                 StealthDisadvantage = false;
                 break;
             case Armors.ArmorName.Studded_Leather:
-                Item.base_cost = 45;
+                Item.base_cost_cp = 4500;
                 Item.base_weight = 13;
                 ArmorWeightClass = Armors.ArmorType.Light;
                 BaseArmorClass = 12;
@@ -84,7 +84,7 @@ public class Armor : MonoBehaviour
                 StealthDisadvantage = false;
                 break;
             case Armors.ArmorName.Hide:
-                Item.base_cost = 10;
+                Item.base_cost_cp = 1000;
                 Item.base_weight = 12;
                 ArmorWeightClass = Armors.ArmorType.Medium;
                 BaseArmorClass = 12;
@@ -93,7 +93,7 @@ public class Armor : MonoBehaviour
                 StealthDisadvantage = false;
                 break;
             case Armors.ArmorName.Chain_Shirt:
-                Item.base_cost = 50;
+                Item.base_cost_cp = 5000;
                 Item.base_weight = 20;
                 ArmorWeightClass = Armors.ArmorType.Medium;
                 BaseArmorClass = 13;
@@ -102,7 +102,7 @@ public class Armor : MonoBehaviour
                 StealthDisadvantage = false;
                 break;
             case Armors.ArmorName.Scale_Mail:
-                Item.base_cost = 50;
+                Item.base_cost_cp = 5000;
                 Item.base_weight = 45;
                 ArmorWeightClass = Armors.ArmorType.Medium;
                 BaseArmorClass = 14;
@@ -110,7 +110,7 @@ public class Armor : MonoBehaviour
                 StealthDisadvantage = true;
                 break;
             case Armors.ArmorName.Breastplate:
-                Item.base_cost = 400;
+                Item.base_cost_cp = 40000;
                 Item.base_weight = 20;
                 ArmorWeightClass = Armors.ArmorType.Medium;
                 BaseArmorClass = 14;
@@ -119,7 +119,7 @@ public class Armor : MonoBehaviour
                 StealthDisadvantage = false;
                 break;
             case Armors.ArmorName.Half_Plate:
-                Item.base_cost = 750;
+                Item.base_cost_cp = 75000;
                 Item.base_weight = 40;
                 ArmorWeightClass = Armors.ArmorType.Medium;
                 BaseArmorClass = 15;
@@ -128,7 +128,7 @@ public class Armor : MonoBehaviour
                 StealthDisadvantage = true;
                 break;
             case Armors.ArmorName.Ring_Mail:
-                Item.base_cost = 30;
+                Item.base_cost_cp = 3000;
                 Item.base_weight = 40;
                 ArmorWeightClass = Armors.ArmorType.Heavy;
                 BaseArmorClass = 14;
@@ -137,7 +137,7 @@ public class Armor : MonoBehaviour
                 StealthDisadvantage = true;
                 break;
             case Armors.ArmorName.Chain_Mail:
-                Item.base_cost = 75;
+                Item.base_cost_cp = 7500;
                 Item.base_weight = 55;
                 ArmorWeightClass = Armors.ArmorType.Heavy;
                 BaseArmorClass = 16;
@@ -146,7 +146,7 @@ public class Armor : MonoBehaviour
                 StealthDisadvantage = true;
                 break;
             case Armors.ArmorName.Splint:
-                Item.base_cost = 200;
+                Item.base_cost_cp = 20000;
                 Item.base_weight = 60;
                 ArmorWeightClass = Armors.ArmorType.Heavy;
                 BaseArmorClass = 17;
@@ -155,7 +155,7 @@ public class Armor : MonoBehaviour
                 StealthDisadvantage = true;
                 break;
             case Armors.ArmorName.Plate:
-                Item.base_cost = 1500;
+                Item.base_cost_cp = 150000;
                 Item.base_weight = 65;
                 ArmorWeightClass = Armors.ArmorType.Heavy;
                 BaseArmorClass = 18;
@@ -164,12 +164,12 @@ public class Armor : MonoBehaviour
                 StealthDisadvantage = true;
                 break;
             case Armors.ArmorName.Shield:
-                Item.base_cost = 10;
+                Item.base_cost_cp = 10;
                 Item.base_weight = 6;
                 ArmorClassEnhancement += 2;
                 break;
             case Armors.ArmorName.None:
-                Item.base_cost = 0;
+                Item.base_cost_cp = 0;
                 Item.base_weight = 0;
                 BaseArmorClass = 10;
                 MaximumDexterityBonus = 10;

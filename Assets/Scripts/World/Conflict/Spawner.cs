@@ -9,13 +9,13 @@ public class Spawner : MonoBehaviour
     public enum RespawnStrategy { Once, Proximity, Timer };
 
     // Inspector settings
-    public List<SpawnEntry> spawn_prefabs;
-    public RespawnStrategy respawn_strategy;
-    public float player_proximity_trigger;
-    public int respawn_delay;
-    public float spawn_circle_radius;
-    public Faction faction;
-    public Objective objective;
+    [SerializeField] List<SpawnEntry> spawn_prefabs;
+    [SerializeField] RespawnStrategy respawn_strategy;
+    [SerializeField] float player_proximity_trigger;
+    [SerializeField] int respawn_turns;
+    [SerializeField] float spawn_circle_radius;
+    [SerializeField] Faction faction;
+    [SerializeField] Objective objective;
 
     [Serializable]
     public struct SpawnEntry
@@ -27,7 +27,9 @@ public class Spawner : MonoBehaviour
 
     // properties
 
-    public int RespawnTick { get; set; }
+    public Faction Allegiance { get; set; }
+
+    public int RespawnTurn { get; set; }
     public Circle SpawnCircle { get; set; }
     public Dictionary<string, List<Actor>> Spawned { get; set; }
 
@@ -111,15 +113,15 @@ public class Spawner : MonoBehaviour
     {
         while (respawn_strategy == RespawnStrategy.Proximity) {
             if (Player.Instance != null && Vector3.Distance(transform.position, Player.Instance.transform.position) < player_proximity_trigger) {
-                if (RespawnTick == 0 || RespawnTick >= respawn_delay) {
+                if (RespawnTurn == 0 || RespawnTurn >= respawn_turns) {
                     // The first time the player approaches, spawn right away; but then delay
 
                     Spawn(); // Spawn ensures that the number outstanding is equal to or less than the number to be spawned
-                    RespawnTick = 0;
+                    RespawnTurn = 0;
                 }
-                RespawnTick++; // only start the delay counter if the player has come within range
+                RespawnTurn++; // only start the delay counter if the player has come within range
             }
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(Turn.ActionThreshold);
         }
     }
 
@@ -128,18 +130,19 @@ public class Spawner : MonoBehaviour
     private IEnumerator Respawn()
     {
         while (respawn_strategy == RespawnStrategy.Timer) {
-            if (RespawnTick >= respawn_delay ) {
+            if (RespawnTurn >= respawn_turns ) {
                 Spawn(); // Spawn ensures that the number outstanding is equal to or less than the number to be spawned
-                RespawnTick = 0;
+                RespawnTurn = 0;
             }
-            RespawnTick++;
-            yield return new WaitForSeconds(1);
+            RespawnTurn++;
+            yield return new WaitForSeconds(Turn.ActionThreshold);
         }
     }
 
 
     private void SetComponents()
     {
+        Allegiance = faction;
         SpawnCircle = Circle.New(transform.position, spawn_circle_radius);
         Spawned = new Dictionary<string, List<Actor>>();
     }

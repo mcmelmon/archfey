@@ -108,7 +108,7 @@ public class Combat : MonoBehaviour
 
     public bool IsWithinMeleeRange(Transform target)
     {
-        float separation = Me.SeparationFrom(target) - Me.Actions.Movement.ReachedThreshold;
+        float separation = Me.SeparationFrom(target) - Me.Actions.Movement.StoppingDistance();
         return separation < MeleeRange();
     }
 

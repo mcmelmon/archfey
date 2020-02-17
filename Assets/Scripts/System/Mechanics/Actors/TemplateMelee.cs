@@ -59,15 +59,15 @@ public class TemplateMelee : MonoBehaviour, IAct
     public virtual void OnHasObjective()
     {
         if (!Me.Actions.Decider.Objectives.Any()) {
-            Me.Actions.Decider.Goal = null;
+            Me.Actions.Decider.GoalClaim = null;
             return;
         }
 
-        ClaimNode target_node = Me.Actions.Decider.Goal ?? PickNodeFromObjective(Me.Actions.Decider.Objectives.First());
+        ClaimNode target_node = Me.Actions.Decider.GoalClaim ?? PickNodeFromObjective(Me.Actions.Decider.Objectives.First());
 
         if (target_node != null) {
             Me.Actions.Decider.AchievedAllObjectives = false;
-            Me.Actions.Decider.Goal = target_node;
+            Me.Actions.Decider.GoalClaim = target_node;
             Me.Actions.Movement.SetDestination(target_node.transform.position);
         } else {
             Me.Actions.Decider.AchievedAllObjectives = true;
@@ -138,7 +138,6 @@ public class TemplateMelee : MonoBehaviour, IAct
 
     public virtual void OnReachedGoal()
     {
-        Me.Actions.Movement.ResetPath();
         OnIdle();
     }
 
@@ -154,7 +153,6 @@ public class TemplateMelee : MonoBehaviour, IAct
 
     public virtual void OnWatch()
     {
-        Me.Actions.Movement.ResetPath();
         Me.Actions.CloseWithEnemies();
         Me.Actions.Attack();
     }
@@ -176,7 +174,7 @@ public class TemplateMelee : MonoBehaviour, IAct
         }
 
         if (node != null) {
-            Me.Actions.Decider.Goal = node;
+            Me.Actions.Decider.GoalClaim = node;
             Me.Actions.Movement.SetDestination(node.transform.position);
         } else {
             Me.Actions.Movement.Home();
