@@ -95,7 +95,7 @@ PrefabInstance:
     - target: {fileID: 7258184742708812191, guid: 835b40d02416441ef9fc81e4f3e7f3b5,
         type: 3}
       propertyPath: challenge_rating
-      value: 12
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7258184742708812191, guid: 835b40d02416441ef9fc81e4f3e7f3b5,
         type: 3}
@@ -111,6 +111,11 @@ PrefabInstance:
         type: 3}
       propertyPath: required_skill
       value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 7258184742708812191, guid: 835b40d02416441ef9fc81e4f3e7f3b5,
+        type: 3}
+      propertyPath: category
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 835b40d02416441ef9fc81e4f3e7f3b5, type: 3}

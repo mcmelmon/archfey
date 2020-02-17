@@ -15,7 +15,7 @@ PrefabInstance:
     - target: {fileID: 947639081400993083, guid: f9c27e15020d142ca92efd910b91102b,
         type: 3}
       propertyPath: dexterity
-      value: 16
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 947639081400993083, guid: f9c27e15020d142ca92efd910b91102b,
         type: 3}
@@ -105,7 +105,7 @@ PrefabInstance:
     - target: {fileID: 3308453885947126789, guid: f9c27e15020d142ca92efd910b91102b,
         type: 3}
       propertyPath: m_Name
-      value: Commoner Herbalist
+      value: Commoner Herbalist Variant
       objectReference: {fileID: 0}
     - target: {fileID: 5425178627575091761, guid: f9c27e15020d142ca92efd910b91102b,
         type: 3}
