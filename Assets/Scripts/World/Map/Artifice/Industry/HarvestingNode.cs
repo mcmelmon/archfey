@@ -79,7 +79,7 @@ public class HarvestingNode : MonoBehaviour
     {
         List<Resource> available = available_for_harvest.Where(r => r.IsAccessibleTo(_harvester)).ToList();
         Random.InitState(System.DateTime.Now.Second);
-        return available[Random.Range (0, available.Count - 1)];
+        return available[Random.Range(0, available.Count)];
     }
 
     private void SetComponents()

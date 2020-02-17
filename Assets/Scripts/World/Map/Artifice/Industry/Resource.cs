@@ -27,6 +27,7 @@ public class Resource : MonoBehaviour
 
     public bool HarvestBy(Actor _harvester)
     {
+        if (Name == null || Name == "") Debug.Log("Blank name in category: " + category + "; CR: " + challenge_rating);
         if (!IsAccessibleTo(_harvester)) return false;
 
         if (required_attribute != Proficiencies.Attribute.None) {

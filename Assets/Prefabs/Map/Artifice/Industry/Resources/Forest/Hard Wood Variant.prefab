@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &728041210637405567
+--- !u!1001 &3290576060702860976
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -65,17 +65,37 @@ PrefabInstance:
     - target: {fileID: 1799126228495362617, guid: 835b40d02416441ef9fc81e4f3e7f3b5,
         type: 3}
       propertyPath: base_weight
-      value: 50
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1799126228495362617, guid: 835b40d02416441ef9fc81e4f3e7f3b5,
         type: 3}
       propertyPath: base_cost_cp
-      value: 250
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 4391544133669531493, guid: 835b40d02416441ef9fc81e4f3e7f3b5,
         type: 3}
       propertyPath: m_Name
-      value: Ash Variant
+      value: Hard Wood Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 7258184742708812191, guid: 835b40d02416441ef9fc81e4f3e7f3b5,
+        type: 3}
+      propertyPath: required_tools.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7258184742708812191, guid: 835b40d02416441ef9fc81e4f3e7f3b5,
+        type: 3}
+      propertyPath: acquisition_turns
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7258184742708812191, guid: 835b40d02416441ef9fc81e4f3e7f3b5,
+        type: 3}
+      propertyPath: required_tools.Array.data[0]
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 7258184742708812191, guid: 835b40d02416441ef9fc81e4f3e7f3b5,
+        type: 3}
+      propertyPath: challenge_rating
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7258184742708812191, guid: 835b40d02416441ef9fc81e4f3e7f3b5,
         type: 3}
@@ -85,17 +105,12 @@ PrefabInstance:
     - target: {fileID: 7258184742708812191, guid: 835b40d02416441ef9fc81e4f3e7f3b5,
         type: 3}
       propertyPath: required_attribute
-      value: 6
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7258184742708812191, guid: 835b40d02416441ef9fc81e4f3e7f3b5,
         type: 3}
       propertyPath: required_skill
-      value: 18
-      objectReference: {fileID: 0}
-    - target: {fileID: 7258184742708812191, guid: 835b40d02416441ef9fc81e4f3e7f3b5,
-        type: 3}
-      propertyPath: challenge_rating
-      value: 8
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7258184742708812191, guid: 835b40d02416441ef9fc81e4f3e7f3b5,
         type: 3}

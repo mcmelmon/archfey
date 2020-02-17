@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-
     // properties
 
     public List<GameObject> Contents { get; set; }
