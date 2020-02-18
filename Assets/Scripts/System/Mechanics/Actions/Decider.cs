@@ -221,7 +221,7 @@ public class Decider : MonoBehaviour
 
     private bool Crafting()
     {
-        return Industry.CurrentlyCrafting.Contains(Me);
+        return Industry.Instance.CurrentlyCrafting.Contains(Me);
     }
 
 

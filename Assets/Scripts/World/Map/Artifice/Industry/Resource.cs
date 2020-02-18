@@ -14,14 +14,14 @@ public class Resource : MonoBehaviour
 
     // properties
 
+    public Item Item { get; set; }
     public string Name { get; set; }
 
     // Unity
 
     private void Awake() {
-        Name = this.name;
+        SetComponents();
     }
-
 
     // public
 
@@ -60,5 +60,13 @@ public class Resource : MonoBehaviour
     {
         return _harvester.Stats.Tools.Contains(required_tool);
 
+    }
+
+    // private
+
+    private void SetComponents()
+    {
+        Item = GetComponent<Item>();
+        Name = this.name;
     }
 }

@@ -57,9 +57,16 @@ public class Inventory : MonoBehaviour
         return Contents.Count > 0;
     }
 
-    public void RemoveFromInventory(GameObject stored_object)
+    public void RemoveFromInventory(GameObject stored_object, int number_to_remove = 1)
     {
-        Contents.Remove(stored_object);
+        int number_in_inventory = StorageCount(stored_object);
+        if (number_to_remove > number_in_inventory) number_to_remove = number_in_inventory;
+        List<GameObject> removeable_items = Contents.Where(i => i == stored_object).ToList();
+
+        foreach (var item in removeable_items.GetRange(0, number_to_remove - 1)) {
+            Contents.Remove(item);
+        }
+
         CheckIfEncumbered();
     }
 
@@ -68,32 +75,47 @@ public class Inventory : MonoBehaviour
         Contents.RemoveAt(index);
     }
 
-    public int StorageCount()
+    public int StorageCount(GameObject item = null)
     {
-        return Contents.Count;
+        if (item == null) {
+            return Contents.Count;
+        } else {
+            return Contents.Where(i => i.gameObject == item).ToList().Count();
+        }
     }
 
-    public float StorageValue()
+    public float StorageValue(GameObject item = null)
     {
         float stored_value = 0f;
 
-        foreach (Item item in Contents.Select(i => i.GetComponent<Item>())) {
-            stored_value += item.GetAdjustedValueInCopper();
+        if (item == null) {
+            foreach (Item match in Contents.Select(i => i.GetComponent<Item>())) {
+                stored_value += match.GetAdjustedValueInCopper();
+            }
+        } else {
+            foreach (Item match in Contents.Where(i => i.gameObject == item).Select(i => i.GetComponent<Item>())) {
+                stored_value += match.GetAdjustedValueInCopper();
+            }
         }
 
         return stored_value;
     }
 
-    public float StorageWeight()
+    public float StorageWeight(GameObject item = null)
     {
         float stored_weight = 0;
 
-        foreach (Item item in Contents.Select(i => i.GetComponent<Item>())) {
-            stored_weight += item.GetAdjustedWeight();
+        if (item == null) {
+            foreach (Item match in Contents.Select(i => i.GetComponent<Item>())) {
+                stored_weight += match.GetAdjustedWeight();
+            }
+        } else {
+            foreach (Item match in Contents.Where(i => i.gameObject == item).Select(i => i.GetComponent<Item>())) {
+                stored_weight += match.GetAdjustedWeight();
+            }
         }
 
         return stored_weight;
-
     }
 
     // private
