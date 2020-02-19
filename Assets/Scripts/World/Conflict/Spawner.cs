@@ -67,7 +67,7 @@ public class Spawner : MonoBehaviour
                     GameObject new_spawn = Instantiate(prefab, SpawnCircle.RandomContainedPoint(), prefab.transform.rotation);
                     new_spawn.transform.parent = FindObjectOfType<Characters>().gameObject.transform;
 
-                    Renderer rend = new_spawn.GetComponent<Renderer>();
+                    Renderer rend = new_spawn.GetComponentInChildren<Renderer>();
                     rend.sharedMaterial.SetColor("_BaseColor", faction.colors);
 
                     Actor actor = new_spawn.GetComponent<Actor>();

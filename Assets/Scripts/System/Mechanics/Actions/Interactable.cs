@@ -60,11 +60,11 @@ public class Interactable : MonoBehaviour
     private IEnumerator Flash()
     {
         while (!Flashing) {
-            GetComponent<Renderer>().material = highlight_material;
+            GetComponentInChildren<Renderer>().material = highlight_material;
             yield return new WaitForSeconds(Turn.ActionThreshold);
             Flashing = true;
         }
-        GetComponent<Renderer>().material = OriginalMaterial;
+        GetComponentInChildren<Renderer>().material = OriginalMaterial;
         Flashing = false;
     }
 
@@ -75,7 +75,7 @@ public class Interactable : MonoBehaviour
         Item = GetComponent<Item>();
         Interactors = new List<Actor>();
         Actor = GetComponent<Actor>();
-        OriginalMaterial = GetComponent<Renderer>().material;
+        OriginalMaterial = GetComponentInChildren<Renderer>().material;
         Structure = GetComponent<Structure>();
     }
 }
