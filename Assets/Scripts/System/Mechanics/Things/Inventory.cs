@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
+
+    [SerializeField] List<GameObject> contents = new List<GameObject>();
     // properties
 
     public List<GameObject> Contents { get; set; }
@@ -24,9 +26,12 @@ public class Inventory : MonoBehaviour
     // public 
 
 
-    public void AddToInventory(GameObject stored_object)
+    public void AddToInventory(GameObject stored_object, int number_to_add = 1)
     {
-        Contents.Add(stored_object);
+        for (int i = 0; i < number_to_add; i++) {
+            Contents.Add(stored_object);
+        }
+
         CheckIfEncumbered();
 
         // TODO: some objects should be deactivated (like weapons picked up), some shouldn't (like resource primitives)
@@ -57,9 +62,17 @@ public class Inventory : MonoBehaviour
         return Contents.Count > 0;
     }
 
-    public void RemoveFromInventory(GameObject stored_object)
+    public void RemoveFromInventory(GameObject stored_object, int number_to_remove = 1)
     {
-        Contents.Remove(stored_object);
+        int number_in_inventory = StorageCount(stored_object);
+        if (number_to_remove > number_in_inventory) number_to_remove = number_in_inventory;
+        List<GameObject> removeable_items = Contents.Where(i => i == stored_object).ToList();
+
+        for (int i = 0; i < removeable_items.Count(); i++) {
+            GameObject item = removeable_items[i];
+            Contents.Remove(item);
+        }
+
         CheckIfEncumbered();
     }
 
@@ -68,39 +81,54 @@ public class Inventory : MonoBehaviour
         Contents.RemoveAt(index);
     }
 
-    public int StorageCount()
+    public int StorageCount(GameObject item = null)
     {
-        return Contents.Count;
+        if (item == null) {
+            return Contents.Count;
+        } else {
+            return Contents.Where(i => i.gameObject == item).ToList().Count();
+        }
     }
 
-    public float StorageValue()
+    public float StorageValue(GameObject item = null)
     {
         float stored_value = 0f;
 
-        foreach (Item item in Contents.Select(i => i.GetComponent<Item>())) {
-            stored_value += item.GetAdjustedValueInCopper();
+        if (item == null) {
+            foreach (Item match in Contents.Select(i => i.GetComponent<Item>())) {
+                stored_value += match.GetAdjustedValueInCopper();
+            }
+        } else {
+            foreach (Item match in Contents.Where(i => i.gameObject == item).Select(i => i.GetComponent<Item>())) {
+                stored_value += match.GetAdjustedValueInCopper();
+            }
         }
 
         return stored_value;
     }
 
-    public float StorageWeight()
+    public float StorageWeight(GameObject item = null)
     {
         float stored_weight = 0;
 
-        foreach (Item item in Contents.Select(i => i.GetComponent<Item>())) {
-            stored_weight += item.GetAdjustedWeight();
+        if (item == null) {
+            foreach (Item match in Contents.Select(i => i.GetComponent<Item>())) {
+                stored_weight += match.GetAdjustedWeight();
+            }
+        } else {
+            foreach (Item match in Contents.Where(i => i.gameObject == item).Select(i => i.GetComponent<Item>())) {
+                stored_weight += match.GetAdjustedWeight();
+            }
         }
 
         return stored_weight;
-
     }
 
     // private
 
     private void SetComponents()
     {
-        Contents = new List<GameObject>();
+        Contents = contents;
         Me = GetComponent<Actor>();
         Pockets = new List<GameObject>();
         Structure = GetComponent<Structure>();

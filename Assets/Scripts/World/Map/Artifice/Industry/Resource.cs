@@ -14,20 +14,19 @@ public class Resource : MonoBehaviour
 
     // properties
 
+    public Item Item { get; set; }
     public string Name { get; set; }
 
     // Unity
 
     private void Awake() {
-        Name = this.name;
+        SetComponents();
     }
-
 
     // public
 
     public bool HarvestBy(Actor _harvester)
     {
-        if (Name == null || Name == "") Debug.Log("Blank name in category: " + category + "; CR: " + challenge_rating);
         if (!IsAccessibleTo(_harvester)) return false;
 
         if (required_attribute != Proficiencies.Attribute.None) {
@@ -44,10 +43,8 @@ public class Resource : MonoBehaviour
             if (!_harvester.Actions.Movement.Encumbered) {
                 _harvester.Me.Inventory.AddToInventory(this.gameObject);
                 _harvester.HasFullLoad = false;
-                Debug.Log("Harvested: " + Name);
                 return true;
             } else {
-                Debug.Log("Encumbered");
                 _harvester.HasFullLoad = true;
                 return false;
             }
@@ -60,5 +57,13 @@ public class Resource : MonoBehaviour
     {
         return _harvester.Stats.Tools.Contains(required_tool);
 
+    }
+
+    // private
+
+    private void SetComponents()
+    {
+        Item = GetComponent<Item>();
+        Name = this.name;
     }
 }

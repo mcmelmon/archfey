@@ -53,10 +53,8 @@ public class Commoner : TemplateMelee
     public override void OnHarvesting()
     {
         if (Me.Senses.PerceptionCheck(true, MyHarvest.ChallengeRating)) {
-            Debug.Log("Spotted node");
             Harvest();
         } else {
-            Debug.Log("Failed to spot node");
             ChooseHarvest();
         }
     }
@@ -93,13 +91,9 @@ public class Commoner : TemplateMelee
     }
     public override void OnReachedGoal()
     {
-        Debug.Log("Reached goal");
         if (!Harvest()) {
-            Debug.Log("Failed to harvest");
             if (!Craft()) {
-                Debug.Log("No craft");
                 if (!Warehouse()) {
-                    Debug.Log("No warehouse");
                     if (!RepairStructure()) {
                         OnIdle();
                     }
@@ -159,11 +153,25 @@ public class Commoner : TemplateMelee
         return false;
     }
 
+    private bool ChooseWorkshop()
+    {
+        List<Workshop> available = FindObjectsOfType<Workshop>().Where(ws => ws.UsefulTo(Me) && ws.Structure.IsOpenToMe(Me)).ToList();
+        if (available.Any()) {
+            MyWorkshop = available.OrderBy(ws => Vector3.Distance(ws.transform.position, transform.position)).First();
+            if (MyWorkshop == null) return false;
+            Me.HasTask = true;
+            Me.Actions.Movement.SetDestination(MyWorkshop.Structure.NearestEntranceTo(Me.transform));
+            return true;
+        }
+
+        return false;
+    }
+
     private bool Craft()
     {
         if (!Proficiencies.Instance.IsArtisan(Me) || MyWorkshop == null) return false;
 
-        return Me.HasTask && Me.Actions.Movement.AtCurrentDestination() && MyWorkshop.Craft(Me);
+        return Me.HasTask && Me.Actions.Movement.AtCurrentDestination() && MyWorkshop.CraftByArtisan(Me);
     }
 
     private void FindDamagedStructure()
@@ -226,11 +234,7 @@ public class Commoner : TemplateMelee
         if (Proficiencies.Instance.IsHarvester(Me)) {
             if (ChooseHarvest()) return;
         } else if (Proficiencies.Instance.IsArtisan(Me)) {
-            MyWorkshop = FindObjectsOfType<Workshop>().First(ws => ws.UsefulTo(Me) && ws.Structure.IsOpenToMe(Me));
-            if (MyWorkshop == null) return;
-            Me.HasTask = true;
-            Me.Actions.Movement.SetDestination(MyWorkshop.Structure.NearestEntranceTo(Me.transform));
-            return;
+            if (ChooseWorkshop()) return;
         }
 
         // No work is available, so see if we can drop anything off despite not having a full load

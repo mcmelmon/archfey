@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-
 
 public class Industry : MonoBehaviour
 {
@@ -8,13 +8,11 @@ public class Industry : MonoBehaviour
 
     // properties
 
-    public static List<Actor> CurrentlyCrafting { get; set; }
+    public List<Actor> CurrentlyCrafting { get; set; }
     public static Dictionary<Coin, int> ExchangeRates { get; set; }
     public static Industry Instance { get; set; }
-    // TODO: accumulate all product/workshop/tool/material combinations
 
     // Unity
-
 
     private void Awake()
     {
@@ -26,14 +24,29 @@ public class Industry : MonoBehaviour
         }
         Instance = this;
         SetComponents();
+        StartCoroutine(MakeProductsFromResources());
     }
-
 
     // public
 
 
     // private
 
+    private IEnumerator MakeProductsFromResources()
+    {
+        while (true) {
+            foreach (var workshop in FindObjectsOfType<Workshop>()) {
+                foreach (var product in Products.Instance.AvailableProducts) {
+                    if (product.SufficientMaterialsInStorage(workshop.Structure)) {
+                        Debug.Log("Available materials for: " + product);
+                        workshop.CraftByShop(product);
+                    }
+                }
+            }
+
+            yield return new WaitForSeconds(Turn.ActionThreshold);
+        }
+    }
 
     private void SetComponents()
     {
@@ -46,6 +59,5 @@ public class Industry : MonoBehaviour
             [Coin.Gold] = 100,
             [Coin.Platinum] = 1000
         };
-        //Products = new List<Product>();
     }
 }
