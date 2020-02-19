@@ -85,7 +85,7 @@ public class Actor : MonoBehaviour
 
     public bool IsGrounded()
     {
-        CapsuleCollider my_collider = GetComponent<CapsuleCollider>();
+        CapsuleCollider my_collider = GetComponentInChildren<CapsuleCollider>(); // TODO: in future, may not always be a capsule
         Vector3 my_base = new Vector3(my_collider.bounds.center.x, my_collider.bounds.min.y, my_collider.bounds.center.z);
         return Physics.CheckCapsule(my_collider.bounds.center, my_base, my_collider.radius * .9f, ground_layer);
     }
