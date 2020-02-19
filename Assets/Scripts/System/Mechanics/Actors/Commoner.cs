@@ -53,10 +53,8 @@ public class Commoner : TemplateMelee
     public override void OnHarvesting()
     {
         if (Me.Senses.PerceptionCheck(true, MyHarvest.ChallengeRating)) {
-            Debug.Log("Spotted node");
             Harvest();
         } else {
-            Debug.Log("Failed to spot node");
             ChooseHarvest();
         }
     }
@@ -93,13 +91,9 @@ public class Commoner : TemplateMelee
     }
     public override void OnReachedGoal()
     {
-        Debug.Log("Reached goal");
         if (!Harvest()) {
-            Debug.Log("Failed to harvest");
             if (!Craft()) {
-                Debug.Log("No craft");
                 if (!Warehouse()) {
-                    Debug.Log("No warehouse");
                     if (!RepairStructure()) {
                         OnIdle();
                     }

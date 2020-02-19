@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Products : MonoBehaviour
 {
-    public enum Category { Armor = 0, Clothing = 1, Construction = 2, Food = 3, Sacred = 4, Tool = 5, Transportation = 6, Weapon = 7 }
+    public enum Category { Armor = 0, Clothing = 1, Component = 8, Construction = 2, Food = 3, Sacred = 4, Tool = 5, Transportation = 6, Weapon = 7 }
 
     // properties
 

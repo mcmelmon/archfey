@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
+
+    [SerializeField] List<GameObject> contents = new List<GameObject>();
     // properties
 
     public List<GameObject> Contents { get; set; }
@@ -24,9 +26,12 @@ public class Inventory : MonoBehaviour
     // public 
 
 
-    public void AddToInventory(GameObject stored_object)
+    public void AddToInventory(GameObject stored_object, int number_to_add = 1)
     {
-        Contents.Add(stored_object);
+        for (int i = 0; i < number_to_add; i++) {
+            Contents.Add(stored_object);
+        }
+
         CheckIfEncumbered();
 
         // TODO: some objects should be deactivated (like weapons picked up), some shouldn't (like resource primitives)
@@ -63,7 +68,8 @@ public class Inventory : MonoBehaviour
         if (number_to_remove > number_in_inventory) number_to_remove = number_in_inventory;
         List<GameObject> removeable_items = Contents.Where(i => i == stored_object).ToList();
 
-        foreach (var item in removeable_items.GetRange(0, number_to_remove - 1)) {
+        for (int i = 0; i < removeable_items.Count(); i++) {
+            GameObject item = removeable_items[i];
             Contents.Remove(item);
         }
 
@@ -122,7 +128,7 @@ public class Inventory : MonoBehaviour
 
     private void SetComponents()
     {
-        Contents = new List<GameObject>();
+        Contents = contents;
         Me = GetComponent<Actor>();
         Pockets = new List<GameObject>();
         Structure = GetComponent<Structure>();

@@ -54,10 +54,11 @@ public class Structure : MonoBehaviour
     public void DeliverMaterials(Actor _worker)
     {
         foreach (var acceptable in will_accept_for_storage) {
-            foreach (var transfer in _worker.Inventory.Contents.Where(item => item.gameObject == acceptable).ToList()) {
+            List<GameObject> transfered_goods = _worker.Inventory.Contents.Where(item => item.gameObject == acceptable).ToList();
+            foreach (var transfer in transfered_goods) {
                 Inventory.AddToInventory(transfer);
+                _worker.Inventory.RemoveFromInventory(transfer);
             }
-            _worker.Inventory.RemoveFromInventory(acceptable);
         }
     }
 

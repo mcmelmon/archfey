@@ -27,7 +27,6 @@ public class Resource : MonoBehaviour
 
     public bool HarvestBy(Actor _harvester)
     {
-        if (Name == null || Name == "") Debug.Log("Blank name in category: " + category + "; CR: " + challenge_rating);
         if (!IsAccessibleTo(_harvester)) return false;
 
         if (required_attribute != Proficiencies.Attribute.None) {
@@ -44,10 +43,8 @@ public class Resource : MonoBehaviour
             if (!_harvester.Actions.Movement.Encumbered) {
                 _harvester.Me.Inventory.AddToInventory(this.gameObject);
                 _harvester.HasFullLoad = false;
-                Debug.Log("Harvested: " + Name);
                 return true;
             } else {
-                Debug.Log("Encumbered");
                 _harvester.HasFullLoad = true;
                 return false;
             }

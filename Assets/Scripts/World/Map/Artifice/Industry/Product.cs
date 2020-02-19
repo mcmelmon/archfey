@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -7,20 +8,21 @@ public class Product : MonoBehaviour
     // Inspector settings
 
     [SerializeField] Products.Category category;
-    [SerializeField] List<ComponentMaterial> recipe;
+    [SerializeField] List<Components> recipe;
     [SerializeField] Proficiencies.Tool tool; // simplify process to use the "main" tool
 
-    public struct ComponentMaterial {
-        public Resource material;
+    [Serializable]
+    public struct Components {
+        public GameObject item;
         public int quantity;
     }
 
     // properties
 
     public Item Item { get; set; }
-    public List<Resource> Materials { get; set; }
+    public List<GameObject> Materials { get; set; }
     public string Name { get; set; }
-    public List<ComponentMaterial> Recipe { get; set; }
+    public List<Components> Recipe { get; set; }
     public Proficiencies.Tool RequiredTool { get; set; }
 
     // Unity
@@ -34,8 +36,10 @@ public class Product : MonoBehaviour
 
     public bool SufficientMaterialsInStorage(Structure storage)
     {
+        if (storage == null || storage.Inventory.StorageCount() <= 0) return false;
+
         foreach (var component in recipe) {
-            if (storage.Inventory.StorageCount(component.material.gameObject) < component.quantity) return false;
+            if (storage.Inventory.StorageCount(component.item) < component.quantity) return false;
         }
 
         return true;
@@ -46,7 +50,7 @@ public class Product : MonoBehaviour
     private void SetComponents()
     {
         Item = GetComponent<Item>();
-        Materials = recipe.Select(r => r.material).ToList();
+        Materials = recipe.Select(r => r.item).ToList();
         Recipe = recipe;
         Name = this.name;
         RequiredTool = tool;

@@ -53,6 +53,7 @@ public class Workshop : MonoBehaviour
         // Used primarily by the Industry singleton
 
         if (_product.SufficientMaterialsInStorage(Structure)) {
+            Debug.Log("Starting to craft: " + _product);
             StartCoroutine(Craft(_product));
             return true;
         }
@@ -75,8 +76,8 @@ public class Workshop : MonoBehaviour
 
     private IEnumerator Craft(Product _product, Actor _artisan = null)
     {
-        foreach (Product.ComponentMaterial component in _product.Recipe) {
-            Structure.Inventory.RemoveFromInventory(component.material.gameObject, component.quantity);
+        foreach (Product.Components component in _product.Recipe) {
+            Structure.Inventory.RemoveFromInventory(component.item, component.quantity);
         }
 
         int turn = 0;

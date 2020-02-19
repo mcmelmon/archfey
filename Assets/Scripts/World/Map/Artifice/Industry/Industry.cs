@@ -38,6 +38,7 @@ public class Industry : MonoBehaviour
             foreach (var workshop in FindObjectsOfType<Workshop>()) {
                 foreach (var product in Products.Instance.AvailableProducts) {
                     if (product.SufficientMaterialsInStorage(workshop.Structure)) {
+                        Debug.Log("Available materials for: " + product);
                         workshop.CraftByShop(product);
                     }
                 }
