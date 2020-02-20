@@ -9,7 +9,6 @@ public class Commoner : MonoBehaviour
 
     public Actor Me { get; set; }
     public HarvestingNode MyHarvest { get; set; }
-    public List<HarvestingNode> MyHarvestPath {get; set; }
     public Structure MyWarehouse { get; set; }
     public Workshop MyWorkshop { get; set; }
 
@@ -129,24 +128,17 @@ public class Commoner : MonoBehaviour
 
     private bool ChooseHarvest()
     {
-        if (MyHarvestPath != null && MyHarvestPath.Any()) {
-            if (MyHarvest == null) {
-                MyHarvest = MyHarvestPath.First();
-            } else {
-                int current_harvest_index = MyHarvestPath.IndexOf(MyHarvest);
-                int next_harvest_index = current_harvest_index += 1;
-                MyHarvest = MyHarvestPath[next_harvest_index % MyHarvestPath.Count];
-            }
-            
-            if (MyHarvest != null) {
-                Me.HasTask = true;
-                Me.Actions.Movement.SetDestination(MyHarvest.transform);
-                return true;
-            }
+        if (MyHarvest != null) return true;
+
+        List<HarvestingNode> available = FindObjectsOfType<HarvestingNode>().Where(r => r.IsAccessibleTo(Me)).ToList();
+        if (available.Any()) {
+            MyHarvest = available.OrderBy(ws => Vector3.Distance(ws.transform.position, transform.position)).First();
+            if (MyHarvest == null) return false;
+            Me.HasTask = true;
+            Me.Actions.Movement.SetDestination(MyHarvest.transform);
+            return true;
         }
 
-        Me.HasTask = false;
-        Me.Actions.Movement.ClearCurrentDestination();
         return false;
     }
 
@@ -335,16 +327,7 @@ public class Commoner : MonoBehaviour
     private void SetComponents()
     {
         Me = GetComponent<Actor>();
-        SetHarvestPath();
         SetAdditionalStats();
-    }
-
-    private void SetHarvestPath()
-    {
-        List<HarvestingNode> available = FindObjectsOfType<HarvestingNode>().Where(node => node.AccessibleTo(Me)).ToList();
-        if (available.Any()) {
-            MyHarvestPath = available.OrderBy(h => Vector3.Distance(h.transform.position, transform.position)).ToList();
-        }
     }
 
 
