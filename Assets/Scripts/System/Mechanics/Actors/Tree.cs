@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Tree : MonoBehaviour
 {
     // properties
-    public HarvestingNode HarvestingNode { get; set; }
+
+    public HarvestingNode HerbNode { get; set; }
+    public HarvestingNode TimberNode { get; set; }
     public Actor Me { get; set; }
     // Unity
 
@@ -25,12 +28,12 @@ public class Tree : MonoBehaviour
     public void OnHealthChange()
     {
         // We do this in order to account for the tree being healed; or, damaged in combat
-        HarvestingNode.SetInitialQuantity(Me.Health.CurrentHitPoints);
+        TimberNode.SetInitialQuantity(Me.Health.CurrentHitPoints);
     }
 
     public void OnQuantityChange()
     {
-        int change = HarvestingNode.CurrentlyAvailable - Me.Health.CurrentHitPoints;
+        int change = TimberNode.CurrentlyAvailable - Me.Health.CurrentHitPoints;
 
         if (change == 0) return;
 
@@ -61,13 +64,15 @@ public class Tree : MonoBehaviour
     private void SetComponents()
     {
         Me = GetComponent<Actor>();
-        HarvestingNode = Me.GetComponentInChildren<HarvestingNode>();
+
+        HerbNode = GetComponentsInChildren<HarvestingNode>().First(hn => hn.Replenishes == HarvestingNode.ReplenishStrategy.Timer);
+        TimberNode = GetComponentsInChildren<HarvestingNode>().First(hn => hn.Replenishes == HarvestingNode.ReplenishStrategy.Once);
     }
 
     private void SetStats()
     {
         SetAdditionalStats();
-        HarvestingNode.SetInitialQuantity(Me.Health.CurrentHitPoints);
+        TimberNode.SetInitialQuantity(Me.Health.CurrentHitPoints);
     }
 
 
@@ -78,7 +83,9 @@ public class Tree : MonoBehaviour
         Me.Stats.Resistances[Weapons.DamageType.Fire] = 200;
         Me.Stats.Resistances[Weapons.DamageType.Piercing] = 50;
 
+        Me.Health.HitDice = Me.Health.HitDice + (int)transform.localScale.y - 1;
+        Me.Health.SetCurrentAndMaxHitPoints();
         Me.Health.OnHealthChange = OnHealthChange;
-        HarvestingNode.OnQuantityChange = OnQuantityChange;
+        TimberNode.OnQuantityChange = OnQuantityChange;
     }
 }

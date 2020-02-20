@@ -28,9 +28,9 @@ public class Spawner : MonoBehaviour
     // properties
 
     public Faction Allegiance { get; set; }
-
     public int RespawnTurn { get; set; }
     public Circle SpawnCircle { get; set; }
+    public Structure Structure { get; set; }
     public Dictionary<string, List<Actor>> Spawned { get; set; }
 
 
@@ -59,12 +59,13 @@ public class Spawner : MonoBehaviour
         PruneSpawned();
 
         if (faction != null) {
-
             foreach (var spawn in spawn_prefabs) {
                 GameObject prefab = spawn.spawn_prefab;
                 int already_spawned = Spawned.ContainsKey(spawn.spawn_name) ? Spawned[spawn.spawn_name].Count() : 0;
+                Vector3 spawn_location = (Structure != null) ? Structure.RandomEntrance().position : SpawnCircle.RandomContainedPoint();
+
                 for (int i = 0; i < spawn.units_to_spawn - already_spawned; i++) {
-                    GameObject new_spawn = Instantiate(prefab, SpawnCircle.RandomContainedPoint(), prefab.transform.rotation);
+                    GameObject new_spawn = Instantiate(prefab, spawn_location, prefab.transform.rotation);
                     new_spawn.transform.parent = FindObjectOfType<Characters>().gameObject.transform;
 
                     Renderer rend = new_spawn.GetComponentInChildren<Renderer>();
@@ -145,5 +146,6 @@ public class Spawner : MonoBehaviour
         Allegiance = faction;
         SpawnCircle = Circle.New(transform.position, spawn_circle_radius);
         Spawned = new Dictionary<string, List<Actor>>();
+        Structure = GetComponentInParent<Structure>();
     }
 }

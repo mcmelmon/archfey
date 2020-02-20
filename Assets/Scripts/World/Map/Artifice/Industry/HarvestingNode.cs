@@ -37,15 +37,6 @@ public class HarvestingNode : MonoBehaviour
 
     // public
 
-    public bool AccessibleTo(Actor _harvester)
-    {
-        foreach (var resource in available_for_harvest) {
-            if (resource.IsAccessibleTo(_harvester)) return true;
-        }
-
-        return false;
-    }
-
     public bool HarvestResource(Actor _harvester)
     {
         if (!Proficiencies.Instance.IsHarvester(_harvester) || CurrentlyAvailable <= 0) return false;
@@ -55,6 +46,15 @@ public class HarvestingNode : MonoBehaviour
             OnQuantityChange?.Invoke();
             return true;
         }
+        return false;
+    }
+
+    public bool IsAccessibleTo(Actor _harvester)
+    {
+        foreach (var resource in available_for_harvest) {
+            if (resource.IsAccessibleTo(_harvester)) return true;
+        }
+
         return false;
     }
 
