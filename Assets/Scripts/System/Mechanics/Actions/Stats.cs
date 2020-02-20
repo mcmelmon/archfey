@@ -188,7 +188,7 @@ public class Stats : MonoBehaviour
 
     private int DamageAfterResistance(int _damage, Weapons.DamageType _type)
     {
-        return (_damage <= 0 || Resistances == null) ? _damage : (_damage -= _damage * (Resistances[_type] / 100));
+        return (_damage <= 0 || Resistances == null) ? _damage : (_damage = _damage * (Resistances[_type] / 100));
     }
 
 

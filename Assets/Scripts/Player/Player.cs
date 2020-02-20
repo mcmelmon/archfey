@@ -4,7 +4,7 @@ using System.Collections;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
-public class Player : MonoBehaviour, IAct {
+public class Player : MonoBehaviour{
 
     // Inspector settings
     public CinemachineFreeLook viewport;
@@ -42,9 +42,6 @@ public class Player : MonoBehaviour, IAct {
 
         StartCoroutine(AdjustCameraDistance());
         StartCoroutine(HandleMovement());
-
-        // Set home here to avoid overwriting it during respawns
-        Me.Actions.Movement.AddDestination(Movement.CommonDestination.Home, transform.position);
     }
 
 
@@ -67,25 +64,6 @@ public class Player : MonoBehaviour, IAct {
             EldritchSmite.Cast(target);
         }
     }
-
-
-    public void OnBadlyInjured() { }
-    public void OnCrafting() { }
-    public void OnFriendsInNeed() { }
-    public void OnFriendlyActorsSighted() { }
-    public void OnFullLoad() { }
-    public void OnDamagedFriendlyStructuresSighted() { }
-    public void OnHarvesting() { }
-    public void OnHasObjective() { }
-    public void OnHostileActorsSighted() { }
-    public void OnHostileStructuresSighted() { }
-    public void OnInCombat() { }
-    public void OnMedic() { }
-    public void OnMovingToGoal() { }
-    public void OnNeedsRest() { }
-    public void OnUnderAttack() { }
-    public void OnWatch() { }
-
 
     public void OnIdle()
     {
@@ -171,7 +149,28 @@ public class Player : MonoBehaviour, IAct {
             yield return null;
         }
     }
-
+    private void SetActions()
+    {
+        // Me.Actions.OnBadlyInjured = OnBadlyInjured;
+        // Me.Actions.OnCrafting = OnCrafting;
+        // Me.Actions.OnDamagedFriendlyStructuresSighted = OnDamagedFriendlyStructuresSighted;
+        // Me.Actions.OnFriendlyActorsSighted = OnFriendlyActorsSighted;
+        // Me.Actions.OnFriendsInNeed = OnFriendsInNeed;
+        // Me.Actions.OnFullLoad = OnFullLoad;
+        // Me.Actions.OnHarvesting = OnHarvesting;
+        // Me.Actions.OnHasObjective = OnHasObjective;
+        // Me.Actions.OnHostileActorsSighted = OnHostileActorsSighted;
+        // Me.Actions.OnHostileStructuresSighted = OnHostileStructuresSighted;
+        Me.Actions.OnIdle = OnIdle;
+        // Me.Actions.OnInCombat = OnInCombat;
+        // Me.Actions.OnMedic = OnMedic;
+        // Me.Actions.OnMovingToGoal = OnMovingToGoal;
+        // Me.Actions.OnNeedsRest = OnNeedsRest;
+        Me.Actions.OnReachedGoal = OnReachedGoal;
+        // Me.Actions.OnResting = OnResting;
+        // Me.Actions.OnUnderAttack = OnUnderAttack;
+        // Me.Actions.OnWatch = OnWatch;
+    }
 
     private void SetComponents()
     {
@@ -185,7 +184,6 @@ public class Player : MonoBehaviour, IAct {
         Me.Stats = GetComponent<Stats>();
     }
 
-
     private void SetNormalState()
     {
         Me.Senses.Darkvision = false;
@@ -195,7 +193,6 @@ public class Player : MonoBehaviour, IAct {
 
         Me.Actions.Combat.CalculateAdditionalDamage = AdditionalDamage;
     }
-
 
     private void SetSkills()
     {

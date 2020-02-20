@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,7 @@ public class Health : MonoBehaviour {
     public int HitDice { get; set; }
     public int HitDiceType { get; set; }
     public int MaximumHitPoints { get; set; }
+    public Action OnHealthChange;
     public int TemporaryHitPoints { get; set; }
 
 
@@ -84,6 +86,7 @@ public class Health : MonoBehaviour {
         }
 
         Me.Stats.UpdateStatBars();
+        OnHealthChange?.Invoke();
     }
 
 
@@ -95,6 +98,7 @@ public class Health : MonoBehaviour {
         if (CurrentHitPoints > MaximumHitPoints) CurrentHitPoints = MaximumHitPoints;
 
         Me.Stats.UpdateStatBars();
+        OnHealthChange?.Invoke();
     }
 
 

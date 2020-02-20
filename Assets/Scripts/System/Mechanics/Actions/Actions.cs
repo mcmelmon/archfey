@@ -17,18 +17,36 @@ public class Actions : MonoBehaviour
     public Stats Stats { get; set; }
     public Stealth Stealth { get; set; }
 
+    // action properties
+
+    public Action OnBadlyInjured { get; set; }
+    public Action OnCrafting { get; set; }
+    public Action OnDamagedFriendlyStructuresSighted { get; set; }
+    public Action OnFriendlyActorsSighted { get; set; }
+    public Action OnFriendsInNeed { get; set; }
+    public Action OnFullLoad { get; set; }
+    public Action OnHarvesting { get; set; }
+    public Action OnHasObjective { get; set; }
+    public Action OnHostileActorsSighted { get; set; }
+    public Action OnHostileStructuresSighted { get; set; }
+    public Action OnIdle { get; set; }
+    public Action OnInCombat { get; set; }
+    public Action OnMedic { get; set; }
+    public Action OnMovingToGoal { get; set; }
+    public Action OnNeedsRest { get; set; }
+    public Action OnReachedGoal { get; set; }
+    public Action OnResting { get; set; }
+    public Action OnUnderAttack { get; set; }
+    public Action OnWatch { get; set; }
 
     // Unity
-
 
     void Awake()
     {
         SetComponents();
     }
 
-
     // public
-
 
     public void ActOnTurn()
     {
@@ -47,68 +65,67 @@ public class Actions : MonoBehaviour
 
         switch (Decider.state) {
             case Decider.State.BadlyInjured:
-                GetComponentInParent<IAct>().OnBadlyInjured();
+                OnBadlyInjured?.Invoke();
                 break;
             case Decider.State.Crafting:
-                GetComponentInParent<IAct>().OnCrafting();
+                OnCrafting?.Invoke();
                 break;
             case Decider.State.FriendsInNeed:
-                GetComponentInParent<IAct>().OnFriendsInNeed();
+                OnFriendsInNeed?.Invoke();
                 break;
             case Decider.State.FriendlyActorsSighted:
-                GetComponentInParent<IAct>().OnFriendlyActorsSighted();
+                OnFriendlyActorsSighted?.Invoke();
                 break;
             case Decider.State.DamagedFriendlyStructuresSighted:
-                GetComponentInParent<IAct>().OnDamagedFriendlyStructuresSighted();
+                OnDamagedFriendlyStructuresSighted?.Invoke();
                 break;
             case Decider.State.FullLoad:
-                GetComponentInParent<IAct>().OnFullLoad();
+                OnFullLoad?.Invoke();
                 break;
             case Decider.State.Harvesting:
-                GetComponentInParent<IAct>().OnHarvesting();
+                OnHarvesting?.Invoke();
                 break;
             case Decider.State.HasObjective:
-                GetComponentInParent<IAct>().OnHasObjective();
+                OnHasObjective?.Invoke();
                 break;
             case Decider.State.HostileActorsSighted:
-                GetComponentInParent<IAct>().OnHostileActorsSighted();
+                OnHostileActorsSighted?.Invoke();
                 break;
             case Decider.State.HostileStructuresSighted:
-                GetComponentInParent<IAct>().OnHostileStructuresSighted();
+                OnHostileStructuresSighted?.Invoke();
                 break;
             case Decider.State.Idle:
-                GetComponentInParent<IAct>().OnIdle();
+                OnIdle?.Invoke();
                 break;
             case Decider.State.InCombat:
-                GetComponentInParent<IAct>().OnInCombat();
+                OnInCombat?.Invoke();
                 break;
             case Decider.State.Medic:
-                GetComponentInParent<IAct>().OnMedic();
+                OnMedic?.Invoke();
                 break;
             case Decider.State.MovingToGoal:
-                GetComponentInParent<IAct>().OnMovingToGoal();
+                OnMovingToGoal?.Invoke();
                 break;
             case Decider.State.NeedsRest:
-                GetComponentInParent<IAct>().OnNeedsRest();
+                OnNeedsRest?.Invoke();
                 break;
             case Decider.State.ReachedGoal:
-                GetComponentInParent<IAct>().OnReachedGoal();
+                OnReachedGoal?.Invoke();
                 break;
             case Decider.State.Resting:
-                Rest();
+                OnResting?.Invoke();
                 break;
             case Decider.State.UnderAttack:
-                GetComponentInParent<IAct>().OnUnderAttack();
+                OnUnderAttack?.Invoke();
                 break;
             case Decider.State.Watch:
-                GetComponentInParent<IAct>().OnWatch();
+                OnWatch?.Invoke();
                 break;
             default:
-                GetComponentInParent<IAct>().OnIdle();
+                OnIdle?.Invoke();
                 break;
         }
     }
-
 
     public void Attack(bool offhand = false, bool player_target = false)
     {
@@ -150,7 +167,6 @@ public class Actions : MonoBehaviour
         }
     }
 
-
     public void CloseWithEnemies()
     {
         if (transform == null) return;
@@ -161,7 +177,6 @@ public class Actions : MonoBehaviour
             StartCoroutine(Movement.TrackUnit(nearest_enemy));
         }
     }
-
 
     public void FleeFromEnemies()
     {
@@ -181,7 +196,6 @@ public class Actions : MonoBehaviour
         }
     }
 
-
     public void KeepEnemiesAtRange()
     {
         if (transform == null) return;
@@ -192,7 +206,6 @@ public class Actions : MonoBehaviour
             StartCoroutine(Movement.HarassUnit(nearest_enemy));
         }
     }
-
 
     public int RollDie(int dice_type, int number_of_rolls, bool advantage = false, bool disadvantage = false)
     {
@@ -214,7 +227,6 @@ public class Actions : MonoBehaviour
         return die_roll;
     }
 
-
     public bool SavingThrow(Proficiencies.Attribute attribute, int challenge_rating, bool advantage = false, bool disadvantage = false)
     {
         int proficiency_bonus = Me.Stats.SavingThrows.Contains(attribute) ? Me.Stats.ProficiencyBonus : 0;
@@ -226,7 +238,6 @@ public class Actions : MonoBehaviour
         return die_roll + bonus > challenge_rating;
     }
 
-
     public bool Search()
     {
         // TODO: get a list of anything interesting within range
@@ -237,7 +248,6 @@ public class Actions : MonoBehaviour
         return false;
     }
 
-
     public void SheathWeapon()
     {
         Combat.Engaged = false;
@@ -245,7 +255,6 @@ public class Actions : MonoBehaviour
         if (Combat.EquippedRangedWeapon != null) Combat.EquippedRangedWeapon.gameObject.SetActive(false);
         if (Combat.EquippedOffhand != null) Combat.EquippedOffhand.gameObject.SetActive(false);
     }
-
 
     public int SkillCheck(bool active, Proficiencies.Skill skill, bool advantage = false, bool disadvatnage = false)
     {
@@ -262,7 +271,6 @@ public class Actions : MonoBehaviour
         return roll + bonus;
     }
 
-
     public int ToolCheck(Proficiencies.Tool tool, bool advantage = false, bool disadvatnage = false)
     {
         // We may be rolling to create the challenge rating (e.g. a forgery), so don't check for "success" here
@@ -275,23 +283,7 @@ public class Actions : MonoBehaviour
         return roll + proficiency_bonus;
     }
 
-
     // private
-
-
-    private void Rest()
-    {
-        Me.Actions.SheathWeapon();
-
-        if (Me.RestCounter == Actor.rested_at) {
-            Me.Health.RecoverHealth(RollDie(Me.Health.HitDiceType, 1));
-            if (Me.Magic != null) Me.Magic.RecoverSpellLevels();
-            Me.RestCounter = 0;
-        } else {
-            Me.RestCounter++;
-        }
-    }
-
 
     private void SetComponents()
     {

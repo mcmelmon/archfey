@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Commoner : TemplateMelee
+public class Commoner : MonoBehaviour
 {
     // properties
 
+    public Actor Me { get; set; }
     public HarvestingNode MyHarvest { get; set; }
     public List<HarvestingNode> MyHarvestPath {get; set; }
     public Structure MyWarehouse { get; set; }
@@ -16,20 +17,22 @@ public class Commoner : TemplateMelee
 
     private void Start()
     {
+        Me = GetComponent<Actor>();
         SetComponents();
+        SetActions();
     }
 
 
     // public
 
-    public override void OnBadlyInjured()
+    public void OnBadlyInjured()
     {
         Me.Actions.Movement.Home();
     }
 
-    public override void OnCrafting() { }
+    public void OnCrafting() { }
 
-    public override void OnDamagedFriendlyStructuresSighted()
+    public void OnDamagedFriendlyStructuresSighted()
     {
         if (!RepairStructure()) {
             FindDamagedStructure();
@@ -37,7 +40,7 @@ public class Commoner : TemplateMelee
         }
     }
 
-    public override void OnFriendsInNeed()
+    public void OnFriendsInNeed()
     {
         if (Me.Actions.Decider.FriendsInNeed.First() != null) {
             Me.Actions.Movement.SetDestination(Me.Actions.Decider.FriendsInNeed.First().transform);
@@ -46,11 +49,11 @@ public class Commoner : TemplateMelee
         Me.Actions.Decider.FriendsInNeed.Clear();
     }
 
-    public override void OnFullLoad()
+    public void OnFullLoad()
     {
         FindWarehouse();
     }
-    public override void OnHarvesting()
+    public void OnHarvesting()
     {
         if (Me.Senses.PerceptionCheck(true, MyHarvest.ChallengeRating)) {
             Harvest();
@@ -58,19 +61,19 @@ public class Commoner : TemplateMelee
             ChooseHarvest();
         }
     }
-    public override void OnHostileActorsSighted()
+    public void OnHostileActorsSighted()
     {
         if (Me.Actions.Decider.FriendsInNeed.Count == 0) {
             AbandonLoad();
             FindGuard();
         }
     }
-    public override void OnHostileStructuresSighted()
+    public void OnHostileStructuresSighted()
     {
         Me.Actions.CallForHelp();
         Me.Actions.FleeFromEnemies();
     }
-    public override void OnIdle()
+    public void OnIdle()
     {
         Me.Actions.SheathWeapon();
         Me.HasTask = false;
@@ -84,12 +87,12 @@ public class Commoner : TemplateMelee
             FindWork();
         }
     }
-    public override void OnNeedsRest()
+    public void OnNeedsRest()
     {
         Me.Actions.SheathWeapon();
         Me.Actions.Movement.Home();
     }
-    public override void OnReachedGoal()
+    public void OnReachedGoal()
     {
         if (!Harvest()) {
             if (!Craft()) {
@@ -99,6 +102,19 @@ public class Commoner : TemplateMelee
                     }
                 }
             }
+        }
+    }
+
+    private void OnResting()
+    {
+        Me.Actions.SheathWeapon();
+
+        if (Me.RestCounter == Actor.rested_at) {
+            Me.Health.RecoverHealth(Me.Actions.RollDie(Me.Health.HitDiceType, 1));
+            if (Me.Magic != null) Me.Magic.RecoverSpellLevels();
+            Me.RestCounter = 0;
+        } else {
+            Me.RestCounter++;
         }
     }
 
@@ -113,7 +129,7 @@ public class Commoner : TemplateMelee
 
     private bool ChooseHarvest()
     {
-        if (MyHarvestPath.Any()) {
+        if (MyHarvestPath != null && MyHarvestPath.Any()) {
             if (MyHarvest == null) {
                 MyHarvest = MyHarvestPath.First();
             } else {
@@ -284,6 +300,29 @@ public class Commoner : TemplateMelee
         }
 
         return false;
+    }
+
+    private void SetActions()
+    {
+        Me.Actions.OnBadlyInjured = OnBadlyInjured;
+        Me.Actions.OnCrafting = OnCrafting;
+        Me.Actions.OnDamagedFriendlyStructuresSighted = OnDamagedFriendlyStructuresSighted;
+        // Me.Actions.OnFriendlyActorsSighted = OnFriendlyActorsSighted;
+        Me.Actions.OnFriendsInNeed = OnFriendsInNeed;
+        Me.Actions.OnFullLoad = OnFullLoad;
+        Me.Actions.OnHarvesting = OnHarvesting;
+        // Me.Actions.OnHasObjective = OnHasObjective;
+        Me.Actions.OnHostileActorsSighted = OnHostileActorsSighted;
+        Me.Actions.OnHostileStructuresSighted = OnHostileStructuresSighted;
+        Me.Actions.OnIdle = OnIdle;
+        // Me.Actions.OnInCombat = OnInCombat;
+        // Me.Actions.OnMedic = OnMedic;
+        // Me.Actions.OnMovingToGoal = OnMovingToGoal;
+        Me.Actions.OnNeedsRest = OnNeedsRest;
+        Me.Actions.OnReachedGoal = OnReachedGoal;
+        Me.Actions.OnResting = OnResting;
+        // Me.Actions.OnUnderAttack = OnUnderAttack;
+        // Me.Actions.OnWatch = OnWatch;
     }
 
     private void SetAdditionalStats()

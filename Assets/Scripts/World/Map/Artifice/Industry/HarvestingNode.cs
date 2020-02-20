@@ -19,6 +19,7 @@ public class HarvestingNode : MonoBehaviour
 
     public int ChallengeRating { get; set; }
     public int CurrentlyAvailable { get; set; }
+    public System.Action OnQuantityChange {get; set; }
     public ReplenishStrategy Replenishes { get; set; }
     public int ReplenishTurn { get; set; }
     public Structure Structure { get; set; }
@@ -51,9 +52,15 @@ public class HarvestingNode : MonoBehaviour
 
         if (SelectHarvestFor(_harvester).HarvestBy(_harvester)) {
             CurrentlyAvailable -= 1;
+            OnQuantityChange?.Invoke();
             return true;
         }
         return false;
+    }
+
+    public void SetInitialQuantity(int _quantity)
+    {
+        initial_quantity = CurrentlyAvailable = _quantity;
     }
 
 
