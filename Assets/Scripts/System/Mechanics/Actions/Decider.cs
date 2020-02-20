@@ -146,6 +146,8 @@ public class Decider : MonoBehaviour
     {
         if (other_unit == null || other_unit == Me) return true;
 
+        if (Me.CurrentFaction == null) return true;
+
         if (Threat.Threats.ContainsKey(other_unit)) return false;
 
         bool faction_hostile = Me.CurrentFaction.IsHostileTo(other_unit.CurrentFaction);

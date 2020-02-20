@@ -53,7 +53,6 @@ public class Workshop : MonoBehaviour
         // Used primarily by the Industry singleton
 
         if (_product.SufficientMaterialsInStorage(Structure)) {
-            Debug.Log("Starting to craft: " + _product);
             StartCoroutine(Craft(_product));
             return true;
         }
