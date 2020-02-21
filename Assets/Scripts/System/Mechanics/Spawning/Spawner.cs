@@ -13,7 +13,6 @@ public class Spawner : MonoBehaviour
     [SerializeField] RespawnStrategy respawn_strategy;
     [SerializeField] float player_proximity_trigger;
     [SerializeField] int respawn_turns;
-    [SerializeField] float spawn_circle_radius;
     [SerializeField] Faction faction;
     [SerializeField] Objective objective;
 
@@ -29,9 +28,7 @@ public class Spawner : MonoBehaviour
 
     public Faction Allegiance { get; set; }
     public int RespawnTurn { get; set; }
-    public SpawnBox SpawnBox { get; set; }
-    public Circle SpawnCircle { get; set; }
-    public Structure Structure { get; set; }
+    public SpawnGrid Grid { get; set; }
     public Dictionary<string, List<Actor>> Spawned { get; set; }
 
 
@@ -66,15 +63,9 @@ public class Spawner : MonoBehaviour
                 int already_spawned = Spawned.ContainsKey(spawn.spawn_name) ? Spawned[spawn.spawn_name].Count() : 0;
 
                 for (int i = 0; i < spawn.units_to_spawn - already_spawned; i++) {
-                    if (SpawnBox == null) {
-                        Vector3 spawn_location = SpawnCircle.RandomContainedPoint();
-                        new_spawn = Instantiate(prefab, spawn_location, prefab.transform.rotation);
-                        new_spawn.transform.parent = FindObjectOfType<Characters>().gameObject.transform;
-                    } else {
-                        new_spawn = SpawnBox.SpawnInNextUnnocupied(prefab);
-                    }
+                    new_spawn = Grid.SpawnInNextUnnocupied(prefab);
 
-                    if (new_spawn == null) break;  // The SpawnBox is full
+                    if (new_spawn == null) break;  // Grid is full
 
                     Renderer rend = new_spawn.GetComponentInChildren<Renderer>();
                     rend.sharedMaterial.SetColor("_BaseColor", faction.colors);
@@ -152,12 +143,7 @@ public class Spawner : MonoBehaviour
     private void SetComponents()
     {
         Allegiance = faction;
-        SpawnCircle = Circle.New(transform.position, spawn_circle_radius);
+        Grid = GetComponentInChildren<SpawnGrid>();
         Spawned = new Dictionary<string, List<Actor>>();
-        Structure = GetComponentInParent<Structure>();
-
-        if (Structure != null) {
-            SpawnBox = Structure.GetComponentInChildren<SpawnBox>();
-        }
     }
 }
