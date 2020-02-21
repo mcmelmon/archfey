@@ -20,6 +20,7 @@ public class SpawnGrid : MonoBehaviour
     public GameObject SpawnInNextUnnocupied(GameObject _prefab)
     {
         GameObject new_spawn = null;
+        UpdateOccupation();
 
         List<SpawnBox> unoccupied = Grid.Where(box => !box.Occupied).ToList();
 
@@ -28,5 +29,14 @@ public class SpawnGrid : MonoBehaviour
         }
 
         return new_spawn;
+    }
+
+    // private
+
+    private void UpdateOccupation()
+    {
+        foreach (var box in Grid) {
+            box.CheckForOccupation();
+        }
     }
 }
