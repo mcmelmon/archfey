@@ -5,6 +5,12 @@ using UnityEngine;
 
 public class Tree : MonoBehaviour
 {
+
+    // Inspector settings
+
+    [SerializeField] HarvestingNode herb;
+    [SerializeField] HarvestingNode timber;
+    
     // properties
 
     public HarvestingNode HerbNode { get; set; }
@@ -65,8 +71,8 @@ public class Tree : MonoBehaviour
     {
         Me = GetComponent<Actor>();
 
-        HerbNode = GetComponentsInChildren<HarvestingNode>().First(hn => hn.Replenishes == HarvestingNode.ReplenishStrategy.Timer);
-        TimberNode = GetComponentsInChildren<HarvestingNode>().First(hn => hn.Replenishes == HarvestingNode.ReplenishStrategy.Once);
+        HerbNode = herb;
+        TimberNode = timber;
     }
 
     private void SetStats()

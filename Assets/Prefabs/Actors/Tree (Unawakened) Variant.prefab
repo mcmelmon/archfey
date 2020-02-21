@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4c6e58c7fc954118801c58fbbf6e540, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  herb: {fileID: 6219663399525792141}
+  timber: {fileID: 8775271720880111117}
 --- !u!1 &2354085850207104896
 GameObject:
   m_ObjectHideFlags: 0
