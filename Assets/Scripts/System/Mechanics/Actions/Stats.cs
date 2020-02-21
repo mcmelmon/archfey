@@ -48,6 +48,7 @@ public class Stats : MonoBehaviour
     public Actor Me { get; set; }
     public Families Family { get; set; }
     public Sizes Size { get; set; }
+    public int Speed { get; set; }
     public Subfamilies Subfamily { get; set; }
     public int Level { get; set; }
 
@@ -224,6 +225,7 @@ public class Stats : MonoBehaviour
         SavingThrows = new List<Proficiencies.Attribute>();
         Size = size;
         Skills = new List<Proficiencies.Skill>(skillset);
+        Speed = speed;
         Subfamily = subfamily;
         Tools = new List<Proficiencies.Tool>(toolset);
 
@@ -250,32 +252,7 @@ public class Stats : MonoBehaviour
 
     private void SetDependentComponents()
     {
-        Me.Actions.Combat.AttacksPerAction = action_count;
-        Me.Actions.Movement.BaseSpeed = speed / 10;
-        Me.Actions.Movement.Agent.speed = speed / 10;
-        switch (Size) {
-            case Sizes.Tiny:
-                Me.Actions.Movement.Agent.stoppingDistance = 1.5f;
-                break;
-            case Sizes.Small:
-                Me.Actions.Movement.Agent.stoppingDistance = 2f;
-                break;
-            case Sizes.Medium:
-                Me.Actions.Movement.Agent.stoppingDistance = 2.5f;
-                break;
-            case Sizes.Large:
-                Me.Actions.Movement.Agent.stoppingDistance = 3f;
-                break;
-            case Sizes.Huge:
-                Me.Actions.Movement.Agent.stoppingDistance = 3.5f;
-                break;
-            case Sizes.Gargantuan:
-                Me.Actions.Movement.Agent.stoppingDistance = 4f;
-                break;
-            default:
-                Me.Actions.Movement.Agent.stoppingDistance = 2.5f;
-                break;
-        }
+        if (Me.Actions != null) Me.Actions.Combat.AttacksPerAction = action_count;
 
         BaseArmorClass = armor_class;
 
