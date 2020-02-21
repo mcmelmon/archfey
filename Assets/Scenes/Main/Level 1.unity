@@ -1612,7 +1612,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 168323430}
-  m_LocalRotation: {x: 0.069447264, y: -0.03939578, z: -0.27336338, w: -0.95859146}
+  m_LocalRotation: {x: 0.069447264, y: -0.03939577, z: -0.2733633, w: -0.9585915}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -5570,7 +5570,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 641421152}
-  m_LocalRotation: {x: -0, y: 0.0000000018626454, z: -0.17562148, w: -0.9844578}
+  m_LocalRotation: {x: -0.0000000037252907, y: -0.0000000018626454, z: -0.1756212,
+    w: -0.98445785}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -8780,8 +8781,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1106487735}
-  m_LocalRotation: {x: 0.033518128, y: -0.018846313, z: 0.0006321608, w: 0.9992602}
-  m_LocalPosition: {x: -49, y: 5.5999994, z: -68.99887}
+  m_LocalRotation: {x: 0.033518143, y: -0.018846313, z: 0.00063216116, w: 0.9992602}
+  m_LocalPosition: {x: -53, y: 5.5999994, z: -56.498867}
   m_LocalScale: {x: 1.500001, y: 1.9665062, z: 1.5334942}
   m_Children:
   - {fileID: 1564158198}
@@ -12398,7 +12399,7 @@ PrefabInstance:
     - target: {fileID: 270423198234104870, guid: ddadfb98217294719a16318a6807f1be,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -49
+      value: -53
       objectReference: {fileID: 0}
     - target: {fileID: 270423198234104870, guid: ddadfb98217294719a16318a6807f1be,
         type: 3}
@@ -12408,7 +12409,7 @@ PrefabInstance:
     - target: {fileID: 270423198234104870, guid: ddadfb98217294719a16318a6807f1be,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -69
+      value: -56.5
       objectReference: {fileID: 0}
     - target: {fileID: 270423198234104870, guid: ddadfb98217294719a16318a6807f1be,
         type: 3}
@@ -13299,7 +13300,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1564158197}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.25461224, y: -0.3956313, z: -6.580984}
+  m_LocalPosition: {x: -0.25461242, y: -0.39563158, z: -6.5809865}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1839084877}
@@ -13654,39 +13655,39 @@ PrefabInstance:
     - target: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
         type: 3}
       propertyPath: spawn_prefabs.Array.data[0].units_to_spawn
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
         type: 3}
       propertyPath: spawn_prefabs.Array.data[1].spawn_name
-      value: Goblin
+      value: Lumberjack
       objectReference: {fileID: 0}
     - target: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
         type: 3}
       propertyPath: spawn_prefabs.Array.data[1].spawn_prefab
       value: 
-      objectReference: {fileID: 2956116405725689223, guid: 6a88b32fb91894fe2bc5dec2e61ec18e,
+      objectReference: {fileID: 3308453885947126789, guid: f9c27e15020d142ca92efd910b91102b,
         type: 3}
     - target: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
         type: 3}
       propertyPath: spawn_prefabs.Array.data[1].units_to_spawn
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
         type: 3}
       propertyPath: spawn_prefabs.Array.data[2].spawn_name
-      value: Goblin
+      value: Lumberjack
       objectReference: {fileID: 0}
     - target: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
         type: 3}
       propertyPath: spawn_prefabs.Array.data[2].spawn_prefab
       value: 
-      objectReference: {fileID: 7008212635584689065, guid: 6a88b32fb91894fe2bc5dec2e61ec18e,
+      objectReference: {fileID: 3308453885947126789, guid: f9c27e15020d142ca92efd910b91102b,
         type: 3}
     - target: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
         type: 3}
       propertyPath: spawn_prefabs.Array.data[2].units_to_spawn
-      value: 4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
         type: 3}
@@ -13723,6 +13724,22 @@ PrefabInstance:
         type: 3}
       propertyPath: respawn_turns
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
+        type: 3}
+      propertyPath: spawn_prefabs.Array.data[3].spawn_name
+      value: Lumberjack
+      objectReference: {fileID: 0}
+    - target: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
+        type: 3}
+      propertyPath: spawn_prefabs.Array.data[3].spawn_prefab
+      value: 
+      objectReference: {fileID: 3308453885947126789, guid: f9c27e15020d142ca92efd910b91102b,
+        type: 3}
+    - target: {fileID: 8617861524137209076, guid: b7f0889fefd164662b76c951966c6b59,
+        type: 3}
+      propertyPath: spawn_prefabs.Array.data[3].units_to_spawn
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b7f0889fefd164662b76c951966c6b59, type: 3}
@@ -16385,7 +16402,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1839084876}
-  m_LocalRotation: {x: -0.026190525, y: -0.008749122, z: -0.87876743, w: 0.47645083}
+  m_LocalRotation: {x: -0.026190517, y: -0.008749254, z: -0.87876934, w: 0.4764473}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
