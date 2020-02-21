@@ -7,6 +7,7 @@ public class Commoner : MonoBehaviour
 {
     // properties
 
+    public List<HarvestingNode> FailedToSpot { get; set; }
     public Actor Me { get; set; }
     public HarvestingNode MyHarvest { get; set; }
     public Structure MyWarehouse { get; set; }
@@ -57,6 +58,7 @@ public class Commoner : MonoBehaviour
         if (Me.Senses.PerceptionCheck(true, MyHarvest.ChallengeRating)) {
             Harvest();
         } else {
+            if (MyHarvest != null) FailedToSpot.Add(MyHarvest);
             ChooseHarvest();
         }
     }
@@ -128,9 +130,12 @@ public class Commoner : MonoBehaviour
 
     private bool ChooseHarvest()
     {
-        if (MyHarvest != null) return true;
+        if (MyHarvest != null && !FailedToSpot.Contains(MyHarvest)) return true;
 
-        List<HarvestingNode> available = FindObjectsOfType<HarvestingNode>().Where(r => r.IsAccessibleTo(Me)).ToList();
+        List<HarvestingNode> potentially_available = FindObjectsOfType<HarvestingNode>().Where(hn => hn.IsAccessibleTo(Me)).ToList();
+        if (FailedToSpot.Count >= potentially_available.Count / 2) FailedToSpot.Clear();
+        List<HarvestingNode> available = potentially_available.Where(hn => !FailedToSpot.Contains(hn)).ToList();
+
         if (available.Any()) {
             MyHarvest = available.OrderBy(hn => Vector3.Distance(hn.transform.position, transform.position)).First();
             if (MyHarvest == null) return false;
@@ -327,6 +332,7 @@ public class Commoner : MonoBehaviour
     private void SetComponents()
     {
         Me = GetComponent<Actor>();
+        FailedToSpot = new List<HarvestingNode>();
         SetAdditionalStats();
     }
 
