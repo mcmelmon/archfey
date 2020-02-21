@@ -132,7 +132,7 @@ public class Commoner : MonoBehaviour
 
         List<HarvestingNode> available = FindObjectsOfType<HarvestingNode>().Where(r => r.IsAccessibleTo(Me)).ToList();
         if (available.Any()) {
-            MyHarvest = available.OrderBy(ws => Vector3.Distance(ws.transform.position, transform.position)).First();
+            MyHarvest = available.OrderBy(hn => Vector3.Distance(hn.transform.position, transform.position)).First();
             if (MyHarvest == null) return false;
             Me.HasTask = true;
             Me.Actions.Movement.SetDestination(MyHarvest.transform);
