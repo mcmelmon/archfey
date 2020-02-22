@@ -29,6 +29,5 @@ public class Gnoll : TemplateMelee
         Me.Actions.Combat.EquipShield(Armors.Instance.GetArmorNamed(Armors.ArmorName.Shield));
         Me.Actions.Combat.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Spear));
         Me.Actions.Combat.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Longbow));
-        Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
     }
 }

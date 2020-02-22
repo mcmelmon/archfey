@@ -119,6 +119,14 @@ public class Commoner : MonoBehaviour
         }
     }
 
+    public void OnUnderAttack()
+    {
+        Me.Actions.Decider.FriendsInNeed.Clear();
+        Me.Actions.CloseWithEnemies();
+        Me.Actions.Attack();
+        Me.RestCounter = 0;
+    }
+
 
     // private
 
@@ -203,14 +211,19 @@ public class Commoner : MonoBehaviour
 
     private void FindGuard()
     {
-        Structure nearest_military_structure = FindObjectsOfType<Structure>()
-            .Where(s => s.Faction == Me.CurrentFaction && s.Use == Structure.Purpose.Military)
-            .OrderBy(s => Vector3.Distance(transform.position, s.transform.position))
-            .ToList()
-            .First();
+        List<Structure> available_military_structures = FindObjectsOfType<Structure>().Where(s => s.IsOpenToMe(Me) && s.Use == Structure.Purpose.Military).ToList();
+        if (available_military_structures.Any()) {
+            Me.Actions.Movement.SetDestination(available_military_structures.OrderBy(s => Vector3.Distance(transform.position, s.transform.position)).ToList().First().transform);
+        } else {
+            List<Structure> available_structure = FindObjectsOfType<Structure>().Where(s => s.IsOpenToMe(Me)).ToList();
+            if (available_structure.Any()) {
+                Me.Actions.Movement.SetDestination(available_structure.OrderBy(s => Vector3.Distance(transform.position, s.transform.position)).ToList().First().transform);
+            } else {
+                Me.Actions.FleeFromEnemies();
+            }
+        }
 
-        // Don't set as a CommonDestination just yet, because the commoner should run to nearest based on current location
-        Me.Actions.Movement.SetDestination(nearest_military_structure.transform);
+        Me.HasTask = false;
     }
 
     private void FindShrine()
@@ -318,15 +331,14 @@ public class Commoner : MonoBehaviour
         Me.Actions.OnNeedsRest = OnNeedsRest;
         Me.Actions.OnReachedGoal = OnReachedGoal;
         Me.Actions.OnResting = OnResting;
-        // Me.Actions.OnUnderAttack = OnUnderAttack;
+        Me.Actions.OnUnderAttack = OnUnderAttack;
         // Me.Actions.OnWatch = OnWatch;
     }
 
     private void SetAdditionalStats()
     {
         Me.Actions.Combat.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.None));
-        Me.Actions.Combat.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Club));
-        Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
+        Me.Actions.Combat.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Dagger));
     }
 
     private void SetComponents()

@@ -31,6 +31,5 @@ public class Kobold : TemplateMelee
         Me.Actions.Combat.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.None));
         Me.Actions.Combat.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Scimitar));
         Me.Actions.Combat.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Hand_Crossbow)); 
-        Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
     }
 }

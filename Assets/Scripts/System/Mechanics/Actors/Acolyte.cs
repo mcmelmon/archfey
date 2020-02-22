@@ -165,7 +165,6 @@ public class Acolyte : MonoBehaviour, IAct
     {
         Me.Actions.Combat.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.None));
         Me.Actions.Combat.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Club));
-        Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
 
         CureWounds = gameObject.AddComponent<CureWounds>();
         SacredFlame = gameObject.AddComponent<SacredFlame>();

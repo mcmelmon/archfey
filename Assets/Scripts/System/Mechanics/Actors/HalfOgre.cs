@@ -37,7 +37,6 @@ public class HalfOgre : TemplateMelee
         Me.Actions.Combat.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.Hide));
         Me.Actions.Combat.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Halberd));
         Me.Actions.Combat.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Javelin));
-        Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
         Me.Actions.Combat.CalculateAdditionalDamage = AdditionalDamage;
     }
 }

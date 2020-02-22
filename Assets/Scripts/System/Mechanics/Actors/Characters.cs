@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Characters : MonoBehaviour
 {
+    // TODO: Obsolete, delete
 
     // Inspector settings
     public GameObject player_prefab;
@@ -41,21 +42,10 @@ public class Characters : MonoBehaviour
             return;
         }
         Instance = this;
-        GenerateStats();
-    }
-
-
-    // public
-
-
-    public void GenerateStats()
-    {
         BaseCharacterTemplate();
     }
 
-
     // private
-
 
     private static void BaseCharacterTemplate()
     {
