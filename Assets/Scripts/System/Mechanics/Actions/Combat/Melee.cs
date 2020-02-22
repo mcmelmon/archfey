@@ -114,8 +114,6 @@ public class Melee : MonoBehaviour
 
         if (roll >= Me.Actions.Combat.CriticalRangeStart) Critical = true;
 
-        //Debug.Log(Me.name + " melee attack rolled: " + roll);
-
         if (target_actor != null) {
             return roll + AttackModifier > target_actor.Actions.Stats.GetArmorClass();
         } else if (target_structure != null) {

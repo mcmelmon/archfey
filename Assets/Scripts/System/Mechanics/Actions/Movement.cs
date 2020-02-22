@@ -277,5 +277,7 @@ public class Movement : MonoBehaviour
         Encumbered = false;
         IsJumping = false;
         SpeedAdjustment = 0;
+
+        Destinations[CommonDestination.Home] = transform.position;
     }
 }

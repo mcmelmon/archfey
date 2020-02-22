@@ -7,11 +7,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4234383038254447763, guid: 8f235e1a43a41495d91c3cb637668d39,
-        type: 3}
-      propertyPath: m_Name
-      value: Blade Wight Variant
-      objectReference: {fileID: 0}
     - target: {fileID: 3266668026256983198, guid: 8f235e1a43a41495d91c3cb637668d39,
         type: 3}
       propertyPath: rivals.Array.size
@@ -20,12 +15,12 @@ PrefabInstance:
     - target: {fileID: 3266668026256983198, guid: 8f235e1a43a41495d91c3cb637668d39,
         type: 3}
       propertyPath: identifier
-      value: Blade Wight
+      value: Gnoll
       objectReference: {fileID: 0}
     - target: {fileID: 3266668026256983198, guid: 8f235e1a43a41495d91c3cb637668d39,
         type: 3}
       propertyPath: alignment
-      value: 6
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 3266668026256983198, guid: 8f235e1a43a41495d91c3cb637668d39,
         type: 3}
@@ -60,6 +55,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5977216355613215229, guid: 0db6a0df10aa441d38b5cc3a870fedb3,
         type: 3}
+    - target: {fileID: 4234383038254447763, guid: 8f235e1a43a41495d91c3cb637668d39,
+        type: 3}
+      propertyPath: m_Name
+      value: Gnoll Variant
+      objectReference: {fileID: 0}
     - target: {fileID: 7491154403795611845, guid: 8f235e1a43a41495d91c3cb637668d39,
         type: 3}
       propertyPath: m_LocalPosition.x

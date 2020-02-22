@@ -67,7 +67,6 @@ public class Sebbie : TemplateMelee
     private void SetAdditionalStats()
     {
         Me.Actions.Combat.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.Leather));
-        Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
         RayOfFrost = gameObject.AddComponent<RayOfFrost>();
         Me.Actions.Combat.CombatSpells.Add(Weapons.Instance.GetSpellNamed(Spell.SpellName.RayOfFrost));
     }

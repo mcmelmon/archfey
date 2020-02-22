@@ -101,8 +101,6 @@ public class Range : MonoBehaviour
 
         int roll = Me.Actions.RollDie(20, 1, Advantage, Disadvantage);
 
-        //Debug.Log(Me.name + " ranged attack rolled: " + roll);
-
         if (roll >= Me.Actions.Combat.CriticalRangeStart) Critical = true;
 
         if (target_actor != null) {

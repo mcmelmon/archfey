@@ -84,10 +84,11 @@ public class Tree : MonoBehaviour
 
     private void SetAdditionalStats()
     {
-        Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
-        Me.Stats.Resistances[Weapons.DamageType.Bludgeoning] = 50;
-        Me.Stats.Resistances[Weapons.DamageType.Fire] = 200;
-        Me.Stats.Resistances[Weapons.DamageType.Piercing] = 50;
+        Me.Stats.Resistances = new Dictionary<Weapons.DamageType, Stats.ResistanceLevels> {
+            [Weapons.DamageType.Bludgeoning] = Stats.ResistanceLevels.Resistant,
+            [Weapons.DamageType.Fire] = Stats.ResistanceLevels.Vulnerable,
+            [Weapons.DamageType.Piercing] = Stats.ResistanceLevels.Resistant,
+        };
 
         Me.Health.HitDice = Me.Health.HitDice + (int)transform.localScale.y - 1;
         Me.Health.SetCurrentAndMaxHitPoints();

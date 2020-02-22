@@ -55,7 +55,6 @@ public class Bugbear : TemplateVersatile
         Me.Actions.Combat.EquipShield(Armors.Instance.GetArmorNamed(Armors.ArmorName.Shield));
         Me.Actions.Combat.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Morningstar));
         Me.Actions.Combat.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Javelin));
-        Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
         Me.Actions.Combat.CalculateAdditionalDamage = AdditionalDamage;
 
         Me.Stats.ExpertiseInSkills.Add(Proficiencies.Skill.Stealth);

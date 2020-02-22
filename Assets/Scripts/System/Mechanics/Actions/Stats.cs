@@ -7,6 +7,7 @@ public class Stats : MonoBehaviour
 {
     public enum Alignments { LawfulGood, LawfulNeutral, LawfulEvil, NeutralGood, Neutral, NeutralEvil, ChaoticGood, ChaoticNeutral, ChaoticEvil }
     public enum Families { Abberation, Beast, Celestial, Construct, Dragon, Elemental, Fey, Fiend, Giant, Humanoid, Monstrosity, Ooze, Plant, Swarm, Undead };
+    public enum ResistanceLevels { None, Resistant, Immune, Vulnerable }
     public enum Sizes { Tiny, Small, Medium, Large, Huge, Gargantuan }
     public enum Subfamilies { None, Dwarf, Elf, Gnoll, Gnome, Goblinoid, Grimlock, Human, Kobold, Lizardfolk, Merfolk, Orc, Sahuagin, Shapechanger };
 
@@ -57,7 +58,7 @@ public class Stats : MonoBehaviour
     public Dictionary<Proficiencies.Attribute, int> AttributeAdjustments { get; set; }
     public List<Proficiencies.Skill> ExpertiseInSkills { get; set; }
     public List<Proficiencies.Tool> ExpertiseInTools { get; set; }
-    public Dictionary<Weapons.DamageType, int> Resistances { get; set; }
+    public Dictionary<Weapons.DamageType, ResistanceLevels> Resistances { get; set; }
     public int ProficiencyBonus { get; set; }
     public List<Proficiencies.Attribute> SavingThrows { get; set; }
     public List<Proficiencies.Skill> Skills { get; set; }
@@ -189,7 +190,23 @@ public class Stats : MonoBehaviour
 
     private int DamageAfterResistance(int _damage, Weapons.DamageType _type)
     {
-        return (_damage <= 0 || Resistances == null) ? _damage : (_damage = _damage * (Resistances[_type] / 100));
+        int damage_taken = _damage;
+
+        switch(Resistances[_type]) {
+            case ResistanceLevels.Resistant:
+                damage_taken = _damage / 2;
+                break;
+            case ResistanceLevels.Immune:
+                damage_taken = 0;
+                break;
+            case ResistanceLevels.Vulnerable:
+                damage_taken = _damage * 2;
+                break;
+            default:
+                break;
+        }
+
+        return damage_taken;
     }
 
 
@@ -247,6 +264,22 @@ public class Stats : MonoBehaviour
             [Proficiencies.Attribute.Intelligence] = 0,
             [Proficiencies.Attribute.Strength] = 0,
             [Proficiencies.Attribute.Wisdom] = 0
+        };
+
+        Resistances = new Dictionary<Weapons.DamageType, ResistanceLevels> {
+            [Weapons.DamageType.Acid] = ResistanceLevels.None,
+            [Weapons.DamageType.Bludgeoning] = ResistanceLevels.None,
+            [Weapons.DamageType.Cold] = ResistanceLevels.None,
+            [Weapons.DamageType.Fire] = ResistanceLevels.None,
+            [Weapons.DamageType.Force] = ResistanceLevels.None,
+            [Weapons.DamageType.Lightning] = ResistanceLevels.None,
+            [Weapons.DamageType.Necrotic] = ResistanceLevels.None,
+            [Weapons.DamageType.Piercing] = ResistanceLevels.None,
+            [Weapons.DamageType.Poison] = ResistanceLevels.None,
+            [Weapons.DamageType.Psychic] = ResistanceLevels.None,
+            [Weapons.DamageType.Radiant] = ResistanceLevels.None,
+            [Weapons.DamageType.Slashing] = ResistanceLevels.None,
+            [Weapons.DamageType.Thunder] = ResistanceLevels.None
         };
     }
 

@@ -21,7 +21,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1690649058592984, guid: 235a3e539eea845b79c0d0cb44baec18, type: 3}
       propertyPath: m_Name
-      value: Guard
+      value: Guard Variant
       objectReference: {fileID: 0}
     - target: {fileID: 4083075569688968, guid: 235a3e539eea845b79c0d0cb44baec18, type: 3}
       propertyPath: m_LocalPosition.x
@@ -65,6 +65,101 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4083075569688968, guid: 235a3e539eea845b79c0d0cb44baec18, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: skillset.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: strength
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: dexterity
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: constitution
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: intelligence
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: wisdom
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: charisma
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: alignment
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: family
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: subfamily
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: armor_class
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: hit_dice
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: hit_dice_type
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: skillset.Array.data[0]
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: skillset.Array.data[1]
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 7396572855923113708, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7396572855923113708, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7800957907209320745, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

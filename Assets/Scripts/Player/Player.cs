@@ -186,8 +186,7 @@ public class Player : MonoBehaviour{
 
     private void SetNormalState()
     {
-        Me.Senses.Darkvision = false;
-        Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
+        Me.Senses.DarkVisionRange = 0f;
 
         Me.Actions.Combat.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.Leather));
 

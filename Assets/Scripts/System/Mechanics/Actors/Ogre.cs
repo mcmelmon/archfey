@@ -38,7 +38,6 @@ public class Ogre : TemplateMelee
         Me.Actions.Combat.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.Hide));
         Me.Actions.Combat.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Greataxe));
         Me.Actions.Combat.EquipRangedWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Javelin)); 
-        Me.Stats.Resistances = Characters.resistances[Characters.Template.Base];
         Me.Actions.Combat.CalculateAdditionalDamage = AdditionalDamage;
 
         GameObject pocket_lint = new GameObject("Pocket Lint");

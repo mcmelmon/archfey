@@ -8,7 +8,8 @@ public class Senses : MonoBehaviour
     // properties
 
     public Actor Me { get; set; }
-    public bool Darkvision { get; set; }
+    public float BlindSightRange { get; set; }
+    public float DarkVisionRange { get; set; }
     public float PerceptionRange { get; set; }
     public List<Actor> Actors { get; set; }
     public List<Item> Items { get; set; }
