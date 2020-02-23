@@ -90,8 +90,7 @@ public class Tree : MonoBehaviour
             [Weapons.DamageType.Piercing] = Stats.ResistanceLevels.Resistant,
         };
 
-        Me.Health.HitDice = Me.Health.HitDice + (int)transform.localScale.y - 1;
-        Me.Health.SetCurrentAndMaxHitPoints();
+        Me.Health.AddHitDice(Me.Health.HitDice.First().Key, (int)transform.localScale.y - 1);
         Me.Health.OnHealthChange = OnHealthChange;
         TimberNode.OnQuantityChange = OnQuantityChange;
     }

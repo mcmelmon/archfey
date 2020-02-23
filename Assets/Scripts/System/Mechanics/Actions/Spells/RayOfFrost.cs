@@ -138,7 +138,7 @@ public class RayOfFrost : MonoBehaviour
         Me = GetComponentInParent<Actor>();
         Range = 15f;
         School = Magic.School.Evocation;
-        switch (Me.Stats.Level) {
+        switch (Me.GetComponent<Spellcaster>().Level) {  // TODO: pick the Spellcaster for this spell by casting attribute
             case int n when (n > 0 && n < 5):
                 NumberOfDice = 1;
                 break;

@@ -111,6 +111,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
         type: 3}
+      propertyPath: armor.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
       propertyPath: Strength
       value: 8
       objectReference: {fileID: 0}
@@ -223,6 +228,16 @@ PrefabInstance:
         type: 3}
       propertyPath: alignment
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: armor.Array.data[0]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2362503439384013286, guid: 235a3e539eea845b79c0d0cb44baec18,
+        type: 3}
+      propertyPath: armor.Array.data[1]
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5307651885853832245, guid: 235a3e539eea845b79c0d0cb44baec18,
         type: 3}

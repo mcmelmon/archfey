@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class Proficiencies : MonoBehaviour
 {
+    public enum Armor { Light, Medium, Heavy, Shield }
 
-    public enum Attribute { Charisma, Dexterity, Constitution, Intelligence, Strength, Wisdom, None };
+    public enum Attribute { Charisma, Dexterity, Constitution, Intelligence, Strength, Wisdom, None }
 
     public enum Skill { 
         Acrobatics,
@@ -27,7 +28,7 @@ public class Proficiencies : MonoBehaviour
         Stealth,
         Survival,
         None
-    };
+    }
 
     public enum Tool {
         Alchemist,
@@ -58,6 +59,8 @@ public class Proficiencies : MonoBehaviour
         Weaver
     }
 
+    public enum Weapon { Simple, Martial }
+
     public struct SkillAttribute
     {
         public Skill skill;
@@ -87,11 +90,8 @@ public class Proficiencies : MonoBehaviour
     public List<Tool> GatheringTools { get; set; }
     public static Proficiencies Instance { get; set; }
     public static List<SkillAttribute> SkillAttributes { get; set; }
-    public static List<ToolSynergy> ToolSynergies { get; set; }
-
 
     // Unity
-
 
     private void Awake()
     {
@@ -105,9 +105,7 @@ public class Proficiencies : MonoBehaviour
         SetComponents();
     }
 
-
     // public
-
 
     public Attribute GetAttributeForSkill(Skill skill)
     {
@@ -154,12 +152,6 @@ public class Proficiencies : MonoBehaviour
             new SkillAttribute(Skill.SleightOfHand, Attribute.Dexterity),
             new SkillAttribute(Skill.Stealth, Attribute.Dexterity),
             new SkillAttribute(Skill.Survival, Attribute.Wisdom)
-        };
-
-        ToolSynergies = new List<ToolSynergy>() {
-            new ToolSynergy("Farmer", new List<Skill>{ Skill.AnimalHandling, Skill.Insight, Skill.Nature, Skill.Survival }),
-            new ToolSynergy("Lumberjack", new List<Skill>{ Skill.Investigation, Skill.Perception, Skill.Survival }),
-            new ToolSynergy("Miner", new List<Skill>{ Skill.Arcana, Skill.History, Skill.Nature }),
         };
     }
 }

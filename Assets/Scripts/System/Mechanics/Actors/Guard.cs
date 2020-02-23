@@ -80,7 +80,7 @@ public class Guard : MonoBehaviour
         Me.Actions.SheathWeapon();
 
         if (Me.RestCounter == Actor.rested_at) {
-            Me.Health.RecoverHealth(Me.Actions.RollDie(Me.Health.HitDiceType, 1));
+            Me.Health.RecoverHealth(Me.Actions.RollDie(Me.Health.LargestHitDie(), 1));
             if (Me.Magic != null) Me.Magic.RecoverSpellLevels();
             Me.RestCounter = 0;
         } else {

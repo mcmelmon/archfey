@@ -197,7 +197,7 @@ public class CommandBarOne : MonoBehaviour {
                 if (actor != null && Me.Actions.Combat.IsWithinMeleeRange(actor.transform)) {
                     Me.Actions.Decider.TargetMelee(actor.gameObject);
                     Me.Actions.Attack(false, true); // offhand = false, player target = true
-                    Player.Instance.CastEldritchSmite(actor);
+                    // Player.Instance.CastEldritchSmite(actor);
                     StartCoroutine(Cooldown(SmiteButton, 20));
                     Me.Actions.CanTakeAction = false;
                 }

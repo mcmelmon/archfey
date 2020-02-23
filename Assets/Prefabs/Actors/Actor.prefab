@@ -157,8 +157,11 @@ MonoBehaviour:
   size: 0
   action_count: 1
   proficiency_bonus: 2
+  armor: 
+  saving_throws: 
   skillset: 
   toolset: 
+  weapons: 00000000
 --- !u!114 &8115153439838660898
 MonoBehaviour:
   m_ObjectHideFlags: 0

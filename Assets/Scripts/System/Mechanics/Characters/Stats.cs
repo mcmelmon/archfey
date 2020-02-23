@@ -37,32 +37,34 @@ public class Stats : MonoBehaviour
     [SerializeField] Sizes size;
     [SerializeField] int action_count = 1;
     [SerializeField] int proficiency_bonus = 2;
+    [SerializeField] List<Proficiencies.Armor> armor;
+    [SerializeField] List<Proficiencies.Attribute> saving_throws;
     [SerializeField] List<Proficiencies.Skill> skillset;
     [SerializeField] List<Proficiencies.Tool> toolset;
+    [SerializeField] List<Proficiencies.Weapon> weapons;
 
 
 
     // properties
 
-    public Alignments Alignment { get; set; }
-    public List<string> ClassFeatures { get; set; }
     public Actor Me { get; set; }
-    public Families Family { get; set; }
-    public Sizes Size { get; set; }
-    public int Speed { get; set; }
-    public Subfamilies Subfamily { get; set; }
-    public int Level { get; set; }
-
-    public int BaseArmorClass { get; set; } // TODO: build up AC from equipment and dex
+    public Alignments Alignment { get; set; }
+    public List<Proficiencies.Armor> ArmorProficiencies { get; set; }
     public Dictionary<Proficiencies.Attribute, int> Attributes { get; set; }
     public Dictionary<Proficiencies.Attribute, int> AttributeAdjustments { get; set; }
+    public int BaseArmorClass { get; set; } // TODO: build up AC from equipment and dex
     public List<Proficiencies.Skill> ExpertiseInSkills { get; set; }
     public List<Proficiencies.Tool> ExpertiseInTools { get; set; }
+    public Families Family { get; set; }
     public Dictionary<Weapons.DamageType, ResistanceLevels> Resistances { get; set; }
     public int ProficiencyBonus { get; set; }
     public List<Proficiencies.Attribute> SavingThrows { get; set; }
+    public Sizes Size { get; set; }
+    public int Speed { get; set; }
+    public Subfamilies Subfamily { get; set; }
     public List<Proficiencies.Skill> Skills { get; set; }
     public List<Proficiencies.Tool> Tools { get; set; }
+    public List<Proficiencies.Weapon> WeaponProficiencies { get; set; }
 
 
     // Unity
@@ -233,18 +235,18 @@ public class Stats : MonoBehaviour
         Me = GetComponentInParent<Actor>();
 
         Alignment = alignment;
-        ClassFeatures = new List<string>();
+        ArmorProficiencies = new List<Proficiencies.Armor>(armor);
         ExpertiseInSkills = new List<Proficiencies.Skill>();
         ExpertiseInTools = new List<Proficiencies.Tool>();
         Family = family;
-        Level = 1;
         ProficiencyBonus = proficiency_bonus;
-        SavingThrows = new List<Proficiencies.Attribute>();
+        SavingThrows = new List<Proficiencies.Attribute>(saving_throws);
         Size = size;
         Skills = new List<Proficiencies.Skill>(skillset);
         Speed = speed;
         Subfamily = subfamily;
         Tools = new List<Proficiencies.Tool>(toolset);
+        WeaponProficiencies = new List<Proficiencies.Weapon>(weapons);
 
         Attributes = new Dictionary<Proficiencies.Attribute, int>
         {
@@ -289,10 +291,7 @@ public class Stats : MonoBehaviour
 
         BaseArmorClass = armor_class;
 
-        Me.Health.HitDice = hit_dice;
-        Me.Health.HitDiceType = hit_dice_type;
-
-        Me.Health.SetCurrentAndMaxHitPoints();
+        Me.Health.AddHitDice(hit_dice_type, hit_dice);
     }
 
 
