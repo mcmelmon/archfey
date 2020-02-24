@@ -306,10 +306,10 @@ public class Decider : MonoBehaviour
 
     private bool Medic()
     {
-        bool can_cast = Me.Magic != null && Me.Magic.HaveSpellSlot(Magic.Level.First);
+        bool can_heal = Me.Actions.Magic.CanHeal();
         bool wounded_friend = IdentifyFriends().Any(friend => friend.Health.BadlyInjured());
 
-        return can_cast && wounded_friend;
+        return can_heal && wounded_friend;
     }
 
 
@@ -322,7 +322,7 @@ public class Decider : MonoBehaviour
     private bool NeedsRest()
     {
         bool enemies_abound = HostileActorsSighted();
-        bool spent_spell_slots = Me.Magic != null && Me.Magic.UsedSlot;
+        bool spent_spell_slots = Me.Actions.Magic.UsedASlot;
         bool injured = Me.Health.CurrentHitPoints < Me.Health.MaximumHitPoints;
         return !enemies_abound && (injured || spent_spell_slots);
     }

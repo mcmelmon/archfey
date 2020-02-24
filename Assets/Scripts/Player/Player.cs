@@ -115,7 +115,7 @@ public class Player : MonoBehaviour{
         Me.Actions.Combat.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Quarterstaff));
         Me.Actions.Combat.AttacksPerAction = 1;
 
-        if (CommandBarOne.Instance != null) CommandBarOne.Instance.ActivateButtonSet("Druid");
+        if (CommandBarOne.Instance != null) CommandBarOne.Instance.ActivateButtonSet("Warlock");
     }
 
     private void SetComponents()

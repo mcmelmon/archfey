@@ -5,12 +5,21 @@ using UnityEngine;
 public class Warlock : MonoBehaviour
 {
     public enum Boons { Blade, Book, Chain }
+    public enum EldritchInvocations { 
+        AgonizingBlast = 0,
+        ArmorOfShadows = 2,
+        AscendantStep = 3,
+        BeastSpeech = 4,
+        BeguilingInfluence = 5
+    }
+
     public enum Pacts { Archfey }
 
     // properties
 
     public Actor Me { get; set; }
     public Boons Boon { get; set; }
+    public List<EldritchInvocations> Invocations { get; set; }
     public int Level { get; set; }
     public Pacts Pact { get; set; }
     public List<Proficiencies.Skill> Skills { get; set; }
@@ -34,15 +43,18 @@ public class Warlock : MonoBehaviour
         Me.Stats.ArmorProficiencies.Add(Proficiencies.Armor.Light);
         Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Charisma);
         Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Constitution);
+        Me.Actions.Magic.gameObject.AddComponent<EldritchBlast>();
     }
 
     private void SetComponents()
     {
         Me = GetComponent<Actor>();
+        Invocations = new List<EldritchInvocations>();
         Level = 1;
         Pact = Pacts.Archfey;
         Spellcaster = Me.gameObject.AddComponent<Spellcaster>();
         Spellcaster.CastingAttribute = Proficiencies.Attribute.Charisma;
+        Spellcaster.CastingClass = Magic.CastingClass.Warlock;
         Spellcaster.Level = Level;
 
         Skills = new List<Proficiencies.Skill> {

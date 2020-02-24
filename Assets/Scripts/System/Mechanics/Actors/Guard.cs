@@ -81,7 +81,7 @@ public class Guard : MonoBehaviour
 
         if (Me.RestCounter == Actor.rested_at) {
             Me.Health.RecoverHealth(Me.Actions.RollDie(Me.Health.LargestHitDie(), 1));
-            if (Me.Magic != null) Me.Magic.RecoverSpellLevels();
+            if (Me.Actions.Magic != null) Me.Actions.Magic.RecoverSpellSlots();
             Me.RestCounter = 0;
         } else {
             Me.RestCounter++;

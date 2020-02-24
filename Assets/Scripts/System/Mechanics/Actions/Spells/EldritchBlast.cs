@@ -1,22 +1,21 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class RayOfFrost : MonoBehaviour
+public class EldritchBlast : MonoBehaviour
 {
-    // properties
+   // properties
 
     public Actor Me { get; set; }
     public bool Advantage { get; set; }
-    public GameObject Beam { get; set; }
     public Weapons.DamageType DamageType { get; set; }
     public int Die { get; set; }
     public bool Disadvantage { get; set; }
-    public int Level { get; set; }
+    public Magic.Level Level { get; set; }
     public float Range { get; set; }
     public Magic.School School { get; set; }
     public Spellcaster Spellcaster { get; set; }
-    // public Proficiencies.Attribute SpellCastingAttribute { get; set; }
     public Actor Target { get; set; }
 
 
@@ -29,35 +28,38 @@ public class RayOfFrost : MonoBehaviour
 
     // public
 
-    // TODO: specify spell_casting_attribute for other spells
-    public void Cast(Actor _target, Proficiencies.Attribute spell_casting_attribute = Proficiencies.Attribute.Intelligence, bool dispel_effect = false)
-    {
+
+    public void Cast(Actor _target, bool dispel_effect = false)
+    {        
         if (_target == null) return;
         Target = _target;
-
         CheckAdvantageAndDisadvantage();
-        DisplayEffects();
 
         if (Hit()) {
             ApplyDamage();
-            GameObject _impact = Instantiate(SpellEffects.Instance.physical_strike_prefab, Target.transform.position, SpellEffects.Instance.physical_strike_prefab.transform.rotation);
-            _impact.name = "Impact";
-            Destroy(_impact, 3f);
+            DisplayEffects();
         }
+        // TODO: push or pull from invocations
     }
 
+    public bool IsWithinAttackRange(Transform target)
+    {
+        float separation = Me.SeparationFrom(target);
+        return separation < Range;
+    }
 
     // private
-
 
     private void ApplyDamage()
     {
         int damage_roll = Me.Actions.RollDie(Die, NumberOfDice());
+
+        // TODO: agonizing blast invocation 
+
         int damage_inflicted = Target.Actions.Stats.DamageAfterDefenses(damage_roll, DamageType);
         Target.Health.LoseHealth(damage_inflicted, Me);
     }
 
-    // TODO: refactor advantage/disadvantage - though it can be 
     private void CheckAdvantageAndDisadvantage()
     {
         var friends_in_melee = Me.Senses.Actors
@@ -71,16 +73,13 @@ public class RayOfFrost : MonoBehaviour
         Advantage |= friends_in_melee.Count > Me.Actions.Decider.AvailableMeleeTargets.Count;
     }
 
-
     private void DisplayEffects()
     {
-        if (Beam == null) {
-            Beam = new GameObject();
-            Beam.AddComponent<LineRenderer>();
-            StartCoroutine(MoveBeam());
-        }
+        GameObject flare = Instantiate(SpellEffects.Instance.sacred_flame_prefab, Target.transform.position, Target.transform.rotation, Target.transform);
+        flare.name = "EldritchSmite";
+        flare.transform.position += new Vector3(0, 3, 0);
+        Destroy(flare, 1.5f);
     }
-
 
     private bool Hit()
     {
@@ -93,30 +92,6 @@ public class RayOfFrost : MonoBehaviour
         }
 
         return false;
-    }
-
-
-    private IEnumerator MoveBeam()
-    {
-        int tick = 0;
-        LineRenderer lr = Beam.GetComponent<LineRenderer>();
-        lr.material = Me.GetComponent<Interactable>().highlight_material; // TODO: create ray material
-        lr.startWidth = 0.2f;
-        lr.endWidth = 0.2f;
-        Destroy(Beam, 1f);
-
-        while (Beam != null) {
-            tick++;
-            Vector3 start = Me == null || Target == null ? Vector3.zero : Me.GetComponent<Collider>().ClosestPointOnBounds(Target.transform.position);
-            Vector3 stop = Target == null ? Vector3.zero : Target.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
-            if (start != Vector3.zero && stop != Vector3.zero) {
-                lr.SetPosition(0, start);
-                lr.SetPosition(1, stop);
-            } else {
-                break;
-            }
-            yield return null;
-        }
     }
 
     private int NumberOfDice()
@@ -137,12 +112,12 @@ public class RayOfFrost : MonoBehaviour
 
     private void SetComponents()
     {
-        DamageType = Weapons.DamageType.Radiant;
-        Die = 8;
-        Level = 0;
+        DamageType = Weapons.DamageType.Force;
+        Die = 10;
+        Level = Magic.Level.Cantrip;
         Me = GetComponentInParent<Actor>();
-        Range = 15f;
+        Range = 12f;
         School = Magic.School.Evocation;
-        Spellcaster = Me.GetComponent<Spellcaster>();
+        Spellcaster = Me.GetComponent<Spellcaster>(); // TODO: someday we may have mutliclassing, but not this day
     }
 }

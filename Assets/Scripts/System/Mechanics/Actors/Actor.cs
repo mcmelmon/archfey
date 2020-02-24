@@ -27,7 +27,6 @@ public class Actor : MonoBehaviour
     public Health Health { get; set; }
     public Interactable Interactions { get; set; }
     public Inventory Inventory { get; set; }
-    public Magic Magic { get; set; }
     public Actor Me { get; set; }
     public int RestCounter { get; set; }
     public Route Route { get; set; }
@@ -128,6 +127,7 @@ public class Actor : MonoBehaviour
 
     private void SetComponents()
     {
+        Me = this;
         Actions = GetComponentInChildren<Actions>();
         Alignment = Conflict.Alignment.Unaligned;
         CurrentFaction = null;
@@ -139,7 +139,6 @@ public class Actor : MonoBehaviour
         Health = GetComponent<Health>();
         Interactions = GetComponent<Interactable>();
         Inventory = GetComponent<Inventory>();
-        Me = this;
         RestCounter = 0;
         Route = GetComponent<Route>();
         Senses = GetComponent<Senses>();

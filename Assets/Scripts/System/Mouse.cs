@@ -47,7 +47,7 @@ public class Mouse : MonoBehaviour
                 HoveredObject.GetComponentInChildren<Renderer>().material = HoveredObject.GetComponentInParent<Interactable>().OriginalMaterial;
 
             for (int i = 0; i < SelectedObjects.Count; i++) {
-                SelectedObjects[i].GetComponent<Renderer>().material = SelectedObjects[i].GetComponentInParent<Interactable>().OriginalMaterial;
+                SelectedObjects[i].GetComponentInChildren<Renderer>().material = SelectedObjects[i].GetComponentInParent<Interactable>().OriginalMaterial;
             }
             SelectedObjects.Clear();
         }
@@ -76,7 +76,7 @@ public class Mouse : MonoBehaviour
 
         SelectedObjects.Add(selected_object);
         foreach (var selection in SelectedObjects.Where(so => so != null)) {
-            selection.GetComponent<Renderer>().material = selection.GetComponentInParent<Interactable>().highlight_material;
+            selection.GetComponentInChildren<Renderer>().material = selection.GetComponentInParent<Interactable>().highlight_material;
         }
     }
 
@@ -92,18 +92,18 @@ public class Mouse : MonoBehaviour
                 GameObject hover = hit.transform.gameObject;
 
                 if (HoveredObject != null && !SelectedObjects.Contains(HoveredObject))
-                    HoveredObject.GetComponent<Renderer>().material = HoveredObject.GetComponentInParent<Interactable>().OriginalMaterial;
+                    HoveredObject.GetComponentInChildren<Renderer>().material = HoveredObject.GetComponentInParent<Interactable>().OriginalMaterial;
 
                 HoveredObject = hover;
                 if (HoveredObject != null && !SelectedObjects.Contains(HoveredObject)) {
                     Item hover_item = HoveredObject.GetComponent<Item>();
-                    HoveredObject.GetComponent<Renderer>().material = hover_item != null && !hover_item.IsSpotted
+                    HoveredObject.GetComponentInChildren<Renderer>().material = hover_item != null && !hover_item.IsSpotted
                         ? HoveredObject.GetComponentInParent<Interactable>().OriginalMaterial
                         : HoveredObject.GetComponentInParent<Interactable>().highlight_material;
                 }
             } else {
                 if (HoveredObject != null && !SelectedObjects.Contains(HoveredObject)) {
-                    HoveredObject.GetComponent<Renderer>().material = HoveredObject.GetComponentInParent<Interactable>().OriginalMaterial;
+                    HoveredObject.GetComponentInChildren<Renderer>().material = HoveredObject.GetComponentInParent<Interactable>().OriginalMaterial;
                     HoveredObject = null;
                 }
             }
@@ -172,7 +172,7 @@ public class Mouse : MonoBehaviour
     private void ClearSelection()
     {
         foreach (var selection in SelectedObjects.Where(so => so != null)) {
-            selection.GetComponent<Renderer>().material = selection.GetComponentInParent<Interactable>().OriginalMaterial;
+            selection.GetComponentInChildren<Renderer>().material = selection.GetComponentInParent<Interactable>().OriginalMaterial;
         }
         SelectedObjects.Clear();
     }
