@@ -8,7 +8,6 @@ public class RayOfFrost : MonoBehaviour
 
     public Actor Me { get; set; }
     public bool Advantage { get; set; }
-    public GameObject Beam { get; set; }
     public Weapons.DamageType DamageType { get; set; }
     public int Die { get; set; }
     public bool Disadvantage { get; set; }
@@ -36,7 +35,7 @@ public class RayOfFrost : MonoBehaviour
         Target = _target;
 
         CheckAdvantageAndDisadvantage();
-        DisplayEffects();
+        DrawRay();
 
         if (Hit()) {
             ApplyDamage();
@@ -46,9 +45,7 @@ public class RayOfFrost : MonoBehaviour
         }
     }
 
-
     // private
-
 
     private void ApplyDamage()
     {
@@ -71,16 +68,10 @@ public class RayOfFrost : MonoBehaviour
         Advantage |= friends_in_melee.Count > Me.Actions.Decider.AvailableMeleeTargets.Count;
     }
 
-
-    private void DisplayEffects()
+    private void DrawRay()
     {
-        if (Beam == null) {
-            Beam = new GameObject();
-            Beam.AddComponent<LineRenderer>();
-            StartCoroutine(MoveBeam());
-        }
+        Me.Actions.Magic.DrawRay(Me.weapon_transform.position, Target.transform.position);
     }
-
 
     private bool Hit()
     {
@@ -93,30 +84,6 @@ public class RayOfFrost : MonoBehaviour
         }
 
         return false;
-    }
-
-
-    private IEnumerator MoveBeam()
-    {
-        int tick = 0;
-        LineRenderer lr = Beam.GetComponent<LineRenderer>();
-        lr.material = Me.GetComponent<Interactable>().highlight_material; // TODO: create ray material
-        lr.startWidth = 0.2f;
-        lr.endWidth = 0.2f;
-        Destroy(Beam, 1f);
-
-        while (Beam != null) {
-            tick++;
-            Vector3 start = Me == null || Target == null ? Vector3.zero : Me.GetComponent<Collider>().ClosestPointOnBounds(Target.transform.position);
-            Vector3 stop = Target == null ? Vector3.zero : Target.GetComponent<Collider>().ClosestPointOnBounds(transform.position);
-            if (start != Vector3.zero && stop != Vector3.zero) {
-                lr.SetPosition(0, start);
-                lr.SetPosition(1, stop);
-            } else {
-                break;
-            }
-            yield return null;
-        }
     }
 
     private int NumberOfDice()

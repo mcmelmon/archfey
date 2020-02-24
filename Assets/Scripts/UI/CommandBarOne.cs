@@ -111,12 +111,15 @@ public class CommandBarOne : MonoBehaviour {
 
     public void EldritchBlast()
     {
+        EldritchBlast blast = Me.Actions.Magic.GetComponent<EldritchBlast>();
+        if (blast == null) return;
+
         if (Me.Actions.CanTakeAction && BlastButton.interactable && Mouse.SelectedObjects != null) {
-            var targets = Mouse.SelectedObjects.Where(so => so != null && Me.Actions.Combat.IsAttackable(so) && Me.Actions.Combat.IsWithinAttackRange(so.transform));
+            var targets = Mouse.SelectedObjects.Where(so => so != null && Me.Actions.Combat.IsAttackable(so) && blast.IsWithinAttackRange(so.transform));
             if (targets.Any()) {
                 Actor actor = targets.First().GetComponent<Actor>();
-                if (actor != null && Me.Actions.Combat.IsWithinAttackRange(actor.transform)) {
-                    Me.Actions.Magic.GetComponent<EldritchBlast>().Cast(actor);
+                if (actor != null && blast.IsWithinAttackRange(actor.transform)) {
+                    blast.Cast(actor);
                     Me.Actions.CanTakeAction = false;
                 }
             }

@@ -35,6 +35,8 @@ public class EldritchBlast : MonoBehaviour
         Target = _target;
         CheckAdvantageAndDisadvantage();
 
+        DrawRay();
+
         if (Hit()) {
             ApplyDamage();
             DisplayEffects();
@@ -76,9 +78,14 @@ public class EldritchBlast : MonoBehaviour
     private void DisplayEffects()
     {
         GameObject flare = Instantiate(SpellEffects.Instance.sacred_flame_prefab, Target.transform.position, Target.transform.rotation, Target.transform);
-        flare.name = "EldritchSmite";
+        flare.name = "EldritchBlast";
         flare.transform.position += new Vector3(0, 3, 0);
         Destroy(flare, 1.5f);
+    }
+
+    private void DrawRay()
+    {
+        Me.Actions.Magic.DrawRay(Me.weapon_transform.position, Target.transform.position);
     }
 
     private bool Hit()
