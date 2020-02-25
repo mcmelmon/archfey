@@ -21,9 +21,11 @@ public class Warlock : MonoBehaviour
     public Boons Boon { get; set; }
     public List<EldritchInvocations> Invocations { get; set; }
     public int Level { get; set; }
+    public Dictionary<Magic.Level, GameObject> MysticArcanum { get; set; }
     public Pacts Pact { get; set; }
     public List<Proficiencies.Skill> Skills { get; set; }
     public Spellcaster Spellcaster { get; set; }
+    public Magic.Level SpellSlotLevel { get; set; }
 
     // Unity
 
@@ -36,6 +38,24 @@ public class Warlock : MonoBehaviour
     }
 
     // private
+
+    private Magic.Level GetSpellSlotLevel()
+    {
+        switch (Level) {
+            case int n when (n > 0 && n < 3):
+                return Magic.Level.First;
+            case int n when (n >= 3 && n < 5):
+                return Magic.Level.Second;
+            case int n when (n >= 5 && n < 7):
+                return Magic.Level.Third;
+            case int n when (n >= 7 && n < 9):
+                return Magic.Level.Fourth;
+            case int n when (n >= 9):
+                return Magic.Level.Fifth;
+            default:
+                return Magic.Level.First;
+        }
+    }
 
     private void SetAdditionalComponents()
     {
@@ -51,6 +71,7 @@ public class Warlock : MonoBehaviour
         Me = GetComponent<Actor>();
         Invocations = new List<EldritchInvocations>();
         Level = 1;
+        MysticArcanum = new Dictionary<Magic.Level, GameObject>();
         Pact = Pacts.Archfey;
         Spellcaster = Me.gameObject.AddComponent<Spellcaster>();
         Spellcaster.CastingAttribute = Proficiencies.Attribute.Charisma;

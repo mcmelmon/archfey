@@ -37,7 +37,11 @@ public class Spellcaster : MonoBehaviour
 
     public bool HaveSpellSlot(Magic.Level _level)
     {
-        return SpellsLeft[_level] > 0;
+        // return true if the spellcaster has a spell slot of the specified level or higher
+        foreach (KeyValuePair<Magic.Level, int> level_spells in SpellsLeft.Where(sl => (int)sl.Key >= (int)_level)) {
+            if (level_spells.Value > 0) return true;
+        }
+        return false;
     }
 
     public void UseSpellSlot(Magic.Level _level)
