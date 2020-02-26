@@ -53,8 +53,8 @@ public class Combat : MonoBehaviour
     // TODO: weapon sets; enforce offhand rules
     public void EquipMeleeWeapon(Weapon weapon)
     {    
-        EquippedMeleeWeapon = Instantiate(weapon, Me.weapon_transform.position, transform.rotation);
-        EquippedMeleeWeapon.transform.parent = Me.weapon_transform;
+        EquippedMeleeWeapon = Instantiate(weapon, Me.MainHand.position, transform.rotation);
+        EquippedMeleeWeapon.transform.parent = Me.MainHand;
         EquippedMeleeWeapon.name = "Melee Weapon";
         EquippedMeleeWeapon.gameObject.SetActive(false);
     }
@@ -62,8 +62,8 @@ public class Combat : MonoBehaviour
 
     public void EquipOffhand(Weapon weapon)
     {
-        EquippedOffhand = Instantiate(weapon, Me.offhand_transform.position, transform.rotation);
-        EquippedOffhand.transform.parent = Me.offhand_transform;
+        EquippedOffhand = Instantiate(weapon, Me.OffHand.position, transform.rotation);
+        EquippedOffhand.transform.parent = Me.OffHand;
         EquippedOffhand.name = "Offhand";
         EquippedOffhand.gameObject.SetActive(false);
     }
@@ -71,8 +71,8 @@ public class Combat : MonoBehaviour
 
     public void EquipRangedWeapon(Weapon weapon)
     {
-        EquippedRangedWeapon = Instantiate(weapon, Me.weapon_transform.position, transform.rotation);
-        EquippedRangedWeapon.transform.parent = Me.weapon_transform;
+        EquippedRangedWeapon = Instantiate(weapon, Me.MainHand.position, transform.rotation);
+        EquippedRangedWeapon.transform.parent = Me.MainHand;
         EquippedRangedWeapon.name = "Ranged Weapon";
         EquippedRangedWeapon.gameObject.SetActive(false);
     }
@@ -80,8 +80,8 @@ public class Combat : MonoBehaviour
 
     public void EquipShield(Armor shield)
     {
-        EquippedOffhand = Instantiate(shield, Me.offhand_transform.position, transform.rotation).GetComponent<Weapon>();
-        EquippedOffhand.transform.parent = Me.offhand_transform;
+        EquippedOffhand = Instantiate(shield, Me.OffHand.position, transform.rotation).GetComponent<Weapon>();
+        EquippedOffhand.transform.parent = Me.OffHand;
         EquippedOffhand.name = "Shield";
         EquippedOffhand.gameObject.SetActive(false);
     }

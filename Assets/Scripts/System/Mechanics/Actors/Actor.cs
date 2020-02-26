@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -10,12 +11,14 @@ public class Actor : MonoBehaviour
 
     // Inspector settings
 
-    public LayerMask ground_layer;
-    public Transform offhand_transform;
-    public Transform weapon_transform;
+    [SerializeField] LayerMask ground_layer;
+    [SerializeField] Transform main_hand_transform;
+    [SerializeField] Transform offhand_transform;
+    [SerializeField] List<Plot> plots_participating_in;
 
     // properties
 
+    public Actor Me { get; set; }
     public Actions Actions { get; set; }
     public Conflict.Alignment Alignment { get; set; }
     public Dialog Dialog { get; set; }
@@ -27,7 +30,9 @@ public class Actor : MonoBehaviour
     public Health Health { get; set; }
     public Interactable Interactions { get; set; }
     public Inventory Inventory { get; set; }
-    public Actor Me { get; set; }
+    public Transform MainHand { get; set; }
+    public Transform OffHand { get; set; }
+    public List<Plot> Plots { get; set; }
     public int RestCounter { get; set; }
     public Route Route { get; set; }
     public Senses Senses { get; set; }
@@ -36,48 +41,48 @@ public class Actor : MonoBehaviour
 
     // Unity
 
-
     private void Awake()
     {
         SetComponents();
     }
 
-
     // public
 
-
-    public void ChangeFaction(Faction new_faction)
+    public void ChangeFaction(Faction _new_faction)
     {
         if (!Factions.Contains(CurrentFaction)) Factions.Add(CurrentFaction);
-        Me.CurrentFaction = new_faction;
+        Me.CurrentFaction = _new_faction;
         Renderer rend = GetComponent<Renderer>();
-        rend.sharedMaterial.SetColor("_BaseColor", new_faction.colors);
+        rend.sharedMaterial.SetColor("_BaseColor", _new_faction.colors);
     }
 
-
-    public Vector3 GetHarassPoint(Actor other_unit)
+    public Vector3 ClosestPointTo(Actor _other_unit)
     {
-        if (other_unit == null || Me == null) return Vector3.zero;
+        return GetComponentInChildren<CapsuleCollider>().ClosestPointOnBounds(_other_unit.transform.position);
+    }
 
-        if (other_unit.Actions.Combat.EquippedRangedWeapon != null) {
-            float melee_range = other_unit.Actions.Combat.MeleeRange();
-            float long_range = other_unit.Actions.Combat.EquippedRangedWeapon.Range;
+    public Vector3 GetHarassPoint(Actor _other_unit)
+    {
+        if (_other_unit == null || Me == null) return Vector3.zero;
+
+        if (_other_unit.Actions.Combat.EquippedRangedWeapon != null) {
+            float melee_range = _other_unit.Actions.Combat.MeleeRange();
+            float long_range = _other_unit.Actions.Combat.EquippedRangedWeapon.Range;
             float target_range = (long_range - melee_range) + (melee_range * 0.66f); // the edge of long range is too far, but within melee is too close
-            Vector3 harass_point = (other_unit.transform.position - transform.position).normalized * target_range;
-            Vector3 their_bottom = other_unit.GetComponent<Collider>().bounds.min;
+            Vector3 harass_point = (_other_unit.transform.position - transform.position).normalized * target_range;
+            Vector3 their_bottom = _other_unit.GetComponent<Collider>().bounds.min;
             return new Vector3((transform.position + harass_point).x, their_bottom.y, (transform.position + harass_point).z);
         }
-        return GetInteractionPoint(other_unit);
+        return GetInteractionPoint(_other_unit);
     }
 
-
-    public Vector3 GetInteractionPoint(Actor other_unit)
+    public Vector3 GetInteractionPoint(Actor _other_unit)
     {
-        if (other_unit == null || Me == null) return Vector3.zero;
+        if (_other_unit == null || Me == null) return Vector3.zero;
         // The point on Me that other_unit will move to so that I am in their range
-        Vector3 toward_approach = (other_unit.transform.position - transform.position).normalized * other_unit.Actions.Movement.StoppingDistance();
-        Vector3 interaction_point = GetComponent<Collider>().ClosestPointOnBounds(other_unit.transform.position) + toward_approach;
-        Vector3 their_bottom = other_unit.GetComponent<Collider>().bounds.min;
+        Vector3 toward_approach = (_other_unit.transform.position - transform.position).normalized * _other_unit.Actions.Movement.StoppingDistance();
+        Vector3 interaction_point = GetComponent<Collider>().ClosestPointOnBounds(_other_unit.transform.position) + toward_approach;
+        Vector3 their_bottom = _other_unit.GetComponent<Collider>().bounds.min;
 
         return new Vector3(interaction_point.x, their_bottom.y, interaction_point.z);
     }
@@ -89,17 +94,15 @@ public class Actor : MonoBehaviour
         return Physics.CheckCapsule(my_collider.bounds.center, my_base, my_collider.radius * .9f, ground_layer);
     }
 
-
     public bool IsPlayer()
     {
         return Me.GetComponent<Player>() != null;
     }
 
-
-    public float SeparationFrom(Transform target)
+    public float SeparationFrom(Transform _target)
     {
-        Actor actor = target.GetComponent<Actor>();
-        Structure structure = target.GetComponent<Structure>();
+        Actor actor = _target.GetComponent<Actor>();
+        Structure structure = _target.GetComponent<Structure>();
         Vector3 their_closest_point_to_me = Vector3.zero;
         Vector3 their_bottom = Vector3.zero;
         Vector3 my_closest_point_to_them = Vector3.zero;
@@ -121,9 +124,7 @@ public class Actor : MonoBehaviour
         return separation;
     }
 
-
     // private
-
 
     private void SetComponents()
     {
@@ -139,6 +140,8 @@ public class Actor : MonoBehaviour
         Health = GetComponent<Health>();
         Interactions = GetComponent<Interactable>();
         Inventory = GetComponent<Inventory>();
+        MainHand = main_hand_transform;
+        OffHand = offhand_transform;
         RestCounter = 0;
         Route = GetComponent<Route>();
         Senses = GetComponent<Senses>();

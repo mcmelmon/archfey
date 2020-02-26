@@ -35,7 +35,7 @@ public class Magic : MonoBehaviour
         return false;
     }
 
-    public void DrawRay(Vector3 _source, Vector3 _target)
+    public void DrawRay(Actor _source, Actor _target)
     {
         StartCoroutine(FireRay(_source, _target));
     }
@@ -60,20 +60,20 @@ public class Magic : MonoBehaviour
 
     // private
 
-    private IEnumerator FireRay(Vector3 _source, Vector3 _target)
+    private IEnumerator FireRay(Actor _source, Actor _target)
     {
         int tick = 0;
-        LineRenderer ray = Me.Actions.Magic.gameObject.AddComponent<LineRenderer>();
+        LineRenderer ray = _source.gameObject.AddComponent<LineRenderer>();
         // ray.material = Me.GetComponent<Interactable>().highlight_material;
         ray.startWidth = 0.2f;
         ray.endWidth = 0.2f;
-        Destroy(ray, 1f);
+        Destroy(ray, Turn.ActionThreshold);
 
         while (ray != null) {
             tick++;
-            if (_source != Vector3.zero && _target != Vector3.zero) {
-                ray.SetPosition(0, _source);
-                ray.SetPosition(1, _target);
+            if (_source != null && _target != null) {
+                ray.SetPosition(0, _source.MainHand.position);
+                ray.SetPosition(1, _target.ClosestPointTo(_source));
             } else {
                 break;
             }

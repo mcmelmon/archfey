@@ -70,7 +70,7 @@ public class RayOfFrost : MonoBehaviour
 
     private void DrawRay()
     {
-        Me.Actions.Magic.DrawRay(Me.weapon_transform.position, Target.transform.position);
+        Me.Actions.Magic.DrawRay(Me, Target);
     }
 
     private bool Hit()

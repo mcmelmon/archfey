@@ -112,8 +112,9 @@ MonoBehaviour:
   ground_layer:
     serializedVersion: 2
     m_Bits: 33554432
+  main_hand_transform: {fileID: 5059839301230664796}
   offhand_transform: {fileID: 3553075362306555651}
-  weapon_transform: {fileID: 5059839301230664796}
+  plots_participating_in: []
 --- !u!114 &7210647187439319263
 MonoBehaviour:
   m_ObjectHideFlags: 0

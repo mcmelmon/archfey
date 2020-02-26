@@ -36,7 +36,7 @@ public class Range : MonoBehaviour
         Target = _target;
         Weapon = Me.Actions.Combat.EquippedRangedWeapon;
         SetModifiers();
-        Projectile = Instantiate(Weapon.projectile_prefab, Me.weapon_transform.position, transform.rotation);
+        Projectile = Instantiate(Weapon.projectile_prefab, Me.MainHand.position, transform.rotation);
         StartCoroutine(Seek());
         CheckAdvantageAndDisadvantage();
 
