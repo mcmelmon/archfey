@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Resources : MonoBehaviour
 {
-    public enum Category { Bone = 0, Herbs = 1, Hides = 2, Meat = 3, Ore = 4, Timber = 5, Textile = 6 }
+    public enum Category { Bone = 0, Herbs = 1, Hides = 2, Meat = 3, Ore = 4, Timber = 5, Textile = 6, None = 99 }
 
     // properties
 

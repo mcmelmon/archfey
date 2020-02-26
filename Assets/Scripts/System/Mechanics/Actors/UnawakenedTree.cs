@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Tree : MonoBehaviour
+public class UnawakenedTree : MonoBehaviour
 {
 
     // Inspector settings
 
-    [SerializeField] HarvestingNode herb;
-    [SerializeField] HarvestingNode timber;
+    [SerializeField] HarvestingNode herb = null;
+    [SerializeField] HarvestingNode timber = null;
     
     // properties
 

@@ -11,10 +11,9 @@ public class Actor : MonoBehaviour
 
     // Inspector settings
 
-    [SerializeField] LayerMask ground_layer;
-    [SerializeField] Transform main_hand_transform;
-    [SerializeField] Transform offhand_transform;
-    [SerializeField] List<Plot> plots_participating_in;
+    [SerializeField] Transform main_hand_transform = null;
+    [SerializeField] Transform offhand_transform = null;
+    [SerializeField] List<Plot> plots_participating_in = new List<Plot>();
 
     // properties
 
@@ -33,6 +32,7 @@ public class Actor : MonoBehaviour
     public Transform MainHand { get; set; }
     public Transform OffHand { get; set; }
     public List<Plot> Plots { get; set; }
+    public List<Reputation> Reputations { get; set; }
     public int RestCounter { get; set; }
     public Route Route { get; set; }
     public Senses Senses { get; set; }
@@ -91,7 +91,7 @@ public class Actor : MonoBehaviour
     {
         CapsuleCollider my_collider = GetComponentInChildren<CapsuleCollider>(); // TODO: in future, may not always be a capsule
         Vector3 my_base = new Vector3(my_collider.bounds.center.x, my_collider.bounds.min.y, my_collider.bounds.center.z);
-        return Physics.CheckCapsule(my_collider.bounds.center, my_base, my_collider.radius * .9f, ground_layer);
+        return Physics.CheckCapsule(my_collider.bounds.center, my_base, my_collider.radius * .9f, LayerMask.NameToLayer("Ground"));
     }
 
     public bool IsPlayer()
@@ -143,6 +143,7 @@ public class Actor : MonoBehaviour
         MainHand = main_hand_transform;
         OffHand = offhand_transform;
         RestCounter = 0;
+        Reputations = new List<Reputation>();
         Route = GetComponent<Route>();
         Senses = GetComponent<Senses>();
         Stats = GetComponent<Stats>();

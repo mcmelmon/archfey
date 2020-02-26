@@ -9,12 +9,12 @@ public class Spawner : MonoBehaviour
     public enum RespawnStrategy { Once, Proximity, Timer };
 
     // Inspector settings
-    [SerializeField] List<SpawnEntry> spawn_prefabs;
-    [SerializeField] RespawnStrategy respawn_strategy;
-    [SerializeField] float player_proximity_trigger;
-    [SerializeField] int respawn_turns;
-    [SerializeField] Faction faction;
-    [SerializeField] Objective objective;
+    [SerializeField] List<SpawnEntry> spawn_prefabs = new List<SpawnEntry>();
+    [SerializeField] RespawnStrategy respawn_strategy = RespawnStrategy.Once;
+    [SerializeField] float player_proximity_trigger = 1f;
+    [SerializeField] int respawn_turns = 10;
+    [SerializeField] Faction faction = null;
+    [SerializeField] Objective objective = null;
 
     [Serializable]
     public struct SpawnEntry

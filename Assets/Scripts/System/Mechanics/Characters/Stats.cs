@@ -19,29 +19,29 @@ public class Stats : MonoBehaviour
 
     [Header("Stat Block")]
     [Space(5)]
-    [SerializeField] int strength;
-    [SerializeField] int dexterity;
-    [SerializeField] int constitution;
-    [SerializeField] int intelligence;
-    [SerializeField] int wisdom;
-    [SerializeField] int charisma;
+    [SerializeField] int strength = 10;
+    [SerializeField] int dexterity = 10;
+    [SerializeField] int constitution = 10;
+    [SerializeField] int intelligence = 10;
+    [SerializeField] int wisdom = 10;
+    [SerializeField] int charisma = 10;
 
     [Space(10)]
-    [SerializeField] Alignments alignment;
-    [SerializeField] Families family;
-    [SerializeField] Subfamilies subfamily;
-    [SerializeField] int armor_class;
-    [SerializeField] int hit_dice;
-    [SerializeField] int hit_dice_type;
+    [SerializeField] Alignments alignment = Alignments.Neutral;
+    [SerializeField] Families family = Families.Humanoid;
+    [SerializeField] Subfamilies subfamily = Subfamilies.Human;
+    [SerializeField] int armor_class = 10;
+    [SerializeField] int hit_dice = 1;
+    [SerializeField] int hit_dice_type = 6;
     [SerializeField] int speed = 30;
-    [SerializeField] Sizes size;
+    [SerializeField] Sizes size = Sizes.Medium;
     [SerializeField] int action_count = 1;
     [SerializeField] int proficiency_bonus = 2;
-    [SerializeField] List<Proficiencies.Armor> armor;
-    [SerializeField] List<Proficiencies.Attribute> saving_throws;
-    [SerializeField] List<Proficiencies.Skill> skillset;
-    [SerializeField] List<Proficiencies.Tool> toolset;
-    [SerializeField] List<Proficiencies.Weapon> weapons;
+    [SerializeField] List<Proficiencies.Armor> armor = new List<Proficiencies.Armor>();
+    [SerializeField] List<Proficiencies.Attribute> saving_throws = new List<Proficiencies.Attribute>();
+    [SerializeField] List<Proficiencies.Skill> skillset = new List<Proficiencies.Skill>();
+    [SerializeField] List<Proficiencies.Tool> toolset = new List<Proficiencies.Tool>();
+    [SerializeField] List<Proficiencies.Weapon> weapons = new List<Proficiencies.Weapon>();
 
 
 
