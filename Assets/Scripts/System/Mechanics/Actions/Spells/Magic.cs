@@ -1,89 +1,93 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class Magic : MonoBehaviour
 {
-    public enum Level { First = 1, Second = 2, Third = 3, Fourth = 4, Fifth = 5, Sixth = 6, Seventh = 7, Eighth = 8, Ninth = 9 };
-    public enum School { Abjuration, Conjuration, Divination, Enchantment, Evocation, Illusion, Necromancy, Transmutation };
+    public enum CastingClass { Warlock }
+    public enum Level { Cantrip = 0, First = 1, Second = 2, Third = 3, Fourth = 4, Fifth = 5, Sixth = 6, Seventh = 7, Eighth = 8, Ninth = 9 }
+    public enum School { Abjuration, Conjuration, Divination, Enchantment, Evocation, Illusion, Necromancy, Transmutation }
 
     // properties
 
-    public Dictionary<Level, int> MaximumSpellSlots { get; set; }
-    public Dictionary<Level, int> SpellsLeft { get; set; }
-    public bool UsedSlot { get; set; }
-
+    public Actor Me { get; set; }
+    public List<Spellcaster> Spellcasting { get; set; }
+    public bool UsedASlot { get; set; }
 
     // Unity
 
-    private void Awake()
-    {
+    private void Awake() {
         SetComponents();
     }
 
-
     // public
 
-    public bool HaveSpellSlot(Level _level)
+    public bool CanHeal()
     {
-        return SpellsLeft[_level] > 0;
-    }
-
-
-    public void RecoverSpellLevels()
-    {
-        if (!UsedSlot) return;
-
-        foreach (Level _level in Enum.GetValues(typeof(Level))) {
-            if (SpellsLeft[_level] < MaximumSpellSlots[_level]) {
-                SpellsLeft[_level] = MaximumSpellSlots[_level];
-                break;  // only recover from one depleted level per rest cyle, starting at First
+        foreach (var spellcaster in Spellcasting) {
+            if (GetComponent<CureWounds>() != null && spellcaster.HaveSpellSlot(Level.First)) {
+                return true;
             }
         }
-        var used_levels = SpellsLeft.Where(sl => sl.Value < MaximumSpellSlots[sl.Key]).ToList();
 
-        UsedSlot &= used_levels.Count > 0;
+        return false;
     }
 
-
-    public void UseSpellSlot(Level _level)
+    public void DrawRay(Actor _source, Actor _target)
     {
-        if (HaveSpellSlot(_level)) {
-            SpellsLeft[_level]--;
-        }
+        StartCoroutine(FireRay(_source, _target));
     }
 
+    public void RecoverSpellSlots()
+    {
+        if (!UsedASlot) return;
+
+        foreach (var spellcaster in Spellcasting) {
+           foreach (Level _level in Enum.GetValues(typeof(Level))) {
+                if (spellcaster.SpellsLeft[_level] < spellcaster.MaximumSpellSlots[_level]) {
+                    spellcaster.SpellsLeft[_level] = spellcaster.MaximumSpellSlots[_level];
+                    break;  // only recover from one depleted level per rest cyle, starting at First
+                }
+            }         
+        }
+
+        var used_levels = Spellcasting.Select(caster => caster.SpellsLeft.Where(sl => sl.Value < caster.MaximumSpellSlots[sl.Key])).ToList();
+
+        UsedASlot &= used_levels.Count > 0;
+    }
 
     // private
 
+    private IEnumerator FireRay(Actor _source, Actor _target)
+    {
+        int tick = 0;
+        LineRenderer ray = _source.gameObject.AddComponent<LineRenderer>();
+        // ray.material = Me.GetComponent<Interactable>().highlight_material;
+        ray.startWidth = 0.2f;
+        ray.endWidth = 0.2f;
+        Destroy(ray, Turn.ActionThreshold);
+
+        while (ray != null) {
+            tick++;
+            if (_source != null && _target != null) {
+                ray.SetPosition(0, _source.MainHand.position);
+                ray.SetPosition(1, _target.ClosestPointTo(_source));
+            } else {
+                break;
+            }
+            yield return null;
+        }
+    }
 
     private void SetComponents()
     {
-        MaximumSpellSlots = new Dictionary<Level, int>
-        {
-            [Level.First] = 0,
-            [Level.Second] = 0,
-            [Level.Third] = 0,
-            [Level.Fourth] = 0,
-            [Level.Fifth] = 0,
-            [Level.Sixth] = 0,
-            [Level.Seventh] = 0,
-            [Level.Eighth] = 0,
-            [Level.Ninth] = 0
-        };
-        SpellsLeft = new Dictionary<Level, int>
-        {
-            [Level.First] = 0,
-            [Level.Second] = 0,
-            [Level.Third] = 0,
-            [Level.Fourth] = 0,
-            [Level.Fifth] = 0,
-            [Level.Sixth] = 0,
-            [Level.Seventh] = 0,
-            [Level.Eighth] = 0,
-            [Level.Ninth] = 0
-        };
-        UsedSlot = false;
+        Me = GetComponentInParent<Actor>();
+        UsedASlot = false;
+
+        if (Me.GetComponents<Spellcaster>() != null) {
+            Spellcasting = new List<Spellcaster>(Me.GetComponents<Spellcaster>());
+        }
     }
 }

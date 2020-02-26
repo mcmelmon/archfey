@@ -26,9 +26,7 @@ public class Range : MonoBehaviour
         SetComponents();
     }
 
-
     // public
-
 
     public void Strike(GameObject _target) {
         // TODO: allow ranged attacks against structure
@@ -38,7 +36,7 @@ public class Range : MonoBehaviour
         Target = _target;
         Weapon = Me.Actions.Combat.EquippedRangedWeapon;
         SetModifiers();
-        Projectile = Instantiate(Weapon.projectile_prefab, Me.weapon_transform.position, transform.rotation);
+        Projectile = Instantiate(Weapon.projectile_prefab, Me.MainHand.position, transform.rotation);
         StartCoroutine(Seek());
         CheckAdvantageAndDisadvantage();
 
@@ -48,9 +46,7 @@ public class Range : MonoBehaviour
         }
     }
 
-
     // private
-
 
     private void ApplyDamage()
     {
@@ -84,14 +80,12 @@ public class Range : MonoBehaviour
         Advantage |= friends_in_melee.Count > Me.Actions.Decider.AvailableMeleeTargets.Count;
     }
 
-
     private void DisplayEffects(Vector3 _location)
     {
         GameObject _impact = Instantiate(SpellEffects.Instance.physical_strike_prefab, _location, SpellEffects.Instance.physical_strike_prefab.transform.rotation);
         _impact.name = "Impact";
         Destroy(_impact, 3f);
     }
-
 
     private bool Hit()
     {
@@ -111,7 +105,6 @@ public class Range : MonoBehaviour
 
         return false;
     }
-
 
     private void SetComponents()
     {

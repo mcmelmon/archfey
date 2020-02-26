@@ -36,7 +36,7 @@ public class Sanctuary : MonoBehaviour
         Level = _level;
 
         ProtectTarget();
-        Me.Magic.UsedSlot = true;
+        Me.Actions.Magic.UsedASlot = true;
     }
 
 

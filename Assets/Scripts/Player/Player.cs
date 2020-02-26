@@ -12,15 +12,12 @@ public class Player : MonoBehaviour{
 
     // properties
 
-    public bool GodOfRage { get; set; }
+    public Actor Me { get; set; }
     public static Player Instance { get; set; }
     public PlayerInventory Inventory { get; set; }
-    public Actor Me { get; set; }
-    public EldritchSmite EldritchSmite { get; set; }
-
+    public Warlock Warlock { get; set; }
 
     // Unity
-
 
     private void Awake()
     {
@@ -34,19 +31,15 @@ public class Player : MonoBehaviour{
         SetComponents();
     }
 
-
     private void Start()
     {
-        SetNormalState();
-        SetSkills();
+        SetAdditionalComponents();
 
         StartCoroutine(AdjustCameraDistance());
         StartCoroutine(HandleMovement());
     }
 
-
     // public
-
 
     public int AdditionalDamage(GameObject target, bool is_ranged)
     {
@@ -56,42 +49,12 @@ public class Player : MonoBehaviour{
         return additional_damage;
     }
 
-
-    public void CastEldritchSmite(Actor target)
-    {
-        if (target != null && Vector3.Distance(target.transform.position, transform.position) < EldritchSmite.Range)
-        {
-            EldritchSmite.Cast(target);
-        }
-    }
-
-    public void OnIdle()
-    {
-        Me.Actions.SheathWeapon();
-        Me.Actions.Movement.ResetPath();
-        Me.Actions.Decider.FriendsInNeed.Clear();
-    }
-
-
-    public void OnReachedGoal()
-    {
-        Me.Actions.Movement.ResetPath();
-        Me.Actions.Decider.FriendsInNeed.Clear();
-    }
-
-
     public void Respawn()
     {
-        SetComponents();
-        SetNormalState();
-        SetSkills();
         transform.position = Me.Actions.Movement.Destinations[Movement.CommonDestination.Home];
-        Me.ChangeFaction(player_faction);
     }
 
-
     // private
-
 
     private IEnumerator AdjustCameraDistance()
     {
@@ -111,13 +74,10 @@ public class Player : MonoBehaviour{
         }
     }
 
-
     private IEnumerator HandleMovement()
     {
         while (true) {
-
             // TODO: Use the new InputSystem
-
 
             // Touch to move
             if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began) {
@@ -149,27 +109,13 @@ public class Player : MonoBehaviour{
             yield return null;
         }
     }
-    private void SetActions()
+
+    private void SetAdditionalComponents()
     {
-        // Me.Actions.OnBadlyInjured = OnBadlyInjured;
-        // Me.Actions.OnCrafting = OnCrafting;
-        // Me.Actions.OnDamagedFriendlyStructuresSighted = OnDamagedFriendlyStructuresSighted;
-        // Me.Actions.OnFriendlyActorsSighted = OnFriendlyActorsSighted;
-        // Me.Actions.OnFriendsInNeed = OnFriendsInNeed;
-        // Me.Actions.OnFullLoad = OnFullLoad;
-        // Me.Actions.OnHarvesting = OnHarvesting;
-        // Me.Actions.OnHasObjective = OnHasObjective;
-        // Me.Actions.OnHostileActorsSighted = OnHostileActorsSighted;
-        // Me.Actions.OnHostileStructuresSighted = OnHostileStructuresSighted;
-        Me.Actions.OnIdle = OnIdle;
-        // Me.Actions.OnInCombat = OnInCombat;
-        // Me.Actions.OnMedic = OnMedic;
-        // Me.Actions.OnMovingToGoal = OnMovingToGoal;
-        // Me.Actions.OnNeedsRest = OnNeedsRest;
-        Me.Actions.OnReachedGoal = OnReachedGoal;
-        // Me.Actions.OnResting = OnResting;
-        // Me.Actions.OnUnderAttack = OnUnderAttack;
-        // Me.Actions.OnWatch = OnWatch;
+        Me.Actions.Combat.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Quarterstaff));
+        Me.Actions.Combat.AttacksPerAction = 1;
+
+        if (CommandBarOne.Instance != null) CommandBarOne.Instance.ActivateButtonSet("Warlock");
     }
 
     private void SetComponents()
@@ -182,38 +128,8 @@ public class Player : MonoBehaviour{
         Me.RestCounter = 0;
         Me.Senses = GetComponent<Senses>();
         Me.Stats = GetComponent<Stats>();
+        
+        Warlock = Me.gameObject.AddComponent<Warlock>();
     }
 
-    private void SetNormalState()
-    {
-        Me.Senses.DarkVisionRange = 0f;
-
-        Me.Actions.Combat.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.Leather));
-
-        Me.Actions.Combat.CalculateAdditionalDamage = AdditionalDamage;
-    }
-
-    private void SetSkills()
-    {
-        Me.Stats.ClassFeatures.Clear();
-        Me.Stats.ExpertiseInSkills.Clear();
-        Me.Stats.SavingThrows.Clear();
-        Me.Stats.Skills.Clear();
-        Me.Stats.Tools.Clear();
-
-        Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Intelligence);
-        Me.Stats.SavingThrows.Add(Proficiencies.Attribute.Wisdom);
-
-        Me.Stats.ClassFeatures.Add("Druid");  // TODO: the features will provide benefits after "leveling up"
-        Me.Stats.ExpertiseInSkills.Add(Proficiencies.Skill.Insight);
-
-        Me.Stats.Skills.Add(Proficiencies.Skill.Insight);
-        Me.Stats.Skills.Add(Proficiencies.Skill.Perception);
-        Me.Stats.Tools.Add(Proficiencies.Tool.Herbalist);
-
-        Me.Actions.Combat.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Quarterstaff));
-        Me.Actions.Combat.AttacksPerAction = 1;
-
-        if (CommandBarOne.Instance != null) CommandBarOne.Instance.ActivateButtonSet("Druid");
-    }
 }

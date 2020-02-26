@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Acolyte : MonoBehaviour, IAct
+public class Acolyte : MonoBehaviour
 {
     // properties
 
@@ -11,37 +11,24 @@ public class Acolyte : MonoBehaviour, IAct
     public CureWounds CureWounds { get; set; }
     public SacredFlame SacredFlame { get; set; }
     public Sanctuary Sanctuary { get; set; }
-
+    public Spellcaster Spellcaster { get; set; }
 
     // Unity
-
 
     private void Start()
     {
         SetComponents();
     }
 
-
     // public
-
 
     public void OnBadlyInjured()
     {
-        if (Me.Magic.HaveSpellSlot(Magic.Level.First)) {
-            Me.Magic.UseSpellSlot(Magic.Level.First);
+        if (Spellcaster.HaveSpellSlot(Magic.Level.First)) {
+            Spellcaster.UseSpellSlot(Magic.Level.First);
             CureWounds.Cast(Me);
         }
     }
-
-
-    public void OnCrafting() { }
-
-
-    public void OnDamagedFriendlyStructuresSighted() { }
-
-
-    public void OnFriendlyActorsSighted() { }
-
 
     public void OnFriendsInNeed()
     {
@@ -52,16 +39,6 @@ public class Acolyte : MonoBehaviour, IAct
         Me.Actions.Decider.FriendsInNeed.Clear();
     }
 
-
-    public void OnFullLoad() { }
-
-
-    public void OnHarvesting() { }
-
-
-    public void OnHasObjective() { }
-
-
     public void OnHostileActorsSighted()
     {
         Me.Actions.Decider.FriendsInNeed.Clear();
@@ -69,22 +46,16 @@ public class Acolyte : MonoBehaviour, IAct
         if (!CastSanctuary()) AttackWithSpell();
     }
 
-
-    public void OnHostileStructuresSighted() { }
-
-
     public void OnInCombat()
     {
         AttackWithSpell();
     }
-
 
     public void OnIdle()
     {
         Me.Actions.SheathWeapon();
         Me.Actions.Movement.Home();
     }
-
 
     public void OnMedic()
     {
@@ -99,16 +70,11 @@ public class Acolyte : MonoBehaviour, IAct
         if (!TreatWounded()) AttackWithSpell();
     }
 
-
-    public void OnMovingToGoal() { }
-
-
     public void OnNeedsRest()
     {
         Me.Actions.SheathWeapon();
         Me.Actions.Movement.Home();
     }
-
 
     public void OnReachedGoal()
     {
@@ -116,6 +82,18 @@ public class Acolyte : MonoBehaviour, IAct
         OnIdle();
     }
 
+    private void OnResting()
+    {
+        Me.Actions.SheathWeapon();
+
+        if (Me.RestCounter == Actor.rested_at) {
+            Me.Health.RecoverHealth(Me.Actions.RollDie(Me.Health.LargestHitDie(), 1));
+            if (Me.Actions.Magic != null) Me.Actions.Magic.RecoverSpellSlots();
+            Me.RestCounter = 0;
+        } else {
+            Me.RestCounter++;
+        }
+    }
 
     public void OnUnderAttack()
     {
@@ -123,15 +101,7 @@ public class Acolyte : MonoBehaviour, IAct
         Me.RestCounter = 0;
     }
 
-
-    public void OnWatch()
-    {
-        // call for help after running away
-    }
-
-
     // private
-
 
     private void AttackWithSpell()
     {
@@ -142,10 +112,9 @@ public class Acolyte : MonoBehaviour, IAct
         }
     }
 
-
     private bool CastSanctuary()
     {
-        if (Me.Magic.HaveSpellSlot(Magic.Level.First) && !Sanctuary.ProtectedTargets.ContainsKey(Me)) {
+        if (Spellcaster.HaveSpellSlot(Magic.Level.First) && !Sanctuary.ProtectedTargets.ContainsKey(Me)) {
             Sanctuary.Cast(Me);
             return true;
         }
@@ -153,6 +122,28 @@ public class Acolyte : MonoBehaviour, IAct
         return false;
     }
 
+    private void SetActions()
+    {
+        Me.Actions.OnBadlyInjured = OnBadlyInjured;
+        // Me.Actions.OnCrafting = OnCrafting;
+        // Me.Actions.OnDamagedFriendlyStructuresSighted = OnDamagedFriendlyStructuresSighted;
+        // Me.Actions.OnFriendlyActorsSighted = OnFriendlyActorsSighted;
+        Me.Actions.OnFriendsInNeed = OnFriendsInNeed;
+        // Me.Actions.OnFullLoad = OnFullLoad;
+        // Me.Actions.OnHarvesting = OnHarvesting;
+        // Me.Actions.OnHasObjective = OnHasObjective;
+        Me.Actions.OnHostileActorsSighted = OnHostileActorsSighted;
+        // Me.Actions.OnHostileStructuresSighted = OnHostileStructuresSighted;
+        Me.Actions.OnIdle = OnIdle;
+        Me.Actions.OnInCombat = OnInCombat;
+        Me.Actions.OnMedic = OnMedic;
+        // Me.Actions.OnMovingToGoal = OnMovingToGoal;
+        Me.Actions.OnNeedsRest = OnNeedsRest;
+        Me.Actions.OnReachedGoal = OnReachedGoal;
+        Me.Actions.OnResting = OnResting;
+        Me.Actions.OnUnderAttack = OnUnderAttack;
+        // Me.Actions.OnWatch = OnWatch;
+    }
 
     private void SetComponents()
     {
@@ -160,25 +151,21 @@ public class Acolyte : MonoBehaviour, IAct
         SetAdditionalStats();
     }
 
-
     private void SetAdditionalStats()
     {
         Me.Actions.Combat.EquipArmor(Armors.Instance.GetArmorNamed(Armors.ArmorName.None));
         Me.Actions.Combat.EquipMeleeWeapon(Weapons.Instance.GetWeaponNamed(Weapons.WeaponName.Club));
 
-        CureWounds = gameObject.AddComponent<CureWounds>();
-        SacredFlame = gameObject.AddComponent<SacredFlame>();
-        Sanctuary = gameObject.AddComponent<Sanctuary>();
 
-        Me.Magic = gameObject.AddComponent<Magic>();
-        Me.Magic.MaximumSpellSlots[Magic.Level.First] = 3;
-        Me.Magic.SpellsLeft[Magic.Level.First] = 3;
 
-        Me.Stats.Skills.Add(Proficiencies.Skill.Medicine);
-        Me.Stats.ExpertiseInSkills.Add(Proficiencies.Skill.Medicine);
-        Me.Stats.Skills.Add(Proficiencies.Skill.Religion);
+        Spellcaster = Me.gameObject.AddComponent<Spellcaster>();
+        Spellcaster.CastingAttribute = Proficiencies.Attribute.Wisdom;
+        Spellcaster.MaximumSpellSlots[Magic.Level.First] = 3;
+        Spellcaster.SpellsLeft[Magic.Level.First] = 3;
+        CureWounds = Me.Actions.Magic.gameObject.AddComponent<CureWounds>();
+        SacredFlame = Me.Actions.Magic.gameObject.AddComponent<SacredFlame>();
+        Sanctuary = Me.Actions.Magic.gameObject.AddComponent<Sanctuary>();
     }
-
 
     private bool TreatWounded()
     {
@@ -189,8 +176,8 @@ public class Acolyte : MonoBehaviour, IAct
         if (nearby_wounded.Count > 0) {
             Actor wounded = nearby_wounded.OrderBy(f => f.Health.CurrentHealthPercentage()).Reverse().ToList().First();
 
-            if (wounded != null && Me.Magic.HaveSpellSlot(Magic.Level.First)) {
-                Me.Magic.UseSpellSlot(Magic.Level.First);
+            if (wounded != null && Spellcaster.HaveSpellSlot(Magic.Level.First)) {
+                Spellcaster.UseSpellSlot(Magic.Level.First);
                 CureWounds.Cast(wounded);
                 return true;
             }

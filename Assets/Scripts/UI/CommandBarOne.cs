@@ -10,16 +10,15 @@ public class CommandBarOne : MonoBehaviour {
 
     public GameObject player;
     public GameObject attack_action;
+    public GameObject blast_action;
     public GameObject dash_action;
     public GameObject disengage_action;
     public GameObject hide_action;
     public GameObject offhand_action;
     public GameObject performance_action;
     public GameObject pick_lock_action;
-    public GameObject rage_action;
     public GameObject search_action;
     public GameObject sleight_action;
-    public GameObject smite_action;
     public GameObject talk_action;
     public DialogPanel dialog_panel;
 
@@ -28,6 +27,7 @@ public class CommandBarOne : MonoBehaviour {
     public List<Button> ActiveButtonSet { get; set; }
     public List<GameObject> AllActions { get; set; }
     public Button AttackButton { get; set; }
+    public Button BlastButton { get; set; }
     public Dictionary<string, List<Button>> ButtonSets { get; set; }
     public Button DashButton { get; set; }
     public Button DisengageButton { get; set; }
@@ -38,14 +38,11 @@ public class CommandBarOne : MonoBehaviour {
     public Button OffhandButton { get; set; }
     public Button PerformanceButton { get; set; }
     public Button PickLockButton { get; set; }
-    public Button RageButton { get; set; }
     public Button SearchButton { get; set; }
     public Button SleightButton { get; set; }
-    public Button SmiteButton { get; set; }
     public Button TalkButton { get; set; }
 
     // Unity
-
 
     private void Awake()
     {
@@ -61,9 +58,7 @@ public class CommandBarOne : MonoBehaviour {
         StartCoroutine(ButtonInteractability());
     }
 
-
     // public
-
 
     public void ActivateButtonSet(string set)
     {
@@ -77,7 +72,6 @@ public class CommandBarOne : MonoBehaviour {
             button.gameObject.SetActive(true);
         }
     }
-
 
     public void Attack()
     {
@@ -95,7 +89,6 @@ public class CommandBarOne : MonoBehaviour {
             }
         }
     }
-
 
     public void Dash()
     {
@@ -116,6 +109,22 @@ public class CommandBarOne : MonoBehaviour {
         }
     }
 
+    public void EldritchBlast()
+    {
+        EldritchBlast blast = Me.Actions.Magic.GetComponent<EldritchBlast>();
+        if (blast == null) return;
+
+        if (Me.Actions.CanTakeAction && BlastButton.interactable && Mouse.SelectedObjects != null) {
+            var targets = Mouse.SelectedObjects.Where(so => so != null && Me.Actions.Combat.IsAttackable(so) && blast.IsWithinAttackRange(so.transform));
+            if (targets.Any()) {
+                Actor actor = targets.First().GetComponent<Actor>();
+                if (actor != null && blast.IsWithinAttackRange(actor.transform)) {
+                    blast.Cast(actor);
+                    Me.Actions.CanTakeAction = false;
+                }
+            }
+        }
+    }
 
     public void Hide()
     {
@@ -147,7 +156,6 @@ public class CommandBarOne : MonoBehaviour {
         }
     }
 
-
     public void Performance()
     {
         if (Me.Actions.CanTakeAction && PerformanceButton.interactable) {
@@ -160,7 +168,6 @@ public class CommandBarOne : MonoBehaviour {
         }
     }
 
-
     public void PickLock()
     {
         if ((Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction) && PickLockButton.interactable) {
@@ -168,7 +175,6 @@ public class CommandBarOne : MonoBehaviour {
             Me.Actions.Stealth.PickLock();
         }
     }
-
 
     public void Search()
     {
@@ -178,7 +184,6 @@ public class CommandBarOne : MonoBehaviour {
         }
     }
 
-
     public void SleightOfHand()
     {
         if ((Me.Actions.CanTakeAction || Me.Actions.CanTakeBonusAction) && SleightButton.interactable) {
@@ -186,25 +191,6 @@ public class CommandBarOne : MonoBehaviour {
             Me.Actions.Stealth.SleightOfHand();
         }
     }
-
-
-    public void Smite()
-    {
-        if (Me.Actions.CanTakeAction && SmiteButton.interactable && Mouse.SelectedObjects != null) {
-            var targets = Mouse.SelectedObjects.Where(so => so != null && Me.Actions.Combat.IsAttackable(so) && Me.Actions.Combat.IsWithinAttackRange(so.transform));
-            if (targets.Any()) {
-                Actor actor = targets.First().GetComponent<Actor>();
-                if (actor != null && Me.Actions.Combat.IsWithinMeleeRange(actor.transform)) {
-                    Me.Actions.Decider.TargetMelee(actor.gameObject);
-                    Me.Actions.Attack(false, true); // offhand = false, player target = true
-                    Player.Instance.CastEldritchSmite(actor);
-                    StartCoroutine(Cooldown(SmiteButton, 20));
-                    Me.Actions.CanTakeAction = false;
-                }
-            }
-        }
-    }
-
 
     public void Talk()
     {
@@ -232,7 +218,13 @@ public class CommandBarOne : MonoBehaviour {
                                            .Where(so => so != null && Me.Actions.Combat.IsAttackable(so) && Me.Actions.Combat.IsWithinAttackRange(so.transform));
                     bool have_target = interactors.Any();
                     AttackButton.interactable = Me.Actions.CanTakeAction && have_target;
-                    SmiteButton.interactable = AttackButton.interactable;
+                }
+
+                if (BlastButton != null && Mouse.SelectedObjects != null) {
+                    var interactors = Mouse.SelectedObjects
+                                           .Where(so => so != null && Me.Actions.Combat.IsAttackable(so) && Me.Actions.Magic.GetComponent<EldritchBlast>().IsWithinAttackRange(so.transform));
+                    bool have_target = interactors.Any();
+                    BlastButton.interactable = Me.Actions.CanTakeAction && have_target;
                 }
 
                 if (DashButton != null) {
@@ -265,10 +257,6 @@ public class CommandBarOne : MonoBehaviour {
                     } else {
                         PickLockButton.interactable = false;
                     }
-                }
-
-                if (RageButton != null) {
-                    RageButton.interactable = Me.ExhaustionLevel == 0;
                 }
 
                 if (SearchButton != null) {
@@ -405,8 +393,9 @@ public class CommandBarOne : MonoBehaviour {
     {
         Me = player.GetComponent<Actor>();
 
-        AllActions = new List<GameObject> { attack_action, dash_action, disengage_action, hide_action, performance_action, pick_lock_action, rage_action, search_action, sleight_action, smite_action, talk_action  };
+        AllActions = new List<GameObject> { attack_action, blast_action, dash_action, disengage_action, hide_action, performance_action, pick_lock_action, search_action, sleight_action, talk_action  };
         AttackButton = attack_action.GetComponent<Button>();
+        BlastButton = blast_action.GetComponent<Button>();
         DashButton = dash_action.GetComponent<Button>();
         DisengageButton = disengage_action.GetComponent<Button>();
         HideButton = hide_action.GetComponent<Button>();
@@ -414,19 +403,13 @@ public class CommandBarOne : MonoBehaviour {
         OffhandButton = offhand_action.GetComponent<Button>();
         PerformanceButton = performance_action.GetComponent<Button>();
         PickLockButton = pick_lock_action.GetComponent<Button>();
-        RageButton = rage_action.GetComponent<Button>();
         SearchButton = search_action.GetComponent<Button>();
         SleightButton = sleight_action.GetComponent<Button>();
-        SmiteButton = smite_action.GetComponent<Button>();
         TalkButton = talk_action.GetComponent<Button>();
 
         ButtonSets = new Dictionary<string, List<Button>>
         {
-            // In new story, only have "druid" role at moment, but may add other roles
-
-            ["Druid"] = new List<Button> { AttackButton, HideButton, SearchButton },
-            ["Thief"] = new List<Button> { AttackButton, OffhandButton, DashButton, DisengageButton, HideButton, PickLockButton, SleightButton, PerformanceButton, TalkButton, RageButton },
-            ["Warlock"] = new List<Button> { AttackButton, SmiteButton, TalkButton }
+            ["Warlock"] = new List<Button> { AttackButton, BlastButton, TalkButton }
         };
     }
 }

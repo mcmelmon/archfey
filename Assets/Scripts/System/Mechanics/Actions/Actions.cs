@@ -7,12 +7,13 @@ public class Actions : MonoBehaviour
 {
     // properties
 
+    public Actor Me { get; set; }
     public bool CanTakeAction { get; set; }
     public bool CanTakeBonusAction { get; set; }
     public Combat Combat { get; set; }
     public Decider Decider { get; set; }
     public bool InCombat { get; set; }
-    public Actor Me { get; set; }
+    public Magic Magic { get; set; }
     public Movement Movement { get; set; }
     public Stats Stats { get; set; }
     public Stealth Stealth { get; set; }
@@ -287,11 +288,12 @@ public class Actions : MonoBehaviour
 
     private void SetComponents()
     {
+        Me = GetComponentInParent<Actor>();
         Combat = GetComponentInChildren<Combat>();
         Decider = GetComponent<Decider>();
+        Magic = GetComponent<Magic>();
         Stats = GetComponentInParent<Stats>();
         Stealth = GetComponentInParent<Stealth>();
-        Me = GetComponentInParent<Actor>();
         Movement = GetComponent<Movement>();
         CanTakeAction = true;
     }

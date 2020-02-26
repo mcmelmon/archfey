@@ -1,21 +1,21 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class RayOfFrost : MonoBehaviour
+public class EldritchBlast : MonoBehaviour
 {
-    // properties
+   // properties
 
     public Actor Me { get; set; }
     public bool Advantage { get; set; }
     public Weapons.DamageType DamageType { get; set; }
     public int Die { get; set; }
     public bool Disadvantage { get; set; }
-    public int Level { get; set; }
+    public Magic.Level Level { get; set; }
     public float Range { get; set; }
     public Magic.School School { get; set; }
     public Spellcaster Spellcaster { get; set; }
-    // public Proficiencies.Attribute SpellCastingAttribute { get; set; }
     public Actor Target { get; set; }
 
 
@@ -28,21 +28,26 @@ public class RayOfFrost : MonoBehaviour
 
     // public
 
-    // TODO: specify spell_casting_attribute for other spells
-    public void Cast(Actor _target, Proficiencies.Attribute spell_casting_attribute = Proficiencies.Attribute.Intelligence, bool dispel_effect = false)
-    {
+
+    public void Cast(Actor _target, bool dispel_effect = false)
+    {        
         if (_target == null) return;
         Target = _target;
-
         CheckAdvantageAndDisadvantage();
+
         DrawRay();
 
         if (Hit()) {
             ApplyDamage();
-            GameObject _impact = Instantiate(SpellEffects.Instance.physical_strike_prefab, Target.transform.position, SpellEffects.Instance.physical_strike_prefab.transform.rotation);
-            _impact.name = "Impact";
-            Destroy(_impact, 3f);
+            DisplayEffects();
         }
+        // TODO: push or pull from invocations
+    }
+
+    public bool IsWithinAttackRange(Transform target)
+    {
+        float separation = Me.SeparationFrom(target);
+        return separation < Range;
     }
 
     // private
@@ -50,11 +55,13 @@ public class RayOfFrost : MonoBehaviour
     private void ApplyDamage()
     {
         int damage_roll = Me.Actions.RollDie(Die, NumberOfDice());
+
+        // TODO: agonizing blast invocation 
+
         int damage_inflicted = Target.Actions.Stats.DamageAfterDefenses(damage_roll, DamageType);
         Target.Health.LoseHealth(damage_inflicted, Me);
     }
 
-    // TODO: refactor advantage/disadvantage - though it can be 
     private void CheckAdvantageAndDisadvantage()
     {
         var friends_in_melee = Me.Senses.Actors
@@ -66,6 +73,14 @@ public class RayOfFrost : MonoBehaviour
         }
 
         Advantage |= friends_in_melee.Count > Me.Actions.Decider.AvailableMeleeTargets.Count;
+    }
+
+    private void DisplayEffects()
+    {
+        GameObject flare = Instantiate(SpellEffects.Instance.sacred_flame_prefab, Target.transform.position, Target.transform.rotation, Target.transform);
+        flare.name = "EldritchBlast";
+        flare.transform.position += new Vector3(0, 3, 0);
+        Destroy(flare, 1.5f);
     }
 
     private void DrawRay()
@@ -104,12 +119,12 @@ public class RayOfFrost : MonoBehaviour
 
     private void SetComponents()
     {
-        DamageType = Weapons.DamageType.Radiant;
-        Die = 8;
-        Level = 0;
+        DamageType = Weapons.DamageType.Force;
+        Die = 10;
+        Level = Magic.Level.Cantrip;
         Me = GetComponentInParent<Actor>();
-        Range = 15f;
+        Range = 12f;
         School = Magic.School.Evocation;
-        Spellcaster = Me.GetComponent<Spellcaster>();
+        Spellcaster = Me.GetComponent<Spellcaster>(); // TODO: someday we may have mutliclassing, but not this day
     }
 }

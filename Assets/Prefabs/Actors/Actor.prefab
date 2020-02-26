@@ -112,8 +112,9 @@ MonoBehaviour:
   ground_layer:
     serializedVersion: 2
     m_Bits: 33554432
+  main_hand_transform: {fileID: 5059839301230664796}
   offhand_transform: {fileID: 3553075362306555651}
-  weapon_transform: {fileID: 5059839301230664796}
+  plots_participating_in: []
 --- !u!114 &7210647187439319263
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,8 +158,11 @@ MonoBehaviour:
   size: 0
   action_count: 1
   proficiency_bonus: 2
+  armor: 
+  saving_throws: 
   skillset: 
   toolset: 
+  weapons: 00000000
 --- !u!114 &8115153439838660898
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -984,6 +988,7 @@ GameObject:
   - component: {fileID: 7577489829603045404}
   - component: {fileID: 4209757016347478359}
   - component: {fileID: 1345439636813904737}
+  - component: {fileID: 3209293561285896128}
   m_Layer: 26
   m_Name: Actions
   m_TagString: Untagged
@@ -1091,6 +1096,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 02287697131c74d08bcff12d174c600f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3209293561285896128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6038404007122128154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64cb623e70dee44b99e749ad97b361fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &6494893816819593099
