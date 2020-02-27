@@ -32,7 +32,7 @@ public class Actor : MonoBehaviour
     public Transform MainHand { get; set; }
     public Transform OffHand { get; set; }
     public List<Plot> Plots { get; set; }
-    public List<Reputation> Reputations { get; set; }
+    public Reputations Reputations { get; set; }
     public int RestCounter { get; set; }
     public Route Route { get; set; }
     public Senses Senses { get; set; }
@@ -143,7 +143,7 @@ public class Actor : MonoBehaviour
         MainHand = main_hand_transform;
         OffHand = offhand_transform;
         RestCounter = 0;
-        Reputations = new List<Reputation>();
+        Reputations = GetComponent<Reputations>();
         Route = GetComponent<Route>();
         Senses = GetComponent<Senses>();
         Stats = GetComponent<Stats>();
