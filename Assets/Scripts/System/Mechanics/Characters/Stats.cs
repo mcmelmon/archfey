@@ -66,9 +66,7 @@ public class Stats : MonoBehaviour
     public List<Proficiencies.Tool> Tools { get; set; }
     public List<Proficiencies.Weapon> WeaponProficiencies { get; set; }
 
-
     // Unity
-
 
     private void Awake()
     {
@@ -81,16 +79,26 @@ public class Stats : MonoBehaviour
         SetDependentComponents();
     }
 
-
     private void OnValidate()
     {
         if (BaseArmorClass > 30) BaseArmorClass = 30;
         if (BaseArmorClass < 1) BaseArmorClass = 1;
     }
 
-
     // public
 
+    public int CharismaCheck(bool _advantage = false, bool _disadvantage = false) =>
+        Me.Actions.RollDie(20, 1, _advantage, _disadvantage) + GetAdjustedAttributeModifier(Proficiencies.Attribute.Charisma);
+    public int ConstitutionCheck(bool _advantage = false, bool _disadvantage = false) =>
+        Me.Actions.RollDie(20, 1, _advantage, _disadvantage) + GetAdjustedAttributeModifier(Proficiencies.Attribute.Constitution);
+    public int DexterityCheck(bool _advantage = false, bool _disadvantage = false) =>
+        Me.Actions.RollDie(20, 1, _advantage, _disadvantage) + GetAdjustedAttributeModifier(Proficiencies.Attribute.Dexterity);
+    public int IntelligenceCheck(bool _advantage = false, bool _disadvantage = false) =>
+        Me.Actions.RollDie(20, 1, _advantage, _disadvantage) + GetAdjustedAttributeModifier(Proficiencies.Attribute.Intelligence);
+    public int StrengthCheck(bool _advantage = false, bool _disadvantage = false) =>
+        Me.Actions.RollDie(20, 1, _advantage, _disadvantage) + GetAdjustedAttributeModifier(Proficiencies.Attribute.Strength);
+    public int WisdomCheck(bool _advantage = false, bool _disadvantage = false) =>
+        Me.Actions.RollDie(20, 1, _advantage, _disadvantage) + GetAdjustedAttributeModifier(Proficiencies.Attribute.Wisdom);
 
     public void AdjustAttribute(Proficiencies.Attribute attribute, int adjustment)
     {
@@ -99,7 +107,6 @@ public class Stats : MonoBehaviour
             // TODO: recalculate hit points and armor class if appropriate
         }
     }
-
 
     public float CarryingCapacity()
     {
@@ -132,18 +139,15 @@ public class Stats : MonoBehaviour
         return encumbered_weight;
     }
 
-
     public int DamageAfterDefenses(int _damage, Weapons.DamageType _type)
     {
         return DamageAfterResistance(_damage, _type);
     }
 
-
     public float DragPushLiftCapacity()
     {
         return CarryingCapacity() * 2;
     }
-
 
     public int GetAdjustedAttribute(Proficiencies.Attribute attribute)
     {
@@ -155,7 +159,6 @@ public class Stats : MonoBehaviour
         return Mathf.Clamp((GetAdjustedAttribute(attribute) - 10)/2, -5, 10);
     }
 
-
     public int GetArmorClass()
     {
         int armor_class = Mathf.Max(BaseArmorClass, Me.Actions.Combat.EquippedArmor.ArmorClass(GetAdjustedAttributeModifier(Proficiencies.Attribute.Dexterity)));
@@ -163,7 +166,6 @@ public class Stats : MonoBehaviour
 
         return shield != null ? armor_class + shield.ArmorClassEnhancement : armor_class;
     }
-
 
     public void UpdateStatBars()
     {
@@ -186,9 +188,7 @@ public class Stats : MonoBehaviour
         }
     }
 
-
     // private
-
 
     private int DamageAfterResistance(int _damage, Weapons.DamageType _type)
     {
@@ -211,12 +211,10 @@ public class Stats : MonoBehaviour
         return damage_taken;
     }
 
-
     private void ManageResources()
     {
         //TODO: StartCoroutine(RegainSpells());
     }
-
 
     private IEnumerator ManageStatBars()
     {
@@ -228,7 +226,6 @@ public class Stats : MonoBehaviour
             yield return new WaitForSeconds(Turn.ActionThreshold);
         }
     }
-
 
     private void SetComponents()
     {
@@ -293,7 +290,6 @@ public class Stats : MonoBehaviour
 
         Me.Health.AddHitDice(hit_dice_type, hit_dice);
     }
-
 
     private IEnumerator StatBarsFaceCamera()
     {

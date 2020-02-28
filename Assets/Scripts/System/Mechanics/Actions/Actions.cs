@@ -49,6 +49,16 @@ public class Actions : MonoBehaviour
 
     // public
 
+    // Skills which are always opposed by another Actor (in contrast to Perception, which may be opposed by a thing)
+    public int DeceptionCheck(bool _active, bool _advantage = false, bool _disadvantage = false) =>
+        SkillCheck(_active, Proficiencies.Skill.Deception, _advantage, _disadvantage);
+    public int InsightCheck(bool _active, bool _advantage = false, bool _disadvantage = false) =>
+        SkillCheck(_active, Proficiencies.Skill.Insight, _advantage, _disadvantage);
+    public int IntimidationCheck(bool _active, bool _advantage = false, bool _disadvantage = false) =>
+        SkillCheck(_active, Proficiencies.Skill.Intimidation);
+    public int PersuasionCheck(bool _active, bool _advantage = false, bool _disadvantage = false) =>
+        SkillCheck(_active, Proficiencies.Skill.Persuasion);
+
     public void ActOnTurn()
     {
         CanTakeAction |= (Me == Player.Instance.Me);
@@ -142,13 +152,13 @@ public class Actions : MonoBehaviour
         Me.RestCounter = 0;
     }
 
-    public int AttributeCheck(bool active, Proficiencies.Attribute attribute, bool advantage = false, bool disadvatnage = false)
+    public int AttributeCheck(bool _active, Proficiencies.Attribute _attribute, bool _advantage = false, bool _disadvatnage = false)
     {
         // Don't compare with a challenge rating here, because this may be to create the challenge rating (e.g. a grapple)
         int proficiency_bonus = Me.Stats.ProficiencyBonus;
-        int attribute_bonus = Me.Stats.GetAdjustedAttributeModifier(attribute);
+        int attribute_bonus = Me.Stats.GetAdjustedAttributeModifier(_attribute);
 
-        int roll = active ? RollDie(20, 1, advantage, disadvatnage) : 10;
+        int roll = _active ? RollDie(20, 1, _advantage, _disadvatnage) : 10;
 
         return roll + attribute_bonus;
     }
@@ -206,6 +216,24 @@ public class Actions : MonoBehaviour
         if (nearest_enemy != null && (Me.Actions.Combat.IsWithinMeleeRange(nearest_enemy.transform) || !Me.Actions.Combat.IsWithinAttackRange(nearest_enemy.transform))) {
             StartCoroutine(Movement.HarassUnit(nearest_enemy));
         }
+    }
+
+    public bool OpposedSkillCheck(Proficiencies.Skill _skill, Actor _target, bool _advantage = false, bool _disadvantage = false)
+    {
+        switch(_skill) {
+            case Proficiencies.Skill.Deception:
+                return DeceptionCheck(true, _advantage, _disadvantage) > _target.Me.Stats.WisdomCheck();
+            case Proficiencies.Skill.Insight:
+                return InsightCheck(true, _advantage, _disadvantage) > Mathf.Max(15, _target.Me.Actions.SkillCheck(true, Proficiencies.Skill.Deception, _advantage, _disadvantage));
+            case Proficiencies.Skill.Intimidation:
+                return IntimidationCheck(true, _advantage, _disadvantage)  > _target.Me.Stats.WisdomCheck();
+            case Proficiencies.Skill.Investigation:
+                return Me.Senses.InvestigationCheck(true, Mathf.Max(15, _target.Me.Actions.SkillCheck(true, Proficiencies.Skill.Deception, _advantage, _disadvantage)), _advantage, _disadvantage);
+            case Proficiencies.Skill.Persuasion:
+                return PersuasionCheck(true, _advantage, _disadvantage)  > _target.Me.Stats.WisdomCheck();
+        }
+        Debug.Log("Opposed skill check for unhandle skill: " + _skill);
+        return false;
     }
 
     public int RollDie(int dice_type, int number_of_rolls, bool advantage = false, bool disadvantage = false)

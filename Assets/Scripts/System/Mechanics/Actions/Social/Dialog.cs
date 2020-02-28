@@ -57,15 +57,15 @@ public class Dialog : MonoBehaviour
 
     // public
 
-    public void Answer(string response_text)
-    {
-        // player chooses from available responses
-        // chosen response is tracked
-    }
-
     public string GetChitChat() =>
         // Chit Chat consists of strings the actor emotes when the player passes by, but does not specifically Talk
         (chit_chat.Count > 0) ? chit_chat[Random.Range(0, chit_chat.Count)] : "";
+
+    public void HandleResponse(Statement _response)
+    {
+        Current = _response.Answer();
+        DisplayCurrent();
+    }
 
     public void InitiateDialog(DialogPanel dialog_panel)
     {
@@ -88,6 +88,10 @@ public class Dialog : MonoBehaviour
         Current.SeenByPlayer = true;
 
         // Show responses available to the player
+
+        foreach (var response in Current.PresentResponses()) {
+            // create a "button" in the dialog
+        }
     }
 
     private void SetComponents()

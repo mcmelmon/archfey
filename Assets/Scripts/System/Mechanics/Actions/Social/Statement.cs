@@ -5,20 +5,19 @@ using UnityEngine;
 public class Statement : MonoBehaviour
 {
     // Inspector
-    [SerializeField] string text = "This is my statement.";
-    [SerializeField] string non_response = "I've got nothing to say to you.";
-    [SerializeField] List<StatementSkillChallenge> potential_responses = new List<StatementSkillChallenge>(); // e.g. Insight, success, "You're hiding something."
-    [SerializeField] Statement answer_to_response = null;  // e.g. "Talk to my lawyer!"
+    [SerializeField] string statement = "This is my statement.";
+    [SerializeField] string non_statement = "I've got nothing to say to you.";
+    [SerializeField] List<Statement> potential_responses = new List<Statement>(); // e.g. Insight, success, "You're hiding something."
     [SerializeField] int minimum_faction_reputation = 0;
     [SerializeField] int minimum_individual_reputation = 0;
     [SerializeField] int minimum_plot_reputation = 0;
+    [SerializeField] bool player_making_challenge = false;
+    [SerializeField] Proficiencies.Skill applicable_skill = Proficiencies.Skill.None;
+    [SerializeField] Statement response_for_player_success = null; // in case of player_making_challenge, the "success" is having the applicable skill; the npc resists after the option is chosen (affects answer)
+    [SerializeField] Statement response_for_player_failure = null;
+    [SerializeField] Statement answer_for_player_success = null; // the npc answer if the player challenged and was successful (or there was no challenge)
+    [SerializeField] Statement answer_for_player_failure = null; // the npc answer if the player failed
 
-    public struct StatementSkillChallenge {
-        public Proficiencies.Skill skill; // the default response will have a skill of None
-        public int challenge_rating;
-        public Statement response_for_success;
-        public Statement response_for_failure;
-    }
 
     // properties
 
@@ -33,9 +32,31 @@ public class Statement : MonoBehaviour
 
     // public
 
-    public Statement AnswerToResponse(Statement _response)
+    public Statement Answer(bool _advantage = false, bool _disadvantage = false)
     {
-        return _response.answer_to_response;
+        Statement answer = null;
+
+        switch(applicable_skill) {
+            case Proficiencies.Skill.Deception:
+                answer = Player.Instance.Me.Actions.OpposedSkillCheck(Proficiencies.Skill.Deception, Me, _advantage, _disadvantage) ? answer_for_player_success : answer_for_player_failure;
+                break;
+            case Proficiencies.Skill.Insight:
+                answer = Player.Instance.Me.Actions.OpposedSkillCheck(Proficiencies.Skill.Insight, Me, _advantage, _disadvantage) ? answer_for_player_success : answer_for_player_failure;
+                break;
+            case Proficiencies.Skill.Intimidation:
+                answer = Player.Instance.Me.Actions.OpposedSkillCheck(Proficiencies.Skill.Intimidation, Me, _advantage, _disadvantage) ? answer_for_player_success : answer_for_player_failure;
+                break;
+            case Proficiencies.Skill.Investigation:
+                answer = Player.Instance.Me.Senses.InvestigationCheck(true, Mathf.Max(15, Me.Actions.DeceptionCheck(true, Player.Instance.Me)), _advantage, _disadvantage) ? answer_for_player_success : answer_for_player_failure;
+                break;
+            case Proficiencies.Skill.Perception:
+                answer = Player.Instance.Me.Senses.PerceptionCheck(true, Mathf.Max(15, Me.Actions.DeceptionCheck(true, Player.Instance.Me)), _advantage, _disadvantage) ? answer_for_player_success : answer_for_player_failure;
+                break;
+            case Proficiencies.Skill.Persuasion:
+                answer = Player.Instance.Me.Actions.OpposedSkillCheck(Proficiencies.Skill.Persuasion, Me, _advantage, _disadvantage) ? answer_for_player_success : answer_for_player_failure;
+                break;
+        }
+        return answer;
     }
 
     public string GetStatementToPlayer()
@@ -43,32 +64,54 @@ public class Statement : MonoBehaviour
         // pick one of the npc's statements based on reputations
 
         if (MeetsReputationRequirements()) {
-            return text;
+            return statement;
         }
 
-        return non_response;
+        return non_statement;
     }
 
     public List<Statement> PresentResponses()
     {
-        List<Statement> selected_responses = new List<Statement>();
+        List<Statement> presentable_responses = new List<Statement>();
 
-        foreach (var skill_challenge in potential_responses) {
-            if (skill_challenge.skill == Proficiencies.Skill.None) {
-                selected_responses.Add(skill_challenge.response_for_success);
+        foreach (var statement in potential_responses) {
+            if (statement.applicable_skill == Proficiencies.Skill.None) {
+                presentable_responses.Add(statement.response_for_player_success);
                 continue;
             }
 
-            if (!Player.Instance.Me.Stats.Skills.Contains(skill_challenge.skill)) continue;
+            if (!Player.Instance.Me.Stats.Skills.Contains(statement.applicable_skill)) continue; // we don't have the needed skill (e.g. Insight) to choose this response
 
-            if (Player.Instance.Me.Actions.SkillCheck(true, skill_challenge.skill) >= skill_challenge.challenge_rating) {
-                selected_responses.Add(skill_challenge.response_for_success);
-            } else {
-                if (skill_challenge.response_for_failure.text != "") selected_responses.Add(skill_challenge.response_for_failure);
+            if (statement.player_making_challenge) {
+                // If the player is challenging and has gotten here, they can pick this response (e.g. an intimidating line)
+                presentable_responses.Add(statement.response_for_player_success);
+                continue;
+            }
+
+            // From here, it is the NPC who is challenging the PC to see the response 
+
+            switch(statement.applicable_skill) {
+                case Proficiencies.Skill.Deception:
+                    if (Me.Actions.OpposedSkillCheck(Proficiencies.Skill.Deception, Player.Instance.Me)) {
+                        presentable_responses.Add(statement.response_for_player_failure);
+                    } else {
+                        presentable_responses.Add(statement.response_for_player_success);
+                    }
+                    break;
+                case Proficiencies.Skill.Intimidation:
+                    if (Me.Actions.OpposedSkillCheck(Proficiencies.Skill.Intimidation, Player.Instance.Me)) {
+                        presentable_responses.Add(statement.response_for_player_failure);
+                    } else {
+                        presentable_responses.Add(statement.response_for_player_success);
+                    }
+                    break;
+                default:
+                    Debug.Log("NPC isn't useing a known conversation skill: " + statement.applicable_skill);
+                    break;               
             }
         }
 
-        return selected_responses;
+        return presentable_responses;
     }
 
     // private
