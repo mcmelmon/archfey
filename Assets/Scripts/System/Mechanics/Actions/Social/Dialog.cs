@@ -14,8 +14,7 @@ public class Dialog : MonoBehaviour
     // properties
 
     public Actor Me { get; set; }
-    public Statement Current { get; set; }
-    public DialogPanel Panel { get; set; }
+    public Statement CurrentStatement { get; set; }
     public List<Statement> ResponsesChosen { get; set; }
 
     // Unity
@@ -63,16 +62,14 @@ public class Dialog : MonoBehaviour
 
     public void HandleResponse(Statement _response)
     {
-        Current = _response.Answer();
+        CurrentStatement = _response.Answer();
         DisplayCurrent();
     }
 
     public void InitiateDialog(DialogPanel dialog_panel)
     {
-        Panel = dialog_panel;
-        Panel.speaker_name.GetComponent<UnityEngine.UI.Text>().text = Me.Stats.name;
         DisplayCurrent();
-        Panel.gameObject.SetActive(true);
+        DialogPanel.Instance.gameObject.SetActive(true);
     }
 
     public bool WithinRange(Actor other_actor)
@@ -84,12 +81,11 @@ public class Dialog : MonoBehaviour
 
     private void DisplayCurrent()
     {
-        // Show the npc's current statement
-        Current.SeenByPlayer = true;
+        CurrentStatement.SeenByPlayer = true;
+        DialogPanel.Instance.SetSpeaker(Me.Stats.name);
+        DialogPanel.Instance.SetText(CurrentStatement.GetStatementToPlayer());
 
-        // Show responses available to the player
-
-        foreach (var response in Current.PresentResponses()) {
+        foreach (var response in CurrentStatement.PresentResponses()) {
             // create a "button" in the dialog
         }
     }
@@ -97,7 +93,7 @@ public class Dialog : MonoBehaviour
     private void SetComponents()
     {
         Me = GetComponent<Actor>();
-        Current = (statements.Any()) ? statements[0] : null;
+        CurrentStatement = (statements.Any()) ? statements[0] : null;
         ResponsesChosen = new List<Statement>();
     }
 }

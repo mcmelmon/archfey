@@ -11,6 +11,7 @@ public class Actor : MonoBehaviour
 
     // Inspector settings
 
+    [SerializeField] Faction start_faction = null;
     [SerializeField] Transform main_hand_transform = null;
     [SerializeField] Transform offhand_transform = null;
     [SerializeField] List<Plot> plots_participating_in = new List<Plot>();
@@ -52,7 +53,7 @@ public class Actor : MonoBehaviour
     {
         if (!Factions.Contains(CurrentFaction)) Factions.Add(CurrentFaction);
         Me.CurrentFaction = _new_faction;
-        Renderer rend = GetComponent<Renderer>();
+        Renderer rend = GetComponentInChildren<Renderer>();
         rend.sharedMaterial.SetColor("_BaseColor", _new_faction.colors);
     }
 
@@ -142,12 +143,13 @@ public class Actor : MonoBehaviour
         Inventory = GetComponent<Inventory>();
         MainHand = main_hand_transform;
         OffHand = offhand_transform;
+        Plots = new List<Plot>(plots_participating_in);
         RestCounter = 0;
         Reputations = GetComponent<Reputations>();
         Route = GetComponent<Route>();
         Senses = GetComponent<Senses>();
         Stats = GetComponent<Stats>();
 
-        if (GetComponent<Faction>() != null) CurrentFaction = GetComponent<Faction>();
+        ChangeFaction(start_faction);
     }
 }

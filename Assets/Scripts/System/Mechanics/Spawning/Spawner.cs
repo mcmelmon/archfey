@@ -71,7 +71,7 @@ public class Spawner : MonoBehaviour
                     rend.sharedMaterial.SetColor("_BaseColor", faction.colors);
 
                     Actor actor = new_spawn.GetComponent<Actor>();
-                    actor.CurrentFaction = faction;
+                    actor.ChangeFaction(faction);
                     actor.Alignment = faction.alignment;
 
                     if (Spawned.ContainsKey(spawn.spawn_name)) {

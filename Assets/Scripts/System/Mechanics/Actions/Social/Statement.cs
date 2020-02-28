@@ -24,6 +24,7 @@ public class Statement : MonoBehaviour
     public Actor Me { get; set; }
     public bool SeenByPlayer { get; set; }
 
+
     // Unity
 
     private void Awake() {
@@ -74,6 +75,8 @@ public class Statement : MonoBehaviour
     {
         List<Statement> presentable_responses = new List<Statement>();
 
+        if (potential_responses.Count == 0) return presentable_responses;
+        
         foreach (var statement in potential_responses) {
             if (statement.applicable_skill == Proficiencies.Skill.None) {
                 presentable_responses.Add(statement.response_for_player_success);
