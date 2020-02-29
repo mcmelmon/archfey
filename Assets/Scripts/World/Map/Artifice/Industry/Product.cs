@@ -7,9 +7,9 @@ public class Product : MonoBehaviour
 {
     // Inspector settings
 
-    [SerializeField] Products.Category category;
-    [SerializeField] List<Components> recipe;
-    [SerializeField] Proficiencies.Tool tool; // simplify process to use the "main" tool
+    [SerializeField] Products.Category category = Products.Category.Tool;
+    [SerializeField] List<Components> recipe = new List<Components>();
+    [SerializeField] Proficiencies.Tool tool = Proficiencies.Tool.None; // simplify process to use the "main" tool
 
     [Serializable]
     public struct Components {
@@ -19,6 +19,7 @@ public class Product : MonoBehaviour
 
     // properties
 
+    public Products.Category Category { get; set; }
     public Item Item { get; set; }
     public List<GameObject> Materials { get; set; }
     public string Name { get; set; }
@@ -49,6 +50,7 @@ public class Product : MonoBehaviour
 
     private void SetComponents()
     {
+        Category = category;
         Item = GetComponent<Item>();
         Materials = recipe.Select(r => r.item).ToList();
         Recipe = recipe;

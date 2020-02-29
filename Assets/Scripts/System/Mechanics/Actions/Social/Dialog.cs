@@ -9,13 +9,11 @@ public class Dialog : MonoBehaviour
     // Inspector settings
     public List<string> chit_chat;
     public List<Statement> statements;
-    public List<Statement> responses;
 
     // properties
 
     public Actor Me { get; set; }
-    public Statement Current { get; set; }
-    public DialogPanel Panel { get; set; }
+    public Statement CurrentStatement { get; set; }
     public List<Statement> ResponsesChosen { get; set; }
 
     // Unity
@@ -57,22 +55,20 @@ public class Dialog : MonoBehaviour
 
     // public
 
-    public void Answer(string response_text)
-    {
-        // player chooses from available responses
-        // chosen response is tracked
-    }
-
     public string GetChitChat() =>
         // Chit Chat consists of strings the actor emotes when the player passes by, but does not specifically Talk
         (chit_chat.Count > 0) ? chit_chat[Random.Range(0, chit_chat.Count)] : "";
 
+    public void HandleResponse(Response _response)
+    {
+        CurrentStatement = _response.Answer(Me);
+        DisplayCurrent();
+    }
+
     public void InitiateDialog(DialogPanel dialog_panel)
     {
-        Panel = dialog_panel;
-        Panel.speaker_name.GetComponent<UnityEngine.UI.Text>().text = Me.Stats.name;
         DisplayCurrent();
-        Panel.gameObject.SetActive(true);
+        DialogPanel.Instance.gameObject.SetActive(true);
     }
 
     public bool WithinRange(Actor other_actor)
@@ -84,16 +80,23 @@ public class Dialog : MonoBehaviour
 
     private void DisplayCurrent()
     {
-        // Show the npc's current statement
-        Current.SeenByPlayer = true;
+        CurrentStatement.SeenByPlayer = true;
+        DialogPanel.Instance.Dialog = this;
+        DialogPanel.Instance.SetSpeaker(Me.Stats.name);
+        DialogPanel.Instance.SetText(CurrentStatement.GetStatementToPlayer());
+        List<Response> responses = CurrentStatement.PresentResponses();
 
-        // Show responses available to the player
+        DialogPanel.Instance.ClearResponses();
+
+        for (int i = 0; i < responses.Count; i++) {
+            DialogPanel.Instance.AddResponse(i, responses[i]);
+        }
     }
 
     private void SetComponents()
     {
         Me = GetComponent<Actor>();
-        Current = (statements.Any()) ? statements[0] : null;
+        CurrentStatement = (statements.Any()) ? statements[0] : null;
         ResponsesChosen = new List<Statement>();
     }
 }

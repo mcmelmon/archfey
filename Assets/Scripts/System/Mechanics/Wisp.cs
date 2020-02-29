@@ -5,11 +5,11 @@ using UnityEngine;
 class Wisp : MonoBehaviour
 {
 
-    public Transform haunt;
+    public Transform haunt = null;
     public float haunt_radius = 15f;
     public bool reverse_haunt = false;
 
-    public Light candle_light;
+    public Light candle_light = null;
     public Color candle_color = Color.white;
     public float candle_intensity = 1f;
     public float candle_range = 10f;

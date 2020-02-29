@@ -8,13 +8,12 @@ public class Structure : MonoBehaviour
     public enum Purpose { Civic = 0, Commercial = 1, Industrial = 2, Military = 3, Residential = 4, Sacred = 5 };
 
     // Inspector settings
-    [SerializeField] Purpose use;
+    [SerializeField] Purpose use = Purpose.Civic;
     [SerializeField] List<GameObject> will_accept_for_storage = new List<GameObject>();
     [SerializeField] int armor_class = 13;
-    [SerializeField] int damage_resistance;
-    [SerializeField] Faction faction;
+    [SerializeField] int damage_resistance = 5;
+    [SerializeField] Faction faction = null;
     [SerializeField] int maximum_hit_points = 100;
-    [SerializeField] float revenue_cp;
 
     public List<Transform> entrances = new List<Transform>();
 

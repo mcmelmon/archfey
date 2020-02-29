@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Proficiencies : MonoBehaviour
 {
-    public enum Armor { Light, Medium, Heavy, Shield }
+    public enum Armor { Light, Medium, Heavy, Shield, None }
 
     public enum Attribute { Charisma, Dexterity, Constitution, Intelligence, Strength, Wisdom, None }
 
@@ -56,7 +56,8 @@ public class Proficiencies : MonoBehaviour
         Thief,
         Tinker,
         Vehicle,
-        Weaver
+        Weaver,
+        None
     }
 
     public enum Weapon { Simple, Martial }

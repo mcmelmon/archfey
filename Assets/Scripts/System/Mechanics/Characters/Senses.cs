@@ -24,43 +24,31 @@ public class Senses : MonoBehaviour
         SetComponents();
     }
 
-
     // public
 
-
-    public bool HasLineOfSightOn(GameObject target)
+    public bool HasLineOfSightOn(GameObject _target)
     {
         bool line_of_sight = false;
-        var rayDirection = target.transform.position - transform.position;
+        var rayDirection = _target.transform.position - transform.position;
 
         if (Physics.Raycast(transform.position, rayDirection, out RaycastHit hit)) {
-            line_of_sight = hit.transform == target.transform;
+            line_of_sight = hit.transform == _target.transform;
         }
 
         return line_of_sight;
     }
 
-
-    public bool InsightCheck(bool active_check, int challenge_rating, bool obscurity = false, bool advantage = false, bool disadvantage = false)
+    public bool InvestigationCheck(bool _active, int challenge_rating, bool obscurity = false, bool advantage = false, bool disadvantage = false)
     {
         // TODO: handle obscurity etc.
-        return Me.Actions.SkillCheck(active_check, Proficiencies.Skill.Insight) >= challenge_rating;
+        return Me.Actions.SkillCheck(_active, Proficiencies.Skill.Investigation) >= challenge_rating;
     }
 
-
-    public bool InvestigationCheck(bool active_check, int challenge_rating, bool obscurity = false, bool advantage = false, bool disadvantage = false)
+    public bool PerceptionCheck(bool _active, int challenge_rating, bool obscurity = false, bool advantage = false, bool disadvantage = false)
     {
         // TODO: handle obscurity etc.
-        return Me.Actions.SkillCheck(active_check, Proficiencies.Skill.Investigation) >= challenge_rating;
+        return Me.Actions.SkillCheck(_active, Proficiencies.Skill.Perception) >= challenge_rating;
     }
-
-
-    public bool PerceptionCheck(bool active_check, int challenge_rating, bool obscurity = false, bool advantage = false, bool disadvantage = false)
-    {
-        // TODO: handle obscurity etc.
-        return Me.Actions.SkillCheck(active_check, Proficiencies.Skill.Perception) >= challenge_rating;
-    }
-
 
     public void Sense()
     {
@@ -78,9 +66,7 @@ public class Senses : MonoBehaviour
         TriggerInsights();
     }
 
-
     // private
-
 
     private void RemoveHidden()
     {
@@ -106,12 +92,11 @@ public class Senses : MonoBehaviour
         }
     }
 
-
     private void TriggerInsights()
     {
         List<Actor> suspects = Actors.Where(actor => actor.Interactions.is_suspicious && actor.Interactions.relevant_skill == Proficiencies.Skill.Insight).ToList();
         foreach (var suspect in suspects){
-            bool suspicious = InsightCheck(false, suspect.Interactions.suspicion_challenge_rating) || InvestigationCheck(false, suspect.Interactions.suspicion_challenge_rating);
+            bool suspicious = Me.Actions.OpposedSkillCheck(Proficiencies.Skill.Insight, suspect) || Me.Actions.OpposedSkillCheck(Proficiencies.Skill.Investigation, suspect);
             if (suspicious) suspect.Interactions.DrawAttention();
         }
     }

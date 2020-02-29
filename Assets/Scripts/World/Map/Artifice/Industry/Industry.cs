@@ -16,8 +16,7 @@ public class Industry : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null)
-        {
+        if (Instance != null) {
             Debug.LogError("More than one industry instance!");
             Destroy(this);
             return;

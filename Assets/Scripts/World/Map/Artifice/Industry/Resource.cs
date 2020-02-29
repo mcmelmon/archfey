@@ -5,11 +5,11 @@ using UnityEngine;
 public class Resource : MonoBehaviour
 {
     // Inspector fields
-    [SerializeField] Resources.Category category;
-    [SerializeField] Proficiencies.Tool required_tool;
-    [SerializeField] Proficiencies.Attribute required_attribute;
-    [SerializeField] Proficiencies.Skill required_skill;
-    [SerializeField] int challenge_rating;
+    [SerializeField] Resources.Category category = Resources.Category.None;
+    [SerializeField] Proficiencies.Tool required_tool = Proficiencies.Tool.Alchemist;
+    [SerializeField] Proficiencies.Attribute required_attribute = Proficiencies.Attribute.None;
+    [SerializeField] Proficiencies.Skill required_skill = Proficiencies.Skill.None;
+    [SerializeField] int challenge_rating = 5;
 
 
     // properties
