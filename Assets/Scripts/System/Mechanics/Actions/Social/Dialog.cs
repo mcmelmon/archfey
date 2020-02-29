@@ -9,7 +9,6 @@ public class Dialog : MonoBehaviour
     // Inspector settings
     public List<string> chit_chat;
     public List<Statement> statements;
-    public List<Statement> responses;
 
     // properties
 
@@ -60,9 +59,9 @@ public class Dialog : MonoBehaviour
         // Chit Chat consists of strings the actor emotes when the player passes by, but does not specifically Talk
         (chit_chat.Count > 0) ? chit_chat[Random.Range(0, chit_chat.Count)] : "";
 
-    public void HandleResponse(Statement _response)
+    public void HandleResponse(Response _response)
     {
-        CurrentStatement = _response.Answer();
+        CurrentStatement = _response.Answer(Me);
         DisplayCurrent();
     }
 
@@ -84,9 +83,10 @@ public class Dialog : MonoBehaviour
         CurrentStatement.SeenByPlayer = true;
         DialogPanel.Instance.SetSpeaker(Me.Stats.name);
         DialogPanel.Instance.SetText(CurrentStatement.GetStatementToPlayer());
+        List<Response> responses = CurrentStatement.PresentResponses();
 
-        foreach (var response in CurrentStatement.PresentResponses()) {
-            // create a "button" in the dialog
+        for (int i = 0; i < responses.Count; i++) {
+            DialogPanel.Instance.AddResponse(i, responses[i]);
         }
     }
 

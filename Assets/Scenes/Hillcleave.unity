@@ -154,7 +154,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 504471557}
   m_Father: {fileID: 256676158}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -172,16 +173,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   statement: This is my statement.
   non_statement: I've got nothing to say to you.
-  potential_responses: []
   minimum_faction_reputation: 0
   minimum_individual_reputation: 0
   minimum_plot_reputation: 0
-  player_making_challenge: 0
-  applicable_skill: 18
-  response_for_player_success: {fileID: 0}
-  response_for_player_failure: {fileID: 0}
-  answer_for_player_success: {fileID: 0}
-  answer_for_player_failure: {fileID: 0}
+  potential_responses:
+  - {fileID: 504471558}
 --- !u!1 &10998446
 GameObject:
   m_ObjectHideFlags: 0
@@ -1337,7 +1333,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-34240
+  m_Name: pb_Mesh19418
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1954,8 +1950,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 300897836}
-  m_LocalRotation: {x: 0.0000000018626451, y: -0.0000000037252903, z: -0.17231825,
-    w: -0.9850413}
+  m_LocalRotation: {x: 0.0000000055879354, y: 0.0000000018626451, z: -0.1723329, w: -0.9850388}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2837,8 +2832,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -140}
-  m_SizeDelta: {x: 300, y: 25}
+  m_AnchoredPosition: {x: 0, y: -170}
+  m_SizeDelta: {x: 500, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &418655856
 MonoBehaviour:
@@ -3595,6 +3590,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 497010513}
   m_CullTransparentMesh: 0
+--- !u!1 &504471556
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 504471557}
+  - component: {fileID: 504471558}
+  m_Layer: 26
+  m_Name: DefaultResponse
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &504471557
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 504471556}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7117642}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &504471558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 504471556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dadefc724fc3649dab30fbbddd5d8036, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skill_required_to_see_response: 18
+  text_for_player_success: That was your statement.
+  skill_challenge_vs_npc: 18
+  answer_for_player_failure: {fileID: 0}
+  answer_for_player_success: {fileID: 0}
 --- !u!1001 &513036739
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3907,7 +3950,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -70}
-  m_SizeDelta: {x: 410, y: 230}
+  m_SizeDelta: {x: 500, y: 150}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &562929173
 GameObject:
@@ -5997,7 +6040,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 450, y: 300}
+  m_SizeDelta: {x: 600, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &769526179
 MonoBehaviour:
@@ -6013,6 +6056,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speaker_name: {fileID: 1323360995}
   spoken_text: {fileID: 531972938}
+  first_response: {fileID: 312661991}
+  second_response: {fileID: 111113956}
+  third_response: {fileID: 1969269220}
 --- !u!114 &769526180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6073,7 +6119,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 822658961}
-  m_LocalRotation: {x: -0.021172982, y: -0.011426747, z: -0.8769285, w: 0.48001832}
+  m_LocalRotation: {x: -0.026100235, y: -0.008725355, z: -0.87689257, w: 0.47989804}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -6313,8 +6359,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -165}
-  m_SizeDelta: {x: 300, y: 25}
+  m_AnchoredPosition: {x: 0, y: -225}
+  m_SizeDelta: {x: 500, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &866484350
 MonoBehaviour:
@@ -6817,7 +6863,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1046343725}
-  m_LocalRotation: {x: 0.07121672, y: -0.033460904, z: -0.268587, w: -0.9600363}
+  m_LocalRotation: {x: 0.0697003, y: -0.03886683, z: -0.26874822, w: -0.95989877}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -8623,7 +8669,7 @@ PrefabInstance:
     - target: {fileID: 7471716586940375990, guid: bafcbeeff7e1b4bee89145f5fa4745cf,
         type: 3}
       propertyPath: statements.Array.size
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7471716586940375990, guid: bafcbeeff7e1b4bee89145f5fa4745cf,
         type: 3}
@@ -9748,7 +9794,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1324125674}
-  m_LocalRotation: {x: 0.02019316, y: -0.013080594, z: 0.000264215, w: 0.9997105}
+  m_LocalRotation: {x: 0.020191353, y: -0.018699277, z: 0.00037770678, w: 0.9996212}
   m_LocalPosition: {x: 10, y: 5, z: -23.62743}
   m_LocalScale: {x: 1.500001, y: 1.9665062, z: 1.5334942}
   m_Children:
@@ -10278,7 +10324,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -115}
-  m_SizeDelta: {x: 300, y: 25}
+  m_SizeDelta: {x: 500, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1400651454
 MonoBehaviour:

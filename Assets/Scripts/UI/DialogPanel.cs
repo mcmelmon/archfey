@@ -7,6 +7,10 @@ public class DialogPanel : MonoBehaviour
     // Inspector
     [SerializeField] GameObject speaker_name = null;
     [SerializeField] GameObject spoken_text = null;
+    [SerializeField] GameObject first_response = null;
+    [SerializeField] GameObject second_response = null;
+    [SerializeField] GameObject third_response = null;
+
 
     // properties
 
@@ -33,9 +37,22 @@ public class DialogPanel : MonoBehaviour
 
     }
 
-    public void AddResponse(string _response)
+    public void AddResponse(int _position, Response _response)
     {
-        
+        switch (_position) {
+            case 0:
+                first_response.GetComponent<UnityEngine.UI.Text>().text = _response.TextForSuccess;
+                first_response.gameObject.SetActive(true);
+                break;
+            case 1:
+                second_response.GetComponent<UnityEngine.UI.Text>().text = _response.TextForSuccess;
+                second_response.gameObject.SetActive(true);
+                break;
+            case 2:
+                third_response.GetComponent<UnityEngine.UI.Text>().text = _response.TextForSuccess;
+                third_response.gameObject.SetActive(true);
+                break;
+        }
     }
 
     public void SetSpeaker(string _speaker) =>
