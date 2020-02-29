@@ -16,6 +16,7 @@ public class Response : MonoBehaviour
     public Actor Me { get; set; }
     public Proficiencies.Skill PlayerChallengingNPC { get; set; }
     public Proficiencies.Skill SkillRequiredForResponse { get; set; }
+    public Actor Target { get; set; }
     public string TextForSuccess { get; set; }
 
     // Unity
@@ -29,25 +30,28 @@ public class Response : MonoBehaviour
     public Statement Answer(Actor _target, bool _advantage = false, bool _disadvantage = false)
     {
         Statement answer = null;
+        Target = _target;
+
+        if (PlayerChallengingNPC == Proficiencies.Skill.None) return answer_for_player_success;
 
         switch(PlayerChallengingNPC) {  // the player is making an opposed skill check against the npc
             case Proficiencies.Skill.Deception:
-                answer = Me.Actions.OpposedSkillCheck(Proficiencies.Skill.Deception, _target, _advantage, _disadvantage) ? answer_for_player_success : answer_for_player_failure;
+                answer = Me.Actions.OpposedSkillCheck(Proficiencies.Skill.Deception, Target, _advantage, _disadvantage) ? answer_for_player_success : answer_for_player_failure;
                 break;
             case Proficiencies.Skill.Insight:
-                answer = Me.Actions.OpposedSkillCheck(Proficiencies.Skill.Insight, _target, _advantage, _disadvantage) ? answer_for_player_success : answer_for_player_failure;
+                answer = Me.Actions.OpposedSkillCheck(Proficiencies.Skill.Insight, Target, _advantage, _disadvantage) ? answer_for_player_success : answer_for_player_failure;
                 break;
             case Proficiencies.Skill.Intimidation:
-                answer = Me.Actions.OpposedSkillCheck(Proficiencies.Skill.Intimidation, _target, _advantage, _disadvantage) ? answer_for_player_success : answer_for_player_failure;
+                answer = Me.Actions.OpposedSkillCheck(Proficiencies.Skill.Intimidation, Target, _advantage, _disadvantage) ? answer_for_player_success : answer_for_player_failure;
                 break;
             case Proficiencies.Skill.Investigation:
-                answer = Me.Senses.InvestigationCheck(true, Mathf.Max(15, _target.Actions.DeceptionCheck(true, Player.Instance.Me)), _advantage, _disadvantage) ? answer_for_player_success : answer_for_player_failure;
+                answer = Me.Senses.InvestigationCheck(true, Mathf.Max(15, Target.Actions.DeceptionCheck(true, Player.Instance.Me)), _advantage, _disadvantage) ? answer_for_player_success : answer_for_player_failure;
                 break;
             case Proficiencies.Skill.Perception:
-                answer = Me.Senses.PerceptionCheck(true, Mathf.Max(15, _target.Actions.DeceptionCheck(true, Player.Instance.Me)), _advantage, _disadvantage) ? answer_for_player_success : answer_for_player_failure;
+                answer = Me.Senses.PerceptionCheck(true, Mathf.Max(15, Target.Actions.DeceptionCheck(true, Player.Instance.Me)), _advantage, _disadvantage) ? answer_for_player_success : answer_for_player_failure;
                 break;
             case Proficiencies.Skill.Persuasion:
-                answer = Me.Actions.OpposedSkillCheck(Proficiencies.Skill.Persuasion, _target, _advantage, _disadvantage) ? answer_for_player_success : answer_for_player_failure;
+                answer = Me.Actions.OpposedSkillCheck(Proficiencies.Skill.Persuasion, Target, _advantage, _disadvantage) ? answer_for_player_success : answer_for_player_failure;
                 break;
         }
         return answer;

@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 7117642}
   - component: {fileID: 7117643}
   m_Layer: 26
-  m_Name: DefaultStatement
+  m_Name: InitialStatement
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1790,6 +1790,55 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1177563403}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &270595099
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 270595101}
+  - component: {fileID: 270595100}
+  m_Layer: 26
+  m_Name: AnswerForSuccess
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &270595100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 270595099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02e78c4b3b49b4a96b1f706b4444db96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  statement: That is what I said.
+  non_statement: 
+  minimum_faction_reputation: 0
+  minimum_individual_reputation: 0
+  minimum_plot_reputation: 0
+  potential_responses: []
+--- !u!4 &270595101
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 270595099}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 504471557}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &283864809 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 667788035216135294, guid: baad7d180d8904436b9fa17b6973167b,
@@ -1950,7 +1999,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 300897836}
-  m_LocalRotation: {x: 0.0000000055879354, y: 0.0000000018626451, z: -0.1723329, w: -0.9850388}
+  m_LocalRotation: {x: -0, y: -0.0000000018626451, z: -0.17233132, w: -0.9850391}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -3601,7 +3650,7 @@ GameObject:
   - component: {fileID: 504471557}
   - component: {fileID: 504471558}
   m_Layer: 26
-  m_Name: DefaultResponse
+  m_Name: InitialResponse
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3617,7 +3666,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 270595101}
   m_Father: {fileID: 7117642}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3637,7 +3687,7 @@ MonoBehaviour:
   text_for_player_success: That was your statement.
   skill_challenge_vs_npc: 18
   answer_for_player_failure: {fileID: 0}
-  answer_for_player_success: {fileID: 0}
+  answer_for_player_success: {fileID: 270595100}
 --- !u!1001 &513036739
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6056,9 +6106,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speaker_name: {fileID: 1323360995}
   spoken_text: {fileID: 531972938}
-  first_response: {fileID: 312661991}
-  second_response: {fileID: 111113956}
-  third_response: {fileID: 1969269220}
+  first_response_button: {fileID: 1400651454}
+  second_response_button: {fileID: 418655856}
+  third_response_button: {fileID: 866484350}
+  first_response_text: {fileID: 312661991}
+  second_response_text: {fileID: 111113956}
+  third_response_text: {fileID: 1969269220}
 --- !u!114 &769526180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6119,7 +6172,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 822658961}
-  m_LocalRotation: {x: -0.026100235, y: -0.008725355, z: -0.87689257, w: 0.47989804}
+  m_LocalRotation: {x: -0.025172457, y: -0.009233959, z: -0.87689847, w: 0.4799273}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -6863,7 +6916,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1046343725}
-  m_LocalRotation: {x: 0.0697003, y: -0.03886683, z: -0.26874822, w: -0.95989877}
+  m_LocalRotation: {x: 0.069986545, y: -0.037847843, z: -0.2687046, w: -0.95993084}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -9794,7 +9847,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1324125674}
-  m_LocalRotation: {x: 0.020191353, y: -0.018699277, z: 0.00037770678, w: 0.9996212}
+  m_LocalRotation: {x: 0.020191738, y: -0.017641205, z: 0.0003563347, w: 0.99964046}
   m_LocalPosition: {x: 10, y: 5, z: -23.62743}
   m_LocalScale: {x: 1.500001, y: 1.9665062, z: 1.5334942}
   m_Children:

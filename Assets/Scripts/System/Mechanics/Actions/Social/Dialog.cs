@@ -81,9 +81,12 @@ public class Dialog : MonoBehaviour
     private void DisplayCurrent()
     {
         CurrentStatement.SeenByPlayer = true;
+        DialogPanel.Instance.Dialog = this;
         DialogPanel.Instance.SetSpeaker(Me.Stats.name);
         DialogPanel.Instance.SetText(CurrentStatement.GetStatementToPlayer());
         List<Response> responses = CurrentStatement.PresentResponses();
+
+        DialogPanel.Instance.ClearResponses();
 
         for (int i = 0; i < responses.Count; i++) {
             DialogPanel.Instance.AddResponse(i, responses[i]);
