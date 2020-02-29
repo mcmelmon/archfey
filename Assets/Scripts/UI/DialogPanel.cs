@@ -33,6 +33,11 @@ public class DialogPanel : MonoBehaviour
 
     }
 
+    public void AddResponse(string _response)
+    {
+        
+    }
+
     public void SetSpeaker(string _speaker) =>
         speaker_name.GetComponent<UnityEngine.UI.Text>().text = _speaker;
     public void SetText(string _text) =>
