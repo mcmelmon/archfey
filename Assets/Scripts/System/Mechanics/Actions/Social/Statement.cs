@@ -46,12 +46,10 @@ public class Statement : MonoBehaviour
         foreach (var response in potential_responses) {
             if (presentable_responses.Count > 3) break;
 
-            if (response.SkillRequiredForResponse == Proficiencies.Skill.None) {
+            if (response.NPCChallengingPlayer == Proficiencies.Skill.None) {
                 presentable_responses.Add(response);
                 continue;
             }
-
-            if (!Player.Instance.Me.Stats.Skills.Contains(response.SkillRequiredForResponse)) continue; // we don't have the needed skill (e.g. Insight) to choose this response
 
             if (response.PlayerChallengingNPC != Proficiencies.Skill.None) {
                 // If the player is challenging and has gotten here, they can pick this response (e.g. an intimidating line)
@@ -61,8 +59,9 @@ public class Statement : MonoBehaviour
 
             // From here, it is the NPC who is challenging the PC to see the response 
 
-            switch(response.SkillRequiredForResponse) {
+            switch(response.NPCChallengingPlayer) {
                 case Proficiencies.Skill.Deception:
+                    Debug.Log("Deceiving");
                     if (!Me.Actions.OpposedSkillCheck(Proficiencies.Skill.Deception, Player.Instance.Me)) {
                         presentable_responses.Add(response);
                     }
@@ -73,7 +72,7 @@ public class Statement : MonoBehaviour
                     }
                     break;
                 default:
-                    Debug.Log("NPC isn't useing a known conversation skill: " + response.SkillRequiredForResponse);
+                    Debug.Log("NPC isn't useing a known conversation skill: " + response.NPCChallengingPlayer);
                     break;               
             }
         }

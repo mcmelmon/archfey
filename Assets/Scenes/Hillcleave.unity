@@ -156,6 +156,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 504471557}
+  - {fileID: 394553942}
   m_Father: {fileID: 256676158}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -178,6 +179,7 @@ MonoBehaviour:
   minimum_plot_reputation: 0
   potential_responses:
   - {fileID: 504471558}
+  - {fileID: 394553943}
 --- !u!1 &10998446
 GameObject:
   m_ObjectHideFlags: 0
@@ -916,6 +918,59 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 88285036}
   m_CullTransparentMesh: 0
+--- !u!1 &93403689
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 93403690}
+  - component: {fileID: 93403691}
+  m_Layer: 26
+  m_Name: AnswerForSuccess
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &93403690
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 93403689}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 2071115864}
+  - {fileID: 830684831}
+  m_Father: {fileID: 394553942}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &93403691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 93403689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02e78c4b3b49b4a96b1f706b4444db96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  statement: You are amazing.  I am a cultist.
+  non_statement: 
+  minimum_faction_reputation: 0
+  minimum_individual_reputation: 0
+  minimum_plot_reputation: 0
+  potential_responses:
+  - {fileID: 2071115865}
+  - {fileID: 830684832}
 --- !u!1 &111113956
 GameObject:
   m_ObjectHideFlags: 0
@@ -1999,7 +2054,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 300897836}
-  m_LocalRotation: {x: -0, y: -0.0000000018626451, z: -0.17233132, w: -0.9850391}
+  m_LocalRotation: {x: 0.0000000055879354, y: -0.0000000055879354, z: -0.17234483,
+    w: -0.98503673}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2363,6 +2419,55 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &313996032
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 313996033}
+  - component: {fileID: 313996034}
+  m_Layer: 26
+  m_Name: Agree
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &313996033
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 313996032}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 830684831}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &313996034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 313996032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02e78c4b3b49b4a96b1f706b4444db96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  statement: Your silver tongue makes a fine proposal.  We shall work together.
+  non_statement: 
+  minimum_faction_reputation: 0
+  minimum_individual_reputation: 0
+  minimum_plot_reputation: 0
+  potential_responses: []
 --- !u!1 &324710030
 GameObject:
   m_ObjectHideFlags: 0
@@ -2845,6 +2950,56 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 385653704}
   m_CullTransparentMesh: 0
+--- !u!1 &394553941
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 394553942}
+  - component: {fileID: 394553943}
+  m_Layer: 26
+  m_Name: InsightStatement
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &394553942
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 394553941}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 93403690}
+  - {fileID: 1768112495}
+  m_Father: {fileID: 7117642}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &394553943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 394553941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dadefc724fc3649dab30fbbddd5d8036, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skill_challenge_vs_player: 4
+  text_for_player_success: My insight tells me that you are hiding something.
+  skill_challenge_vs_npc: 18
+  answer_for_player_failure: {fileID: 1768112496}
+  answer_for_player_success: {fileID: 93403691}
 --- !u!1 &418655854
 GameObject:
   m_ObjectHideFlags: 0
@@ -3650,7 +3805,7 @@ GameObject:
   - component: {fileID: 504471557}
   - component: {fileID: 504471558}
   m_Layer: 26
-  m_Name: InitialResponse
+  m_Name: BasicResponse
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3683,7 +3838,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dadefc724fc3649dab30fbbddd5d8036, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skill_required_to_see_response: 18
+  skill_challenge_vs_player: 18
   text_for_player_success: That was your statement.
   skill_challenge_vs_npc: 18
   answer_for_player_failure: {fileID: 0}
@@ -6172,7 +6327,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 822658961}
-  m_LocalRotation: {x: -0.025172457, y: -0.009233959, z: -0.87689847, w: 0.4799273}
+  m_LocalRotation: {x: -0.02737704, y: -0.008024626, z: -0.87686753, w: 0.47988492}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -6352,6 +6507,56 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 829489611}
   m_CullTransparentMesh: 0
+--- !u!1 &830684830
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 830684831}
+  - component: {fileID: 830684832}
+  m_Layer: 26
+  m_Name: Proposition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &830684831
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 830684830}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 313996033}
+  - {fileID: 2029416992}
+  m_Father: {fileID: 93403690}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &830684832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 830684830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dadefc724fc3649dab30fbbddd5d8036, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skill_challenge_vs_player: 18
+  text_for_player_success: I could be of use to you.
+  skill_challenge_vs_npc: 13
+  answer_for_player_failure: {fileID: 2029416993}
+  answer_for_player_success: {fileID: 313996034}
 --- !u!1 &856254546 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1250768562403641813, guid: 5f24754e072a24a118dd6493d5f61722,
@@ -6916,7 +7121,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1046343725}
-  m_LocalRotation: {x: 0.069986545, y: -0.037847843, z: -0.2687046, w: -0.95993084}
+  m_LocalRotation: {x: 0.06930669, y: -0.040268026, z: -0.26879665, w: -0.959856}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -8638,6 +8843,46 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1083948588113410988, guid: bafcbeeff7e1b4bee89145f5fa4745cf,
+        type: 3}
+      propertyPath: skillset.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083948588113410988, guid: bafcbeeff7e1b4bee89145f5fa4745cf,
+        type: 3}
+      propertyPath: skillset.Array.data[0]
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083948588113410988, guid: bafcbeeff7e1b4bee89145f5fa4745cf,
+        type: 3}
+      propertyPath: charisma
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083948588113410988, guid: bafcbeeff7e1b4bee89145f5fa4745cf,
+        type: 3}
+      propertyPath: strength
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083948588113410988, guid: bafcbeeff7e1b4bee89145f5fa4745cf,
+        type: 3}
+      propertyPath: dexterity
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083948588113410988, guid: bafcbeeff7e1b4bee89145f5fa4745cf,
+        type: 3}
+      propertyPath: intelligence
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083948588113410988, guid: bafcbeeff7e1b4bee89145f5fa4745cf,
+        type: 3}
+      propertyPath: skillset.Array.data[1]
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083948588113410988, guid: bafcbeeff7e1b4bee89145f5fa4745cf,
+        type: 3}
+      propertyPath: wisdom
+      value: 16
+      objectReference: {fileID: 0}
     - target: {fileID: 3442360358424386194, guid: bafcbeeff7e1b4bee89145f5fa4745cf,
         type: 3}
       propertyPath: m_Name
@@ -9847,7 +10092,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1324125674}
-  m_LocalRotation: {x: 0.020191738, y: -0.017641205, z: 0.0003563347, w: 0.99964046}
+  m_LocalRotation: {x: 0.020190787, y: -0.020155123, z: 0.00040711355, w: 0.9995929}
   m_LocalPosition: {x: 10, y: 5, z: -23.62743}
   m_LocalScale: {x: 1.500001, y: 1.9665062, z: 1.5334942}
   m_Children:
@@ -10785,6 +11030,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2524111057773370440, guid: ddadfb98217294719a16318a6807f1be,
         type: 3}
+      propertyPath: skillset.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2524111057773370440, guid: ddadfb98217294719a16318a6807f1be,
+        type: 3}
       propertyPath: rage_bar
       value: 
       objectReference: {fileID: 580878993}
@@ -10796,27 +11046,27 @@ PrefabInstance:
     - target: {fileID: 2524111057773370440, guid: ddadfb98217294719a16318a6807f1be,
         type: 3}
       propertyPath: dexterity
-      value: 10
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 2524111057773370440, guid: ddadfb98217294719a16318a6807f1be,
         type: 3}
       propertyPath: constitution
-      value: 10
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 2524111057773370440, guid: ddadfb98217294719a16318a6807f1be,
         type: 3}
       propertyPath: intelligence
-      value: 10
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 2524111057773370440, guid: ddadfb98217294719a16318a6807f1be,
         type: 3}
       propertyPath: wisdom
-      value: 10
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 2524111057773370440, guid: ddadfb98217294719a16318a6807f1be,
         type: 3}
       propertyPath: charisma
-      value: 10
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 2524111057773370440, guid: ddadfb98217294719a16318a6807f1be,
         type: 3}
@@ -10867,6 +11117,16 @@ PrefabInstance:
         type: 3}
       propertyPath: proficiency_bonus
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2524111057773370440, guid: ddadfb98217294719a16318a6807f1be,
+        type: 3}
+      propertyPath: skillset.Array.data[0]
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2524111057773370440, guid: ddadfb98217294719a16318a6807f1be,
+        type: 3}
+      propertyPath: skillset.Array.data[1]
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 5361162323687309723, guid: ddadfb98217294719a16318a6807f1be,
         type: 3}
@@ -11368,6 +11628,55 @@ Transform:
   m_Father: {fileID: 716091680}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1600481789
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1600481790}
+  - component: {fileID: 1600481791}
+  m_Layer: 26
+  m_Name: No
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1600481790
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1600481789}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2071115864}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1600481791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1600481789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02e78c4b3b49b4a96b1f706b4444db96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  statement: I shall not change my ways and you can't make me.
+  non_statement: 
+  minimum_faction_reputation: 0
+  minimum_individual_reputation: 0
+  minimum_plot_reputation: 0
+  potential_responses: []
 --- !u!1 &1609069332
 GameObject:
   m_ObjectHideFlags: 0
@@ -11814,6 +12123,55 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 466718002}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1768112494
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1768112495}
+  - component: {fileID: 1768112496}
+  m_Layer: 26
+  m_Name: AnswerForFailure
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1768112495
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1768112494}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 394553942}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1768112496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1768112494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02e78c4b3b49b4a96b1f706b4444db96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  statement: Nonsense.  I am the model of propriety.
+  non_statement: 
+  minimum_faction_reputation: 0
+  minimum_individual_reputation: 0
+  minimum_plot_reputation: 0
+  potential_responses: []
 --- !u!1 &1816240676
 GameObject:
   m_ObjectHideFlags: 0
@@ -13043,6 +13401,55 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2027421702}
   m_CullTransparentMesh: 0
+--- !u!1 &2029416991
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2029416992}
+  - component: {fileID: 2029416993}
+  m_Layer: 26
+  m_Name: Decline
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2029416992
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2029416991}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 830684831}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2029416993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2029416991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02e78c4b3b49b4a96b1f706b4444db96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  statement: No offense, but no.
+  non_statement: 
+  minimum_faction_reputation: 0
+  minimum_individual_reputation: 0
+  minimum_plot_reputation: 0
+  potential_responses: []
 --- !u!1001 &2068547791
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13280,6 +13687,55 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b3ec24dbe47d142bbb121cad20c9198e, type: 3}
+--- !u!1 &2071115863
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2071115864}
+  - component: {fileID: 2071115865}
+  m_Layer: 26
+  m_Name: Admonishment
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2071115864
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2071115863}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1600481790}
+  m_Father: {fileID: 93403690}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2071115865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2071115863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dadefc724fc3649dab30fbbddd5d8036, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skill_challenge_vs_player: 18
+  text_for_player_success: Change your ways!
+  skill_challenge_vs_npc: 18
+  answer_for_player_failure: {fileID: 1600481791}
+  answer_for_player_success: {fileID: 1600481791}
 --- !u!1001 &2081365855
 PrefabInstance:
   m_ObjectHideFlags: 0

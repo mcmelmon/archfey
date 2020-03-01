@@ -35,12 +35,6 @@ public class DialogPanel : MonoBehaviour
 
     // public
 
-    public void ResponseChosen(UnityEngine.UI.Text response_text)
-    {
-        Actor interactor = Player.Instance.Me.Interactions.Interactors.First();
-
-    }
-
     public void AddResponse(int _position, Response _response)
     {
         switch (_position) {
