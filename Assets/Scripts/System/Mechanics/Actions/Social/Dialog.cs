@@ -14,13 +14,23 @@ public class Dialog : MonoBehaviour
 
     public Actor Me { get; set; }
     public Statement CurrentStatement { get; set; }
-    public List<Statement> ResponsesChosen { get; set; }
+    public Statement FinalStatement { get; set; }
+    public Statement OpeningStatement { get; set; }
+    public List<Response> ResponsesChosen { get; set; }
 
     // Unity
 
     private void Awake()
     {
         SetComponents();
+    }
+
+    private void Start() {
+        List<Statement> potential_openers = Me.GetComponentsInChildren<Statement>().Where(s => s.IsOpeningStatement).ToList();
+        if (potential_openers.Any()) {
+            CurrentStatement = potential_openers.First();
+            OpeningStatement = CurrentStatement;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -61,14 +71,15 @@ public class Dialog : MonoBehaviour
 
     public void HandleResponse(Response _response)
     {
+        ResponsesChosen.Add(_response);
         CurrentStatement = _response.Answer(Me);
         DisplayCurrent();
     }
 
     public void InitiateDialog(DialogPanel dialog_panel)
     {
+        CurrentStatement = (FinalStatement == null) ? OpeningStatement : FinalStatement;
         DisplayCurrent();
-        DialogPanel.Instance.gameObject.SetActive(true);
 
         // We do not refresh the dialog sequence after closing, so the last current will be displayed again.
         // This may or may not be desirable.
@@ -83,24 +94,29 @@ public class Dialog : MonoBehaviour
 
     private void DisplayCurrent()
     {
-        CurrentStatement.SeenByPlayer = true;
         DialogPanel.Instance.Dialog = this;
         DialogPanel.Instance.SetSpeaker(Me.Stats.name);
+        DialogPanel.Instance.ClearResponses();
+        
+        if (CurrentStatement.IsFinalStatement) FinalStatement = CurrentStatement;
+        
         DialogPanel.Instance.SetText(CurrentStatement.GetStatementToPlayer());
         List<Response> responses = CurrentStatement.PresentResponses();
-
-        DialogPanel.Instance.ClearResponses();
 
         for (int i = 0; i < responses.Count; i++) {
             DialogPanel.Instance.AddResponse(i, responses[i]);
         }
+
+        DialogPanel.Instance.gameObject.SetActive(true);
     }
 
     private void SetComponents()
     {
         Me = GetComponent<Actor>();
-        CurrentStatement = (statements.Any()) ? statements[0] : null;
-        ResponsesChosen = new List<Statement>();
+        CurrentStatement = null;  // Set in Start after other objects awaken
+        FinalStatement = null;
+        OpeningStatement = null;
+        ResponsesChosen = new List<Response>();
     }
 }
 
