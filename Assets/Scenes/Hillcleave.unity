@@ -172,6 +172,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02e78c4b3b49b4a96b1f706b4444db96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  is_opening_statement: 1
+  is_final_statement: 0
   statement: This is my statement.
   non_statement: I've got nothing to say to you.
   minimum_faction_reputation: 0
@@ -963,6 +965,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02e78c4b3b49b4a96b1f706b4444db96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  is_opening_statement: 0
+  is_final_statement: 0
   statement: You are amazing.  I am a cultist.
   non_statement: 
   minimum_faction_reputation: 0
@@ -1874,6 +1878,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02e78c4b3b49b4a96b1f706b4444db96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  is_opening_statement: 0
+  is_final_statement: 0
   statement: That is what I said.
   non_statement: 
   minimum_faction_reputation: 0
@@ -2054,8 +2060,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 300897836}
-  m_LocalRotation: {x: 0.0000000055879354, y: -0.0000000055879354, z: -0.17234483,
-    w: -0.98503673}
+  m_LocalRotation: {x: 0.0000000018626451, y: -0.0000000037252903, z: -0.17125285,
+    w: -0.98522717}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2462,6 +2468,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02e78c4b3b49b4a96b1f706b4444db96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  is_opening_statement: 0
+  is_final_statement: 1
   statement: Your silver tongue makes a fine proposal.  We shall work together.
   non_statement: 
   minimum_faction_reputation: 0
@@ -3292,6 +3300,73 @@ MonoBehaviour:
   - {fileID: 5977216355613215229, guid: 0db6a0df10aa441d38b5cc3a870fedb3, type: 3}
   - {fileID: 5947408550990878629, guid: 295e5e8edd4294599b7dade0b81c59b3, type: 3}
   - {fileID: 4908333391941868846, guid: 9bc45ff19c15645f39f2360af5801ea4, type: 3}
+--- !u!1 &455051989
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 455051990}
+  - component: {fileID: 455051991}
+  m_Layer: 0
+  m_Name: CM vcam1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &455051990
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 455051989}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.6666662, y: 0.508516, z: 0.65210545}
+  m_Children:
+  - {fileID: 1249889751}
+  m_Father: {fileID: 1324125675}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &455051991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 455051989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ExcludedPropertiesInInspector:
+  - m_Script
+  m_LockStageInInspector: 
+  m_StreamingVersion: 20170927
+  m_Priority: 10
+  m_StandbyUpdate: 2
+  m_LookAt: {fileID: 580834487}
+  m_Follow: {fileID: 580834487}
+  m_Lens:
+    FieldOfView: 60
+    OrthographicSize: 5
+    NearClipPlane: 0.1
+    FarClipPlane: 5000
+    Dutch: 0
+    LensShift: {x: 0, y: 0}
+  m_Transitions:
+    m_BlendHint: 0
+    m_InheritPosition: 0
+    m_OnCameraLive:
+      m_PersistentCalls:
+        m_Calls: []
+  m_LegacyBlendHint: 0
+  m_ComponentOwner: {fileID: 1249889751}
 --- !u!1001 &466718002
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6327,7 +6402,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 822658961}
-  m_LocalRotation: {x: -0.02737704, y: -0.008024626, z: -0.87686753, w: 0.47988492}
+  m_LocalRotation: {x: -0.02737045, y: -0.008046913, z: -0.877258, w: 0.47917074}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -7121,7 +7196,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1046343725}
-  m_LocalRotation: {x: 0.06930669, y: -0.040268026, z: -0.26879665, w: -0.959856}
+  m_LocalRotation: {x: 0.06935976, y: -0.040176533, z: -0.2675296, w: -0.9602099}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -8851,12 +8926,12 @@ PrefabInstance:
     - target: {fileID: 1083948588113410988, guid: bafcbeeff7e1b4bee89145f5fa4745cf,
         type: 3}
       propertyPath: skillset.Array.data[0]
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1083948588113410988, guid: bafcbeeff7e1b4bee89145f5fa4745cf,
         type: 3}
       propertyPath: charisma
-      value: 14
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1083948588113410988, guid: bafcbeeff7e1b4bee89145f5fa4745cf,
         type: 3}
@@ -9208,7 +9283,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1211149646
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9497,6 +9572,85 @@ Transform:
   m_Father: {fileID: 1176401641}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1249889750
+GameObject:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1249889751}
+  - component: {fileID: 1249889753}
+  - component: {fileID: 1249889754}
+  - component: {fileID: 1249889752}
+  m_Layer: 0
+  m_Name: cm
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1249889751
+Transform:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1249889750}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 455051990}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1249889752
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1249889750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e8b78ac948f05a46a6d8339a503172b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1249889753
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1249889750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1249889754
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1249889750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa7155796051b734daa718462081dc5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_BindingMode: 1
+  m_FollowOffset: {x: 0, y: 35, z: -15}
+  m_XDamping: 1
+  m_YDamping: 1
+  m_ZDamping: 1
+  m_AngularDampingMode: 0
+  m_PitchDamping: 0
+  m_YawDamping: 0
+  m_RollDamping: 0
+  m_AngularDamping: 0
 --- !u!1 &1250373919
 GameObject:
   m_ObjectHideFlags: 0
@@ -10078,6 +10232,7 @@ GameObject:
   - component: {fileID: 1324125678}
   - component: {fileID: 1324125677}
   - component: {fileID: 1324125676}
+  - component: {fileID: 1324125679}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -10092,11 +10247,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1324125674}
-  m_LocalRotation: {x: 0.020190787, y: -0.020155123, z: 0.00040711355, w: 0.9995929}
-  m_LocalPosition: {x: 10, y: 5, z: -23.62743}
+  m_LocalRotation: {x: 0.55049103, y: -0, z: -0, w: 0.8348411}
+  m_LocalPosition: {x: 10, y: 38, z: -28.5}
   m_LocalScale: {x: 1.500001, y: 1.9665062, z: 1.5334942}
   m_Children:
   - {fileID: 1211149647}
+  - {fileID: 455051990}
   m_Father: {fileID: 722188686}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 15, y: 0, z: 0}
@@ -10115,7 +10271,7 @@ MonoBehaviour:
   m_ShowDebugText: 0
   m_ShowCameraFrustum: 1
   m_IgnoreTimeScale: 0
-  m_WorldUpOverride: {fileID: 0}
+  m_WorldUpOverride: {fileID: 580834487}
   m_UpdateMethod: 2
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
@@ -10185,6 +10341,37 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &1324125679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1324125674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_CameraOutput: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
 --- !u!224 &1334024035 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 224344314453344526, guid: b3ec24dbe47d142bbb121cad20c9198e,
@@ -11061,7 +11248,7 @@ PrefabInstance:
     - target: {fileID: 2524111057773370440, guid: ddadfb98217294719a16318a6807f1be,
         type: 3}
       propertyPath: wisdom
-      value: 14
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 2524111057773370440, guid: ddadfb98217294719a16318a6807f1be,
         type: 3}
@@ -11671,6 +11858,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02e78c4b3b49b4a96b1f706b4444db96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  is_opening_statement: 0
+  is_final_statement: 0
   statement: I shall not change my ways and you can't make me.
   non_statement: 
   minimum_faction_reputation: 0
@@ -12166,6 +12355,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02e78c4b3b49b4a96b1f706b4444db96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  is_opening_statement: 0
+  is_final_statement: 0
   statement: Nonsense.  I am the model of propriety.
   non_statement: 
   minimum_faction_reputation: 0
@@ -13444,7 +13635,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02e78c4b3b49b4a96b1f706b4444db96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statement: No offense, but no.
+  is_opening_statement: 0
+  is_final_statement: 1
+  statement: No offense, but I believe we are done here.
   non_statement: 
   minimum_faction_reputation: 0
   minimum_individual_reputation: 0
