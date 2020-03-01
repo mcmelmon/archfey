@@ -220,17 +220,34 @@ public class Actions : MonoBehaviour
 
     public bool OpposedSkillCheck(Proficiencies.Skill _skill, Actor _target, bool _advantage = false, bool _disadvantage = false)
     {
+        int skill_check = 0;
+        int challenge_rating = 0;
+
         switch(_skill) {
             case Proficiencies.Skill.Deception:
-                return DeceptionCheck(true, _advantage, _disadvantage) > _target.Me.Stats.WisdomCheck();
+                skill_check = DeceptionCheck(true, _advantage, _disadvantage);
+                challenge_rating = _target.Me.Stats.WisdomCheck();
+                Debug.Log("Deception Skill check: " + skill_check + " vs Challenge Rating: " + challenge_rating);
+                return skill_check > challenge_rating;
             case Proficiencies.Skill.Insight:
-                return InsightCheck(true, _advantage, _disadvantage) > Mathf.Max(15, _target.Me.Actions.SkillCheck(true, Proficiencies.Skill.Deception, _advantage, _disadvantage));
+                skill_check = InsightCheck(true, _advantage, _disadvantage);
+                challenge_rating = Mathf.Max(15, _target.Me.Actions.SkillCheck(true, Proficiencies.Skill.Deception, _advantage, _disadvantage));
+                Debug.Log("Insight Skill check: " + skill_check + " vs Challenge Rating: " + challenge_rating);
+                return  skill_check > challenge_rating; 
             case Proficiencies.Skill.Intimidation:
-                return IntimidationCheck(true, _advantage, _disadvantage)  > _target.Me.Stats.WisdomCheck();
+                skill_check = IntimidationCheck(true, _advantage, _disadvantage);
+                challenge_rating = _target.Me.Stats.WisdomCheck();
+                Debug.Log("Intimidation Skill check: " + skill_check + " vs Challenge Rating: " + challenge_rating);
+                return skill_check > challenge_rating; 
             case Proficiencies.Skill.Investigation:
                 return Me.Senses.InvestigationCheck(true, Mathf.Max(15, _target.Me.Actions.SkillCheck(true, Proficiencies.Skill.Deception, _advantage, _disadvantage)), _advantage, _disadvantage);
+            case Proficiencies.Skill.Perception:
+                return Me.Senses.PerceptionCheck(true, Mathf.Max(15, _target.Me.Actions.SkillCheck(true, Proficiencies.Skill.Deception, _advantage, _disadvantage)), _advantage, _disadvantage);
             case Proficiencies.Skill.Persuasion:
-                return PersuasionCheck(true, _advantage, _disadvantage)  > _target.Me.Stats.WisdomCheck();
+                skill_check = PersuasionCheck(true, _advantage, _disadvantage);
+                challenge_rating = _target.Me.Stats.WisdomCheck();
+                Debug.Log("Persuasion Skill check: " + skill_check + " vs Challenge Rating: " + challenge_rating);
+                return skill_check > challenge_rating;
         }
         Debug.Log("Opposed skill check for unhandle skill: " + _skill);
         return false;

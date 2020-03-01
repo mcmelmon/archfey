@@ -69,6 +69,9 @@ public class Dialog : MonoBehaviour
     {
         DisplayCurrent();
         DialogPanel.Instance.gameObject.SetActive(true);
+
+        // We do not refresh the dialog sequence after closing, so the last current will be displayed again.
+        // This may or may not be desirable.
     }
 
     public bool WithinRange(Actor other_actor)

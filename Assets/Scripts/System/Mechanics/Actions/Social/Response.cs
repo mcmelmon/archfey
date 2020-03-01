@@ -5,7 +5,7 @@ using UnityEngine;
 public class Response : MonoBehaviour
 {
     // Inspector
-    [SerializeField] Proficiencies.Skill skill_required_to_see_response = Proficiencies.Skill.None;
+    [SerializeField] Proficiencies.Skill skill_challenge_vs_player = Proficiencies.Skill.None;
     [SerializeField] string text_for_player_success = ""; // "I have seen through your deception."
     [SerializeField] Proficiencies.Skill skill_challenge_vs_npc = Proficiencies.Skill.None;
     [SerializeField] Statement answer_for_player_failure = null;
@@ -15,7 +15,7 @@ public class Response : MonoBehaviour
 
     public Actor Me { get; set; }
     public Proficiencies.Skill PlayerChallengingNPC { get; set; }
-    public Proficiencies.Skill SkillRequiredForResponse { get; set; }
+    public Proficiencies.Skill NPCChallengingPlayer { get; set; }
     public Actor Target { get; set; }
     public string TextForSuccess { get; set; }
 
@@ -63,7 +63,7 @@ public class Response : MonoBehaviour
     {
         Me = Player.Instance.Me;
         PlayerChallengingNPC = skill_challenge_vs_npc;
-        SkillRequiredForResponse = skill_required_to_see_response;
+        NPCChallengingPlayer = skill_challenge_vs_player;
         TextForSuccess = text_for_player_success;
     }
 
